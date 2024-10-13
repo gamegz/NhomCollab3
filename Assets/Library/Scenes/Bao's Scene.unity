@@ -1205,7 +1205,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: f746014af295be64eb0f4a0685e3bacd,
     type: 3}
-  m_NotificationBehavior: 2
+  m_NotificationBehavior: 0
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -1406,11 +1406,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f31d281281c67d408a075bc59854626, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 8
-  dashForce: 10
-  dashForceWhenNotMove: 20
-  dashDelay: 0.2
-  allowDashWhenStandStill: 1
+  dashMaxDuration: 0.5
+  dashForce: 15
+  playerSpeed: 10
+  timeBetweenDashes: 0.5
+  allowToDashWhenStandStill: 0
 --- !u!1 &1488893983
 GameObject:
   m_ObjectHideFlags: 0

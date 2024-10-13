@@ -5,161 +5,202 @@ using Unity.VisualScripting.ReorderableList;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+public enum PlayerState
+{
+    Idle,
+    Moving,
+    Dashing,
+    StandDashing
+}
+
 public class PlayerMovement : MonoBehaviour
 {
-
-    [Header("Player Movement Attribute")]
-    [SerializeField] float speed;
-    [Header("Player Dash Attribute")]
-    [SerializeField] float dashForce;
-    [SerializeField] float dashForceWhenNotMove;
-    [SerializeField] private float dashDelay;
-    [SerializeField] private bool allowDashWhenStandStill;
-    
-    private Camera _cameraMain;
-    private bool _isDashing;
-    private Ray _ray;
-    private bool _canDash = true;
-    private PlayerInput _input;
-    Rigidbody _rigidbody;
-    Vector2 _movement;
-    Vector2 _mousePosition;
-    private float _initDrag;
-    private float _modifiedDrag = 4f;
-    
-    private void Awake()
-    {
-        _input = new PlayerInput();
-        _rigidbody = GetComponent<Rigidbody>();
-        _cameraMain = Camera.main;
-        transform.hasChanged = false;
-        _initDrag = _rigidbody.drag;
-    }
-
-    void Start()
-    {
-        
-    }
-    
-    void Update()
-    {
-        
-    }
-    
-    private void FixedUpdate()
-    {
-        
-        if (!_isDashing)
-        {
-            Move(); // can only move when the player is not dashing
-        }
-        LookAtMousePosition();
-    }
-
-    #region Move
-
-    private void Move() // move the player around
-    {
-        transform.position += new Vector3(_movement.x, 0, _movement.y) * (speed * Time.deltaTime);
-    }
-    #endregion
-
-    #region DashInput Handling
-    
-    public void Dash(InputAction.CallbackContext context) // this function take the dash input, use it like assign button, when button press function run 
-    {
-        if (context.performed && !_isDashing && _canDash) // check if player press the button and if they can dash or not
-        {
-            if ((_input.Player.Move.ReadValue<Vector2>().sqrMagnitude > 0f)) // if the player is moving or not to dash
-            {
-                _isDashing = true;
-                _canDash = false;
-                Debug.Log("Dashing");
-                DashAction(new Vector3(_movement.x, 0, _movement.y).normalized, dashForce);
-                
-            }
-            else if ((_input.Player.Move.ReadValue<Vector2>().sqrMagnitude <= 0f && allowDashWhenStandStill)) // if the player is not moving and the allow Dash When Stand Still tick box get ticked then allow to dash when stand still
-            {
-                Ray ray = _cameraMain.ScreenPointToRay(_mousePosition);
-                if (Physics.Raycast(ray, out RaycastHit hit))
-                {
-                    _isDashing = true;
-                    _canDash = true;
-                    Vector3 dashWhenNotMove = new Vector3(hit.point.x - transform.position.x, 0, hit.point.z - transform.position.z).normalized;
-                    DashAction(dashWhenNotMove, dashForceWhenNotMove);
-                    
-                }
-                
-            }
-        }
-    }
-    
-    #endregion
-    
-    #region Dash Action
-    private void DashAction(Vector3 dashDirection, float force) //Start Dashing
-    {
-        _rigidbody.velocity = dashDirection * force;
-        _rigidbody.drag = _modifiedDrag;
-        _isDashing = false;
-        Invoke(nameof(DashReset), dashDelay); //Delay an amount of time then call Dash Reset function
-    }
-    
-
-    private void DashReset() // reset the Dash
-    {
-        _rigidbody.drag = _initDrag;
-        _canDash = true;
-        _rigidbody.velocity = Vector3.zero;
-    }
-    #endregion
-
-    #region Rotate Toward Mouse Position
-
-    private void LookAtMousePosition() // look toward mouse position like Ruiner
-    {
-        _ray = _cameraMain.ScreenPointToRay(_mousePosition);
-        RaycastHit hit;
-        if (Physics.Raycast(_ray, out hit))
-        {
-            Vector3 playerToMouse = hit.point - transform.position;
-            playerToMouse.y = 0;
-            Quaternion rotation = Quaternion.LookRotation(playerToMouse);
-            _rigidbody.MoveRotation(rotation);
-        }
-    }
-    #endregion
-    
-    #region Movement Handling
-    private void OnMovement(InputAction.CallbackContext context) // this function record the value of player keyboard then use it for moving
-    {
-        if (!_isDashing)
-        {
-            _movement = context.ReadValue<Vector2>();
-        }
-        
-    }
-    # endregion
-    
-    #region record the mouse position
-    private void OnMousePos(InputAction.CallbackContext context) // record the mouse position
-    {
-        _mousePosition = context.ReadValue<Vector2>();
-    }
-    #endregion
-    
-    #region enable input and disable input
-    private void OnEnable() // enable input
-    {
-        _input.Enable();
-        _input.Player.Move.performed += OnMovement;
-        _input.Player.Move.canceled += OnMovement;
-        _input.Player.MousePos.performed += OnMousePos;
-    }
-
-    private void OnDisable() // disable input
-    {
-        _input.Disable();
-    }
-    #endregion
+      private PlayerInput _playerInput;
+      private float _dashDuration;
+      [SerializeField] private float dashMaxDuration;
+      [SerializeField] private float dashForce;
+      [SerializeField] private float playerSpeed;
+      [SerializeField] private float timeBetweenDashes;
+      [SerializeField] private bool allowToDashWhenStandStill;
+      private bool _isPressDash;
+      private bool _canDash;
+      private Vector2 _movement;
+      private Rigidbody _rb;
+      private PlayerState _state;
+      private Camera _camera;
+      private Ray _ray;
+      private Vector2 _mousePosition;
+  
+      private void Awake()
+      {
+          _camera = Camera.main;
+          _canDash = true;
+          _rb = GetComponent<Rigidbody>();
+          MoveToState(PlayerState.Idle);
+          _playerInput = new PlayerInput();
+      }
+  
+      private void OnEnable()
+      {
+          _playerInput.Player.Move.performed += Move;
+          _playerInput.Player.Move.canceled += Move;
+          _playerInput.Player.Dash.performed += Dash;
+          _playerInput.Player.MousePos.performed += MousePos;
+          _playerInput.Enable();
+      }
+  
+      private void OnDisable()
+      {
+          _playerInput.Player.Move.performed -= Move;
+          _playerInput.Player.Move.canceled -= Move;
+          _playerInput.Player.Dash.performed -= Dash;
+          _playerInput.Disable();
+      }
+      
+      void Update()
+      {
+          LookAtMousePosition();
+          switch (_state)
+          {
+              case PlayerState.Idle:
+                  if (_movement != Vector2.zero)
+                  {
+                      MoveToState(PlayerState.Moving);
+                  }
+                  else if (_playerInput.Player.Dash.inProgress && _canDash)
+                  {
+                      MoveToState(PlayerState.StandDashing);
+                  }
+                  break;
+              case PlayerState.Moving:
+                  if (_movement == Vector2.zero)
+                  {
+                      MoveToState(PlayerState.Idle);
+                  }
+                  else if (_playerInput.Player.Dash.inProgress && _canDash)
+                  {
+                      Debug.Log("Dashing");
+                      MoveToState(PlayerState.Dashing);
+                  }
+                  break;
+              case PlayerState.Dashing:
+                  break;
+              case PlayerState.StandDashing:
+                  break;
+          }
+      }
+  
+      private void FixedUpdate()
+      {
+          switch (_state)
+          {
+              case PlayerState.Moving:
+                  Vector3 playerMovement = new Vector3(_movement.x, 0, _movement.y) * playerSpeed;
+                  _rb.velocity = playerMovement;
+                  break;
+              case PlayerState.Dashing:
+                  DashAction();
+                  break;
+              case PlayerState.StandDashing:
+                  DashAction();
+                  break;
+          }
+      }
+  
+      public void Move(InputAction.CallbackContext context)
+      {
+          _movement = context.ReadValue<Vector2>();
+      }
+  
+      public void Dash(InputAction.CallbackContext context)
+      {
+          if (context.performed)
+          {
+              Debug.Log("pressed dash");
+              _isPressDash = true;
+          }
+          else if (context.canceled)
+          {
+              _isPressDash = false;
+          }
+      }
+      
+      private void MousePos(InputAction.CallbackContext context)
+      {
+          _mousePosition = context.ReadValue<Vector2>();
+      }
+  
+      private void MoveToState(PlayerState newState)
+      {
+          _state = newState;
+          switch (newState)
+          {
+              case PlayerState.Idle:
+                  _rb.velocity = Vector3.zero;
+                  break;
+              case PlayerState.Moving:
+                  break;
+              case PlayerState.Dashing:
+                  StartDash();
+                  break;
+              case PlayerState.StandDashing:
+                  StartStandDash();
+                  break;
+          }
+      }
+  
+      private void StartDash()
+      {
+          Debug.Log("Hey");
+          _canDash = false;
+          _dashDuration = dashMaxDuration;
+          _rb.velocity = new Vector3(_movement.x, 0, _movement.y).normalized * dashForce;
+      }
+  
+      private void StartStandDash()
+      {
+          _canDash = false;
+          _dashDuration = dashMaxDuration;
+          Ray ray = _camera.ScreenPointToRay(_mousePosition);
+          if (allowToDashWhenStandStill)
+          {
+              if (Physics.Raycast(ray, out RaycastHit hit))
+              {
+                  _rb.velocity = new Vector3(hit.point.x - transform.position.x, 0, hit.point.z - transform.position.z).normalized * dashForce;
+              } 
+          }
+          
+      }
+  
+      private void DashAction()
+      {
+          _dashDuration -= Time.deltaTime;
+          if (_dashDuration <= 0)
+          {
+              Debug.Log(_dashDuration);
+              _rb.velocity = Vector3.zero;
+              MoveToState(PlayerState.Idle);
+              StartCoroutine(DashCooldown());
+          }
+  
+      }
+  
+      IEnumerator DashCooldown()
+      {
+          yield return new WaitForSeconds(timeBetweenDashes);
+          _canDash = true;
+      }
+      
+      private void LookAtMousePosition()
+      {
+          _ray = _camera.ScreenPointToRay(_mousePosition);
+          RaycastHit hit;
+          if (Physics.Raycast(_ray, out hit))
+          {
+              Vector3 playerToMouse = hit.point - transform.position;
+              playerToMouse.y = 0;
+              Quaternion rotation = Quaternion.LookRotation(playerToMouse);
+              _rb.MoveRotation(rotation);
+          }
+      }
 }
