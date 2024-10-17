@@ -22,6 +22,8 @@ public class PlayerMovement : MonoBehaviour
       [SerializeField] private float playerSpeed;
       [SerializeField] private float timeBetweenDashes;
       [SerializeField] private bool allowToDashWhenStandStill;
+      [SerializeField] private float rotationSpeed;
+      [SerializeField] private bool allowEightDirectionsMovement;
       private bool _isPressDash;
       private bool _canDash;
       private Vector2 _movement;
@@ -30,6 +32,7 @@ public class PlayerMovement : MonoBehaviour
       private Camera _camera;
       private Ray _ray;
       private Vector2 _mousePosition;
+      
   
       private void Awake()
       {
@@ -59,7 +62,6 @@ public class PlayerMovement : MonoBehaviour
       
       void Update()
       {
-          LookAtMousePosition();
           switch (_state)
           {
               case PlayerState.Idle:
@@ -67,7 +69,7 @@ public class PlayerMovement : MonoBehaviour
                   {
                       MoveToState(PlayerState.Moving);
                   }
-                  else if (_playerInput.Player.Dash.inProgress && _canDash)
+                  else if (_playerInput.Player.Dash.WasReleasedThisFrame() && _canDash && allowToDashWhenStandStill)
                   {
                       MoveToState(PlayerState.StandDashing);
                   }
@@ -77,7 +79,7 @@ public class PlayerMovement : MonoBehaviour
                   {
                       MoveToState(PlayerState.Idle);
                   }
-                  else if (_playerInput.Player.Dash.inProgress && _canDash)
+                  else if (_playerInput.Player.Dash.WasReleasedThisFrame() && _canDash)
                   {
                       Debug.Log("Dashing");
                       MoveToState(PlayerState.Dashing);
@@ -92,11 +94,16 @@ public class PlayerMovement : MonoBehaviour
   
       private void FixedUpdate()
       {
+          LookAtMousePosition();
           switch (_state)
           {
               case PlayerState.Moving:
                   Vector3 playerMovement = new Vector3(_movement.x, 0, _movement.y) * playerSpeed;
                   _rb.velocity = playerMovement;
+                  if (allowEightDirectionsMovement)
+                  {
+                      LookAtWalkDirection(playerMovement);
+                  }
                   break;
               case PlayerState.Dashing:
                   DashAction();
@@ -111,7 +118,32 @@ public class PlayerMovement : MonoBehaviour
       {
           _movement = context.ReadValue<Vector2>();
       }
-  
+
+      #region Dash Handling
+      
+      private void StartDash()
+      {
+          Debug.Log("Hey");
+          _canDash = false;
+          _dashDuration = dashMaxDuration;
+          _rb.velocity = new Vector3(_movement.x, 0, _movement.y).normalized * dashForce;
+      }
+      
+      private void StartStandDash()
+      {
+          _canDash = false;
+          _dashDuration = dashMaxDuration;
+          Vector3 mousePosition = _camera.ScreenToWorldPoint(new Vector3(_mousePosition.x, _mousePosition.y, _camera.transform.position.y));
+          Vector3 directionFromCharacterToMouse = mousePosition - transform.position;
+          directionFromCharacterToMouse.y = 0f;
+
+          if (directionFromCharacterToMouse != Vector3.zero)
+          {
+              _rb.velocity = new Vector3(directionFromCharacterToMouse.x , 0, directionFromCharacterToMouse.z ).normalized * dashForce;
+          }
+          
+      }
+      
       public void Dash(InputAction.CallbackContext context)
       {
           if (context.performed)
@@ -124,6 +156,27 @@ public class PlayerMovement : MonoBehaviour
               _isPressDash = false;
           }
       }
+      
+      private void DashAction()
+      {
+          _dashDuration -= Time.deltaTime;
+          if (_dashDuration <= 0)
+          {
+              Debug.Log(_dashDuration);
+              _rb.velocity = Vector3.zero;
+              MoveToState(PlayerState.Idle);
+              StartCoroutine(DashCooldown());
+          }
+  
+      }
+  
+      IEnumerator DashCooldown()
+      {
+          yield return new WaitForSeconds(timeBetweenDashes);
+          _canDash = true;
+      }
+      #endregion
+      
       
       private void MousePos(InputAction.CallbackContext context)
       {
@@ -148,59 +201,26 @@ public class PlayerMovement : MonoBehaviour
                   break;
           }
       }
-  
-      private void StartDash()
-      {
-          Debug.Log("Hey");
-          _canDash = false;
-          _dashDuration = dashMaxDuration;
-          _rb.velocity = new Vector3(_movement.x, 0, _movement.y).normalized * dashForce;
-      }
-  
-      private void StartStandDash()
-      {
-          _canDash = false;
-          _dashDuration = dashMaxDuration;
-          Ray ray = _camera.ScreenPointToRay(_mousePosition);
-          if (allowToDashWhenStandStill)
-          {
-              if (Physics.Raycast(ray, out RaycastHit hit))
-              {
-                  _rb.velocity = new Vector3(hit.point.x - transform.position.x, 0, hit.point.z - transform.position.z).normalized * dashForce;
-              } 
-          }
-          
-      }
-  
-      private void DashAction()
-      {
-          _dashDuration -= Time.deltaTime;
-          if (_dashDuration <= 0)
-          {
-              Debug.Log(_dashDuration);
-              _rb.velocity = Vector3.zero;
-              MoveToState(PlayerState.Idle);
-              StartCoroutine(DashCooldown());
-          }
-  
-      }
-  
-      IEnumerator DashCooldown()
-      {
-          yield return new WaitForSeconds(timeBetweenDashes);
-          _canDash = true;
-      }
+      
       
       private void LookAtMousePosition()
       {
-          _ray = _camera.ScreenPointToRay(_mousePosition);
-          RaycastHit hit;
-          if (Physics.Raycast(_ray, out hit))
+          if (!allowEightDirectionsMovement || _state == PlayerState.Idle)
           {
-              Vector3 playerToMouse = hit.point - transform.position;
-              playerToMouse.y = 0;
-              Quaternion rotation = Quaternion.LookRotation(playerToMouse);
-              _rb.MoveRotation(rotation);
+              Vector3 mousePosition = _camera.ScreenToWorldPoint(new Vector3(_mousePosition.x, _mousePosition.y, _camera.transform.position.y));
+              Vector3 directionFromCharacterToMouse = mousePosition - transform.position;
+              directionFromCharacterToMouse.y = 0f;
+          
+              if (directionFromCharacterToMouse != Vector3.zero)
+              {
+                  Quaternion rotation = Quaternion.LookRotation(directionFromCharacterToMouse);
+                  transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+              } 
           }
+      }
+
+      private void LookAtWalkDirection(Vector3 movementDirection)
+      {
+          transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movementDirection), rotationSpeed * Time.deltaTime);
       }
 }
