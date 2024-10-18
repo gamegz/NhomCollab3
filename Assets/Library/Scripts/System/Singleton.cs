@@ -1,4 +1,4 @@
-using Core.Logging;
+
 using UnityEngine;
 
 namespace Core.Patterns {
@@ -21,7 +21,7 @@ namespace Core.Patterns {
                     if (_instance == null) {
                         var instances = FindObjectsOfType<T>();
                         if (instances.Length > 1) {
-                            NCLogger.Log("More than one instance of singleton found in scene!", LogLevel.WARNING);
+                            Debug.LogWarning("More than one instance of singleton found in scene!");
                         }
 
                         if (instances.Length > 0) {
@@ -31,7 +31,7 @@ namespace Core.Patterns {
                     }
 
                     if (_instance == null) {
-                        NCLogger.Log($"No instances found, creating new {typeof(T)} instance.");
+                       Debug.Log($"No instances found, creating new {typeof(T)} instance.");
                         _instance = new GameObject($"{typeof(T)} (singleton)").AddComponent<T>();
                         
                     }
@@ -68,7 +68,7 @@ namespace Core.Patterns {
                     if (_instance == null) {
                         var instances = FindObjectsOfType<T>();
                         if (instances.Length > 1) {
-                            NCLogger.Log("More than one instance of singleton found in scene!", LogLevel.WARNING);
+                            Debug.LogWarning("More than one instance of singleton found in scene!");
                         }
 
                         if (instances.Length > 0) {
@@ -78,7 +78,7 @@ namespace Core.Patterns {
                     }
 
                     if (_instance == null) {
-                        NCLogger.Log($"No instances found, creating new {typeof(T)} instance.");
+                        Debug.Log($"No instances found, creating new {typeof(T)} instance.");
                         _instance = new GameObject($"{typeof(T)} (singleton)").AddComponent<T>();
                         
                     }
