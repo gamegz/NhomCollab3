@@ -17,7 +17,8 @@ public class WeaponManager : MonoBehaviour
      This prevent player from registering normal attack as charge attack
      */
     [SerializeField] private float _innitNormalToChargeAttackDelay; // This one
-
+    [SerializeField] private WeaponData swordData;
+    [SerializeField] private GameObject templateWeaponModel;
     //------------------------
 
     //Since each weapon have different delay time, need to overwrite the SO_WeaponData each time _currentWeapon value changes
@@ -25,6 +26,18 @@ public class WeaponManager : MonoBehaviour
     private void Awake()
     {
         _playerInput = new PlayerInput();
+        weaponList.Add(_currentWeapon);
+        if (weaponList.Count > 0)
+        {
+            //Innit(weaponList[0]);
+            _currentWeapon = weaponList[0];
+            //Debug.Log(_currentWeapon.weaponModel);
+            Debug.Log(weaponList.Count);
+        }
+        else
+        {
+            //Debug.Log("weaponList is empty");
+        }
     }
 
     void OnEnable()
@@ -32,8 +45,6 @@ public class WeaponManager : MonoBehaviour
         _playerInput.Enable();
         _playerInput.Player.Attack.performed += OnAttackInputPerform;
         _playerInput.Player.Attack.canceled += OnAttackInputEnd;
-
-
     }
 
     private void OnDisable()
@@ -48,12 +59,19 @@ public class WeaponManager : MonoBehaviour
     {
         //Set current weapon
         //Enable Current weapon
+        
+        _currentWeapon = StartingWeapon;
+        //_currentWeapon.weaponModel.SetActive(true);
     }
 
     //Just add more stuff in here so it keep track of the time for charge attack and cooldown
     private void OnAttackInputPerform(InputAction.CallbackContext context)
     {
-
+        if (_currentWeapon == null)
+        {
+            //Debug.Log("there is currently no weapon");
+            return;
+        }
         _currentWeapon.OnInnitNormalAttack(); //Like this
     }
 
@@ -77,7 +95,6 @@ public class WeaponManager : MonoBehaviour
         {
             activeState = (i == _weaponIndex) ? true : false;
             weaponList[i].weaponModel.SetActive(activeState);
-
             i++;
         }
 

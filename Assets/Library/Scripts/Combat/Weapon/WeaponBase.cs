@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class WeaponBase
+public abstract class WeaponBase : MonoBehaviour
 {
     public enum WeaponType
     {
@@ -14,7 +14,7 @@ public abstract class WeaponBase
     [Header("WEAPON CONFIG")] 
     public GameObject weaponModel;
     [SerializeField] protected LayerMask _layerData;
-    //SerializeField] protected WeaponData _weaponData; //Make an SO with all it's atributes in it (See NOTION)
+    public WeaponData _weaponData; //Make an SO with all it's atributes in it (See NOTION)
     /// <summary>
     /// Add anything you want the weapon to do before innitialization here
     /// Like model, effects, Dotween and stuff like that
