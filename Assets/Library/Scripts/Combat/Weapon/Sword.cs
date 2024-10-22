@@ -8,15 +8,15 @@ public class Sword : WeaponBase
 
     public override void OnInnitNormalAttack()
     {
-        Debug.Log("attack");
-        Debug.Log(_weaponData.baseDamage);
+        //Debug.Log("attack");
+        //Debug.Log(_weaponData.baseDamage);
         this.GetComponent<BoxCollider>().enabled = true;
         StartCoroutine(WaitToTurnOffBoxCollider());
     }
 
     public override void OnStopInnitNormalAttack()
     {
-        Debug.Log("stop normal attack");
+        //Debug.Log("stop normal attack");
     }
 
     public override void OnInnitSecondaryAttack()

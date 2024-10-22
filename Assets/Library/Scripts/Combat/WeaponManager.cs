@@ -32,8 +32,8 @@ public class WeaponManager : MonoBehaviour
         {
             Innit(weaponList[0]);
             _currentWeapon = weaponList[0];
-            Debug.Log(_currentWeapon.weaponModel);
-            Debug.Log(weaponList.Count);
+            //Debug.Log(_currentWeapon.weaponModel);
+            //Debug.Log(weaponList.Count);
         }
         else
         {

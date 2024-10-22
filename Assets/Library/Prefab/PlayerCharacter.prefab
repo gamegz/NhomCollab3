@@ -418,7 +418,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb: {fileID: 8382900440726366155}
-  _playerBody: {fileID: 0}
+  _playerBody: {fileID: 243783853185197192}
   dashMaxDuration: 0.11
   dashForce: 20
   playerSpeed: 8.67
