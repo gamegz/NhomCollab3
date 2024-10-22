@@ -14,6 +14,10 @@ public enum PlayerState
 
 public class PlayerMovement : MonoBehaviour
 {
+      [Header("References")]
+      [SerializeField]private Rigidbody _rb;
+      [SerializeField]private GameObject _playerBody;
+      
       private PlayerInput _playerInput;
       private float _dashDuration;
       [SerializeField] private float dashMaxDuration;
@@ -26,7 +30,6 @@ public class PlayerMovement : MonoBehaviour
       private bool _isPressDash;
       private bool _canDash;
       private Vector2 _movement;
-      private Rigidbody _rb;
       private PlayerState _state;
       private Camera _camera;
       private Ray _ray;
@@ -37,7 +40,6 @@ public class PlayerMovement : MonoBehaviour
       {
           _camera = Camera.main;
           _canDash = true;
-          _rb = GetComponent<Rigidbody>();
           MoveToState(PlayerState.Idle);
           _playerInput = new PlayerInput();
       }
@@ -207,19 +209,19 @@ public class PlayerMovement : MonoBehaviour
           if (!allowEightDirectionsMovement || _state == PlayerState.Idle)
           {
               Vector3 mousePosition = _camera.ScreenToWorldPoint(new Vector3(_mousePosition.x, _mousePosition.y, _camera.transform.position.y));
-              Vector3 directionFromCharacterToMouse = mousePosition - transform.position;
+              Vector3 directionFromCharacterToMouse = mousePosition - _playerBody.transform.position;
               directionFromCharacterToMouse.y = 0f;
           
               if (directionFromCharacterToMouse != Vector3.zero)
               {
                   Quaternion rotation = Quaternion.LookRotation(directionFromCharacterToMouse);
-                  transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+                  _playerBody.transform.rotation = Quaternion.Slerp(_playerBody.transform.rotation, rotation, rotationSpeed * Time.deltaTime);
               } 
           }
       }
 
       private void LookAtWalkDirection(Vector3 movementDirection)
       {
-          transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movementDirection), rotationSpeed * Time.deltaTime);
+          _playerBody.transform.rotation = Quaternion.Slerp(_playerBody.transform.rotation, Quaternion.LookRotation(movementDirection), rotationSpeed * Time.deltaTime);
       }
 }
