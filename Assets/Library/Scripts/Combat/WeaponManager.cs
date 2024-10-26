@@ -192,11 +192,13 @@ public class WeaponManager : MonoBehaviour
                 else
                 {
                     weaponList.Add(weaponToAdd);
+                    
                     _currentWeapon.weaponModel.SetActive(false);
                 }
                 _currentWeapon = weaponToAdd;
+                Debug.Log(_currentWeapon);
+                _currentWeapon.transform.SetParent(this.transform);
                 _weaponIndex = weaponList.IndexOf(_currentWeapon);
-                _currentWeapon.transform.SetParent(transform);
                 _currentWeapon.transform.position = this.transform.position;
                 _currentWeapon.transform.rotation = this.transform.rotation;
                 _currentWeapon.GetComponentInChildren<BoxCollider>().enabled = false;

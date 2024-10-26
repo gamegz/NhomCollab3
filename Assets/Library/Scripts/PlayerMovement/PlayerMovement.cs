@@ -9,7 +9,6 @@ public enum PlayerState
     Idle,
     Moving,
     Dashing,
-    StandDashing
 }
 
 public class PlayerMovement : MonoBehaviour
@@ -17,31 +16,38 @@ public class PlayerMovement : MonoBehaviour
     [Header("References")]
     [SerializeField] private Rigidbody _rb;
     [SerializeField] private GameObject _playerBody;
-
     private PlayerInput _playerInput;
-    private float _dashDuration;
-    [SerializeField] private float dashMaxDuration;
-    [SerializeField] private float dashForce;
+
+    [Header("Movement")]
     [SerializeField] private float playerSpeed;
-    [SerializeField] private float timeBetweenDashes;
-    [SerializeField] private bool allowToDashWhenStandStill;
+    [SerializeField] private float dashForce;
     [SerializeField] private float rotationSpeed;
-    [SerializeField] private bool allowEightDirectionsMovement;
-    private bool _isPressDash;
-    private bool _canDash;
+
+    [Header("Dash Manager")]
+    [SerializeField] int maxCharge = 3;
+    [SerializeField] int currentCharge;
+    [SerializeField] private float dashCooldown = 1.0f;
+    [SerializeField] private float regenCooldown = 2.0f;
+    [SerializeField] private float overheatCooldown = 5.0f;
+
+
+    //init
+    private bool isOverheated = false;
+    private Coroutine regenCoroutine;
+    private Coroutine dashCoroutine;
+
     private Vector2 _movement;
     private PlayerState _state;
     private Camera _camera;
-    private Ray _ray;
     private Vector2 _mousePosition;
 
 
     private void Awake()
     {
         _camera = Camera.main;
-        _canDash = true;
         MoveToState(PlayerState.Idle);
         _playerInput = new PlayerInput();
+        currentCharge = maxCharge;
     }
 
     private void OnEnable()
@@ -63,6 +69,8 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(_state);
+
         switch (_state)
         {
             case PlayerState.Idle:
@@ -70,26 +78,24 @@ public class PlayerMovement : MonoBehaviour
                 {
                     MoveToState(PlayerState.Moving);
                 }
-                else if (_playerInput.Player.Dash.WasReleasedThisFrame() && _canDash && allowToDashWhenStandStill)
-                {
-                    MoveToState(PlayerState.StandDashing);
-                }
                 break;
             case PlayerState.Moving:
                 if (_movement == Vector2.zero)
                 {
                     MoveToState(PlayerState.Idle);
                 }
-                else if (_playerInput.Player.Dash.WasReleasedThisFrame() && _canDash)
+                else if (_playerInput.Player.Dash.WasReleasedThisFrame())
                 {
-                    //Debug.Log("Dashing");
                     MoveToState(PlayerState.Dashing);
                 }
                 break;
             case PlayerState.Dashing:
                 break;
-            case PlayerState.StandDashing:
-                break;
+        }
+
+        if (regenCoroutine == null)  //Regen whenever not dashing
+        {
+            regenCoroutine = StartCoroutine(RegenCharge());
         }
     }
 
@@ -98,90 +104,58 @@ public class PlayerMovement : MonoBehaviour
         LookAtMousePosition();
         switch (_state)
         {
+            case PlayerState.Idle:
+                _rb.velocity = Vector3.zero;
+                break;
             case PlayerState.Moving:
                 Vector3 playerMovement = new Vector3(_movement.x, 0, _movement.y) * playerSpeed;
                 _rb.velocity = playerMovement;
-                if (allowEightDirectionsMovement)
-                {
-                    LookAtWalkDirection(playerMovement);
-                }
                 break;
             case PlayerState.Dashing:
-                DashAction();
+                if (dashCoroutine == null && currentCharge > 0)
+                {
+                    dashCoroutine = StartCoroutine(Dash());
+                }
+                else
+                {
+                    MoveToState(PlayerState.Idle);
+                }
                 break;
-            case PlayerState.StandDashing:
-                DashAction();
-                break;
         }
     }
 
-    public void Move(InputAction.CallbackContext context)
+    IEnumerator Dash()
     {
-        _movement = context.ReadValue<Vector2>();
-    }
 
-    #region Dash Handling
+        currentCharge--;
+        //DASH GOES HERE
+        _rb.AddForce(new Vector3(_movement.x, 0, _movement.y).normalized * dashForce, ForceMode.Impulse);
+        yield return new WaitForSeconds(dashCooldown);
+        MoveToState(PlayerState.Idle);
+        dashCoroutine = null;
 
-    private void StartDash()
-    {
-        //Debug.Log("Hey");
-        _canDash = false;
-        _dashDuration = dashMaxDuration;
-        _rb.velocity = new Vector3(_movement.x, 0, _movement.y).normalized * dashForce;
-    }
-
-    private void StartStandDash()
-    {
-        _canDash = false;
-        _dashDuration = dashMaxDuration;
-        Vector3 mousePosition = _camera.ScreenToWorldPoint(new Vector3(_mousePosition.x, _mousePosition.y, _camera.transform.position.y));
-        Vector3 directionFromCharacterToMouse = mousePosition - transform.position;
-        directionFromCharacterToMouse.y = 0f;
-
-        if (directionFromCharacterToMouse != Vector3.zero)
+        //Overheat check
+        if (currentCharge == 0)
         {
-            _rb.velocity = new Vector3(directionFromCharacterToMouse.x, 0, directionFromCharacterToMouse.z).normalized * dashForce;
+            StartCoroutine(HandleOverheat());
         }
-
     }
 
-    public void Dash(InputAction.CallbackContext context)
+    private IEnumerator RegenCharge()
     {
-        if (context.performed)
+        yield return new WaitForSeconds(regenCooldown);
+        if (currentCharge < maxCharge && !isOverheated) //avoid overload
         {
-            //Debug.Log("pressed dash");
-            _isPressDash = true;
+            currentCharge++;
         }
-        else if (context.canceled)
-        {
-            _isPressDash = false;
-        }
+        regenCoroutine = null;  // Reset coroutine reference when regen is done
     }
 
-    private void DashAction()
+    private IEnumerator HandleOverheat()
     {
-        _dashDuration -= Time.deltaTime;
-        if (_dashDuration <= 0)
-        {
-            //Debug.Log(_dashDuration);
-            _rb.velocity = Vector3.zero;
-            MoveToState(PlayerState.Idle);
-            StartCoroutine(DashCooldown());
-        }
-
-    }
-
-    IEnumerator DashCooldown()
-    {
-        yield return new WaitForSeconds(timeBetweenDashes);
-        _canDash = true;
-    }
-    #endregion
-
-
-    private void MousePos(InputAction.CallbackContext context)
-    {
-        _mousePosition = context.ReadValue<Vector2>();
+        isOverheated = true;
+        yield return new WaitForSeconds(overheatCooldown);
+        isOverheated = false;
     }
 
     private void MoveToState(PlayerState newState)
@@ -190,15 +164,10 @@ public class PlayerMovement : MonoBehaviour
         switch (newState)
         {
             case PlayerState.Idle:
-                _rb.velocity = Vector3.zero;
                 break;
             case PlayerState.Moving:
                 break;
             case PlayerState.Dashing:
-                StartDash();
-                break;
-            case PlayerState.StandDashing:
-                StartStandDash();
                 break;
         }
     }
@@ -206,22 +175,33 @@ public class PlayerMovement : MonoBehaviour
 
     private void LookAtMousePosition()
     {
-        if (!allowEightDirectionsMovement || _state == PlayerState.Idle)
-        {
-            Vector3 mousePosition = _camera.ScreenToWorldPoint(new Vector3(_mousePosition.x, _mousePosition.y, _camera.transform.position.y));
-            Vector3 directionFromCharacterToMouse = mousePosition - _playerBody.transform.position;
-            directionFromCharacterToMouse.y = 0f;
+        Vector3 mousePosition = _camera.ScreenToWorldPoint(new Vector3(_mousePosition.x, _mousePosition.y, _camera.transform.position.y));
+        Vector3 directionFromCharacterToMouse = mousePosition - _playerBody.transform.position;
+        directionFromCharacterToMouse.y = 0f;
 
-            if (directionFromCharacterToMouse != Vector3.zero)
-            {
-                Quaternion rotation = Quaternion.LookRotation(directionFromCharacterToMouse);
-                _playerBody.transform.rotation = Quaternion.Slerp(_playerBody.transform.rotation, rotation, rotationSpeed * Time.deltaTime);
-            }
+        if (directionFromCharacterToMouse != Vector3.zero)
+        {
+            Quaternion rotation = Quaternion.LookRotation(directionFromCharacterToMouse);
+            _playerBody.transform.rotation = Quaternion.Slerp(_playerBody.transform.rotation, rotation, rotationSpeed * Time.deltaTime);
         }
     }
-
-    private void LookAtWalkDirection(Vector3 movementDirection)
+    private void MousePos(InputAction.CallbackContext context)
     {
-        _playerBody.transform.rotation = Quaternion.Slerp(_playerBody.transform.rotation, Quaternion.LookRotation(movementDirection), rotationSpeed * Time.deltaTime);
+        _mousePosition = context.ReadValue<Vector2>();
+    }
+
+    public void Move(InputAction.CallbackContext context)
+    {
+        _movement = context.ReadValue<Vector2>();
+    }
+
+    public void Dash(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+        }
+        else if (context.canceled)
+        {
+        }
     }
 }

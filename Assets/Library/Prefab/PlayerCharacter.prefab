@@ -218,7 +218,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 166184240155598915}
+  - {fileID: 1096468074501029503}
   m_Father: {fileID: 233731215105589656}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -234,7 +234,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ea9ccbb67c159d489fc125fabd02f6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponModel: {fileID: 7320929765565542275}
+  weaponModel: {fileID: 7557078234170438079}
   _layerData:
     serializedVersion: 2
     m_Bits: 0
@@ -270,7 +270,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3668607211282260617}
   - component: {fileID: 3107791070302091922}
-  - component: {fileID: 2844146170246849415}
+  - component: {fileID: 8223221366024730654}
   m_Layer: 0
   m_Name: PlayerCharacter
   m_TagString: Untagged
@@ -346,7 +346,7 @@ MonoBehaviour:
     m_ActionName: Player/Fire[/Mouse/leftButton]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2844146170246849415}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PlayerMovement, Assembly-CSharp
         m_MethodName: Dash
         m_Mode: 0
@@ -409,7 +409,7 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &2844146170246849415
+--- !u!114 &8223221366024730654
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -423,13 +423,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rb: {fileID: 8382900440726366155}
   _playerBody: {fileID: 243783853185197192}
-  dashMaxDuration: 0.11
+  playerSpeed: 8
   dashForce: 20
-  playerSpeed: 8.67
-  timeBetweenDashes: 0.13
-  allowToDashWhenStandStill: 0
-  rotationSpeed: 10
-  allowEightDirectionsMovement: 1
+  rotationSpeed: 15
+  maxCharge: 3
+  currentCharge: 0
+  dashCooldown: 1
+  regenCooldown: 2
+  overheatCooldown: 5
 --- !u!1 &8319276657298368420
 GameObject:
   m_ObjectHideFlags: 0
@@ -545,7 +546,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1001 &2642820984351520083
+--- !u!1001 &3014077922781096815
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -556,7 +557,7 @@ PrefabInstance:
     - target: {fileID: 2802162563369293072, guid: ee79bd220d3c0514e8f2e3b82d31f1c4,
         type: 3}
       propertyPath: m_RootOrder
-      value: -1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2802162563369293072, guid: ee79bd220d3c0514e8f2e3b82d31f1c4,
         type: 3}
@@ -613,25 +614,20 @@ PrefabInstance:
       propertyPath: m_Name
       value: swordModel
       objectReference: {fileID: 0}
-    - target: {fileID: 4698386340031912656, guid: ee79bd220d3c0514e8f2e3b82d31f1c4,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee79bd220d3c0514e8f2e3b82d31f1c4, type: 3}
---- !u!4 &166184240155598915 stripped
+--- !u!4 &1096468074501029503 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2802162563369293072, guid: ee79bd220d3c0514e8f2e3b82d31f1c4,
     type: 3}
-  m_PrefabInstance: {fileID: 2642820984351520083}
+  m_PrefabInstance: {fileID: 3014077922781096815}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &7320929765565542275 stripped
+--- !u!1 &7557078234170438079 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4698386340031912656, guid: ee79bd220d3c0514e8f2e3b82d31f1c4,
     type: 3}
-  m_PrefabInstance: {fileID: 2642820984351520083}
+  m_PrefabInstance: {fileID: 3014077922781096815}
   m_PrefabAsset: {fileID: 0}
