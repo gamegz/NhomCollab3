@@ -17,7 +17,7 @@ MonoBehaviour:
   critDamageMultiplier: 0
   critChance: 0
   attackSpeed: 2
-  attackRecoverSpeed: 1
+  chargeAttackSpeed: 3
+  chargeAttackDamage: 12
   attackStaggerForce: 0
-  weaponModel: {fileID: 4698386340031912656, guid: ee79bd220d3c0514e8f2e3b82d31f1c4,
-    type: 3}
+  holdThreshold: 3
