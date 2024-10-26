@@ -5,26 +5,34 @@ using UnityEngine.InputSystem;
 
 public class WeaponManager : MonoBehaviour
 {
-    public List<WeaponBase> weaponList = new List<WeaponBase>();
-
+    //Unity new Input system
     public PlayerInput _playerInput;
 
+    //Weapon List attribute
+    public List<WeaponBase> weaponList = new List<WeaponBase>();
     private WeaponBase _currentWeapon;
     private int _maxWeaponNum = 2;
     private int _weaponIndex = 0;
+
+    //cooldown timer for normal attack and time between normal and charge attack
     private bool _isNormalAttack = true;
     private bool isAttack = false;
     private float cooldownTimer = 0f;
+
+    //charge attack timer
     private float _holdTime = 0f;
     private bool _isHoldAttack = false;
     private bool _startHold = false;
     /*IF you want to make the hold attacks. Try make a delay BEFORE starting the hold check
      This prevent player from registering normal attack as charge attack
      */
-    [SerializeField] private LayerMask layerToCheck;
-    private Transform playerTransform;
-    [SerializeField] private float _innitNormalToChargeAttackDelay; // This one
+
+    [Header("WeaponCollectRange")]
     [SerializeField] private float collectRange;
+
+    private Transform playerTransform;
+    [SerializeField] private LayerMask layerToCheck;
+    [SerializeField] private float _innitNormalToChargeAttackDelay; // This one
     //[SerializeField] private WeaponData swordData;
     //[SerializeField] private GameObject templateWeaponModel;
     //------------------------
@@ -50,17 +58,16 @@ public class WeaponManager : MonoBehaviour
 
     private void Update()
     {
-        if (_startHold)
+        if (_startHold) // hold timer for charge attack
         {
             _holdTime += Time.deltaTime;
-            //Debug.Log(_holdTime);
-            if(_holdTime >= _currentWeapon._weaponData.holdThreshold)
-            {
-                _isHoldAttack = true;
+            if(_holdTime >= _currentWeapon._weaponData.holdThreshold) // if the player hold the attack button long enough or longer than the threshold give by the current weapon
+            {                                                           //then it will notice the system to know that it is a hold attack which will notice the OnAttackInputEnd()
+                _isHoldAttack = true;                                   // method that it is a hold attack (_isHoldAttack) 
                 _isNormalAttack = false;
             }  
         }
-        if (isAttack)
+        if (isAttack) // cooldown timer betweeen attack and between normal attack and charge attack
         {
             cooldownTimer -= Time.deltaTime;
             Debug.Log("cooldown: " + cooldownTimer);
@@ -72,7 +79,7 @@ public class WeaponManager : MonoBehaviour
         }
     }
 
-    void OnEnable()
+    void OnEnable() 
     {
         _playerInput.Enable();
         _playerInput.Player.Attack.performed += OnAttackInputPerform;
@@ -84,7 +91,7 @@ public class WeaponManager : MonoBehaviour
         
     }
 
-    private void OnDisable()
+    private void OnDisable() 
     {
         _playerInput.Disable();
         _playerInput.Player.Attack.performed -= OnAttackInputPerform;
@@ -95,7 +102,7 @@ public class WeaponManager : MonoBehaviour
         _playerInput.Player.OnSwitchWeapon.canceled -= OnSwitchWeapon;
     }
 
-    private void Innit(WeaponBase StartingWeapon)
+    private void Innit(WeaponBase StartingWeapon) 
     {
         //Set current weapon
         //Enable Current weapon
@@ -104,7 +111,6 @@ public class WeaponManager : MonoBehaviour
         _currentWeapon.GetComponent<BoxCollider>().enabled = false;
     }
 
-    //Just add more stuff in here so it keep track of the time for charge attack and cooldown
     private void OnAttackInputPerform(InputAction.CallbackContext context)
     {
         if (_currentWeapon == null)
@@ -112,28 +118,28 @@ public class WeaponManager : MonoBehaviour
             Debug.Log("there is currently no weapon");
             return;
         }
-        _startHold = true;
-        _holdTime = 0f;
+        _startHold = true; 
+        _holdTime = 0f; // always set the _holdTimer back to 0 when start click to avoid accumulate holdTime if player just do normal attack
     }
 
-    private void OnAttackInputEnd(InputAction.CallbackContext context)
+    private void OnAttackInputEnd(InputAction.CallbackContext context) // this is Unity new input event for when the player release the mouse button
     {
-        Debug.Log("release");
-        if (_isHoldAttack)
+        //_isHoldAttack = true then charge attack and set the cooldown to weapon normal/charge attack speed and then start cooldown
+        if (_isHoldAttack) 
         {
             Debug.Log("ChargeAttack");
-            _currentWeapon.OnInnitSecondaryAttack();
+            _currentWeapon.OnInnitSecondaryAttack(); 
             _startHold = false;
-            cooldownTimer = _currentWeapon._weaponData.chargeAttackSpeed;
+            cooldownTimer = _currentWeapon._weaponData.chargeAttackSpeed; 
         }
-        else if (_isNormalAttack)
+        else if (_isNormalAttack) //if going for combo just focus on this statement
         {
             Debug.Log("Attack");
-            _currentWeapon.OnInnitNormalAttack(); //Like this
-            cooldownTimer = _currentWeapon._weaponData.attackSpeed;
+            _currentWeapon.OnInnitNormalAttack();
+            cooldownTimer = _currentWeapon._weaponData.attackSpeed; 
         }
-        isAttack = true;
-        ResetAttackState();
+        isAttack = true; // set the isAttack = true again so that it will start cooldown, avoid attack with no cooldown
+        ResetAttackState(); 
     }
 
     private void ResetAttackState()
@@ -144,70 +150,67 @@ public class WeaponManager : MonoBehaviour
         _isNormalAttack = false;
     }
 
-    private void OnTryWeaponSwitch()
+    private void OnTryWeaponSwitch() // this function only get call when the OnWeaponSwitch() method get call
     {
         if(weaponList.Count <= 1) { return; }
 
         //Try get next weapon in list
-
-        //_weaponIndex++;
-        //_weaponIndex = Mathf.Clamp(_weaponIndex, 0, weaponList.Count - 1);
-        _weaponIndex = (_weaponIndex + 1) % weaponList.Count;
+        //Switch between 2 weapon in the list
+        _weaponIndex = (_weaponIndex + 1) % weaponList.Count; // modulo to cycle through the weapon list
         bool activeState;
         for (int i = 0; i < weaponList.Count;)
         {
-            activeState = (i == _weaponIndex) ? true : false;
+            activeState = (i == _weaponIndex) ? true : false; 
             weaponList[i].weaponModel.SetActive(activeState);
             if(activeState)
             {
-                _currentWeapon = weaponList[i];
+                _currentWeapon = weaponList[i]; 
             }
             i++;
         }
-
     }
 
-    private void OnTryPickUpWeapon()
+    private void OnTryPickUpWeapon() // this function only call when the OnPickUpWeapon() method get call
     {
-        //if(weaponList.Count == _maxWeaponNum) { return; }
         //Sphere cast To check for weapon
         //Compare distance when detect more than 1 weapon
         //Try pick up close weapon
-        Collider[] hitColliders = Physics.OverlapSphere(playerTransform.position, collectRange, layerToCheck);
+        //If there is no space for more weapon throw the current equppied one and pick up the one on the ground else just pick up new weapon and add to list (maximum space: 2)
+        Collider[] hitColliders = Physics.OverlapSphere(playerTransform.position, collectRange, layerToCheck); 
         foreach (var hitCollider in hitColliders)
         {
-            float distanceFromItemToPlayer = Vector3.Distance(hitCollider.transform.position, playerTransform.position);
-            if (distanceFromItemToPlayer <= collectRange)
+            float distanceFromItemToPlayer = Vector3.Distance(hitCollider.transform.position, playerTransform.position); 
+            if (distanceFromItemToPlayer <= collectRange) 
             {
                 Debug.Log(hitCollider.gameObject.name);
-                WeaponBase weaponToAdd = hitCollider.GetComponentInChildren<WeaponBase>();
-                if (weaponList.Count >= _maxWeaponNum)
+                WeaponBase weaponToAdd = hitCollider.GetComponentInChildren<WeaponBase>(); // will get the script of the weapon the sphere hit
+                if (weaponList.Count >= _maxWeaponNum) 
                 {
                     //Replace weapon? 
-                    weaponList.Remove(_currentWeapon);
-                    _currentWeapon.transform.SetParent(null, true);
-                    _currentWeapon.GetComponent<BoxCollider>().enabled = true;
-                    weaponList.Add(weaponToAdd);
+                    weaponList.Remove(_currentWeapon); 
+                    _currentWeapon.transform.SetParent(null, true); 
+                    _currentWeapon.GetComponent<BoxCollider>().enabled = true; 
+                    weaponList.Add(weaponToAdd); 
                 }
-                else
+                else 
                 {
                     weaponList.Add(weaponToAdd);
                     
-                    _currentWeapon.weaponModel.SetActive(false);
+                    _currentWeapon.weaponModel.SetActive(false); 
                 }
-                _currentWeapon = weaponToAdd;
-                Debug.Log(_currentWeapon);
-                _currentWeapon.transform.SetParent(this.transform);
-                _weaponIndex = weaponList.IndexOf(_currentWeapon);
-                _currentWeapon.transform.position = this.transform.position;
-                _currentWeapon.transform.rotation = this.transform.rotation;
-                _currentWeapon.GetComponentInChildren<BoxCollider>().enabled = false;
+                // the whole section below is to set up the weapon we just pick up and set the boxCollider to false to immediately attack when pick up
+                _currentWeapon = weaponToAdd; 
+                _currentWeapon.transform.SetParent(this.transform); 
+                _weaponIndex = weaponList.IndexOf(_currentWeapon); 
+                _currentWeapon.transform.position = this.transform.position; 
+                _currentWeapon.transform.rotation = this.transform.rotation; 
+                _currentWeapon.GetComponentInChildren<BoxCollider>().enabled = false; 
                 Debug.Log("current weapon: " + _currentWeapon);
             }
         }
     }
 
-    private void OnPickUpWeapon(InputAction.CallbackContext context)
+    private void OnPickUpWeapon(InputAction.CallbackContext context) // this function will get call once when we pick up weapon (which is the "F" key)
     {
         
 
@@ -222,7 +225,6 @@ public class WeaponManager : MonoBehaviour
     {
         if (context.performed)
         {
-            //Debug.Log("switch");
             OnTryWeaponSwitch();
         }
     }

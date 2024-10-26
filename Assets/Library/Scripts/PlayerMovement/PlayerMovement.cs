@@ -69,8 +69,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(_state);
-
+        // If the player in the current state and meet the condition then move to the next state using MoveToState() method
         switch (_state)
         {
             case PlayerState.Idle:
@@ -84,7 +83,7 @@ public class PlayerMovement : MonoBehaviour
                 {
                     MoveToState(PlayerState.Idle);
                 }
-                else if (_playerInput.Player.Dash.WasReleasedThisFrame())
+                else if (_playerInput.Player.Dash.WasPressedThisFrame())
                 {
                     MoveToState(PlayerState.Dashing);
                 }
@@ -102,7 +101,7 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         LookAtMousePosition();
-        switch (_state)
+        switch (_state) // this is action if they are in the state then what will happen to the character and in a FixedUpdate to handle physics
         {
             case PlayerState.Idle:
                 _rb.velocity = Vector3.zero;
@@ -158,7 +157,7 @@ public class PlayerMovement : MonoBehaviour
         isOverheated = false;
     }
 
-    private void MoveToState(PlayerState newState)
+    private void MoveToState(PlayerState newState) 
     {
         _state = newState;
         switch (newState)
@@ -173,7 +172,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-    private void LookAtMousePosition()
+    private void LookAtMousePosition() //Look at player mouse position
     {
         Vector3 mousePosition = _camera.ScreenToWorldPoint(new Vector3(_mousePosition.x, _mousePosition.y, _camera.transform.position.y));
         Vector3 directionFromCharacterToMouse = mousePosition - _playerBody.transform.position;
