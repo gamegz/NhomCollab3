@@ -6,6 +6,8 @@ using FiniteStateMachine.State;
 
 namespace Enemy.statemachine
 {
+    //Handle switching state logic
+    //Handle state logic
     public class BaseEnemyState : StateMachineBaseState
     {
         protected EnemyBase _enemyAgent;

@@ -9,12 +9,12 @@ namespace FiniteStateMachine
     {
         public StateMachineBaseState _currentState;
               
-        public StateMachine(StateMachineBaseState startState)
-        {
-            SetStartState(_currentState);
-        }
+        //public StateMachine(StateMachineBaseState startState)
+        //{
+        //    SetStartState(_currentState);
+        //}
 
-        protected void SetStartState(StateMachineBaseState StartingState)
+        public virtual void SetStartState(StateMachineBaseState StartingState)
         {
             _currentState = StartingState;
             _currentState.EnterState();
