@@ -71,6 +71,24 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""OnPickUpWeapon"",
+                    ""type"": ""Button"",
+                    ""id"": ""0f489102-013f-4b8b-acb5-ea1b7ca1fac4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""OnSwitchWeapon"",
+                    ""type"": ""Button"",
+                    ""id"": ""813f8e7e-705a-41cf-9ac4-6786613cebee"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -313,6 +331,28 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""MousePos"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8280724e-10ee-48f6-b4f9-eaff36e87ec2"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""OnPickUpWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""19ceff18-bd9c-43bb-8cec-94ddec442c6a"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""OnSwitchWeapon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -905,6 +945,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
         m_Player_MousePos = m_Player.FindAction("MousePos", throwIfNotFound: true);
+        m_Player_OnPickUpWeapon = m_Player.FindAction("OnPickUpWeapon", throwIfNotFound: true);
+        m_Player_OnSwitchWeapon = m_Player.FindAction("OnSwitchWeapon", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -983,6 +1025,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_Dash;
     private readonly InputAction m_Player_MousePos;
+    private readonly InputAction m_Player_OnPickUpWeapon;
+    private readonly InputAction m_Player_OnSwitchWeapon;
     public struct PlayerActions
     {
         private @PlayerInput m_Wrapper;
@@ -992,6 +1036,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @Attack => m_Wrapper.m_Player_Attack;
         public InputAction @Dash => m_Wrapper.m_Player_Dash;
         public InputAction @MousePos => m_Wrapper.m_Player_MousePos;
+        public InputAction @OnPickUpWeapon => m_Wrapper.m_Player_OnPickUpWeapon;
+        public InputAction @OnSwitchWeapon => m_Wrapper.m_Player_OnSwitchWeapon;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1016,6 +1062,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @MousePos.started += instance.OnMousePos;
             @MousePos.performed += instance.OnMousePos;
             @MousePos.canceled += instance.OnMousePos;
+            @OnPickUpWeapon.started += instance.OnOnPickUpWeapon;
+            @OnPickUpWeapon.performed += instance.OnOnPickUpWeapon;
+            @OnPickUpWeapon.canceled += instance.OnOnPickUpWeapon;
+            @OnSwitchWeapon.started += instance.OnOnSwitchWeapon;
+            @OnSwitchWeapon.performed += instance.OnOnSwitchWeapon;
+            @OnSwitchWeapon.canceled += instance.OnOnSwitchWeapon;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -1035,6 +1087,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @MousePos.started -= instance.OnMousePos;
             @MousePos.performed -= instance.OnMousePos;
             @MousePos.canceled -= instance.OnMousePos;
+            @OnPickUpWeapon.started -= instance.OnOnPickUpWeapon;
+            @OnPickUpWeapon.performed -= instance.OnOnPickUpWeapon;
+            @OnPickUpWeapon.canceled -= instance.OnOnPickUpWeapon;
+            @OnSwitchWeapon.started -= instance.OnOnSwitchWeapon;
+            @OnSwitchWeapon.performed -= instance.OnOnSwitchWeapon;
+            @OnSwitchWeapon.canceled -= instance.OnOnSwitchWeapon;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -1222,6 +1280,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnAttack(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
         void OnMousePos(InputAction.CallbackContext context);
+        void OnOnPickUpWeapon(InputAction.CallbackContext context);
+        void OnOnSwitchWeapon(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

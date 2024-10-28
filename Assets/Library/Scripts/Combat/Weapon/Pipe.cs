@@ -1,24 +1,24 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Sword : WeaponBase
+public class Pipe : WeaponBase
 {
+    private bool _isChargeAttack = false;
     public override void OnInnitNormalAttack()
     {
-        Debug.Log("attack");
+        Debug.Log("PipeAttack");
         StartCoroutine(WaitToTurnOffBoxCollider());
     }
 
     public override void OnStopInnitNormalAttack()
     {
-        //Debug.Log("stop normal attack");
+
     }
 
     public override void OnInnitSecondaryAttack()
     {
-        Debug.Log("charge attack");
+        Debug.Log("PipeChargeAttack");
         StartCoroutine(WaitToTurnOffBoxCollider());
     }
 
@@ -31,10 +31,11 @@ public class Sword : WeaponBase
 
     private void OnTriggerEnter(Collider other)
     {
-       IDamageable damageable = other.GetComponent<IDamageable>();
+        IDamageable damageable = other.GetComponent<IDamageable>();
         if (damageable != null)
         {
-            
+
         }
     }
+
 }

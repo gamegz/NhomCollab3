@@ -162,11 +162,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2758309433295606730}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.6799998, y: 0, z: 0.119999886}
+  m_LocalPosition: {x: -0.01999998, y: 0, z: 0.73}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 6774433197006951823}
+  m_Children: []
   m_Father: {fileID: 8012560186638218481}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -183,79 +182,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponList: []
+  collectRange: 3
+  layerToCheck:
+    serializedVersion: 2
+    m_Bits: 64
   _innitNormalToChargeAttackDelay: 0
---- !u!1 &6983169098486032399
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6774433197006951823}
-  - component: {fileID: 1147460681509287499}
-  - component: {fileID: 5273463821554906400}
-  m_Layer: 0
-  m_Name: Weapon
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6774433197006951823
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6983169098486032399}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.7, y: 0, z: 0.61}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 233731215105589656}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1147460681509287499
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6983169098486032399}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ea9ccbb67c159d489fc125fabd02f6a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weaponModel: {fileID: 4698386340031912656, guid: ee79bd220d3c0514e8f2e3b82d31f1c4,
-    type: 3}
-  _layerData:
-    serializedVersion: 2
-    m_Bits: 0
-  _weaponData: {fileID: 11400000, guid: 05084c954f4b30047946f8ca05c63d2e, type: 2}
---- !u!65 &5273463821554906400
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6983169098486032399}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1.2166166}
-  m_Center: {x: 0, y: 0, z: 0.4754467}
 --- !u!1 &7728795428013802694
 GameObject:
   m_ObjectHideFlags: 0
@@ -266,7 +197,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3668607211282260617}
   - component: {fileID: 3107791070302091922}
-  - component: {fileID: 2844146170246849415}
+  - component: {fileID: 8223221366024730654}
   m_Layer: 0
   m_Name: PlayerCharacter
   m_TagString: Untagged
@@ -342,7 +273,7 @@ MonoBehaviour:
     m_ActionName: Player/Fire[/Mouse/leftButton]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2844146170246849415}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PlayerMovement, Assembly-CSharp
         m_MethodName: Dash
         m_Mode: 0
@@ -405,7 +336,7 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &2844146170246849415
+--- !u!114 &8223221366024730654
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -419,13 +350,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rb: {fileID: 8382900440726366155}
   _playerBody: {fileID: 243783853185197192}
-  dashMaxDuration: 0.11
+  playerSpeed: 8
   dashForce: 20
-  playerSpeed: 8.67
-  timeBetweenDashes: 0.13
-  allowToDashWhenStandStill: 0
-  rotationSpeed: 10
-  allowEightDirectionsMovement: 1
+  rotationSpeed: 15
+  maxCharge: 3
+  currentCharge: 0
+  dashCooldown: 1
+  regenCooldown: 2
+  overheatCooldown: 5
 --- !u!1 &8319276657298368420
 GameObject:
   m_ObjectHideFlags: 0
