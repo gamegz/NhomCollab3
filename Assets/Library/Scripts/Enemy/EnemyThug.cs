@@ -8,7 +8,9 @@ namespace Enemy.variant
 {
     public class EnemyThug : EnemyBase
     {
-        protected EnemyRoamState _enemyRoamState;
+        private EnemyRoamState _enemyRoamState;
+        private EnemyChaseState _enemyChaseState;
+        private EnemyAttackDirState _enemyAttackDirState;
 
         public override void Awake()
         {
@@ -18,8 +20,10 @@ namespace Enemy.variant
         public override void SetUpStateMachine()
         {
             base.SetUpStateMachine();
-            _enemyRoamState = new EnemyRoamState(this, _stateMachine);
-            _stateMachine.SetStartState(_enemyRoamState);
+            enemyRoamState = new EnemyRoamState(this, _stateMachine);
+            enemyChaseState = new EnemyChaseState(this, _stateMachine);
+            enemyAttackState = new EnemyAttackDirState(this, _stateMachine);
+            _stateMachine.SetStartState(enemyRoamState);
         }
 
 

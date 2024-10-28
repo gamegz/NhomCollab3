@@ -2,17 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyAttackState : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+namespace Enemy.statemachine.States
+{
+    public class EnemyAttackState : BaseEnemyState
     {
-        
+        public EnemyAttackState(EnemyBase enemy, EnemyStateMachine enemyStateMachine) : base(enemy, enemyStateMachine)
+        {
+        }
+
+        public override void EnterState()
+        {
+            
+        }
+
+        public override void ExitState()
+        {
+            
+        }
+
+        public override void FixedUpdateS()
+        {
+            
+        }
+
+        public override void UpdateState()
+        {
+            
+        }
     }
 }
+

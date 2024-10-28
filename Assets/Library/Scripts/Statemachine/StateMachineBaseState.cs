@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace FiniteStateMachine.State
 {
-    public abstract class StateMachineBaseState
+    public abstract class StateMachineBaseState : MonoBehaviour
     {
         
         public abstract void EnterState();

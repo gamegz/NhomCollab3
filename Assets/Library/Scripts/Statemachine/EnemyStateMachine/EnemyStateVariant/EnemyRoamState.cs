@@ -6,6 +6,8 @@ namespace Enemy.statemachine.States
 {
     public class EnemyRoamState : BaseEnemyState
     {
+        private EnemyChaseState _enemyChaseState;
+
         private Vector3 _roamLocation;
 
         float _currentRoamTimeCountDown;
@@ -14,8 +16,13 @@ namespace Enemy.statemachine.States
         public EnemyRoamState(EnemyBase enemy, EnemyStateMachine enemyStateMachine) : base(enemy, enemyStateMachine)
         {
 
-        }
+            if(enemy.TryGetComponent(out EnemyChaseState enemyChaseState))
+            {
+                _enemyChaseState = enemyChaseState;
+            }
 
+            
+        }
         
 
         public override void EnterState()
@@ -42,13 +49,11 @@ namespace Enemy.statemachine.States
             else {
                 ChangeRoamLocation();
             }
-
             
-
 
             if (_enemy.isTargetInChaseRange)
             {
-                //_ownerStateMachine.SwitchState()
+                _ownerStateMachine.SwitchState(_enemy.enemyChaseState);
             }
         }
 

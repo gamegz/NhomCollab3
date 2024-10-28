@@ -52,7 +52,10 @@ namespace Enemy
         [SerializeField] private int _dropValue;
 
         //Statemachine
-        protected EnemyStateMachine _stateMachine;  
+        protected EnemyStateMachine _stateMachine;
+        public EnemyRoamState enemyRoamState;
+        public EnemyAttackState enemyAttackState;
+        public EnemyChaseState enemyChaseState;
         
         public enum DeathMethod
         {
@@ -74,6 +77,10 @@ namespace Enemy
         public virtual void SetUpStateMachine()
         {
             _stateMachine = new EnemyStateMachine();
+            enemyRoamState = new EnemyRoamState(this, _stateMachine);
+            enemyChaseState = new EnemyChaseState(this, _stateMachine);
+            enemyAttackState = new EnemyAttackState(this, _stateMachine);
+            _stateMachine.SetStartState(enemyRoamState);
         }
 
         private void Start()

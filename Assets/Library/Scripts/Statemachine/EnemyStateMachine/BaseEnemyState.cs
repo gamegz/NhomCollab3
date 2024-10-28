@@ -9,7 +9,14 @@ namespace Enemy.statemachine
 {
     //Handle switching state logic
     //Handle state logic
-    public class BaseEnemyState : StateMachineBaseState
+
+    /*
+    To create a new state:
+        Inherit from this class
+        Give coresponding Condition
+    */
+
+    public abstract class BaseEnemyState : StateMachineBaseState
     {
         protected EnemyBase _enemy;
         protected NavMeshAgent _enemyNavMeshAgent;
@@ -22,25 +29,10 @@ namespace Enemy.statemachine
             _ownerStateMachine = enemyStateMachine;
         }
 
-        public override void EnterState()
-        {
-        
-        }
-
-        public override void ExitState()
-        {
-        
-        }
-
-        public override void FixedUpdateS()
-        {
-        
-        }
-
-        public override void UpdateState()
-        {
-        
-        }
+        public abstract override  void EnterState();
+        public abstract override void FixedUpdateS();
+        public abstract override void UpdateState();
+        public abstract override void ExitState();
     }
 
 }
