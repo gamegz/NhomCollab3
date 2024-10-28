@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FiniteStateMachine.State;
+using UnityEngine.AI;
 
 
 namespace Enemy.statemachine
@@ -10,12 +11,14 @@ namespace Enemy.statemachine
     //Handle state logic
     public class BaseEnemyState : StateMachineBaseState
     {
-        protected EnemyBase _enemyAgent;
+        protected EnemyBase _enemy;
+        protected NavMeshAgent _enemyNavMeshAgent;
         protected EnemyStateMachine _ownerStateMachine;
 
         public BaseEnemyState(EnemyBase enemy, EnemyStateMachine enemyStateMachine)
         {
-            _enemyAgent = enemy;
+            _enemy = enemy;
+            _enemyNavMeshAgent = enemy.enemyNavAgent;
             _ownerStateMachine = enemyStateMachine;
         }
 
