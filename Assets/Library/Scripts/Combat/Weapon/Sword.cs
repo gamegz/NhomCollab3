@@ -5,11 +5,9 @@ using UnityEngine;
 
 public class Sword : WeaponBase
 {
-    private bool _isChargeAttack = false;
     public override void OnInnitNormalAttack()
     {
         Debug.Log("attack");
-        _isChargeAttack = false;
         StartCoroutine(WaitToTurnOffBoxCollider());
     }
 
@@ -21,7 +19,6 @@ public class Sword : WeaponBase
     public override void OnInnitSecondaryAttack()
     {
         Debug.Log("charge attack");
-        _isChargeAttack = true;
         StartCoroutine(WaitToTurnOffBoxCollider());
     }
 
@@ -37,8 +34,7 @@ public class Sword : WeaponBase
        IDamageable damageable = other.GetComponent<IDamageable>();
         if (damageable != null)
         {
-            int damageDeal = _isChargeAttack ? _weaponData.chargeAttackDamage : _weaponData.baseDamage;
-            damageable.TakeDamage(damageDeal);
+            
         }
     }
 }

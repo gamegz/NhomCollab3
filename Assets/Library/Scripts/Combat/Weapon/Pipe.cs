@@ -8,7 +8,6 @@ public class Pipe : WeaponBase
     public override void OnInnitNormalAttack()
     {
         Debug.Log("PipeAttack");
-        _isChargeAttack = false;
         StartCoroutine(WaitToTurnOffBoxCollider());
     }
 
@@ -20,7 +19,6 @@ public class Pipe : WeaponBase
     public override void OnInnitSecondaryAttack()
     {
         Debug.Log("PipeChargeAttack");
-        _isChargeAttack = true;
         StartCoroutine(WaitToTurnOffBoxCollider());
     }
 
@@ -36,8 +34,7 @@ public class Pipe : WeaponBase
         IDamageable damageable = other.GetComponent<IDamageable>();
         if (damageable != null)
         {
-            int damageDeal = _isChargeAttack ? _weaponData.chargeAttackDamage : _weaponData.baseDamage;
-            damageable.TakeDamage(damageDeal);
+
         }
     }
 

@@ -12,12 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb9ea0a7bad8e5840afadde900e6c876, type: 3}
   m_Name: Pipe
   m_EditorClassIdentifier: 
-  weaponName: 
-  baseDamage: 7
+  weaponName: Pipe
   critDamageMultiplier: 0
   critChance: 0
   attackSpeed: 2
   chargeAttackSpeed: 3
-  chargeAttackDamage: 8
   attackStaggerForce: 0
   holdThreshold: 2

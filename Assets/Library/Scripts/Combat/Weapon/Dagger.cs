@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class Dagger : WeaponBase
 {
-    private bool _isChargeAttack = false;
     public override void OnInnitNormalAttack()
     {
-        _isChargeAttack = false;
         StartCoroutine(WaitToTurnOffBoxCollider());
     }
 
@@ -19,7 +17,6 @@ public class Dagger : WeaponBase
     public override void OnInnitSecondaryAttack()
     {
         Debug.Log("chargeAttack");
-        _isChargeAttack = true;
         StartCoroutine(WaitToTurnOffBoxCollider());
     }
 
@@ -34,8 +31,7 @@ public class Dagger : WeaponBase
         IDamageable damageable = other.GetComponent<IDamageable>();
         if (damageable != null)
         {
-            int damageDeal = _isChargeAttack ? _weaponData.chargeAttackDamage : _weaponData.baseDamage;
-            damageable.TakeDamage(damageDeal);
+
         }
     }
 }

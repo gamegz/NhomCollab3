@@ -7,12 +7,10 @@ using UnityEngine.Serialization;
 public class WeaponData : ScriptableObject
 {
     public string weaponName;
-    public int baseDamage;
     public int critDamageMultiplier;
     public int critChance;
     public float attackSpeed;
     public float chargeAttackSpeed;
-    public int chargeAttackDamage;
     public int attackStaggerForce;
     public float holdThreshold;
 
