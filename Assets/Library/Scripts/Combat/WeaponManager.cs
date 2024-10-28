@@ -44,16 +44,19 @@ public class WeaponManager : MonoBehaviour
         _playerInput = new PlayerInput();
         playerTransform = transform.parent ?? transform;
         _currentWeapon = GetComponentInChildren<WeaponBase>();
-        weaponList.Add(_currentWeapon);
-        if (weaponList.Count > 0)
+        if(_currentWeapon != null)
         {
-            Innit(weaponList[0]);
-            _currentWeapon = weaponList[0];
-        }
-        else
-        {
-            Debug.Log("weaponList is empty");
-        }
+            weaponList.Add(_currentWeapon);
+            if (weaponList.Count > 0)
+            {
+                Innit(weaponList[0]);
+                _currentWeapon = weaponList[0];
+            }
+            else
+            {
+                Debug.Log("weaponList is empty");
+            }
+        } 
     }
 
     private void Update()
@@ -106,9 +109,11 @@ public class WeaponManager : MonoBehaviour
     {
         //Set current weapon
         //Enable Current weapon
-        
-        _currentWeapon = StartingWeapon;
-        _currentWeapon.GetComponent<BoxCollider>().enabled = false;
+        if(_currentWeapon != null)
+        {
+            _currentWeapon = StartingWeapon;
+            _currentWeapon.GetComponent<BoxCollider>().enabled = false;
+        } 
     }
 
     private void OnAttackInputPerform(InputAction.CallbackContext context)
@@ -124,22 +129,26 @@ public class WeaponManager : MonoBehaviour
 
     private void OnAttackInputEnd(InputAction.CallbackContext context) // this is Unity new input event for when the player release the mouse button
     {
+        if( _currentWeapon != null)
+        {
+            if (_isHoldAttack)
+            {
+                Debug.Log("ChargeAttack");
+                _currentWeapon.OnInnitSecondaryAttack();
+                _startHold = false;
+                cooldownTimer = _currentWeapon._weaponData.chargeAttackSpeed;
+            }
+            else if (_isNormalAttack) //if going for combo just focus on this statement
+            {
+                Debug.Log("Attack");
+                _currentWeapon.OnInnitNormalAttack();
+                cooldownTimer = _currentWeapon._weaponData.attackSpeed;
+            }
+            isAttack = true; // set the isAttack = true again so that it will start cooldown, avoid attack with no cooldown
+            ResetAttackState();
+        }
         //_isHoldAttack = true then charge attack and set the cooldown to weapon normal/charge attack speed and then start cooldown
-        if (_isHoldAttack) 
-        {
-            Debug.Log("ChargeAttack");
-            _currentWeapon.OnInnitSecondaryAttack(); 
-            _startHold = false;
-            cooldownTimer = _currentWeapon._weaponData.chargeAttackSpeed; 
-        }
-        else if (_isNormalAttack) //if going for combo just focus on this statement
-        {
-            Debug.Log("Attack");
-            _currentWeapon.OnInnitNormalAttack();
-            cooldownTimer = _currentWeapon._weaponData.attackSpeed; 
-        }
-        isAttack = true; // set the isAttack = true again so that it will start cooldown, avoid attack with no cooldown
-        ResetAttackState(); 
+        
     }
 
     private void ResetAttackState()
@@ -172,6 +181,7 @@ public class WeaponManager : MonoBehaviour
 
     private void OnTryPickUpWeapon() // this function only call when the OnPickUpWeapon() method get call
     {
+        
         //Sphere cast To check for weapon
         //Compare distance when detect more than 1 weapon
         //Try pick up close weapon
@@ -180,7 +190,7 @@ public class WeaponManager : MonoBehaviour
         foreach (var hitCollider in hitColliders)
         {
             float distanceFromItemToPlayer = Vector3.Distance(hitCollider.transform.position, playerTransform.position); 
-            if (distanceFromItemToPlayer <= collectRange) 
+            if (distanceFromItemToPlayer <= collectRange || distanceFromItemToPlayer <= collectRange && _currentWeapon == null) 
             {
                 Debug.Log(hitCollider.gameObject.name);
                 WeaponBase weaponToAdd = hitCollider.GetComponentInChildren<WeaponBase>(); // will get the script of the weapon the sphere hit
@@ -192,11 +202,13 @@ public class WeaponManager : MonoBehaviour
                     _currentWeapon.GetComponent<BoxCollider>().enabled = true; 
                     weaponList.Add(weaponToAdd); 
                 }
-                else 
+                else if(weaponList.Count < _maxWeaponNum) 
                 {
-                    weaponList.Add(weaponToAdd);
-                    
-                    _currentWeapon.weaponModel.SetActive(false); 
+                    weaponList.Add(weaponToAdd);  
+                    if(_currentWeapon != null)
+                    {
+                        _currentWeapon.weaponModel.SetActive(false);
+                    } 
                 }
                 // the whole section below is to set up the weapon we just pick up and set the boxCollider to false to immediately attack when pick up
                 _currentWeapon = weaponToAdd; 
