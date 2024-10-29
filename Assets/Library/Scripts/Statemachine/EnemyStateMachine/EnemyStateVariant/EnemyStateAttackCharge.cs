@@ -5,18 +5,15 @@ using UnityEngine;
 
 namespace Enemy.statemachine.States
 {
-    public class EnemyAttackDirState : EnemyAttackState
+    public class EnemyStateAttackCharge : EnemyAttackState
     {
-        private EnemyRoamState _enemyRoamState;
 
-        public EnemyAttackDirState(EnemyBase enemy, EnemyStateMachine enemyStateMachine) : base(enemy, enemyStateMachine)
+        public EnemyStateAttackCharge(EnemyBase enemy, EnemyStateMachine enemyStateMachine) : base(enemy, enemyStateMachine)
         {
         }
 
         public override void EnterState()
         {
-            Debug.Log("asdasd");
-            //base.EnterState();
             
         }
 
@@ -33,7 +30,7 @@ namespace Enemy.statemachine.States
 
             if (_enemy.isTargetInAttackRange)
             {
-                Debug.Log("asdasd");
+
             }
             else
             {

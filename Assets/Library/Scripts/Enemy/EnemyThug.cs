@@ -10,7 +10,7 @@ namespace Enemy.variant
     {
         private EnemyRoamState _enemyRoamState;
         private EnemyChaseState _enemyChaseState;
-        private EnemyAttackDirState _enemyAttackDirState;
+        private EnemyStateAttackCharge _enemyAttackDirState;
 
         public override void Awake()
         {
@@ -22,7 +22,7 @@ namespace Enemy.variant
             base.SetUpStateMachine();
             enemyRoamState = new EnemyRoamState(this, _stateMachine);
             enemyChaseState = new EnemyChaseState(this, _stateMachine);
-            enemyAttackState = new EnemyAttackDirState(this, _stateMachine);
+            enemyAttackState = new EnemyStateAttackCharge(this, _stateMachine);
             _stateMachine.SetStartState(enemyRoamState);
         }
 

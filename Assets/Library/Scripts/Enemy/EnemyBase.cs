@@ -107,7 +107,7 @@ namespace Enemy
 
         }
 
-        public void Damage(int damage)
+        public void TakeDamage(int damage)
         {
             currentHealth -= damage;
             //Play damaged animation
