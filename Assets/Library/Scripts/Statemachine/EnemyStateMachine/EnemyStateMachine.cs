@@ -6,12 +6,16 @@ using FiniteStateMachine.State;
 
 namespace Enemy.statemachine
 {
+    //Handle transitionings, set up and updating states
     public class EnemyStateMachine : StateMachine
     {
-        public EnemyStateMachine(StateMachineBaseState startState) : base(startState)
+
+        public override void SetStartState(StateMachineBaseState StartingState)
         {
-            SetStartState(startState);
+            base.SetStartState(StartingState);
         }
+
+
     }
 
 }
