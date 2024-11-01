@@ -5,42 +5,40 @@ using UnityEngine;
 
 namespace Enemy.statemachine.States
 {
-    public class EnemyStateAttackCharge : EnemyAttackState
+    public class EnemyStateChase : EnemyChaseState
     {
 
-        public EnemyStateAttackCharge(EnemyBase enemy, EnemyStateMachine enemyStateMachine) : base(enemy, enemyStateMachine)
+        public EnemyStateChase(EnemyBase enemy, EnemyStateMachine enemyStateMachine) : base(enemy, enemyStateMachine)
         {
         }
 
         public override void EnterState()
         {
+            base.EnterState();
             
         }
 
       
         public override void FixedUpdateS()
         {
-            base.FixedUpdateS();
+            
         }
 
         public override void UpdateState()
         {
-            base.FixedUpdateS();
             _enemy.UpdateLogicByPlayerDistance();
+
+            _enemy.enemyNavAgent.SetDestination(_enemy.playerRef.transform.position);
 
             if (_enemy.isTargetInAttackRange)
             {
-
-            }
-            else
-            {
-                _ownerStateMachine.SwitchState(_enemy.enemyChaseState);
+                _ownerStateMachine.SwitchState(_enemy.enemyAttackState);
             }
         }
         
         public override void ExitState()
         {
-            
+            base.ExitState();
         }
     }
 }

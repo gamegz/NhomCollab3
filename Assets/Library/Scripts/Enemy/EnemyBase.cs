@@ -19,44 +19,83 @@ namespace Enemy
     */
     public class EnemyBase : MonoBehaviour, IDamageable
     {
+        #region DATA CONFIG
+
         public GameObject playerRef;
         public ActorLayerData layerData;
-
+        public Rigidbody rb;
+        public CapsuleCollider colliderCapsule;
+        [Space]
+        
         [SerializeField] private int maxHealth;
         [HideInInspector] public int currentHealth;
 
         //Combat
+        [Header("COMBAT")]
+        public Collider attackCollider;
         public int attackDamage;
-        public int attackRecoverTime;
+        public float attackInnitTime;
+        public float attackRecoverTime;
+        public float attackCooldown;
         public float attackRange;
-        public float chaseRange; //-
+        public float chaseRange;
+        public float retreatDistance;
+
+        [Tooltip("Amount of damage recive before stagger")]
+        public float staggerThreshold;
+        private float _staggerThresholdCount;
+        public float staggerTime;
+        private float _currentStaggerTimeLeft;
+        [HideInInspector] public bool isStagger = false;
         [HideInInspector] public bool isTargetInAttackRange;
         [HideInInspector] public bool isTargetInChaseRange;
         [HideInInspector] public bool isTokenOwner;
 
-        
+
 
         //Navigation
+        [Header("NAVIGATION")]
         public NavMeshAgent enemyNavAgent;
-        [SerializeField] private float _walkSpeed;
-        [SerializeField] private float _chaseSpeed;
+        public float followSpeed;
+        public float chaseSpeed;
+        public float roamSpeed;
+        public float turnSpeed;
+        [SerializeField] private float _dashDistance;
+        [SerializeField] private float _dashDuration;
+        public float DashDuration { get { return _dashDuration; }}
         [HideInInspector] public float currentSpeed;
+        [HideInInspector] public bool isDashing;
         [HideInInspector] public bool canMove;
-
+        [HideInInspector] public bool canTurn;
+        [HideInInspector] public bool isActive;
+        [HideInInspector] public float distanceToPlayer;
         public float roamRadius;
-        public float roamDelay;
+        public float roamCountDown;
+        public float roamDuration;
+        
 
-        [HideInInspector] public float distanceToPlayer; 
-     
-        //Drops upon death
-        [SerializeField] private int _dropValue;
-
-        //Statemachine
+        
+        [Header("STATEMACHINE")]
         protected EnemyStateMachine _stateMachine;
         public EnemyRoamState enemyRoamState;
         public EnemyAttackState enemyAttackState;
         public EnemyChaseState enemyChaseState;
-        
+        public EnemyFollowState enemyFollowState;
+        public EnemyRetreatState enemyRetreatState;
+        [HideInInspector] public EnemyState currentState;
+
+        [Header("DeathConfig")]
+        [SerializeField] private int _dropValue;
+        public DeathMethod deathMethod;
+
+        public enum EnemyState { 
+            Roam,
+            Chase,
+            Follow,
+            Retreat,
+            Attack
+        }
+
         public enum DeathMethod
         {
             KineticCut,
@@ -64,14 +103,14 @@ namespace Enemy
             Burn,
             Freeze,
         }
-        public DeathMethod deathMethod => DeathMethod.KineticCut;
-        
+
+        #endregion
 
 
         public virtual void Awake()
-        {
-            currentHealth = maxHealth;
+        {                     
             SetUpStateMachine();
+            
         }
 
         public virtual void SetUpStateMachine()
@@ -80,44 +119,207 @@ namespace Enemy
             enemyRoamState = new EnemyRoamState(this, _stateMachine);
             enemyChaseState = new EnemyChaseState(this, _stateMachine);
             enemyAttackState = new EnemyAttackState(this, _stateMachine);
-            _stateMachine.SetStartState(enemyRoamState);
+            enemyFollowState = new EnemyFollowState(this, _stateMachine);
+            enemyRetreatState = new EnemyRetreatState(this, _stateMachine);
+
         }
 
-        private void Start()
+        public virtual void Start()
         {
-            enemyNavAgent.speed = _walkSpeed/10;
+            enemyNavAgent.updateRotation = false;
+            canMove = true;
+            canTurn = true;
+            currentSpeed = roamSpeed;
+            currentHealth = maxHealth;
+
+            attackCollider.enabled = true;
+            _currentStaggerTimeLeft = staggerTime;            
+            _staggerThresholdCount = staggerThreshold;
+
+            isTokenOwner = true;
         }
 
         public virtual void UpdateLogic()
         {
+            if(isDashing) { return; }
+            enemyNavAgent.speed = (canMove) ? currentSpeed / 10 : 0;
+            LookAtTarget(transform, playerRef.transform, turnSpeed);
+            UpdateStaggerLogic();
             _stateMachine.UpdateState();
         }
 
         public virtual void FixedUpdateLogic()
         {
+            if (isDashing) { return; }
             _stateMachine.FixedUpdateState();
         }
 
-        public virtual void RequestAttackToken()
+        private void OnCollisionEnter(Collision collision)
         {
-            
+            //myRigidbody.velocity = Vector3.ProjectOnPlane(myRigidbody.velocity, collision.contacts[0].normal);
         }
-        public virtual void ReturnAttackToken()
-        {
 
+        public void UpdateLogicByPlayerDistance()
+        {
+            distanceToPlayer = Vector3.Distance(transform.position, playerRef.transform.position);
+            isTargetInAttackRange = (distanceToPlayer <= attackRange) ? true : false;
+            isTargetInChaseRange = (distanceToPlayer <= chaseRange) ? true : false;
+        }
+
+        private void UpdateStaggerLogic()
+        {
+            if (!isStagger) { return; }
+
+            if (_currentStaggerTimeLeft > 0)
+            {
+
+                _currentStaggerTimeLeft -= Time.deltaTime;
+            }
+            else
+            {
+                _currentStaggerTimeLeft = staggerTime;
+                _staggerThresholdCount = staggerThreshold;
+                isStagger = true;
+            }
+        }
+
+        #region LOGIC IMPLEMENT
+
+        #region MOVEMENT DASH
+        public void InnitDash(Vector3 dashDirection)
+        {
+            StartCoroutine(EnemyDash(dashDirection));
+        }
+        private IEnumerator EnemyDash(Vector3 dashDirection)
+        {
+            if (isDashing) { yield break; }
+
+            dashDirection = dashDirection.normalized;
+            float dashDistance = _dashDistance;
+            Vector3 dashPoint = transform.position + dashDirection * dashDistance;
+            NavMeshHit hit;
+
+            Vector2 enemyPos = new Vector2(transform.position.x, transform.position.z);
+
+            if (enemyNavAgent.CalculatePath(dashPoint, enemyNavAgent.path)) //Inside navmesh
+            {
+                //Path blocked, Get distance from block point
+                if (NavMesh.Raycast(transform.position, dashPoint, out hit, NavMesh.AllAreas))
+                {
+                    //dashPoint = (transform.position + dashDirection) * (_dashDistance - (Vector2.Distance(hit.position, dashPoint) + colliderCapsule.radius));
+                    dashDistance = Vector2.Distance(enemyPos, new Vector2(hit.position.x, hit.position.z)) - colliderCapsule.radius * 2;
+                }
+            }
+            else //Outside navmesh
+            {
+                NavMeshHit hitData;
+                switch (enemyNavAgent.Raycast(dashPoint, out hitData))
+                {
+                    case true: //Path blocked, Get distance from block point
+                        dashPoint = hitData.position;
+                        dashDistance = Vector2.Distance(enemyPos, new Vector2(hitData.position.x, hitData.position.z)) - colliderCapsule.radius * 2;
+                        break;
+
+                    case false: //Is not blocked, Sample to get the rear position
+                        Debug.LogWarning("Cuh what the hell, ho could this happen");
+                        if (NavMesh.SamplePosition(dashPoint, out hitData, 0.1f, 1))
+                        {
+                            dashPoint = hitData.position;
+                            dashDistance = Vector2.Distance(enemyPos, new Vector2(hitData.position.x, hitData.position.z)) - colliderCapsule.radius * 2;
+                        }
+                        break;
+                }
+            }
+
+            //Start
+            canTurn = false;
+            canMove = false;
+            //enemyNavAgent.updateRotation = false;
+            LookAtTarget(transform.position, dashPoint);
+            //enemyNavAgent.updatePosition = false;
+
+            isDashing = true;
+
+            //Dashing
+            float dashSpeed = dashDistance / _dashDuration;
+            float dashDurationCount = _dashDuration;
+
+            while (dashDurationCount > 0)
+            {
+                enemyNavAgent.velocity = dashDirection * dashSpeed;
+                dashDurationCount -= Time.deltaTime;
+                yield return null;
+            }
+
+
+            enemyNavAgent.velocity = Vector3.zero;
+            //enemyNavAgent.updateRotation = true;
+            //enemyNavAgent.updatePosition = true;
+            canTurn = true;
+            canMove = true;
+            isDashing = false;
+        }
+
+        #endregion
+        #region MOVEMENT TURNING
+
+        private void LookAtTarget(Transform center, Transform target, float speed)
+        {
+            if (!canTurn)
+            {
+                return;
+            }
+
+            Vector3 dirToTarget = target.position - center.position;
+            Quaternion rotation = Quaternion.LookRotation(dirToTarget, Vector3.up);
+            transform.rotation = Quaternion.Lerp(center.rotation, rotation, Time.deltaTime * speed);
+        }
+
+        private void LookAtTarget(Transform center, Transform target)
+        {
+            if (!canTurn) { return; }
+            Vector3 dirToTarget = target.position - center.position;
+            Quaternion rotation = Quaternion.LookRotation(dirToTarget, Vector3.up);
+            transform.rotation = rotation;
+        }
+
+        private void LookAtTarget(Vector3 center, Vector3 target)
+        {
+            if (!canTurn) { return; }
+            Vector3 dirToTarget = target - center;
+            Quaternion rotation = Quaternion.LookRotation(dirToTarget, Vector3.up);
+            transform.rotation = rotation;
+        }
+        #endregion
+
+        public virtual void PresetDashAttack(Vector3 DashDirection, float attackTimeOffSet = 0)
+        {
+            InnitDash(DashDirection);
+            InnitAttackCollider(_dashDuration);
+        }
+
+        public IEnumerator InnitAttackCollider(float duration)
+        {
+            attackCollider.gameObject.SetActive(true);
+            yield return new WaitForSeconds(duration);
+            attackCollider.gameObject.SetActive(false);
         }
 
         public void TakeDamage(int damage)
         {
             currentHealth -= damage;
-            //Play damaged animation
+            _staggerThresholdCount -= damage;
 
-            if(currentHealth > 0) { return; }
+            if (_staggerThresholdCount <= 0 && !isStagger)
+            {
+                isStagger = true;
+            }
 
+            if (currentHealth > 0) { return; }
             OnDeath();
         }
 
-        public void OnDeath()
+        public virtual void OnDeath()
         {
             //Disable stuff
             //Play particle or death animation, maybe?
@@ -136,7 +338,13 @@ namespace Enemy
 
         }
 
-        public virtual Vector3 GetRandomNavmeshLocation()
+        #endregion
+
+
+
+        #region HELPER
+
+        public Vector3 GetRandomNavmeshLocation()
         {
             //Get a random point in a circle around target
             Vector3 randomDirection = transform.position + Random.insideUnitSphere * roamRadius;
@@ -151,35 +359,52 @@ namespace Enemy
             return finalPosition;
         }
 
-        public void UpdateLogicByPlayerDistance()
+        public Vector3 GetNavLocationByDirection(Vector3 startingPoint, Vector3 direction, float checkDistance, float checkRadiusAroundHitLocation)
         {
-            distanceToPlayer = Vector3.Distance(transform.position, playerRef.transform.position);
-            isTargetInAttackRange = (distanceToPlayer <= attackRange) ? true : false;
-            isTargetInChaseRange = (distanceToPlayer <= chaseRange) ? true : false;
+            Vector3 location = startingPoint + direction.normalized * checkDistance;
+            NavMeshHit hitData;
+            if (NavMesh.SamplePosition(location, out hitData, checkRadiusAroundHitLocation, 1))
+            {
+                location = hitData.position;
+            }
+
+            return location;
+        }
+
+        //Get direction that is perpendicular to the direction from target to self
+        public Vector3 GetPerpendicularVectorToTarget()
+        {
+
+            Vector3 dirTargetToSelf = playerRef.transform.position - transform.position;
+            Vector2 perdendicularVector = Vector2.Perpendicular(new Vector2(dirTargetToSelf.x, dirTargetToSelf.z));
+
+            return new Vector3(perdendicularVector.x, transform.position.y, perdendicularVector.y);
+
         }
 
         public bool GetDestinationCompleteStatus()
         {
-            if (enemyNavAgent.pathPending) { return false; }
-            if (enemyNavAgent.remainingDistance > enemyNavAgent.stoppingDistance) { return false; }
-            if (!enemyNavAgent.hasPath || enemyNavAgent.velocity.sqrMagnitude == 0f)
+            if (enemyNavAgent.pathPending) { return false; } //Have path to run
+            if (enemyNavAgent.remainingDistance > enemyNavAgent.stoppingDistance) { return false; } //Haven not reach destination
+            if (!enemyNavAgent.hasPath) //does not have a path
             {
                 return true;
             }
             return false;
         }
 
-        //Get direction that is perpendicular to the direction from target to self
-        public Vector3 GetPerpendicularVectorToTarget()
+        public Vector3 GetDirectionToPlayer()
         {
-            Vector3 dirTargetToSelf = playerRef.transform.position - transform.position;
-            float x = 10; //Perpendicular => x*dir.x + y*dir.y + z*dir.z = 0
-            float z = (dirTargetToSelf.x * 10) / - dirTargetToSelf.z;
-
-            return new Vector3(x, 0, z).normalized * 10;
-
-            
+            return playerRef.transform.position - transform.position;
         }
+
+        public Vector3 GetDirectionIgnoreY(Vector3 from, Vector3 to)
+        {
+            return new Vector3(to.x, 2, to.z) - new Vector3(from.x, 2, from.y);
+        }
+
+        #endregion
+
 
         private void OnDrawGizmos()
         {
