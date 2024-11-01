@@ -14,12 +14,13 @@ public enum PlayerState
 public class PlayerMovement : MonoBehaviour
 {
     [Header("References")]
+    private PlayerBase m_PlayerBase;
     [SerializeField] private Rigidbody _rb;
     [SerializeField] private GameObject _playerBody;
     private PlayerInput _playerInput;
 
     [Header("Movement")]
-    [SerializeField] private float playerSpeed;
+    //private float playerSpeed;
     [SerializeField] private float dashForce;
     [SerializeField] private float rotationSpeed;
 
@@ -40,6 +41,7 @@ public class PlayerMovement : MonoBehaviour
     private PlayerState _state;
     private Camera _camera;
     private Vector2 _mousePosition;
+    PlayerBase _playerStats;
 
 
     private void Awake()
@@ -48,6 +50,7 @@ public class PlayerMovement : MonoBehaviour
         MoveToState(PlayerState.Idle);
         _playerInput = new PlayerInput();
         currentCharge = maxCharge;
+        m_PlayerBase = GetComponent<PlayerBase>();
     }
 
     private void OnEnable()
@@ -69,6 +72,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+
         // If the player in the current state and meet the condition then move to the next state using MoveToState() method
         switch (_state)
         {
@@ -107,7 +111,7 @@ public class PlayerMovement : MonoBehaviour
                 _rb.velocity = Vector3.zero;
                 break;
             case PlayerState.Moving:
-                Vector3 playerMovement = new Vector3(_movement.x, 0, _movement.y) * playerSpeed;
+                Vector3 playerMovement = new Vector3(_movement.x, 0, _movement.y) * m_PlayerBase.MoveSpeed;
                 _rb.velocity = playerMovement;
                 break;
             case PlayerState.Dashing:

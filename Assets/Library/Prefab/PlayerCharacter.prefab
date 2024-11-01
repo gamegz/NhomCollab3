@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8382900440726366155}
   m_Layer: 0
   m_Name: Body
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -198,6 +198,7 @@ GameObject:
   - component: {fileID: 3668607211282260617}
   - component: {fileID: 3107791070302091922}
   - component: {fileID: 8223221366024730654}
+  - component: {fileID: 7381951561567745206}
   m_Layer: 0
   m_Name: PlayerCharacter
   m_TagString: Untagged
@@ -350,7 +351,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rb: {fileID: 8382900440726366155}
   _playerBody: {fileID: 243783853185197192}
-  playerSpeed: 8
   dashForce: 20
   rotationSpeed: 15
   maxCharge: 3
@@ -358,6 +358,23 @@ MonoBehaviour:
   dashCooldown: 1
   regenCooldown: 2
   overheatCooldown: 5
+--- !u!114 &7381951561567745206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7728795428013802694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34f50200536ce9a4b852d5fb382f84fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data:
+    playerData: {fileID: 11400000, guid: fe764ddfbb8b4984abfd363b5acf2ad0, type: 2}
+  interactLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!1 &8319276657298368420
 GameObject:
   m_ObjectHideFlags: 0
@@ -388,7 +405,7 @@ Transform:
   m_Children:
   - {fileID: 3668607211282260617}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8487215999029970427
 GameObject:

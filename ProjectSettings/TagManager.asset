@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - CharacterPod
+  - A
   layers:
   - Default
   - TransparentFX
@@ -12,13 +14,13 @@ TagManager:
   - Water
   - UI
   - Weapon
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Interact
+  - Enemy
+  - Player
+  - WalkableGround
+  - Wall
+  - Pickup
+  - enemy
   - 
   - 
   - 
