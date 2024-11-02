@@ -5,6 +5,8 @@ using UnityEngine;
 public class CamFollowMouse : MonoBehaviour
 {
     #region Non-Serializable
+    [Header("References")]
+    private Transform bodyTransform;
     private Vector3 velocity = Vector3.zero;
     private Vector3 offSet;
 
@@ -49,7 +51,7 @@ public class CamFollowMouse : MonoBehaviour
         if (camTransform != null)
         {
 
-            Transform bodyTransform = player.transform.Find("Body").GetComponent<Transform>();
+            bodyTransform = player.transform.Find("Body").GetComponent<Transform>();
             
             camTransform.position = bodyTransform.position + offSet;
             
@@ -63,7 +65,7 @@ public class CamFollowMouse : MonoBehaviour
     void CameraWork()
     {
         // 1. Get the player position in screen space and mouse position
-        Vector2 playerScreenPos = Camera.main.WorldToScreenPoint(player.transform.position);
+        Vector2 playerScreenPos = Camera.main.WorldToScreenPoint(bodyTransform.position);
         Vector2 mouseScreenPos = Input.mousePosition;
 
         // 2. Calculate the difference between player position and mouse position
@@ -76,9 +78,12 @@ public class CamFollowMouse : MonoBehaviour
         }
 
         // 4. Calculate the target position for the camera in world space
-        Vector3 targetWorldPos = camTransform.position + new Vector3(difference.x, 0, difference.y) / 3f;
+        Vector3 targetWorldPos = camTransform.position + (new Vector3(difference.x, 0, difference.y) * 1/2f);
+        Debug.Log("TargetWorldPos: " + targetWorldPos);
+
 
         // 5. Smoothly move the camera towards the target position
         transform.position = Vector3.SmoothDamp(transform.position, targetWorldPos, ref velocity, timeToFollow);
+        //transform.position = targetWorldPos;
     }
 }
