@@ -2,17 +2,53 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Merchant : MonoBehaviour
+public class Merchant : MonoBehaviour, IInteractable
 {
-    // Start is called before the first frame update
+    private GameObject interactionPrompt;
+    private bool isPlayerInRange = false;
+
     void Start()
+    {
+        interactionPrompt = transform.Find("FloatingText").gameObject;
+
+        if (interactionPrompt != null)
+        {
+            interactionPrompt.SetActive(false); // Hide initially
+        }
+        else
+        {
+            Debug.LogWarning("FloatingText not found");
+        }
+    }
+
+    void Update()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    // Remember the TAGGGGGGG!!!!!
+    private void OnTriggerEnter(Collider other)
     {
-        
+        // Check if the player entered the trigger zone
+        if (other.CompareTag("Player"))
+        {
+            isPlayerInRange = true;
+            interactionPrompt.SetActive(true); // Show the interaction prompt
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        // Check if the player exited the trigger zone
+        if (other.CompareTag("Player"))
+        {
+            isPlayerInRange = false;
+            interactionPrompt.SetActive(false); // Hide the interaction prompt
+        }
+    }
+
+    public void Interact()
+    {
+        Debug.Log("Interacting with the merchant...");
     }
 }
