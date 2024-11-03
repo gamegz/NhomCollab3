@@ -29,32 +29,65 @@ namespace Enemy.statemachine.States
         {
             _enemy.UpdateLogicByPlayerDistance();
 
-            //Debug.Log(_currentRoamTimeCountDown);
-
-            if (_currentRoamDelayCountDown > 0) //Roam count down to reroam
+            if (_currentRoamDelayCountDown > 0) 
             {
-                if (_enemy.GetDestinationCompleteStatus())
+                if (_enemy.GetDestinationCompleteStatus()) { RoamRandomStandAndMove(); }
+                _currentRoamDelayCountDown -= Time.deltaTime;
+                if(_currentRoamDelayCountDown <= 0)
                 {
                     RoamRandomStandAndMove();
-
                 }
-                _currentRoamDelayCountDown -= Time.deltaTime;
-            }
-            else //end countdown, roam
-            {
+            }//Reroam if reach destination or countdown ends
 
-                RoamRandomStandAndMove();
-            }
 
-            if(_currentRoamTransitTime > 0)
+            if(_currentRoamTransitTime > 0) //Try transtioning with count down
             {
                 _currentRoamTransitTime -= Time.deltaTime;
-
-
-                if(_currentRoamTransitTime <= 0 && _enemy.isTokenOwner)
+            }
+            else
+            {
+                switch (_enemy.isTokenOwner)
                 {
-                    _ownerStateMachine.SwitchState(_enemy.enemyChaseState);
+                    case true:
+                        if (!_enemy.canAttack)
+                        {
+                            
+                            if (_enemy.distanceToPlayer > _enemy.followDistance)
+                            {
+                                _ownerStateMachine.SwitchState(_enemy.enemyFollowState);
+                                break;
+                            }
+                            else
+                            {
+                                _currentRoamTransitTime = _enemy.roamDuration;
+                            }
+
+                            break;
+                        }
+
+                        if (_enemy.isTargetInAttackRange)
+                        {
+                            _ownerStateMachine.SwitchState(_enemy.enemyAttackState);
+                        }
+                        else
+                        {
+                            _ownerStateMachine.SwitchState(_enemy.enemyChaseState);
+                        }
+                        break;
+
+                    case false:
+                        if(_enemy.distanceToPlayer > _enemy.followDistance)
+                        {
+                            _ownerStateMachine.SwitchState(_enemy.enemyFollowState);
+                        }
+                        if(_enemy.distanceToPlayer < _enemy.retreatDistance)
+                        {
+                            _ownerStateMachine.SwitchState(_enemy.enemyRetreatState);
+                        }
+                        _currentRoamTransitTime = _enemy.roamDuration;
+                        break;
                 }
+                
             }
 
             
@@ -64,23 +97,7 @@ namespace Enemy.statemachine.States
             //    _ownerStateMachine.SwitchState(_enemy.enemyAttackState);
             //}
 
-            switch (_enemy.isTokenOwner)
-            {
-                case true:
-                    if (_enemy.isTargetInChaseRange)
-                    {
-                        _ownerStateMachine.SwitchState(_enemy.enemyChaseState);
-                    }
-
-                    //if (_enemy.isTargetInAttackRange)
-                    //{
-                    //    _ownerStateMachine.SwitchState(_enemy.enemyAttackState);
-                    //}
-                    break;
-                case false:
-                    break;
-            }
-
+          
 
         }
 

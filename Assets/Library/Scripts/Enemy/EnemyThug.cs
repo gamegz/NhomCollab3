@@ -8,8 +8,6 @@ namespace Enemy.variant
 {
     public class EnemyThug : EnemyBase
     {
-        private float countDownTest = 5;
-        private float countDownTestCount;
 
         public override void Awake()
         {
@@ -20,8 +18,6 @@ namespace Enemy.variant
         {
             base.Start();
             currentSpeed = followSpeed;
-
-            countDownTestCount = countDownTest;
         }
 
         public override void SetUpStateMachine()
@@ -31,18 +27,20 @@ namespace Enemy.variant
             enemyChaseState = new EnemyStateChase(this, _stateMachine);
             enemyAttackState = new EnemyStateAttackDash(this, _stateMachine);
             enemyRetreatState = new EnemyStateRetreat(this, _stateMachine);
+            enemyFollowState = new EnemyStateFollow(this, _stateMachine);
             _stateMachine.SetStartState(enemyRoamState);       
             //currentState = EnemyState.Roam;
         }
 
 
+
         public override void UpdateLogic()
         {
-            //countDownTestCount -= Time.deltaTime;
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                InnitDash(playerRef.transform.position - transform.position);
-                //countDownTestCount = countDownTest;
+                isTokenOwner = !isTokenOwner;
+                //InnitDash(- GetPerpendicularVectorToTarget());
+                //Debug.Log(enemyNavAgent.CalculatePath(target.transform.position, enemyNavAgent.path));
             }
             base.UpdateLogic();
         }

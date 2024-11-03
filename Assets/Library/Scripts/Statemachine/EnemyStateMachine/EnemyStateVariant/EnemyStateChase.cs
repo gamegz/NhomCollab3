@@ -30,10 +30,26 @@ namespace Enemy.statemachine.States
 
             _enemy.enemyNavAgent.SetDestination(_enemy.playerRef.transform.position);
 
-            if (_enemy.isTargetInAttackRange)
+
+            switch (_enemy.isTokenOwner)
             {
-                _ownerStateMachine.SwitchState(_enemy.enemyAttackState);
+                case true:
+                    if (_enemy.isTargetInAttackRange && _enemy.canAttack)
+                    {
+                        _ownerStateMachine.SwitchState(_enemy.enemyAttackState);
+                    }
+                    else if (!_enemy.canAttack)
+                    {
+                        _ownerStateMachine.SwitchState(_enemy.enemyFollowState);
+                    }
+
+                    break;
+                case false:
+                    _ownerStateMachine.SwitchState(_enemy.enemyRoamState);
+                    break;
             }
+
+            
         }
         
         public override void ExitState()

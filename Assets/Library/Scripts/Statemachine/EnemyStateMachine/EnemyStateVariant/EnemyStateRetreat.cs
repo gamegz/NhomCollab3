@@ -17,6 +17,7 @@ namespace Enemy.statemachine.States
         public override void EnterState()
         {
             base.EnterState();
+            _enemy.currentSpeed = _enemy.retreatSpeed;
         }
 
       
@@ -33,11 +34,45 @@ namespace Enemy.statemachine.States
                                                                   _runDistance, _runPosOffSet);
             _enemy.enemyNavAgent.SetDestination(retreatPos);
 
-            if (_enemy.distanceToPlayer > _enemy.retreatDistance)
-            {
-                _ownerStateMachine.SwitchState(_enemy.enemyRoamState);
-            }
 
+            switch (_enemy.isTokenOwner)
+            {
+                case true:
+                    if (!_enemy.canAttack)
+                    {
+                        _ownerStateMachine.SwitchState(_enemy.enemyFollowState);
+                        break;
+                    }
+
+                    if (_enemy.isTargetInAttackRange)
+                    {   
+                        if(!_enemy.canAttack) { return; }
+                        _ownerStateMachine.SwitchState(_enemy.enemyAttackState);                       
+                    }
+                    else
+                    {
+                        _ownerStateMachine.SwitchState(_enemy.enemyChaseState);                       
+                    }
+                    break;
+                   
+                case false:
+                    if(_enemy.distanceToPlayer < _enemy.maxRetreatDistance)
+                    {                        
+                        break;
+                    }
+
+                    //To far then follow otherwise roam
+                    if (_enemy.distanceToPlayer > _enemy.followDistance)
+                    {
+                        _ownerStateMachine.SwitchState(_enemy.enemyFollowState);
+                    }
+                    else
+                    {
+                        _ownerStateMachine.SwitchState(_enemy.enemyRoamState);
+                    }
+                    break;
+
+            }
         }
         
         public override void ExitState()

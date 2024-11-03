@@ -21,6 +21,7 @@ namespace Enemy
     {
         #region DATA CONFIG
 
+        public EnemyHostileMethod hostileMethod; //Put this as gunner for testing enemy without tokensystem
         public GameObject playerRef;
         public ActorLayerData layerData;
         public Rigidbody rb;
@@ -37,9 +38,16 @@ namespace Enemy
         public float attackInnitTime;
         public float attackRecoverTime;
         public float attackCooldown;
+        [HideInInspector] public bool isAttacking;
+        [HideInInspector] public bool canAttack;
+        [HideInInspector] public float attackCoolDownCount;
         public float attackRange;
-        public float chaseRange;
+        [Tooltip("Distance to start retreat (The closest player can reach)")]
         public float retreatDistance;
+        [Tooltip("Max Distance to transtion from retreat (Must be greater than retreatDistance)")]
+        public float maxRetreatDistance;
+        [Tooltip("Distance to return if player too far away")]
+        public float followDistance;
 
         [Tooltip("Amount of damage recive before stagger")]
         public float staggerThreshold;
@@ -48,7 +56,6 @@ namespace Enemy
         private float _currentStaggerTimeLeft;
         [HideInInspector] public bool isStagger = false;
         [HideInInspector] public bool isTargetInAttackRange;
-        [HideInInspector] public bool isTargetInChaseRange;
         [HideInInspector] public bool isTokenOwner;
 
 
@@ -57,6 +64,7 @@ namespace Enemy
         [Header("NAVIGATION")]
         public NavMeshAgent enemyNavAgent;
         public float followSpeed;
+        public float retreatSpeed;
         public float chaseSpeed;
         public float roamSpeed;
         public float turnSpeed;
@@ -70,7 +78,9 @@ namespace Enemy
         [HideInInspector] public bool isActive;
         [HideInInspector] public float distanceToPlayer;
         public float roamRadius;
+        [Tooltip("Time until change roam position")]
         public float roamCountDown;
+        [Tooltip("Time to roam until check for transition")]
         public float roamDuration;
         
 
@@ -87,6 +97,13 @@ namespace Enemy
         [Header("DeathConfig")]
         [SerializeField] private int _dropValue;
         public DeathMethod deathMethod;
+
+        public enum EnemyHostileMethod
+        {
+            Melee,
+            Gunner, //Unaffected by token
+            MeleeGunner
+        }
 
         public enum EnemyState { 
             Roam,
@@ -129,23 +146,31 @@ namespace Enemy
             enemyNavAgent.updateRotation = false;
             canMove = true;
             canTurn = true;
+            canAttack = true;
             currentSpeed = roamSpeed;
             currentHealth = maxHealth;
 
-            attackCollider.enabled = true;
+            attackCollider.enabled = false;
             _currentStaggerTimeLeft = staggerTime;            
             _staggerThresholdCount = staggerThreshold;
+            attackCoolDownCount = attackCooldown;
 
-            isTokenOwner = true;
+            if (hostileMethod == EnemyHostileMethod.Gunner) { isTokenOwner = true; }
+            
         }
 
         public virtual void UpdateLogic()
         {
+
+            //Debug.Log(currentState);
+            UpdateAttackCoolDown();
             if(isDashing) { return; }
             enemyNavAgent.speed = (canMove) ? currentSpeed / 10 : 0;
             LookAtTarget(transform, playerRef.transform, turnSpeed);
             UpdateStaggerLogic();
             _stateMachine.UpdateState();
+
+            
         }
 
         public virtual void FixedUpdateLogic()
@@ -163,7 +188,6 @@ namespace Enemy
         {
             distanceToPlayer = Vector3.Distance(transform.position, playerRef.transform.position);
             isTargetInAttackRange = (distanceToPlayer <= attackRange) ? true : false;
-            isTargetInChaseRange = (distanceToPlayer <= chaseRange) ? true : false;
         }
 
         private void UpdateStaggerLogic()
@@ -183,66 +207,93 @@ namespace Enemy
             }
         }
 
+        private void UpdateAttackCoolDown() {
+        
+            //note: call OnDonwAttack when finish attack
+            if (!canAttack) {
+                attackCoolDownCount -= Time.deltaTime;
+                canAttack = (attackCoolDownCount <= 0) ? true : false;
+            }
+        }  //Allow attack again after a delay
+
+        public void OnDoneAttack() {   
+            attackCoolDownCount = attackCooldown;
+            canAttack = false;
+            isAttacking = false;
+        } //Call when finish attack
+
         #region LOGIC IMPLEMENT
 
         #region MOVEMENT DASH
         public void InnitDash(Vector3 dashDirection)
         {
-            StartCoroutine(EnemyDash(dashDirection));
+            StartCoroutine(EnemyDash(dashDirection, _dashDistance, _dashDuration));
         }
-        private IEnumerator EnemyDash(Vector3 dashDirection)
+        private IEnumerator EnemyDash(Vector3 dashDirection, float DashDistance, float DashTime)
         {
             if (isDashing) { yield break; }
 
+            canTurn = false;
+            canMove = false;
+            //enemyNavAgent.updateRotation = false;           
+            enemyNavAgent.ResetPath();
+            //enemyNavAgent.updatePosition = false;
+            isDashing = true;
+
             dashDirection = dashDirection.normalized;
-            float dashDistance = _dashDistance;
+            float dashDistance = DashDistance;
             Vector3 dashPoint = transform.position + dashDirection * dashDistance;
+            LookAtTarget(transform.position, dashPoint);
             NavMeshHit hit;
 
             Vector2 enemyPos = new Vector2(transform.position.x, transform.position.z);
 
-            if (enemyNavAgent.CalculatePath(dashPoint, enemyNavAgent.path)) //Inside navmesh
+            NavMeshPath navpath = new NavMeshPath();
+
+            //Note : recaculate distance and shit use when assign layers
+            //if (enemyNavAgent.CalculatePath(dashPoint, enemyNavAgent.path)) //Inside navmesh
+            //{
+            //    //Path blocked, Get distance from block point
+            //    if (NavMesh.Raycast(transform.position, dashPoint, out hit, NavMesh.AllAreas))
+            //    {
+            //        //dashPoint = (transform.position + dashDirection) * (_dashDistance - (Vector2.Distance(hit.position, dashPoint) + colliderCapsule.radius));
+            //        dashDistance = Vector2.Distance(enemyPos, new Vector2(hit.position.x, hit.position.z)) - colliderCapsule.radius * 2;
+            //    }
+            //}
+            //else //Outside navmesh
+            //{
+            //    NavMeshHit hitData;
+            //    switch (enemyNavAgent.Raycast(dashPoint, out hitData))
+            //    {
+            //        case true: //Path blocked, Get distance from block point
+            //            dashPoint = hitData.position;
+            //            dashDistance = Vector2.Distance(enemyPos, new Vector2(hitData.position.x, hitData.position.z)) - colliderCapsule.radius * 2;
+            //            break;
+
+            //        case false: //Is not blocked, Sample to get the rear position
+            //            Debug.LogWarning("Cuh what the hell, how could this happen");
+            //            if (NavMesh.SamplePosition(dashPoint, out hitData, 0.1f, 1))
+            //            {
+            //                dashPoint = hitData.position;
+            //                dashDistance = Vector2.Distance(enemyPos, new Vector2(hitData.position.x, hitData.position.z)) - colliderCapsule.radius * 2;
+            //            }
+            //            break;
+            //    }
+            //}
+
+            if (NavMesh.SamplePosition(dashPoint, out hit, 0.1f, 1))
             {
-                //Path blocked, Get distance from block point
-                if (NavMesh.Raycast(transform.position, dashPoint, out hit, NavMesh.AllAreas))
-                {
-                    //dashPoint = (transform.position + dashDirection) * (_dashDistance - (Vector2.Distance(hit.position, dashPoint) + colliderCapsule.radius));
-                    dashDistance = Vector2.Distance(enemyPos, new Vector2(hit.position.x, hit.position.z)) - colliderCapsule.radius * 2;
-                }
+                dashPoint = hit.position;
+                dashDistance = Vector2.Distance(enemyPos, new Vector2(hit.position.x, hit.position.z)) - colliderCapsule.radius * 2;
             }
-            else //Outside navmesh
-            {
-                NavMeshHit hitData;
-                switch (enemyNavAgent.Raycast(dashPoint, out hitData))
-                {
-                    case true: //Path blocked, Get distance from block point
-                        dashPoint = hitData.position;
-                        dashDistance = Vector2.Distance(enemyPos, new Vector2(hitData.position.x, hitData.position.z)) - colliderCapsule.radius * 2;
-                        break;
+            
 
-                    case false: //Is not blocked, Sample to get the rear position
-                        Debug.LogWarning("Cuh what the hell, ho could this happen");
-                        if (NavMesh.SamplePosition(dashPoint, out hitData, 0.1f, 1))
-                        {
-                            dashPoint = hitData.position;
-                            dashDistance = Vector2.Distance(enemyPos, new Vector2(hitData.position.x, hitData.position.z)) - colliderCapsule.radius * 2;
-                        }
-                        break;
-                }
-            }
-
-            //Start
-            canTurn = false;
-            canMove = false;
-            //enemyNavAgent.updateRotation = false;
-            LookAtTarget(transform.position, dashPoint);
-            //enemyNavAgent.updatePosition = false;
-
-            isDashing = true;
+            //Recaculate dash duration when distance is changed
+            //DashTime *= (DashDistance / dashDistance);
 
             //Dashing
-            float dashSpeed = dashDistance / _dashDuration;
-            float dashDurationCount = _dashDuration;
+            float dashSpeed = dashDistance / DashTime;
+            float dashDurationCount = DashTime;
 
             while (dashDurationCount > 0)
             {
@@ -298,11 +349,15 @@ namespace Enemy
             InnitAttackCollider(_dashDuration);
         }
 
-        public IEnumerator InnitAttackCollider(float duration)
+        public void InnitAttackCollider(float duration)
         {
-            attackCollider.gameObject.SetActive(true);
+            StartCoroutine(DisableEnableAttackCollider(duration));
+        }
+        private IEnumerator DisableEnableAttackCollider(float duration)
+        {
+            attackCollider.enabled = true;
             yield return new WaitForSeconds(duration);
-            attackCollider.gameObject.SetActive(false);
+            attackCollider.enabled = false;
         }
 
         public void TakeDamage(int damage)
@@ -372,14 +427,16 @@ namespace Enemy
         }
 
         //Get direction that is perpendicular to the direction from target to self
-        public Vector3 GetPerpendicularVectorToTarget()
+        public Vector3 GetPerpendicularDirectionToTarget(bool toRight = true)
         {
 
             Vector3 dirTargetToSelf = playerRef.transform.position - transform.position;
-            Vector2 perdendicularVector = Vector2.Perpendicular(new Vector2(dirTargetToSelf.x, dirTargetToSelf.z));
+            Vector2 perdendicularVector = Vector2.Perpendicular(new Vector2(dirTargetToSelf.x, dirTargetToSelf.z)).normalized;
 
-            return new Vector3(perdendicularVector.x, transform.position.y, perdendicularVector.y);
+            Vector3 finalDir = new Vector3(perdendicularVector.x, transform.position.y, perdendicularVector.y);
+            finalDir = (toRight) ? finalDir : -finalDir;
 
+            return finalDir;
         }
 
         public bool GetDestinationCompleteStatus()
@@ -395,13 +452,31 @@ namespace Enemy
 
         public Vector3 GetDirectionToPlayer()
         {
-            return playerRef.transform.position - transform.position;
+            return (playerRef.transform.position - transform.position).normalized;
         }
 
         public Vector3 GetDirectionIgnoreY(Vector3 from, Vector3 to)
         {
             return new Vector3(to.x, 2, to.z) - new Vector3(from.x, 2, from.y);
         }
+
+        public float GetDistanceToPLayer()
+        {
+            distanceToPlayer = Vector3.Distance(transform.position, playerRef.transform.position);
+            return distanceToPlayer;
+        } //Get straight distance to player
+        public float GetNavMeshTrueDistanceToPlayer()
+        {
+            var corners = enemyNavAgent.path.corners;
+            float distance = 0.5f;
+
+            for (int i = 1; i < corners.Length; i++)
+            {
+                distance += Vector3.Distance(corners[i - 1], corners[i]);
+            }
+
+            return distance;
+        } //Distance to player concerning the obstacles
 
         #endregion
 
@@ -410,8 +485,6 @@ namespace Enemy
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, attackRange);
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, chaseRange);
             //Gizmos.DrawLine(transform.position, GetPerpendicularVectorToTarget());
         }
     }
