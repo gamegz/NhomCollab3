@@ -87,11 +87,11 @@ namespace Enemy
         
         [Header("STATEMACHINE")]
         protected EnemyStateMachine _stateMachine;
-        public EnemyRoamState enemyRoamState;
-        public EnemyAttackState enemyAttackState;
-        public EnemyChaseState enemyChaseState;
-        public EnemyFollowState enemyFollowState;
-        public EnemyRetreatState enemyRetreatState;
+        [HideInInspector] public EnemyRoamState enemyRoamState;
+        [HideInInspector] public EnemyAttackState enemyAttackState;
+        [HideInInspector] public EnemyChaseState enemyChaseState;
+        [HideInInspector] public EnemyFollowState enemyFollowState;
+        [HideInInspector] public EnemyRetreatState enemyRetreatState;
         [HideInInspector] public EnemyState currentState;
 
         [Header("DeathConfig")]

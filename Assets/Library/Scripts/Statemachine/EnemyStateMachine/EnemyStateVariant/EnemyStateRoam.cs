@@ -57,6 +57,11 @@ namespace Enemy.statemachine.States
                                 _ownerStateMachine.SwitchState(_enemy.enemyFollowState);
                                 break;
                             }
+                            if (_enemy.distanceToPlayer < _enemy.retreatDistance)
+                            {
+                                _ownerStateMachine.SwitchState(_enemy.enemyRetreatState);
+                                break;
+                            }
                             else
                             {
                                 _currentRoamTransitTime = _enemy.roamDuration;
@@ -64,25 +69,34 @@ namespace Enemy.statemachine.States
 
                             break;
                         }
-
-                        if (_enemy.isTargetInAttackRange)
-                        {
-                            _ownerStateMachine.SwitchState(_enemy.enemyAttackState);
-                        }
                         else
                         {
-                            _ownerStateMachine.SwitchState(_enemy.enemyChaseState);
+                            if (_enemy.isTargetInAttackRange)
+                            {
+                                _ownerStateMachine.SwitchState(_enemy.enemyAttackState);
+                            }
+                            else
+                            {
+                                _ownerStateMachine.SwitchState(_enemy.enemyChaseState);
+                            }
                         }
+
+
+                        
                         break;
 
                     case false:
+                        
                         if(_enemy.distanceToPlayer > _enemy.followDistance)
                         {
+                            
                             _ownerStateMachine.SwitchState(_enemy.enemyFollowState);
+                            break;
                         }
                         if(_enemy.distanceToPlayer < _enemy.retreatDistance)
                         {
                             _ownerStateMachine.SwitchState(_enemy.enemyRetreatState);
+                            break;
                         }
                         _currentRoamTransitTime = _enemy.roamDuration;
                         break;

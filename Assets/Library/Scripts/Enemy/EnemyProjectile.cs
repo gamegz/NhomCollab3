@@ -7,4 +7,5 @@ public class EnemyProjectile : MonoBehaviour
 {    
     private GameObject owner;
     [SerializeField] private float lifeTime;
+
 }

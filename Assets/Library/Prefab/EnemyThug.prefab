@@ -234,11 +234,6 @@ GameObject:
   - component: {fileID: 557185237890086324}
   - component: {fileID: 2228317731585772334}
   - component: {fileID: 531018669308337807}
-  - component: {fileID: 1707080466162165145}
-  - component: {fileID: 1916423731275715195}
-  - component: {fileID: 16800140790893254}
-  - component: {fileID: 7736177774641715824}
-  - component: {fileID: 7092656836135361019}
   - component: {fileID: 921841916271166104}
   m_Layer: 0
   m_Name: EnemyThug
@@ -386,66 +381,6 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 3
---- !u!114 &1707080466162165145
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8071452473336790782}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74d65da4885ddb74dabc394f6d1a91f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1916423731275715195
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8071452473336790782}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe1142fcf045d9e43a852a68c503fb53, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &16800140790893254
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8071452473336790782}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b93b5eeabd2d80b4da1ef37208bd0531, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &7736177774641715824
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8071452473336790782}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9ae256261fdaf04f981bc5294549fa1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &7092656836135361019
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8071452473336790782}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82a77d37ddf2c1f49adeaad706656b62, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &921841916271166104
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -499,11 +434,11 @@ MonoBehaviour:
   roamRadius: 10
   roamCountDown: 3
   roamDuration: 1.4
-  enemyRoamState: {fileID: 1707080466162165145}
-  enemyAttackState: {fileID: 16800140790893254}
-  enemyChaseState: {fileID: 7736177774641715824}
-  enemyFollowState: {fileID: 7092656836135361019}
-  enemyRetreatState: {fileID: 1916423731275715195}
+  enemyRoamState: {fileID: 0}
+  enemyAttackState: {fileID: 0}
+  enemyChaseState: {fileID: 0}
+  enemyFollowState: {fileID: 0}
+  enemyRetreatState: {fileID: 0}
   currentState: 0
   _dropValue: 10
   deathMethod: 0

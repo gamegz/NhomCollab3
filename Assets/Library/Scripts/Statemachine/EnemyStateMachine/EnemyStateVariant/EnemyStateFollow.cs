@@ -29,36 +29,60 @@ namespace Enemy.statemachine.States
         public override void UpdateState()
         {
             //Kept following
-            
+
 
             switch (_enemy.isTokenOwner)
             {
                 case true:
 
-                    _followPoint = _enemy.GetNavLocationByDirection(_enemy.transform.position,
-                                                            -_enemy.GetDirectionToPlayer(), //Dir from player to enemy
-                                                            followRadius, 1);
-                    _enemy.enemyNavAgent.SetDestination(_followPoint);
+
+
+                    //if (_enemy.GetDistanceToPLayer() > _enemy.followDistance)
+                    //{
+                    //    _enemy.enemyNavAgent.SetDestination(_enemy.playerRef.transform.position);
+                    //}
 
                     if (_enemy.canAttack)
                     {
                         _ownerStateMachine.SwitchState(_enemy.enemyChaseState);
+                        break;
+                    }
+                    else //Cant attack, retreat when too close, follow when needed, otherwise go random 
+                    {
+                        if (_enemy.GetDistanceToPLayer() < _enemy.retreatDistance)
+                        {
+                            _ownerStateMachine.SwitchState(_enemy.enemyRetreatState);
+                            break;
+                        }
+
+                        if (_enemy.GetDistanceToPLayer() > _enemy.followDistance)
+                        {
+                            _enemy.enemyNavAgent.SetDestination(_enemy.playerRef.transform.position);
+                            break;
+                        }
+
+                        _ownerStateMachine.SwitchState(_enemy.enemyRoamState);
                     }
 
                     break;
                 case false:
                     //Stop following and transit
-                    if(_enemy.GetDistanceToPLayer() < _enemy.retreatDistance)
+                    if (_enemy.GetDistanceToPLayer() < _enemy.retreatDistance)
                     {
                         _ownerStateMachine.SwitchState(_enemy.enemyRetreatState);
+                        break;
                     }
-                    else
+
+                    if (_enemy.GetDistanceToPLayer() > _enemy.followDistance)
                     {
-                        _ownerStateMachine.SwitchState(_enemy.enemyRoamState);
+                        _enemy.enemyNavAgent.SetDestination(_enemy.playerRef.transform.position);
+                        break;
                     }
+
+                    _ownerStateMachine.SwitchState(_enemy.enemyRoamState);
                     break;
             }
-        }
+        }          
         
         public override void ExitState()
         {
