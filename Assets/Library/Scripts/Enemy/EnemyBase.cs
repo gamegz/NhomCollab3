@@ -28,11 +28,12 @@ namespace Enemy
         public CapsuleCollider colliderCapsule;
         [Space]
         
-        [SerializeField] private int maxHealth;
-        [HideInInspector] public int currentHealth;
+        
 
         //Combat
         [Header("COMBAT")]
+        [SerializeField] private int maxHealth;
+        [HideInInspector] public int currentHealth;
         public Collider attackCollider;
         public int attackDamage;
         public float attackInnitTime;
@@ -156,7 +157,7 @@ namespace Enemy
             attackCoolDownCount = attackCooldown;
 
             if (hostileMethod == EnemyHostileMethod.Gunner) { isTokenOwner = true; }
-            
+            attackCollider.gameObject.GetComponent<EnemyAttackCollider>()._damage = attackDamage;
         }
 
         public virtual void UpdateLogic()
@@ -167,7 +168,7 @@ namespace Enemy
             if(isDashing) { return; }
             enemyNavAgent.speed = (canMove) ? currentSpeed / 10 : 0;
             LookAtTarget(transform, playerRef.transform, turnSpeed);
-            UpdateStaggerLogic();
+            //UpdateStaggerLogic();
             _stateMachine.UpdateState();
 
             
@@ -179,10 +180,10 @@ namespace Enemy
             _stateMachine.FixedUpdateState();
         }
 
-        private void OnCollisionEnter(Collision collision)
-        {
-            //myRigidbody.velocity = Vector3.ProjectOnPlane(myRigidbody.velocity, collision.contacts[0].normal);
-        }
+        //private void OnCollisionEnter(Collision collision)
+        //{
+        //    //myRigidbody.velocity = Vector3.ProjectOnPlane(myRigidbody.velocity, collision.contacts[0].normal);
+        //}
 
         public void UpdateLogicByPlayerDistance()
         {
@@ -190,22 +191,22 @@ namespace Enemy
             isTargetInAttackRange = (distanceToPlayer <= attackRange) ? true : false;
         }
 
-        private void UpdateStaggerLogic()
-        {
-            if (!isStagger) { return; }
+        //private void UpdateStaggerLogic()
+        //{
+        //    if (!isStagger) { return; }
 
-            if (_currentStaggerTimeLeft > 0)
-            {
+        //    if (_currentStaggerTimeLeft > 0)
+        //    {
 
-                _currentStaggerTimeLeft -= Time.deltaTime;
-            }
-            else
-            {
-                _currentStaggerTimeLeft = staggerTime;
-                _staggerThresholdCount = staggerThreshold;
-                isStagger = true;
-            }
-        }
+        //        _currentStaggerTimeLeft -= Time.deltaTime;
+        //    }
+        //    else
+        //    {
+        //        _currentStaggerTimeLeft = staggerTime;
+        //        _staggerThresholdCount = staggerThreshold;
+        //        isStagger = true;
+        //    }
+        //}
 
         private void UpdateAttackCoolDown() {
         

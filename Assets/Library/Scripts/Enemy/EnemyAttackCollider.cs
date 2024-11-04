@@ -4,15 +4,22 @@ using UnityEngine;
 
 public class EnemyAttackCollider : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public int _damage;
+    [SerializeField] private string _playerTagName;
+
+    private void Start()
     {
+        if(_damage == 0)        
+            Debug.LogWarning("Enemy collider damage unassign");
         
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnCollisionEnter(Collision collision)
     {
-        
+        if (collision.gameObject.CompareTag(_playerTagName))
+        {
+            collision.gameObject.GetComponent<IDamageable>().TakeDamage(_damage);
+        }
     }
+
 }
