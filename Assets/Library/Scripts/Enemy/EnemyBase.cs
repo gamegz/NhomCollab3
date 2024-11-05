@@ -34,15 +34,19 @@ namespace Enemy
         [Header("COMBAT")]
         [SerializeField] private int maxHealth;
         [HideInInspector] public int currentHealth;
+        [SerializeField] private Transform _shootPoint;
+        [SerializeField] private GameObject _shootProjectile;
         public Collider attackCollider;
         public int attackDamage;
+        [Tooltip("Usually overwritten by attack script")]
+        public float totalAttackDuration;
         public float attackInnitTime;
-        public float attackRecoverTime;
         public float attackCooldown;
         [HideInInspector] public bool isAttacking;
         [HideInInspector] public bool canAttack;
         [HideInInspector] public float attackCoolDownCount;
         public float attackRange;
+        public float chaseToAttackTransitTime;
         [Tooltip("Distance to start retreat (The closest player can reach)")]
         public float retreatDistance;
         [Tooltip("Max Distance to transtion from retreat (Must be greater than retreatDistance)")]
@@ -152,6 +156,7 @@ namespace Enemy
             currentHealth = maxHealth;
 
             attackCollider.enabled = false;
+            attackCollider.gameObject.SetActive(false);
             _currentStaggerTimeLeft = staggerTime;            
             _staggerThresholdCount = staggerThreshold;
             attackCoolDownCount = attackCooldown;
@@ -344,6 +349,7 @@ namespace Enemy
         }
         #endregion
 
+        #region ATTACK
         public virtual void PresetDashAttack(Vector3 DashDirection, float attackTimeOffSet = 0)
         {
             InnitDash(DashDirection);
@@ -356,10 +362,27 @@ namespace Enemy
         }
         private IEnumerator DisableEnableAttackCollider(float duration)
         {
+            attackCollider.gameObject.SetActive(true);
             attackCollider.enabled = true;
             yield return new WaitForSeconds(duration);
             attackCollider.enabled = false;
+            attackCollider.gameObject.SetActive(false);
         }
+
+        public void ShootProjectile(Vector3 direction)
+        {
+            GameObject projectile = Instantiate(_shootProjectile, _shootPoint.position, Quaternion.identity);
+            Debug.Log(projectile);
+            if (projectile.TryGetComponent<EnemyProjectile>(out EnemyProjectile enemyProjectile))
+            {
+                enemyProjectile.SetUp(direction, this.gameObject);
+            }
+            
+        }
+
+        #endregion
+
+
 
         public void TakeDamage(int damage)
         {

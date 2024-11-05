@@ -5,13 +5,13 @@ using UnityEngine;
 
 namespace Enemy.statemachine.States
 {
-    public class EnemyStateAttackSwingNormal : EnemyAttackState
+    public class EnemyStateAttackProjectile : EnemyAttackState
     {
         private float _attackInnitTimeCount;
         private float _attackDuration;
         private Vector3 _attackDir;
 
-        public EnemyStateAttackSwingNormal(EnemyBase enemy, EnemyStateMachine enemyStateMachine) : base(enemy, enemyStateMachine)
+        public EnemyStateAttackProjectile(EnemyBase enemy, EnemyStateMachine enemyStateMachine) : base(enemy, enemyStateMachine)
         {
 
         }
@@ -19,15 +19,14 @@ namespace Enemy.statemachine.States
         public override void EnterState()
         {
             base.EnterState();
-            _enemy.currentSpeed = _enemy.chaseSpeed;
             _attackInnitTimeCount = _enemy.attackInnitTime;
             _attackDuration = _enemy.totalAttackDuration;
             Vector3 attackChargePos = _enemy.GetNavLocationByDirection(_enemy.transform.position,
                                                                   _enemy.playerRef.transform.position - _enemy.transform.position,
-                                                                  _enemy.distanceToPlayer + 1.7f, 1);
+                                                                  _enemy.distanceToPlayer * 1.6f, 1);
             _enemy.enemyNavAgent.SetDestination(attackChargePos);
             _attackDir = _enemy.GetDirectionToPlayer();
-            _enemy.canTurn = false;
+            _enemy.currentSpeed = _enemy.chaseSpeed;
         }
 
       
@@ -45,11 +44,10 @@ namespace Enemy.statemachine.States
             if (_attackInnitTimeCount > 0)
             {
                 _attackInnitTimeCount -= Time.deltaTime;
-                
                 if(_attackInnitTimeCount <= 0)
                 {
-                    _enemy.InnitAttackCollider(0.2f);
-                    _enemy.isAttacking = true; 
+                    _enemy.ShootProjectile(_enemy.GetDirectionToPlayer());
+                    _enemy.isAttacking = true; //Start attack
                 }
                 
             }

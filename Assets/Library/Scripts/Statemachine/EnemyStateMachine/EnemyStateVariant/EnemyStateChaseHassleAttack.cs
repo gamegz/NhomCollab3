@@ -5,18 +5,17 @@ using UnityEngine;
 
 namespace Enemy.statemachine.States
 {
-    public class EnemyStateChase : EnemyChaseState
+    public class EnemyStateChaseHassleAttack : EnemyChaseState
     {
-        private float _chaseToAttackTimeCount;
+        
 
-        public EnemyStateChase(EnemyBase enemy, EnemyStateMachine enemyStateMachine) : base(enemy, enemyStateMachine)
+        public EnemyStateChaseHassleAttack(EnemyBase enemy, EnemyStateMachine enemyStateMachine) : base(enemy, enemyStateMachine)
         {
         }
 
         public override void EnterState()
         {
             base.EnterState();
-            _chaseToAttackTimeCount = _enemy.chaseToAttackTransitTime;
             
         }
 
@@ -36,25 +35,11 @@ namespace Enemy.statemachine.States
             switch (_enemy.isTokenOwner)
             {
                 case true:
-
-                    
-
-                    if (_enemy.canAttack)
+                    if (_enemy.isTargetInAttackRange && _enemy.canAttack)
                     {
-                        _chaseToAttackTimeCount -= Time.deltaTime;
-                        if(_chaseToAttackTimeCount <= 0)
-                        {
-                            _ownerStateMachine.SwitchState(_enemy.enemyAttackState);
-                            break;
-                        }
-
-                        if (_enemy.isTargetInAttackRange)
-                        {
-                            _ownerStateMachine.SwitchState(_enemy.enemyAttackState);
-                            break;
-                        }
+                        _ownerStateMachine.SwitchState(_enemy.enemyAttackState);
                     }
-                    else
+                    else if (!_enemy.canAttack)
                     {
                         _ownerStateMachine.SwitchState(_enemy.enemyFollowState);
                     }

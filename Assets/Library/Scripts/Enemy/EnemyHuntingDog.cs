@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Enemy.variant
 {
-    public class EnemyThug : EnemyBase
+    public class EnemyHuntingDog : EnemyBase
     {
 
         public override void Awake()
@@ -25,7 +25,7 @@ namespace Enemy.variant
             base.SetUpStateMachine();
             enemyRoamState = new EnemyStateRoam(this, _stateMachine);
             enemyChaseState = new EnemyStateChase(this, _stateMachine);
-            enemyAttackState = new EnemyStateAttackSwingNormal(this, _stateMachine);
+            enemyAttackState = new EnemyStateAttackDash(this, _stateMachine);
             enemyRetreatState = new EnemyStateRetreat(this, _stateMachine);
             enemyFollowState = new EnemyStateFollow(this, _stateMachine);
             _stateMachine.SetStartState(enemyRoamState);       
