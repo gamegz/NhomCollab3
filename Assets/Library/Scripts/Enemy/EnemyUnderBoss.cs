@@ -1,12 +1,12 @@
-using Enemy;
-using Enemy.statemachine.States;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Enemy;
+using Enemy.statemachine.States;
 
 namespace Enemy.variant
 {
-    public class EnemyThug : EnemyBase
+    public class EnemyUnderBoss : EnemyBase
     {
 
         public override void Awake()
@@ -26,9 +26,9 @@ namespace Enemy.variant
             enemyRoamState = new EnemyStateRoam(this, _stateMachine);
             enemyChaseState = new EnemyStateChase(this, _stateMachine);
             enemyAttackState = new EnemyStateAttackSwingNormal(this, _stateMachine);
-            enemyRetreatState = new EnemyStateRetreat(this, _stateMachine);
+            enemyRetreatState = new EnemyStateRetreatRoam(this, _stateMachine);
             enemyFollowState = new EnemyStateFollow(this, _stateMachine);
-            _stateMachine.SetStartState(enemyRoamState);       
+            _stateMachine.SetStartState(enemyRoamState);
             //currentState = EnemyState.Roam;
         }
 

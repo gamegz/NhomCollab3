@@ -13,7 +13,8 @@ namespace Enemy.statemachine.States
 
         public override void EnterState()
         {
-            
+            _enemy.currentSpeed = _enemy.followSpeed;
+            _enemy.currentState = EnemyBase.EnemyState.Follow;
         }
 
         public override void ExitState()
@@ -28,7 +29,7 @@ namespace Enemy.statemachine.States
 
         public override void UpdateState()
         {
-            
+            _enemy.currentSpeed = _enemy.followSpeed;
         }
     }
 }
