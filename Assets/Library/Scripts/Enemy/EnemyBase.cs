@@ -170,11 +170,12 @@ namespace Enemy
 
             //Debug.Log(currentState);
             UpdateAttackCoolDown();
-            if(isDashing) { return; }
+            _stateMachine.UpdateState();
+            if (isDashing) { return; }
             enemyNavAgent.speed = (canMove) ? currentSpeed / 10 : 0;
             LookAtTarget(transform, playerRef.transform, turnSpeed);
-            //UpdateStaggerLogic();
-            _stateMachine.UpdateState();
+            
+            
 
             
         }
@@ -320,7 +321,7 @@ namespace Enemy
         #endregion
         #region MOVEMENT TURNING
 
-        private void LookAtTarget(Transform center, Transform target, float speed)
+        public void LookAtTarget(Transform center, Transform target, float speed)
         {
             if (!canTurn)
             {
@@ -332,7 +333,7 @@ namespace Enemy
             transform.rotation = Quaternion.Lerp(center.rotation, rotation, Time.deltaTime * speed);
         }
 
-        private void LookAtTarget(Transform center, Transform target)
+        public void LookAtTarget(Transform center, Transform target)
         {
             if (!canTurn) { return; }
             Vector3 dirToTarget = target.position - center.position;
@@ -340,7 +341,7 @@ namespace Enemy
             transform.rotation = rotation;
         }
 
-        private void LookAtTarget(Vector3 center, Vector3 target)
+        public void LookAtTarget(Vector3 center, Vector3 target)
         {
             if (!canTurn) { return; }
             Vector3 dirToTarget = target - center;
@@ -372,7 +373,6 @@ namespace Enemy
         public void ShootProjectile(Vector3 direction)
         {
             GameObject projectile = Instantiate(_shootProjectile, _shootPoint.position, Quaternion.identity);
-            Debug.Log(projectile);
             if (projectile.TryGetComponent<EnemyProjectile>(out EnemyProjectile enemyProjectile))
             {
                 enemyProjectile.SetUp(direction, this.gameObject);

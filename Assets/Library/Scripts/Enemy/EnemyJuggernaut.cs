@@ -6,7 +6,7 @@ using Enemy.statemachine.States;
 
 namespace Enemy.variant
 {
-    public class EnemyUnderBoss : EnemyBase
+    public class EnemyJuggernaut : EnemyBase
     {
 
         public override void Awake()
@@ -25,7 +25,7 @@ namespace Enemy.variant
             base.SetUpStateMachine();
             enemyRoamState = new EnemyStateRoam(this, _stateMachine);
             enemyChaseState = new EnemyStateChase(this, _stateMachine);
-            enemyAttackState = new EnemyStateAttackProjectile(this, _stateMachine);
+            enemyAttackState = new EnemyStateAttackDashRepeat(this, _stateMachine);
             enemyRetreatState = new EnemyStateRetreatRoam(this, _stateMachine);
             enemyFollowState = new EnemyStateFollow(this, _stateMachine);
             _stateMachine.SetStartState(enemyRoamState);
