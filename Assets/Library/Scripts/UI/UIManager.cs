@@ -62,7 +62,6 @@ public class UIManager : MonoBehaviour
 
     public void OnEnableUpgradePanel(bool isEnable)
     {
-        Debug.Log("Hey");
         UpgradePanel.SetActive(isEnable);
     }
 

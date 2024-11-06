@@ -32,7 +32,6 @@ public class PlayerUpgrade : MonoBehaviour, IInteractable
 
     public void OnInteract()
     {
-        Debug.Log("Click");
         UIManager.Instance.OnEnableUpgradePanel(true);
     }
 }
