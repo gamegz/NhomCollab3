@@ -16,7 +16,6 @@ public class PlayerMovement : MonoBehaviour
     [Header("References")]
     private PlayerBase m_PlayerBase;
     [SerializeField] private Rigidbody _rb;
-    [SerializeField] private GameObject _playerBody;
     private PlayerInput _playerInput;
 
     [Header("Movement")]
@@ -179,13 +178,13 @@ public class PlayerMovement : MonoBehaviour
     private void LookAtMousePosition() //Look at player mouse position
     {
         Vector3 mousePosition = _camera.ScreenToWorldPoint(new Vector3(_mousePosition.x, _mousePosition.y, _camera.transform.position.y));
-        Vector3 directionFromCharacterToMouse = mousePosition - _playerBody.transform.position;
+        Vector3 directionFromCharacterToMouse = mousePosition - transform.position;
         directionFromCharacterToMouse.y = 0f;
 
         if (directionFromCharacterToMouse != Vector3.zero)
         {
             Quaternion rotation = Quaternion.LookRotation(directionFromCharacterToMouse);
-            _playerBody.transform.rotation = Quaternion.Slerp(_playerBody.transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
         }
     }
     private void MousePos(InputAction.CallbackContext context)

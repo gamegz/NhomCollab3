@@ -23,8 +23,9 @@ public class PlayerBase : MonoBehaviour
     private void Awake()
     {
          _playerInput = new PlayerInput();
-        MeshRenderer childMeshRender = GetComponentInChildren<MeshRenderer>();
-        _playerTransform = childMeshRender ? childMeshRender.transform : null;
+        //MeshRenderer childMeshRender = GetComponentInChildren<MeshRenderer>();
+        //_playerTransform = childMeshRender ? childMeshRender.transform : null;
+        _playerTransform = GetComponent<Transform>();
         if( _playerInput != null)
         {
             Debug.Log("its work");
