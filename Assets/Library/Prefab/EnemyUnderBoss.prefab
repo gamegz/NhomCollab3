@@ -83,7 +83,7 @@ GameObject:
   - component: {fileID: 3413322010517945385}
   - component: {fileID: 5071117140408281458}
   - component: {fileID: 5822318548057199715}
-  - component: {fileID: 2941676006907821772}
+  - component: {fileID: 3275692932611902173}
   m_Layer: 0
   m_Name: EnemyUnderBoss
   m_TagString: Untagged
@@ -107,7 +107,7 @@ Transform:
   - {fileID: 5537075440511601233}
   - {fileID: 2099823919637676737}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5276282376671262937
 MeshFilter:
@@ -231,7 +231,7 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 3
---- !u!114 &2941676006907821772
+--- !u!114 &3275692932611902173
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -240,7 +240,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 772790172236855413}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f1a06bb8c2f61d44b5d8e11c0b828ef, type: 3}
+  m_Script: {fileID: 11500000, guid: 12f9f6ca54e722d44aba0abbae9e9831, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   hostileMethod: 1
@@ -257,15 +257,15 @@ MonoBehaviour:
   attackDamage: 1
   totalAttackDuration: 0.6
   attackInnitTime: 0.5
-  attackCooldown: 1
+  attackCooldown: 3.4
   isAttacking: 0
   canAttack: 0
   attackCoolDownCount: 0
   attackRange: 15
-  chaseToAttackTransitTime: 10
-  retreatDistance: 7
-  maxRetreatDistance: 8
-  followDistance: 13.5
+  chaseToAttackTransitTime: 6
+  retreatDistance: 11
+  maxRetreatDistance: 12
+  followDistance: 14
   staggerThreshold: 10
   staggerTime: 1
   isStagger: 0
@@ -273,9 +273,9 @@ MonoBehaviour:
   isTokenOwner: 0
   enemyNavAgent: {fileID: 5822318548057199715}
   followSpeed: 70
-  retreatSpeed: 30
+  retreatSpeed: 60
   chaseSpeed: 70
-  roamSpeed: 40
+  roamSpeed: 30
   turnSpeed: 13
   _dashDistance: 20
   _dashDuration: 0.23

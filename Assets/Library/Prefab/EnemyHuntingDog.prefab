@@ -106,7 +106,7 @@ Transform:
   - {fileID: 9104960220271898215}
   - {fileID: 5506708748035600594}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4353305323660079707
 MeshFilter:
@@ -249,15 +249,18 @@ MonoBehaviour:
   colliderCapsule: {fileID: 4942117508061993739}
   maxHealth: 100
   currentHealth: 0
+  _shootPoint: {fileID: 0}
+  _shootProjectile: {fileID: 0}
   attackCollider: {fileID: 8963189367506775013}
   attackDamage: 1
-  attackInnitTime: 0.5
-  attackCooldown: 4
+  totalAttackDuration: 0
+  attackInnitTime: 1
+  attackCooldown: 2
   isAttacking: 0
   canAttack: 0
   attackCoolDownCount: 0
   attackRange: 4
-  chaseToAttackTransitTime: 0
+  chaseToAttackTransitTime: 20
   retreatDistance: 4.5
   maxRetreatDistance: 7
   followDistance: 13
@@ -272,7 +275,7 @@ MonoBehaviour:
   chaseSpeed: 200
   roamSpeed: 30
   turnSpeed: 10
-  _dashDistance: 20
+  _dashDistance: 15
   _dashDuration: 0.23
   currentSpeed: 0
   isDashing: 0

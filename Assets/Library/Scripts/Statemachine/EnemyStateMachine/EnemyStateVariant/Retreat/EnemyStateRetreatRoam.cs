@@ -48,12 +48,12 @@ namespace Enemy.statemachine.States
                 _ownerStateMachine.SwitchState(_enemy.enemyRoamState);
             }            
 
-            if(NavMesh.CalculatePath(_enemy.transform.position, _enemy.playerRef.transform.position, -1, path)){
-                if(path.corners.Length >= 2)
-                {
-                    _ownerStateMachine.SwitchState(_enemy.enemyFollowState);
-                }
-            }
+            //if(NavMesh.CalculatePath(_enemy.transform.position, _enemy.playerRef.transform.position, -1, path)){
+            //    if(path.corners.Length >= 2)
+            //    {
+            //        _ownerStateMachine.SwitchState(_enemy.enemyFollowState);
+            //    }
+            //}
 
             
 

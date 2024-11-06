@@ -16,7 +16,17 @@ public class EnemyProjectile : MonoBehaviour
     {
 
         transform.position += _shootDir * _bulletSpeed * Time.deltaTime;
-        
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            ReflectBulletReverse();
+        }
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            ReflectBulletToOwner();
+        }
+
+
         _lifeTime -= Time.deltaTime;
         if(_lifeTime <= 0)
         {

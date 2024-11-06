@@ -52,6 +52,18 @@ namespace Enemy.statemachine.States
                 
             }
 
+
+           
+
+            //if (_enemy.GetDistanceToPLayer() < _enemy.retreatDistance)
+            //{
+            //    Vector3 retreatPos = _enemy.GetNavLocationByDirection(_enemy.transform.position,
+            //                                                     _enemy.transform.position - _enemy.playerRef.transform.position,
+            //                                                     3.3f, 2);
+            //    _enemy.enemyNavAgent.SetDestination(retreatPos);
+            //}
+
+
             if (!_enemy.isAttacking) { return; }
             _attackDuration -= Time.deltaTime;
             if (_attackDuration < 0) //Finish attack
@@ -72,6 +84,7 @@ namespace Enemy.statemachine.States
                         _ownerStateMachine.SwitchState(_enemy.enemyFollowState);                       
                         break;
                     case false:
+
                         _ownerStateMachine.SwitchState(_enemy.enemyRetreatState);
                         break;
                 }
