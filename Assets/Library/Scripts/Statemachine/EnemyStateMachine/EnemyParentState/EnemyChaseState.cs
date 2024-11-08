@@ -16,19 +16,14 @@ namespace Enemy.statemachine.States
 
         public override void EnterState()
         {
-            _enemy.enemyNavAgent.SetDestination(_enemy.playerRef.transform.position);
+            _enemy.currentSpeed = _enemy.chaseSpeed;
+            _enemy.currentState = EnemyBase.EnemyState.Chase;
+
         }
 
         public override void FixedUpdateS()
         {
-            _enemy.UpdateLogicByPlayerDistance();
-
-            _enemy.enemyNavAgent.SetDestination(_enemy.playerRef.transform.position);
-
-            if (_enemy.isTargetInAttackRange)
-            {
-                _ownerStateMachine.SwitchState(_enemy.enemyAttackState);
-            }
+            
         }
 
         public override void UpdateState()
@@ -38,7 +33,7 @@ namespace Enemy.statemachine.States
 
         public override void ExitState()
         {
-            
+            _enemy.currentSpeed = _enemy.chaseSpeed;
         }
     }
 }

@@ -4,7 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Merchant
+  - CharacterPod
+  - A
   layers:
   - Default
   - TransparentFX
@@ -13,13 +14,13 @@ TagManager:
   - Water
   - UI
   - Weapon
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Interact
+  - Enemy
+  - Player
+  - WalkableGround
+  - Wall
+  - Pickup
+  - enemy
   - 
   - 
   - 
