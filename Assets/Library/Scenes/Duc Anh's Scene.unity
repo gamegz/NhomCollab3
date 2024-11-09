@@ -524,7 +524,7 @@ MonoBehaviour:
   player: {fileID: 711547754}
   camTransform: {fileID: 478824932}
   maxDistance: 3
-  timeToFollow: 0.025
+  timeToFollow: 0.1
   followSpeed: 2
   bruh: 2
 --- !u!1 &1480833547
