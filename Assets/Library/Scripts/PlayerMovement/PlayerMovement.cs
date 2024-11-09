@@ -14,12 +14,12 @@ public enum PlayerState
 public class PlayerMovement : MonoBehaviour
 {
     [Header("References")]
+    private PlayerBase m_PlayerBase;
     [SerializeField] private Rigidbody _rb;
-    [SerializeField] private GameObject _playerBody;
     private PlayerInput _playerInput;
 
     [Header("Movement")]
-    [SerializeField] private float playerSpeed;
+    //private float playerSpeed;
     [SerializeField] private float dashForce;
     [SerializeField] private float rotationSpeed;
 
@@ -40,6 +40,7 @@ public class PlayerMovement : MonoBehaviour
     private PlayerState _state;
     private Camera _camera;
     private Vector2 _mousePosition;
+    PlayerBase _playerStats;
 
 
     private void Awake()
@@ -48,6 +49,7 @@ public class PlayerMovement : MonoBehaviour
         MoveToState(PlayerState.Idle);
         _playerInput = new PlayerInput();
         currentCharge = maxCharge;
+        m_PlayerBase = GetComponent<PlayerBase>();
     }
 
     private void OnEnable()
@@ -69,6 +71,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+
         // If the player in the current state and meet the condition then move to the next state using MoveToState() method
         switch (_state)
         {
@@ -107,7 +110,7 @@ public class PlayerMovement : MonoBehaviour
                 _rb.velocity = Vector3.zero;
                 break;
             case PlayerState.Moving:
-                Vector3 playerMovement = new Vector3(_movement.x, 0, _movement.y) * playerSpeed;
+                Vector3 playerMovement = new Vector3(_movement.x, 0, _movement.y) * m_PlayerBase.MoveSpeed;
                 _rb.velocity = playerMovement;
                 break;
             case PlayerState.Dashing:
@@ -175,13 +178,13 @@ public class PlayerMovement : MonoBehaviour
     private void LookAtMousePosition() //Look at player mouse position
     {
         Vector3 mousePosition = _camera.ScreenToWorldPoint(new Vector3(_mousePosition.x, _mousePosition.y, _camera.transform.position.y));
-        Vector3 directionFromCharacterToMouse = mousePosition - _playerBody.transform.position;
+        Vector3 directionFromCharacterToMouse = mousePosition - transform.position;
         directionFromCharacterToMouse.y = 0f;
 
         if (directionFromCharacterToMouse != Vector3.zero)
         {
             Quaternion rotation = Quaternion.LookRotation(directionFromCharacterToMouse);
-            _playerBody.transform.rotation = Quaternion.Slerp(_playerBody.transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
         }
     }
     private void MousePos(InputAction.CallbackContext context)

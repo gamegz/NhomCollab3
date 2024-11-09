@@ -12,7 +12,7 @@ namespace Enemy.EnemyManager
 	//Handle spawning request
 	//Handle updating all enemy logic
 	public class EnemyManager : MonoBehaviour
-	{		
+	{
 
 		public struct EnemySpawnData
 		{
@@ -21,15 +21,16 @@ namespace Enemy.EnemyManager
 			public Quaternion spawnRotation;
 		}
 
-		private int _maxActiveEnemy;
+		private static int _maxActiveEnemy = 9;
 		private int _currentAtiveEnemy;
 
-		private int _maxAttackToken;
+		private static int _maxAttackToken = 3;
 		private int _currentAttackToken;
 
 		private List<EnemyBase> enemies;
 		private List<EnemyBase> enemiesTokenOwner;
 		private List<EnemySpawnData> enemiesSpawnOnHold;
+		private float _enemySpawnOnHoldDelay = 2;
 
         private void Awake()
         {
@@ -58,19 +59,23 @@ namespace Enemy.EnemyManager
 
 		}
 
+		private void UpdateTokenOwner()
+        {
+
+        }
 
 		private void TrySpawnOnHolders()
 		{
-			if (enemies.Count + 1 > _maxActiveEnemy) { return; } //Might exceed max active enemy, cancel
-			if (enemiesSpawnOnHold != null)
-			{
-				//Spawn and remove used data in the list
-				EnemySpawnData firstEnemyData = enemiesSpawnOnHold[0];
-				EnemyBase spawnedEnemy = Instantiate(firstEnemyData.enemyToSpawn, firstEnemyData.spawnLocation, firstEnemyData.spawnRotation);
-				enemiesSpawnOnHold.RemoveAt(0);
-				enemies.Add(spawnedEnemy);
-				_currentAtiveEnemy++;
-			}
+			//Cancel if no enemy to spawn or might exceed max active enemy
+			if (enemiesSpawnOnHold == null) { return; }
+			if (enemies.Count + 1 > _maxActiveEnemy) { return; } 
+
+			//Spawn and remove used data in the list
+			EnemySpawnData firstEnemyData = enemiesSpawnOnHold[0];
+			EnemyBase spawnedEnemy = Instantiate(firstEnemyData.enemyToSpawn, firstEnemyData.spawnLocation, firstEnemyData.spawnRotation);
+			enemiesSpawnOnHold.RemoveAt(0);
+			enemies.Add(spawnedEnemy);
+			_currentAtiveEnemy++;
 
 		}
 
@@ -90,17 +95,16 @@ namespace Enemy.EnemyManager
 				return;
 			} //Not exceed max enemies, can spawn.
 
-			Instantiate(SpawnEnemy, SpawnLocation, SpawnRotation);
-			_currentAtiveEnemy++;
+			EnemyBase spawnedEnemy = Instantiate(SpawnEnemy, SpawnLocation, SpawnRotation);
+			AddActiveEnemy(spawnedEnemy);
 
 		}
 
 		private void OnEnemyDeath(EnemyBase enemyref)
 		{
-			enemies.Remove(enemyref);
-			_currentAtiveEnemy--;
+			RemoveActiveEnemy(enemyref);
 
-            if (enemyref.isTokenOwner && _currentAttackToken < _maxAttackToken)
+            if (enemyref.isTokenOwner)
             {
                 _currentAttackToken++;
             }
@@ -117,7 +121,16 @@ namespace Enemy.EnemyManager
 
 		}
 
-
+		private void AddActiveEnemy(EnemyBase enemy)
+        {
+			enemies.Add(enemy);
+			_currentAtiveEnemy++;
+		}
+		private void RemoveActiveEnemy(EnemyBase enemy)
+        {
+			enemies.Remove(enemy);
+			_currentAtiveEnemy--;
+		}
 
 	}
 

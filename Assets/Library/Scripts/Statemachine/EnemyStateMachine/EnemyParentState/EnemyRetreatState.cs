@@ -16,7 +16,8 @@ namespace Enemy.statemachine.States
 
         public override void EnterState()
         {
-            
+            _enemy.currentState = EnemyBase.EnemyState.Retreat;
+            _enemy.currentSpeed = _enemy.followSpeed;
         }
 
         public override void FixedUpdateS()
