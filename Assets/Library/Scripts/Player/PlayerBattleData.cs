@@ -22,4 +22,10 @@ public class PlayerBattleData
     {
         return playerData.baseStats.fConversionRate * modifier;
     }
+
+    public int Damage(int modifier)
+    {
+        return playerData.baseStats.Damage * modifier;
+    }
 }
+

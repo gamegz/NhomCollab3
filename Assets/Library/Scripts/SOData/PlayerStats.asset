@@ -16,3 +16,4 @@ MonoBehaviour:
     Health: 10
     movementSpeed: 8
     fConversionRate: 1
+    Damage: 15

@@ -4,7 +4,8 @@ using UnityEngine;
 using Enemy.statemachine;
 using Enemy.statemachine.States;
 using UnityEngine.AI;
-
+using Random = UnityEngine.Random;
+using System;
 
 namespace Enemy
 {
@@ -19,6 +20,7 @@ namespace Enemy
     */
     public class EnemyBase : MonoBehaviour, IDamageable
     {
+        public event Action<EnemyBase> OnEnemyDeaths;
         #region DATA CONFIG
 
         public EnemyHostileMethod hostileMethod; //Put this as gunner for testing enemy without tokensystem
@@ -135,6 +137,11 @@ namespace Enemy
             
         }
 
+        public void SetPlayerChildObject(GameObject playerChild)
+        {
+            playerRef = playerChild;
+        }
+
         public virtual void SetUpStateMachine()
         {
             _stateMachine = new EnemyStateMachine();
@@ -169,6 +176,7 @@ namespace Enemy
         {
 
             //Debug.Log(currentState);
+            //if (this == null) { return; }
             UpdateAttackCoolDown();
             _stateMachine.UpdateState();
             if (isDashing) { return; }
@@ -193,6 +201,7 @@ namespace Enemy
 
         public void UpdateLogicByPlayerDistance()
         {
+            //if(this == null) { return; }
             distanceToPlayer = Vector3.Distance(transform.position, playerRef.transform.position);
             isTargetInAttackRange = (distanceToPlayer <= attackRange) ? true : false;
         }
@@ -413,6 +422,7 @@ namespace Enemy
                 case DeathMethod.Freeze:
                     break;
             }
+            OnEnemyDeaths?.Invoke(this);
             Destroy(gameObject);
 
         }

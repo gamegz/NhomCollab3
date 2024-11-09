@@ -10,12 +10,15 @@ public class PlayerBase : MonoBehaviour
     private int moveSpeedLevel;
     private int healthLevel;
     private int fConversionRateLevel;
+    private int damageLevel;
     private const float SPEED_INCREASE_PER_LEVEL = 0.02f;
     private const float HEALTH_INCREASE_PER_LEVEL = 1f;
     private const float FCONVERSION_RATE_INCREASE_PER_LEVEL = 1f;
+    private const int DAMAGE_INCREASE_PER_LEVEL = 1;
     private float buffSpeed = 1f;
     private float buffHealth = 1f;
     private float buffFConversionRate = 1f;
+    private int buffDamage = 1;
     PlayerInput _playerInput;
     [SerializeField] private LayerMask interactLayerMask;
     private Transform _playerTransform;
@@ -80,6 +83,15 @@ public class PlayerBase : MonoBehaviour
         {
             float modifier = buffFConversionRate + (FCONVERSION_RATE_INCREASE_PER_LEVEL * fConversionRateLevel);
             return data.FConversionRate(modifier);
+        }
+    }
+
+    public int Damage
+    {
+        get
+        {
+            int modifier = buffDamage + (DAMAGE_INCREASE_PER_LEVEL * damageLevel);
+            return data.Damage(modifier);
         }
     }
 

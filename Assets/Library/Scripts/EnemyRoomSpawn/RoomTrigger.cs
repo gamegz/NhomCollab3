@@ -1,4 +1,5 @@
 using Core.Events;
+using Enemy;
 using Enemy.EnemyManager;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,24 +7,13 @@ using UnityEngine;
 
 public class RoomTrigger : MonoBehaviour
 {
-    EnemyManager enemyManager;
-
-    void Start()
-    {
-
-    }
-
-
-    void Update()
-    {
-        
-    }
+    [SerializeField] private GameObject enemySpawner;
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
-            //enemyManager.OnSpawnRequest()
+            enemySpawner.SetActive(true);
         }
     }
 }

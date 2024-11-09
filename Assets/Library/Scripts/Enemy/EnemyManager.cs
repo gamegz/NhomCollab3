@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 namespace Enemy.EnemyManager
 {
@@ -13,7 +14,11 @@ namespace Enemy.EnemyManager
 	//Handle updating all enemy logic
 	public class EnemyManager : MonoBehaviour
 	{
+		public delegate void OnSpawnRequestEvent(EnemyBase enemy, Vector3 location, Quaternion rotation, Action<EnemyBase> onDeathCallBack = null);
+		public static OnSpawnRequestEvent onSpawnRequestEvent;
 
+		//public delegate void OnEnemyDeathEvent(EnemyBase enemy);
+		//public static OnEnemyDeathEvent onEnemyDeathEvent;
 		public struct EnemySpawnData
 		{
 			public EnemyBase enemyToSpawn;
@@ -31,6 +36,7 @@ namespace Enemy.EnemyManager
 		private List<EnemyBase> enemiesTokenOwner;
 		private List<EnemySpawnData> enemiesSpawnOnHold;
 		private float _enemySpawnOnHoldDelay = 2;
+		public GameObject PlayerChildObject;
 
         private void Awake()
         {
@@ -39,11 +45,21 @@ namespace Enemy.EnemyManager
 
         private void Start()
         {
-            //Subcribe OnRequestToken (take enemy)
+			//Subcribe OnRequestToken (take enemy)
 			//Subscribe OnSpawnRequest (take spawn data)
 			//Subcribe OnEnemyDeath
+			onSpawnRequestEvent += OnSpawnRequest;
         }
-        
+
+        private void OnDestroy()
+        {
+            onSpawnRequestEvent -= OnSpawnRequest;
+        }
+
+        private void OnDisable()
+        {
+            onSpawnRequestEvent -= OnSpawnRequest;
+        }
 
         private void Update()
 		{
@@ -73,16 +89,16 @@ namespace Enemy.EnemyManager
 			//Spawn and remove used data in the list
 			EnemySpawnData firstEnemyData = enemiesSpawnOnHold[0];
 			EnemyBase spawnedEnemy = Instantiate(firstEnemyData.enemyToSpawn, firstEnemyData.spawnLocation, firstEnemyData.spawnRotation);
-			enemiesSpawnOnHold.RemoveAt(0);
+            AssignPlayerChildObject(spawnedEnemy);
+            enemiesSpawnOnHold.RemoveAt(0);
 			enemies.Add(spawnedEnemy);
 			_currentAtiveEnemy++;
 
 		}
 
-		public void OnSpawnRequest(EnemyBase SpawnEnemy, Vector3 SpawnLocation, Quaternion SpawnRotation)
+		public void OnSpawnRequest(EnemyBase SpawnEnemy, Vector3 SpawnLocation, Quaternion SpawnRotation, Action<EnemyBase> onDeathCallBack = null)
 		{
 			if (enemiesSpawnOnHold != null) { return; } //Request denied
-
 			//Might exceed max active enemy, move to on hold
 			if (enemies.Count + 1 > _maxActiveEnemy)
 			{
@@ -96,14 +112,27 @@ namespace Enemy.EnemyManager
 			} //Not exceed max enemies, can spawn.
 
 			EnemyBase spawnedEnemy = Instantiate(SpawnEnemy, SpawnLocation, SpawnRotation);
-			AddActiveEnemy(spawnedEnemy);
+            spawnedEnemy.OnEnemyDeaths += OnEnemyDeath;
+			if(onDeathCallBack != null)
+			{
+				spawnedEnemy.OnEnemyDeaths += onDeathCallBack;
+			}
+            AssignPlayerChildObject(spawnedEnemy);
+            AddActiveEnemy(spawnedEnemy);
+		}
 
+		private void AssignPlayerChildObject(EnemyBase enemy)
+		{
+			if(PlayerChildObject != null)
+			{
+				enemy.SetPlayerChildObject(PlayerChildObject);
+			}
 		}
 
 		private void OnEnemyDeath(EnemyBase enemyref)
 		{
 			RemoveActiveEnemy(enemyref);
-
+			enemyref.OnEnemyDeaths -= OnEnemyDeath;
             if (enemyref.isTokenOwner)
             {
                 _currentAttackToken++;
@@ -117,7 +146,7 @@ namespace Enemy.EnemyManager
 			{
 				enemy.isTokenOwner = true;
 				_currentAttackToken--;
-			}
+            }
 
 		}
 
@@ -125,12 +154,13 @@ namespace Enemy.EnemyManager
         {
 			enemies.Add(enemy);
 			_currentAtiveEnemy++;
-		}
+
+        }
 		private void RemoveActiveEnemy(EnemyBase enemy)
         {
 			enemies.Remove(enemy);
 			_currentAtiveEnemy--;
-		}
+        }
 
 	}
 

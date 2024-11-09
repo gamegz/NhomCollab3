@@ -9,4 +9,5 @@ public struct PlayerStatsStruct
     public float Health;
     public float movementSpeed;
     public float fConversionRate;
+    public int Damage;
 }
