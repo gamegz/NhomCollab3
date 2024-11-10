@@ -22,8 +22,7 @@ public class CamFollowMouse : MonoBehaviour
     [Header("Values")]
     [SerializeField] private float maxDistance = 5f;       // Maximum offset distance from the player
     [SerializeField] private float timeToFollow = 0.1f;    // Camera follow time for smoothing
-    [SerializeField] private float followSpeed = 10f;      // A seperate value to use
-    [SerializeField] private float bruh = 2f;
+    //[SerializeField] private float followSpeed = 10f;      // A seperate value to use [UNUSED]
     #endregion
 
     void Start()
@@ -79,7 +78,6 @@ public class CamFollowMouse : MonoBehaviour
 
         // 4. Calculate the target position for the camera in world space
         Vector3 targetWorldPos = camTransform.position + (new Vector3(difference.x, 0, difference.y) * 1/2f);
-        Debug.Log("TargetWorldPos: " + targetWorldPos);
 
 
         // 5. Smoothly move the camera towards the target position

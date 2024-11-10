@@ -14,18 +14,7 @@ public class EnemyProjectile : MonoBehaviour
 
     private void Update()
     {
-
         transform.position += _shootDir * _bulletSpeed * Time.deltaTime;
-
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            ReflectBulletReverse();
-        }
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            ReflectBulletToOwner();
-        }
-
 
         _lifeTime -= Time.deltaTime;
         if(_lifeTime <= 0)
@@ -39,7 +28,7 @@ public class EnemyProjectile : MonoBehaviour
         ChangeShootDir(-_shootDir);
     }
 
-    public void ReflectBulletToOwner()
+    public void ReflectBulletToOwner() // Might not use this yet, will discuss with the team.
     {
         ChangeShootDir(_owner.transform.position - transform.position);
     }
