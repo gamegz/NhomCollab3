@@ -10,8 +10,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button CloseUpgradePanelButton;
     [SerializeField] private Button CloseMerchantPanelButton;
     [SerializeField] private Button UpgradeButton;
-    [SerializeField] private GameObject UpgradeInstructionText;
-    [SerializeField] private GameObject MerchantInstructionsText;
     [SerializeField] private GameObject UpgradePanel;
     [SerializeField] private GameObject MerchantPanel;
     [SerializeField] private TextMeshProUGUI HPText;
@@ -29,8 +27,6 @@ public class UIManager : MonoBehaviour
     }
     void Start()
     {
-        UpgradeInstructionText.SetActive(false);
-        MerchantInstructionsText.SetActive(false);
         CloseUpgradePanelButton.onClick.AddListener(() => OnEnableUpgradePanel(false));
         CloseMerchantPanelButton.onClick.AddListener(() => OnEnableMerchantPanel(false));
         UpgradeButton.onClick.AddListener(OnUpgradeCharacter);
@@ -47,17 +43,6 @@ public class UIManager : MonoBehaviour
         HPText.text = "HP: " + _playerBase.Health.ToString();
         MovementSpeedText.text = "Move Speed: " + _playerBase.MoveSpeed.ToString();
         FConversionRateText.text = "FConversion Rate: " + _playerBase.FConversionRate.ToString();
-    }
-
-    public void OnEnableUpgradeInstructionText(bool isEnable)
-    {
-        
-        UpgradeInstructionText.SetActive(isEnable);
-    }
-
-    public void OnEnableMerchantInstructionText(bool isEnable) 
-    {
-        MerchantInstructionsText.SetActive(isEnable);
     }
 
     public void OnEnableUpgradePanel(bool isEnable)

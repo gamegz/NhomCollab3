@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyDropCoin : MonoBehaviour
+public class EnemyCoinDropper : MonoBehaviour
 {
     [SerializeField] private GameObject coinPrefab;
     [SerializeField] private int coinDropCount = 3;

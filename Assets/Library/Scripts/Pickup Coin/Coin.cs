@@ -13,7 +13,7 @@ public class Coin : MonoBehaviour, ICollectable
     // Interface
     public void Collect()
     {
-        PlayerEconomy moneyScript = FindObjectOfType<PlayerEconomy>();
+        PlayerWallet moneyScript = FindObjectOfType<PlayerWallet>();
         moneyScript.IncreaseBioCompound(bioGranted);
     }
 

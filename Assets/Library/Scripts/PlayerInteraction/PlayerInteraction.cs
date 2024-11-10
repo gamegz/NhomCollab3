@@ -18,7 +18,7 @@ public class PlayerInteraction : MonoBehaviour
             // Check if there's an interactable in range and if "E" is pressed
             if (currentInteractable != null)
             {
-                currentInteractable.Interact();
+                currentInteractable.OnInteract();
             }
             else
             {

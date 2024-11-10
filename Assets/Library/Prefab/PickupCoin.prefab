@@ -129,7 +129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 702ae3ca686875a479d371cf26dcd651, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bioGranted: 1
+  bioGranted: 9000
 --- !u!135 &1595680927507270
 SphereCollider:
   m_ObjectHideFlags: 0

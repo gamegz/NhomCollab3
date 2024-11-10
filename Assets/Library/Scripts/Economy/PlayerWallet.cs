@@ -2,15 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerEconomy : MonoBehaviour
+using TMPro; // Testing
+
+public class PlayerWallet : MonoBehaviour
 {
     private int bioCompound;
-    private int credits;
-
-    private int silver; //???????
+    private int credit;
 
     [SerializeField] private float pullSpeed = 3f;
     [SerializeField] private float bioCompoundPerCredit = 3f;
+
+    // Testing
+    [SerializeField] private TextMeshPro moneyText;
 
     void Start()
     {
@@ -21,10 +24,23 @@ public class PlayerEconomy : MonoBehaviour
     {
         PullCoins();
 
-        if (Input.GetKeyDown(KeyCode.T))
+        // Testing
+        if (Input.GetKeyDown(KeyCode.O))
         {
             ExchangeBioCompoundForCredit();
         }
+        if (Input.GetKeyDown(KeyCode.B)) 
+        {
+            AddBio();
+        }
+        if (Input.GetKeyDown(KeyCode.N))  
+        {
+            AddCredit();
+        }
+        PrintMoney(); 
+
+
+
     }
 
     // Gain money
@@ -53,10 +69,38 @@ public class PlayerEconomy : MonoBehaviour
         int creditGain = Mathf.CeilToInt(bioCompound / bioCompoundPerCredit);
 
         // Update credits and reset BioCompound count to 0 after exchange
-        credits += creditGain;
+        credit += creditGain;
         bioCompound = 0;
-
-        Debug.Log($"Exchanged BioCompound for Credits. Total Credits: {credits}");
     }
 
+
+    public bool DeductBioCompound(int amount)
+    {
+        if (bioCompound >= amount)
+        {
+            bioCompound -= amount;
+            return true;  
+        }
+        else
+        {
+            Debug.LogWarning("Not enough bioCompound!");
+            return false; 
+        }
+    }
+
+    // Testing
+    private void PrintMoney()
+    {
+        moneyText.text = "BioCompound: " + bioCompound + "\nCredit: " + credit;
+    }
+
+    private void AddBio()
+    {
+        bioCompound += 500;
+    }
+
+    private void AddCredit()
+    {
+        credit += 500;
+    }
 }

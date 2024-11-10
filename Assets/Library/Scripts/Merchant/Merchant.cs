@@ -47,7 +47,7 @@ public class Merchant : MonoBehaviour, IInteractable
         }
     }
 
-    public void Interact()
+    public void OnInteract()
     {
         Debug.Log("Interacting with the merchant...");
     }
