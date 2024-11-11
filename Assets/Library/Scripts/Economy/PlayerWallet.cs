@@ -38,9 +38,6 @@ public class PlayerWallet : MonoBehaviour
             AddCredit();
         }
         PrintMoney(); 
-
-
-
     }
 
     // Gain money

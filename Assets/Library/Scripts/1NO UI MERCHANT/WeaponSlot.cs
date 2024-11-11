@@ -51,7 +51,7 @@ public class WeaponSlot : MonoBehaviour, IInteractable
         int price = weapon.weaponBioCurrencyCost;
         if (wallet.DeductBioCompound(price) == true)
         {
-            if (LevelMerchantPro.Instance.remainingBuyTurns > 0)
+            if (LevelMerchantPro.Instance.RemainingBuyTurns > 0)
             {
                 for (int i = 0; i < slots.Length; i++)
                 {
@@ -59,7 +59,12 @@ public class WeaponSlot : MonoBehaviour, IInteractable
                     if ((slots[i].childCount == 0))
                     {
                         LevelMerchantPro.Instance.remainingRerolls = 0;
-                        LevelMerchantPro.Instance.remainingBuyTurns -= 1;
+
+
+                        LevelMerchantPro.Instance.ModifyRemainingBuyTurns(-1);
+
+
+
                         LevelMerchantPro.Instance.UpdateRerollInfo();
                         DestroyWeaponChildren();
                         GameObject realWeapon = Instantiate(weapon.weaponPrefab, slots[i].transform.position, Quaternion.identity);

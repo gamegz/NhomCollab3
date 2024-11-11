@@ -11,7 +11,14 @@ public class LevelMerchantPro : MonoBehaviour, IInteractable
     public static LevelMerchantPro Instance { get; private set; }
 
     [SerializeField] private Transform[] itemSpawnSlotArray;
-    public int remainingBuyTurns = 2;
+
+    private int remainingBuyTurns = 2;
+    public int RemainingBuyTurns => remainingBuyTurns; // Get
+    public void ModifyRemainingBuyTurns(int amount) // Set
+    {
+        remainingBuyTurns += amount;
+    }
+
 
     private PlayerWallet wallet;
 
@@ -27,13 +34,6 @@ public class LevelMerchantPro : MonoBehaviour, IInteractable
     [SerializeField] private List<BuffItemPro> buffItemProList;
     private BuffItemPro[] selectedBuffs = new BuffItemPro[2];
     [SerializeField] private BuffSlot[] buffSlotArray;
-
-
-
-
-
-
-
 
 
     [Space(50)]

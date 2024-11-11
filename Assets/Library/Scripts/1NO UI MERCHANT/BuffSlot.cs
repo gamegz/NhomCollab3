@@ -44,16 +44,16 @@ public class BuffSlot : MonoBehaviour, IInteractable
     {
         Transform[] slots = LevelMerchantPro.Instance.ItemSpawnSlotArray;
         int price = buff.buffBioCurrencyCost;
-        if (wallet.DeductBioCompound(price) == true)
+        if (LevelMerchantPro.Instance.RemainingBuyTurns > 0)
         {
-            if(LevelMerchantPro.Instance.remainingBuyTurns > 0)
+            if (wallet.DeductBioCompound(price) == true)
             {
                 for (int i = 0; i < slots.Length; i++)
                 {
                     if ((slots[i].childCount == 0))
                     {
                         LevelMerchantPro.Instance.remainingRerolls = 0;
-                        LevelMerchantPro.Instance.remainingBuyTurns -= 1;
+                        LevelMerchantPro.Instance.ModifyRemainingBuyTurns(-1);
                         LevelMerchantPro.Instance.UpdateRerollInfo();
                         DestroyBuffChildren();
                         GameObject realBuff = Instantiate(buff.buffPrefab, slots[i].transform.position, Quaternion.identity);
@@ -64,10 +64,10 @@ public class BuffSlot : MonoBehaviour, IInteractable
                 }
                 Debug.Log("No empty slots available to spawn the buff.");
             }
-            else
-            {
-                Debug.Log("No more turn");
-            }
+        }
+        else
+        {
+            Debug.Log("No more turn");
         }
     }
 
