@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class WeaponSlot : MonoBehaviour, IInteractable
+public class WeaponSlotHome : MonoBehaviour, IInteractable
 {
     private WeaponItemPro weapon;
     [SerializeField] private TextMeshPro weaponNameText;
@@ -18,7 +18,7 @@ public class WeaponSlot : MonoBehaviour, IInteractable
 
     void Update()
     {
-
+        
     }
 
     public void GetWeapon(WeaponItemPro newWeapon)
@@ -26,7 +26,6 @@ public class WeaponSlot : MonoBehaviour, IInteractable
         weapon = newWeapon;
         DisplayeWeaponInfo();
     }
-
     private void DisplayeWeaponInfo()
     {
         DestroyWeaponChildren();
@@ -39,20 +38,18 @@ public class WeaponSlot : MonoBehaviour, IInteractable
 
     public void OnInteract()
     {
-        Transform[] slots = LevelMerchantPro.Instance.ItemSpawnSlotArray;
-        int price = weapon.weaponBioCurrencyCost;
-        if (LevelMerchantPro.Instance.RemainingBuyTurns > 0)
+        Transform[] slots = HomeMerchantPro.Instance.ItemSpawnSlotArray;
+        int price = weapon.weaponCreditCurrencyCost;
+        if (HomeMerchantPro.Instance.RemainingBuyTurns > 0)
         {
-            if (wallet.DeductBioCompound(price) == true)
+            if (wallet.DeductCredit(price) == true)
             {
                 for (int i = 0; i < slots.Length; i++)
                 {
                     // Check if the slot doesn't have any child
                     if ((slots[i].childCount == 0))
                     {
-                        LevelMerchantPro.Instance.remainingRerolls = 0;
-                        LevelMerchantPro.Instance.ModifyRemainingBuyTurns(-1);
-                        LevelMerchantPro.Instance.UpdateRerollInfo();
+                        HomeMerchantPro.Instance.ModifyRemainingBuyTurns(-1);
                         DestroyWeaponChildren();
 
                         GameObject realWeapon = Instantiate(weapon.weaponPrefab, slots[i].transform.position, Quaternion.identity);

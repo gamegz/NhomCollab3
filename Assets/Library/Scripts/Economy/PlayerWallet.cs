@@ -85,6 +85,21 @@ public class PlayerWallet : MonoBehaviour
         }
     }
 
+    public bool DeductCredit(int amount)
+    {
+        if (credit >= amount)
+        {
+            credit -= amount;
+            return true;
+        }
+        else
+        {
+            Debug.LogWarning("Not enough Credit!");
+            return false;
+        }
+    }
+
+
     // Testing
     private void PrintMoney()
     {

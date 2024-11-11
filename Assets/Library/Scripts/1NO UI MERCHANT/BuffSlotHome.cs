@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class BuffSlot : MonoBehaviour, IInteractable
+public class BuffSlotHome : MonoBehaviour, IInteractable
 {
     private BuffItemPro buff;
     [SerializeField] private TextMeshPro buffNameText;
@@ -34,25 +34,23 @@ public class BuffSlot : MonoBehaviour, IInteractable
         fakeBuff.transform.SetParent(transform, true);
 
         buffNameText.text = buff.buffName;
-        buffPriceText.text = buff.buffBioCurrencyCost.ToString();
+        buffPriceText.text = buff.buffCreditCurrencyCost.ToString();
     }
 
     public void OnInteract()
     {
-        Transform[] slots = LevelMerchantPro.Instance.ItemSpawnSlotArray;
-        int price = buff.buffBioCurrencyCost;
-        if (LevelMerchantPro.Instance.RemainingBuyTurns > 0)
+        Transform[] slots = HomeMerchantPro.Instance.ItemSpawnSlotArray;
+        int price = buff.buffCreditCurrencyCost;
+        if (HomeMerchantPro.Instance.RemainingBuyTurns > 0)
         {
-            if (wallet.DeductBioCompound(price) == true)
+            if (wallet.DeductCredit(price) == true)
             {
                 for (int i = 0; i < slots.Length; i++)
                 {
                     // Check if the slot doesn't have any child
                     if ((slots[i].childCount == 0))
                     {
-                        LevelMerchantPro.Instance.remainingRerolls = 0;
-                        LevelMerchantPro.Instance.ModifyRemainingBuyTurns(-1);
-                        LevelMerchantPro.Instance.UpdateRerollInfo();
+                        HomeMerchantPro.Instance.ModifyRemainingBuyTurns(-1);
                         DestroyBuffChildren();
 
                         GameObject realBuff = Instantiate(buff.buffPrefab, slots[i].transform.position, Quaternion.identity);

@@ -18,4 +18,4 @@ MonoBehaviour:
     type: 3}
   weaponName: Hand
   weaponBioCurrencyCost: 52
-  weaponCreditCurrencyCost: 0
+  weaponCreditCurrencyCost: 123

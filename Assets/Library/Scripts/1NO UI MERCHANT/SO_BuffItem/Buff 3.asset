@@ -18,4 +18,4 @@ MonoBehaviour:
     type: 3}
   buffName: Buff 3
   buffBioCurrencyCost: 30
-  buffCreditCurrencyCost: 0
+  buffCreditCurrencyCost: 75

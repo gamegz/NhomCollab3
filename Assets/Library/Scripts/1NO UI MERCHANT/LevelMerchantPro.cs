@@ -19,7 +19,6 @@ public class LevelMerchantPro : MonoBehaviour, IInteractable
         remainingBuyTurns += amount;
     }
 
-
     private PlayerWallet wallet;
 
     [Space(50)]
@@ -42,9 +41,6 @@ public class LevelMerchantPro : MonoBehaviour, IInteractable
     [SerializeField] private TextMeshPro rerollCostText;
     public int remainingRerolls = 4;
     [SerializeField] private TextMeshPro rerollCountText;
-
-
-
 
 
     public Transform[] ItemSpawnSlotArray
@@ -88,6 +84,11 @@ public class LevelMerchantPro : MonoBehaviour, IInteractable
         if (wallet == null)
         {
             Debug.Log("This script tried to find a gameObject with the tag 'Player' but it seems you moron forgot to add it!");
+        }
+
+        if (wallet == null)
+        {
+            Debug.Log("BuffSlot tried to find a gameObject with the tag 'Player' but it seems you moron forgot to add it!");
         }
     }
 
@@ -135,7 +136,6 @@ public class LevelMerchantPro : MonoBehaviour, IInteractable
 
 
     // BUFF------------------------------------------------------------------------------------------------------------------------------------------------------------
-
     private void GetRandomBuff()
     {
         if (buffItemProList == null || buffItemProList.Count < 2)
@@ -170,8 +170,6 @@ public class LevelMerchantPro : MonoBehaviour, IInteractable
         buffSlotArray[0].GetBuff(selectedBuffs[0]);
         buffSlotArray[1].GetBuff(selectedBuffs[1]);
     }
-
-
 
     public void OnInteract()
     {

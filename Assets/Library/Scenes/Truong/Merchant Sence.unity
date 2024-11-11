@@ -4828,7 +4828,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 421152979}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -1.612, z: 0}
   m_LocalScale: {x: 1, y: 0.13033, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6036,7 +6036,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &570215649
 Transform:
   m_ObjectHideFlags: 0
@@ -6887,7 +6887,7 @@ GameObject:
   m_Component:
   - component: {fileID: 703367861}
   - component: {fileID: 703367863}
-  - component: {fileID: 703367862}
+  - component: {fileID: 703367864}
   m_Layer: 7
   m_Name: Weapon Slot 2
   m_TagString: Untagged
@@ -6912,20 +6912,6 @@ Transform:
   m_Father: {fileID: 641851322}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &703367862
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 703367860}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a59a33dbe71a15746a242da9a0d8901f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weaponNameText: {fileID: 537061636}
-  weaponPriceText: {fileID: 94262094}
 --- !u!65 &703367863
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6947,6 +6933,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.2991223, y: 2.308804, z: 2.2211785}
   m_Center: {x: -0.00000036791738, y: -0.16154718, z: -1.8675544}
+--- !u!114 &703367864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 703367860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3efe5cd8168e7b4aacf5b66baac48fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponNameText: {fileID: 537061636}
+  weaponPriceText: {fileID: 94262094}
 --- !u!1 &717319140
 GameObject:
   m_ObjectHideFlags: 0
@@ -7338,7 +7338,7 @@ GameObject:
   m_Component:
   - component: {fileID: 771310493}
   - component: {fileID: 771310495}
-  - component: {fileID: 771310494}
+  - component: {fileID: 771310496}
   m_Layer: 7
   m_Name: Buff Slot 2
   m_TagString: Untagged
@@ -7363,20 +7363,6 @@ Transform:
   m_Father: {fileID: 641851322}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &771310494
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 771310492}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ffa8e32cb54aaf48a1a4a89d84b0e13, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  buffNameText: {fileID: 1691566695}
-  buffPriceText: {fileID: 1717385948}
 --- !u!65 &771310495
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7398,6 +7384,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.2991223, y: 2.308804, z: 2.2211785}
   m_Center: {x: -0.00000036791738, y: -0.16154718, z: -1.8675544}
+--- !u!114 &771310496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 771310492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5394e7ad8229f24382d53c7519df476, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buffNameText: {fileID: 1691566695}
+  buffPriceText: {fileID: 1717385948}
 --- !u!1 &771610624
 GameObject:
   m_ObjectHideFlags: 0
@@ -13149,7 +13149,7 @@ GameObject:
   m_Layer: 7
   m_Name: RandomWeapon
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -13161,7 +13161,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1436656768}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.7, y: -0.27, z: -2.33}
+  m_LocalPosition: {x: -2.7, y: 1.341, z: -2.33}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -14477,7 +14477,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1646008632}
   - component: {fileID: 1646008634}
-  - component: {fileID: 1646008633}
+  - component: {fileID: 1646008635}
   m_Layer: 7
   m_Name: 'Buff Slot 1 '
   m_TagString: Untagged
@@ -14502,20 +14502,6 @@ Transform:
   m_Father: {fileID: 641851322}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1646008633
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1646008631}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ffa8e32cb54aaf48a1a4a89d84b0e13, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  buffNameText: {fileID: 472033464}
-  buffPriceText: {fileID: 321311741}
 --- !u!65 &1646008634
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14537,6 +14523,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.2991223, y: 2.308804, z: 2.2211785}
   m_Center: {x: -0.00000036791738, y: -0.16154718, z: -1.8675544}
+--- !u!114 &1646008635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1646008631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5394e7ad8229f24382d53c7519df476, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buffNameText: {fileID: 472033464}
+  buffPriceText: {fileID: 321311741}
 --- !u!1 &1651934760
 GameObject:
   m_ObjectHideFlags: 0
@@ -15900,7 +15900,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1798656322}
   - component: {fileID: 1798656324}
-  - component: {fileID: 1798656323}
+  - component: {fileID: 1798656325}
   m_Layer: 7
   m_Name: Weapon Slot 1
   m_TagString: Untagged
@@ -15925,20 +15925,6 @@ Transform:
   m_Father: {fileID: 641851322}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1798656323
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1798656321}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a59a33dbe71a15746a242da9a0d8901f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weaponNameText: {fileID: 1548280107}
-  weaponPriceText: {fileID: 733735714}
 --- !u!65 &1798656324
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -15960,6 +15946,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.2991223, y: 2.308804, z: 2.2211785}
   m_Center: {x: -0.00000036791738, y: -0.16154718, z: -1.8675544}
+--- !u!114 &1798656325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1798656321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3efe5cd8168e7b4aacf5b66baac48fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponNameText: {fileID: 1548280107}
+  weaponPriceText: {fileID: 733735714}
 --- !u!1 &1815146574
 GameObject:
   m_ObjectHideFlags: 0
@@ -16518,14 +16518,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 881081002eee7d14e8714ebb7f84ee7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemSpawnSlotArray: []
-  weaponItemProList: []
-  weaponSlotArray: []
-  buffItemProList: []
-  buffSlotArray: []
-  rerollCostText: {fileID: 0}
-  remainingRerolls: 4
-  rerollCountText: {fileID: 0}
+  itemSpawnSlotArray:
+  - {fileID: 1972866701}
+  - {fileID: 1187547279}
+  weaponItemProList:
+  - {fileID: 11400000, guid: 21520320e7f913e49b1d2f7eb586222a, type: 2}
+  - {fileID: 11400000, guid: d42128008210b014b901433f9b7866c3, type: 2}
+  - {fileID: 11400000, guid: 3207835257b8e54478c6e40229e947c3, type: 2}
+  - {fileID: 11400000, guid: 09653b03e0f5d304a9a7592a5c5a1ca3, type: 2}
+  - {fileID: 11400000, guid: 2b16fa692778b2d42867e6f066e0bd6e, type: 2}
+  weaponSlotArray:
+  - {fileID: 1798656325}
+  - {fileID: 703367864}
+  buffItemProList:
+  - {fileID: 11400000, guid: b25c82769fc572948889dcf6671a0aef, type: 2}
+  - {fileID: 11400000, guid: dd4b5a0199211c54fa9474c7f58b773a, type: 2}
+  - {fileID: 11400000, guid: e830dc845cfe84d438fea4931192b5ea, type: 2}
+  - {fileID: 11400000, guid: 09ff237a928443a40b124cbfd69427a3, type: 2}
+  - {fileID: 11400000, guid: c06513c414c7fb3428812c94e31461f0, type: 2}
+  buffSlotArray:
+  - {fileID: 1646008635}
+  - {fileID: 771310496}
 --- !u!1 &1825402033
 GameObject:
   m_ObjectHideFlags: 0
@@ -19483,7 +19496,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 4}
+  m_AnchoredPosition: {x: 0, y: 1.78}
   m_SizeDelta: {x: 1, y: 0.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2117708475
@@ -19518,7 +19531,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Cost
+  m_text: 'Name
 
 '
   m_isRightToLeft: 0
