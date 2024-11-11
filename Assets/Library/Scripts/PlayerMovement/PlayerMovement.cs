@@ -9,7 +9,7 @@ public class PlayerMovement : PlayerActionState
 {
     [Header("References")]
     private PlayerBase m_PlayerBase;
-    [SerializeField] private Rigidbody _rb;
+    protected Rigidbody _rb;
     private PlayerInput _playerInput;
 
     [Header("Movement")]
@@ -42,6 +42,7 @@ public class PlayerMovement : PlayerActionState
         _playerInput = new PlayerInput();
         currentCharge = maxCharge;
         m_PlayerBase = GetComponent<PlayerBase>();
+        _rb = GetComponent<Rigidbody>();
     }
 
     private void OnEnable()

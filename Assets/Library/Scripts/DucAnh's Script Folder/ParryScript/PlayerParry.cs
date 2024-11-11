@@ -5,11 +5,11 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEditor.Build;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerParry : PlayerActionState
 {
     #region Non-Serializable
-    [Header("Values")]
     /* BOOLEAN VALUES */
     private bool canParry = true;
     private bool invulnerable = false;
@@ -19,6 +19,10 @@ public class PlayerParry : PlayerActionState
     private float delayTimer;
     private float invulnerableTimer;
     private float standStillTimer;
+
+    /* RFERENCES */
+    private Rigidbody _rb;
+
     #endregion
 
 
@@ -42,6 +46,7 @@ public class PlayerParry : PlayerActionState
         delayTimer = delayTimerOrg;
         invulnerableTimer = invulnerableTimerOrg;
         standStillTimer = standStillTimerOrg;
+        _rb= GetComponent<Rigidbody>();
     }
 
     void Update()
@@ -85,17 +90,23 @@ public class PlayerParry : PlayerActionState
         {
             if (canParry)
             {
-                #region Setting Up Booleans
+
                 canParry = false;   
                 invulnerable = true;
                 standingStill = true;
-                #endregion
 
-                #region Coroutines
                 StartCoroutine(Parrying());
+                MoveToState(PlayerState.Parrying);
 
-                #endregion
             }
+        }
+
+
+        switch (_state)
+        {
+            case PlayerState.Parrying:
+                if (!standingStill) { MoveToState(PlayerState.Idle); }
+                break;
         }
     }
 
@@ -113,8 +124,8 @@ public class PlayerParry : PlayerActionState
     protected override void ParryingAction()
     {
         base.ParryingAction();
-
-        StartCoroutine(StandingStill());
+        
+        StandingStill();
     }
 
 
@@ -153,22 +164,11 @@ public class PlayerParry : PlayerActionState
     }
 
 
-    IEnumerator StandingStill()
+    private void StandingStill()
     {
-        while (standingStill)
+        if (standingStill)
         {
-            PlayerMovement movementScript = this.gameObject.GetComponent<PlayerMovement>(); 
-
-            if (movementScript != null)
-            {
-                //
-            }
-            else
-            {
-                Debug.Log("Couldn't find the player's Rigidbody component");
-            }
-
-            yield return null;
+            _rb.velocity = Vector3.zero;
         }
     }
 
