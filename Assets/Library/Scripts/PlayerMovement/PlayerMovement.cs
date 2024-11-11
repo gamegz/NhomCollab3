@@ -1,17 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public enum PlayerState
-{
-    Idle,
-    Moving,
-    Dashing,
-}
-
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : PlayerActionState
 {
     [Header("References")]
     private PlayerBase m_PlayerBase;
@@ -37,16 +31,14 @@ public class PlayerMovement : MonoBehaviour
     private Coroutine dashCoroutine;
 
     private Vector2 _movement;
-    private PlayerState _state;
     private Camera _camera;
     private Vector2 _mousePosition;
-    PlayerBase _playerStats;
+    PlayerBase _playerStats; // Comment if don't use.
 
 
     private void Awake()
     {
         _camera = Camera.main;
-        MoveToState(PlayerState.Idle);
         _playerInput = new PlayerInput();
         currentCharge = maxCharge;
         m_PlayerBase = GetComponent<PlayerBase>();
@@ -104,27 +96,47 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         LookAtMousePosition();
+
         switch (_state) // this is action if they are in the state then what will happen to the character and in a FixedUpdate to handle physics
         {
             case PlayerState.Idle:
-                _rb.velocity = Vector3.zero;
+                IdleAction();
                 break;
             case PlayerState.Moving:
-                Vector3 playerMovement = new Vector3(_movement.x, 0, _movement.y) * m_PlayerBase.MoveSpeed;
-                _rb.velocity = playerMovement;
+                MovingAction();
                 break;
             case PlayerState.Dashing:
-                if (dashCoroutine == null && currentCharge > 0)
-                {
-                    dashCoroutine = StartCoroutine(Dash());
-                }
-                else
-                {
-                    MoveToState(PlayerState.Idle);
-                }
+                DashingAction();
                 break;
         }
     }
+    
+    protected override void IdleAction()
+    {
+        base.IdleAction();
+        _rb.velocity = Vector3.zero;
+    }
+
+    protected override void MovingAction()
+    {
+        base.MovingAction();
+        Vector3 playerMovement = new Vector3(_movement.x, 0, _movement.y) * m_PlayerBase.MoveSpeed;
+        _rb.velocity = playerMovement;
+    }
+
+    protected override void DashingAction()
+    {
+        base.DashingAction();
+        if (dashCoroutine == null && currentCharge > 0)
+        {
+            dashCoroutine = StartCoroutine(Dash());
+        }
+        else
+        {
+            MoveToState(PlayerState.Idle);
+        }
+    }
+
 
     IEnumerator Dash()
     {
@@ -158,20 +170,6 @@ public class PlayerMovement : MonoBehaviour
         isOverheated = true;
         yield return new WaitForSeconds(overheatCooldown);
         isOverheated = false;
-    }
-
-    private void MoveToState(PlayerState newState) 
-    {
-        _state = newState;
-        switch (newState)
-        {
-            case PlayerState.Idle:
-                break;
-            case PlayerState.Moving:
-                break;
-            case PlayerState.Dashing:
-                break;
-        }
     }
 
 
