@@ -96,7 +96,7 @@ public class PlayerWallet : MonoBehaviour
 
     private void AddBio()
     {
-        bioCompound += 500;
+        bioCompound += 999999999;
     }
 
     private void AddCredit()

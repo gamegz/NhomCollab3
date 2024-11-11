@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e64ba131aaeb874fa2c64e969403998, type: 3}
+  m_Name: Buff 4
+  m_EditorClassIdentifier: 
+  buffPrefab: {fileID: 639917026210902469, guid: d3425cdefc13d7047a3f54d91303a1bd,
+    type: 3}
+  buffModel: {fileID: 1763968776380158641, guid: 0ba1b50a20323dc4498a349c9167aeab,
+    type: 3}
+  buffName: Buff 4
+  buffBioCurrencyCost: 40
+  buffCreditCurrencyCost: 0

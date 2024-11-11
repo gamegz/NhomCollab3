@@ -6,6 +6,9 @@ public class LevelMerchant : MonoBehaviour, IInteractable
 {
     [SerializeField] private GameObject levelInstructionText;
 
+
+
+
     void Start()
     {
         levelInstructionText.SetActive(false);

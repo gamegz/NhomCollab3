@@ -6,6 +6,7 @@ TagManager:
   tags:
   - CharacterPod
   - A
+  - Merchant
   layers:
   - Default
   - TransparentFX
@@ -21,7 +22,7 @@ TagManager:
   - Wall
   - Pickup
   - enemy
-  - 
+  - Buff
   - 
   - 
   - 

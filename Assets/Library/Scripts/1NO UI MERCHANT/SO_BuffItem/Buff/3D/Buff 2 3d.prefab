@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 301445067244586800}
   - component: {fileID: 7875924821662232115}
   - component: {fileID: 1156491923601324953}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Buff 2 3d
   m_TagString: Untagged
   m_Icon: {fileID: 0}
