@@ -8,17 +8,18 @@ public class WeaponSlot : MonoBehaviour, IInteractable
     private WeaponItemPro weapon;
     [SerializeField] private TextMeshPro weaponNameText;
     [SerializeField] private TextMeshPro weaponPriceText;
-    private PlayerWallet wallet;
 
     void Start()
     {
-        wallet = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerWallet>();
         //Please remember to set the weapon layer to 'Weapon'
     }
 
     void Update()
     {
-
+        if (PlayerWallet.P_WalletInstance == null)
+        {
+            Debug.Log("WeaponSlot tried to find a gameObject with the tag 'Player' but it seems you moron forgot to add it!");
+        }
     }
 
     public void GetWeapon(WeaponItemPro newWeapon)
@@ -43,7 +44,7 @@ public class WeaponSlot : MonoBehaviour, IInteractable
         int price = weapon.weaponBioCurrencyCost;
         if (LevelMerchantPro.Instance.RemainingBuyTurns > 0)
         {
-            if (wallet.DeductBioCompound(price) == true)
+            if (PlayerWallet.P_WalletInstance.DeductBioCompound(price) == true)
             {
                 for (int i = 0; i < slots.Length; i++)
                 {
@@ -55,8 +56,8 @@ public class WeaponSlot : MonoBehaviour, IInteractable
                         LevelMerchantPro.Instance.UpdateRerollInfo();
                         DestroyWeaponChildren();
 
-                        GameObject realWeapon = Instantiate(weapon.weaponPrefab, slots[i].transform.position, Quaternion.identity);
-                        realWeapon.transform.SetParent(slots[i].transform, true);
+                        GameObject realWeapon = Instantiate(weapon.weaponPrefab, slots[i].position, Quaternion.identity);
+                        realWeapon.transform.SetParent(slots[i], true);
                         Debug.Log("Weapon spawned in slot: " + i);
                         return;
                     }

@@ -8,11 +8,9 @@ public class BuffSlot : MonoBehaviour, IInteractable
     private BuffItemPro buff;
     [SerializeField] private TextMeshPro buffNameText;
     [SerializeField] private TextMeshPro buffPriceText;
-    private PlayerWallet wallet;
 
     void Start()
     {
-        wallet = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerWallet>();
         // Please remember to set the buff layer to 'Buff'
     }
 
@@ -43,8 +41,9 @@ public class BuffSlot : MonoBehaviour, IInteractable
         int price = buff.buffBioCurrencyCost;
         if (LevelMerchantPro.Instance.RemainingBuyTurns > 0)
         {
-            if (wallet.DeductBioCompound(price) == true)
+            if (PlayerWallet.P_WalletInstance.DeductBioCompound(price) == true)
             {
+
                 for (int i = 0; i < slots.Length; i++)
                 {
                     // Check if the slot doesn't have any child

@@ -8,17 +8,18 @@ public class BuffSlotHome : MonoBehaviour, IInteractable
     private BuffItemPro buff;
     [SerializeField] private TextMeshPro buffNameText;
     [SerializeField] private TextMeshPro buffPriceText;
-    private PlayerWallet wallet;
 
     void Start()
     {
-        wallet = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerWallet>();
         // Please remember to set the buff layer to 'Buff'
     }
 
     void Update()
     {
-
+        if (PlayerWallet.P_WalletInstance == null)
+        {
+            Debug.Log("BuffSlotHome tried to find a gameObject with the tag 'Player' but it seems you moron forgot to add it!");
+        }
     }
 
     public void GetBuff(BuffItemPro newBuff)
@@ -43,7 +44,7 @@ public class BuffSlotHome : MonoBehaviour, IInteractable
         int price = buff.buffCreditCurrencyCost;
         if (HomeMerchantPro.Instance.RemainingBuyTurns > 0)
         {
-            if (wallet.DeductCredit(price) == true)
+            if (PlayerWallet.P_WalletInstance.DeductCredit(price) == true)
             {
                 for (int i = 0; i < slots.Length; i++)
                 {
@@ -53,8 +54,8 @@ public class BuffSlotHome : MonoBehaviour, IInteractable
                         HomeMerchantPro.Instance.ModifyRemainingBuyTurns(-1);
                         DestroyBuffChildren();
 
-                        GameObject realBuff = Instantiate(buff.buffPrefab, slots[i].transform.position, Quaternion.identity);
-                        realBuff.transform.SetParent(slots[i].transform, true);
+                        GameObject realBuff = Instantiate(buff.buffPrefab, slots[i].position, Quaternion.identity);
+                        realBuff.transform.SetParent(slots[i], true);
                         return;
                     }
                 }

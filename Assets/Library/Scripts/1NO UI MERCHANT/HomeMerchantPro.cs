@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class HomeMerchantPro : MonoBehaviour, IInteractable
@@ -8,7 +9,9 @@ public class HomeMerchantPro : MonoBehaviour, IInteractable
     public static HomeMerchantPro Instance { get; private set; }
 
     [SerializeField] private Transform[] itemSpawnSlotArray;
-
+    [SerializeField] private Transform freeWeaponSlot;
+    [SerializeField] private TextMeshPro freeWeaponName;
+     
     private int remainingBuyTurns = 2;
     public int RemainingBuyTurns => remainingBuyTurns; // Get
     public void ModifyRemainingBuyTurns(int amount) // Set
@@ -16,19 +19,21 @@ public class HomeMerchantPro : MonoBehaviour, IInteractable
         remainingBuyTurns += amount;
     }
 
-    private PlayerWallet wallet;
 
     [Space(50)]
     [Header("-------------------- WEAPON --------------------")]
     [SerializeField] private List<WeaponItemPro> weaponItemProList;
-    private WeaponItemPro[] selectedWeapons = new WeaponItemPro[2];
+    private WeaponItemPro[] selectedWeapons = new WeaponItemPro[3];
     [SerializeField] private WeaponSlotHome[] weaponSlotArray;
+    private bool isRandomWeaponUnlocked = false;
+
 
     [Space(50)]
     [Header("-------------------- BUFF --------------------")]
     [SerializeField] private List<BuffItemPro> buffItemProList;
     private BuffItemPro[] selectedBuffs = new BuffItemPro[2];
     [SerializeField] private BuffSlotHome[] buffSlotArray;
+    private bool isRandomBuffUnlocked = false;
 
 
     public Transform[] ItemSpawnSlotArray
@@ -51,7 +56,6 @@ public class HomeMerchantPro : MonoBehaviour, IInteractable
     {
         GetRandomWeapon();
         GetRandomBuff();
-        wallet = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerWallet>();
     }
 
     void Update()
@@ -61,10 +65,7 @@ public class HomeMerchantPro : MonoBehaviour, IInteractable
             GetRandomWeapon();
             GetRandomBuff();
         }
-        if (wallet == null)
-        {
-            Debug.Log("This script tried to find a gameObject with the tag 'Player' but it seems you moron forgot to add it!");
-        }
+
     }
 
     // WEAPON------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -78,29 +79,37 @@ public class HomeMerchantPro : MonoBehaviour, IInteractable
 
         // Filtered list
         List<WeaponItemPro> availableWeapons = new List<WeaponItemPro>(weaponItemProList);
-
-        //Debug.Log("Available Weapons Before: " + string.Join(", ", availableWeapons.Select(w => w.weaponName)));
-
-        availableWeapons.RemoveAll(weapon => selectedWeapons.Contains(weapon));
-
+        Debug.Log("Available Weapons Before: " + string.Join(", ", availableWeapons.Select(w => w.weaponName)));
         if (availableWeapons.Count < 2)
         {
             Debug.LogWarning("Not enough available weapons! Available weapons: " + string.Join(", ", availableWeapons.Select(w => w.weaponName)));
             return;
         }
-        else
+
+
+        for (int i = freeWeaponSlot.childCount - 1; i >= 0; i--)
         {
-            //Debug.Log("Available Weapons After: " + string.Join(", ", availableWeapons.Select(w => w.weaponName)));
+            Transform child = freeWeaponSlot.GetChild(i);
+            if (child.gameObject.layer == LayerMask.NameToLayer("Weapon"))
+            {
+                Destroy(child.gameObject);
+            }
         }
+
 
         selectedWeapons[0] = availableWeapons[UnityEngine.Random.Range(0, availableWeapons.Count)];
         availableWeapons.Remove(selectedWeapons[0]);
         selectedWeapons[1] = availableWeapons[UnityEngine.Random.Range(0, availableWeapons.Count)];
-
-        //Debug.Log("Selected Weapons: " + string.Join(", ", selectedWeapons.Select(w => w.weaponName)));
+        availableWeapons.Remove(selectedWeapons[1]);
 
         weaponSlotArray[0].GetWeapon(selectedWeapons[0]);
         weaponSlotArray[1].GetWeapon(selectedWeapons[1]);
+
+        selectedWeapons[2] = availableWeapons[UnityEngine.Random.Range(0, availableWeapons.Count)];
+        GameObject randomWeapon = Instantiate(selectedWeapons[2].weaponPrefab, freeWeaponSlot.position, Quaternion.identity);
+        randomWeapon.transform.SetParent(freeWeaponSlot, true);
+        freeWeaponName.text = $"Free Weapon: {selectedWeapons[2]}";
+
     }
 
     // BUFF------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -139,9 +148,7 @@ public class HomeMerchantPro : MonoBehaviour, IInteractable
         buffSlotArray[1].GetBuff(selectedBuffs[1]);
     }
 
-
     public void OnInteract()
     {
-        throw new System.NotImplementedException();
     }
 }

@@ -19,7 +19,6 @@ public class LevelMerchantPro : MonoBehaviour, IInteractable
         remainingBuyTurns += amount;
     }
 
-    private PlayerWallet wallet;
 
     [Space(50)]
     [Header("-------------------- WEAPON --------------------")]
@@ -64,7 +63,6 @@ public class LevelMerchantPro : MonoBehaviour, IInteractable
     {
         GetRandomWeapon();
         GetRandomBuff();
-        wallet = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerWallet>();
         UpdateRerollInfo();
     }
 
@@ -81,14 +79,9 @@ public class LevelMerchantPro : MonoBehaviour, IInteractable
             GetRandomWeapon();
             GetRandomBuff();
         }
-        if (wallet == null)
+        if (PlayerWallet.P_WalletInstance == null)
         {
-            Debug.Log("This script tried to find a gameObject with the tag 'Player' but it seems you moron forgot to add it!");
-        }
-
-        if (wallet == null)
-        {
-            Debug.Log("BuffSlot tried to find a gameObject with the tag 'Player' but it seems you moron forgot to add it!");
+            Debug.Log("LevelMerchantPro tried to find a gameObject with the tag 'Player' but it seems you moron forgot to add it!");
         }
     }
 
@@ -175,16 +168,12 @@ public class LevelMerchantPro : MonoBehaviour, IInteractable
     {
         if (remainingRerolls > 0)
         {
-            if (wallet.DeductBioCompound(rerollCost) == true)
+            if (PlayerWallet.P_WalletInstance.DeductBioCompound(rerollCost) == true)
             {
                 GetRandomWeapon();
                 remainingRerolls--;
                 rerollCountText.text = $"Rerolls left: {remainingRerolls}";
             }
-        }
-        else
-        {
-
         }
     }
 }

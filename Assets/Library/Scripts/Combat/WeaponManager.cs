@@ -173,7 +173,8 @@ public class WeaponManager : MonoBehaviour
             weaponList[i].weaponModel.SetActive(activeState);
             if(activeState)
             {
-                _currentWeapon = weaponList[i]; 
+                _currentWeapon = weaponList[i];
+                Debug.Log(_currentWeapon.name);
             }
             i++;
         }
@@ -192,27 +193,30 @@ public class WeaponManager : MonoBehaviour
             float distanceFromItemToPlayer = Vector3.Distance(hitCollider.transform.position, playerTransform.position); 
             if (distanceFromItemToPlayer <= collectRange || distanceFromItemToPlayer <= collectRange && _currentWeapon == null) 
             {
+                
                 Debug.Log(hitCollider.gameObject.name);
                 WeaponBase weaponToAdd = hitCollider.GetComponentInChildren<WeaponBase>(); // will get the script of the weapon the sphere hit
+                //if (_currentWeapon == null) { _currentWeapon = weaponToAdd; _currentWeapon.weaponModel?.SetActive(true); }
                 if (weaponList.Count >= _maxWeaponNum) 
                 {
                     //Replace weapon? 
                     weaponList.Remove(_currentWeapon); 
-                    _currentWeapon.transform.SetParent(null, true); 
+                    _currentWeapon?.transform.SetParent(null, true); 
                     _currentWeapon.GetComponent<BoxCollider>().enabled = true; 
                     weaponList.Add(weaponToAdd); 
                 }
-                else if(weaponList.Count < _maxWeaponNum) 
+                else if(weaponList.Count < _maxWeaponNum || _currentWeapon == null) 
                 {
-                    weaponList.Add(weaponToAdd);  
-                    if(_currentWeapon != null)
+                    weaponList.Add(weaponToAdd);
+                    if (_currentWeapon != null)
                     {
                         _currentWeapon.weaponModel.SetActive(false);
-                    } 
+                    }
+                    
                 }
                 // the whole section below is to set up the weapon we just pick up and set the boxCollider to false to immediately attack when pick up
                 _currentWeapon = weaponToAdd; 
-                _currentWeapon.transform.SetParent(this.transform); 
+                _currentWeapon?.transform.SetParent(this.transform); 
                 _weaponIndex = weaponList.IndexOf(_currentWeapon); 
                 _currentWeapon.transform.position = this.transform.position; 
                 _currentWeapon.transform.rotation = this.transform.rotation; 

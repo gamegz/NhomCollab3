@@ -15,6 +15,20 @@ public class PlayerWallet : MonoBehaviour
     // Testing
     [SerializeField] private TextMeshPro moneyText;
 
+    public static PlayerWallet P_WalletInstance { get; private set; }
+
+    private void Awake()
+    {
+        if (P_WalletInstance == null)
+        {
+            P_WalletInstance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     void Start()
     {
        
