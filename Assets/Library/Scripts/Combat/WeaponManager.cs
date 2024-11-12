@@ -196,10 +196,9 @@ public class WeaponManager : MonoBehaviour
                 
                 Debug.Log(hitCollider.gameObject.name);
                 WeaponBase weaponToAdd = hitCollider.GetComponentInChildren<WeaponBase>(); // will get the script of the weapon the sphere hit
-                //if (_currentWeapon == null) { _currentWeapon = weaponToAdd; _currentWeapon.weaponModel?.SetActive(true); }
                 if (weaponList.Count >= _maxWeaponNum) 
                 {
-                    //Replace weapon? 
+                    //Replace weapon?   
                     weaponList.Remove(_currentWeapon); 
                     _currentWeapon?.transform.SetParent(null, true); 
                     _currentWeapon.GetComponent<BoxCollider>().enabled = true; 

@@ -43,12 +43,9 @@ public class PlayerWallet : MonoBehaviour
         {
             ExchangeBioCompoundForCredit();
         }
-        if (Input.GetKeyDown(KeyCode.B)) 
+        if (Input.GetKeyDown(KeyCode.C))  
         {
             AddBio();
-        }
-        if (Input.GetKeyDown(KeyCode.N))  
-        {
             AddCredit();
         }
         PrintMoney(); 
@@ -122,7 +119,7 @@ public class PlayerWallet : MonoBehaviour
 
     private void AddBio()
     {
-        bioCompound += 999999999;
+        bioCompound += 500;
     }
 
     private void AddCredit()
