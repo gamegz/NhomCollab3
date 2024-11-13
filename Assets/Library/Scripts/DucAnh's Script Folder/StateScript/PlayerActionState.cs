@@ -6,13 +6,18 @@ public class PlayerActionState : MonoBehaviour
 {
     #region Non-Serializable
     // References
-    protected PlayerState _state;
+    protected static PlayerState _state; 
+    public PlayerState CurrentState => _state; // Get
+    protected void MoveToState(PlayerState newState) // Set
+    {
+        _state = newState;
+    }
 
     #endregion
 
 
     #region Serializable
-
+    [SerializeField] private PlayerState currentState; // To check if player's state is working correctly or not.
     #endregion
 
 
@@ -34,6 +39,13 @@ public class PlayerActionState : MonoBehaviour
         #endregion
     }
 
+
+    private void Update()
+    {
+        currentState = CurrentState;
+    }
+
+
     protected virtual void IdleAction() { return;} // Add any universal init here
 
     protected virtual void MovingAction() { return;} // Add any universal init here
@@ -41,25 +53,6 @@ public class PlayerActionState : MonoBehaviour
     protected virtual void DashingAction() { return;} // Add any universal init here
 
     protected virtual void ParryingAction() { return;} // Add any universal init here
-
-    protected void MoveToState(PlayerState newState) // [DUC ANH]: THIS SHIT IS GOING PROTECTED LETS GOO 
-    {
-        _state = newState;
-
-        switch (newState)
-        {
-            case PlayerState.Idle:
-                break;
-            case PlayerState.Moving:
-                break;
-            case PlayerState.Dashing:
-                break;
-            case PlayerState.Parrying:
-                break;
-            default:
-                break;
-        }
-    }
 
 
 }

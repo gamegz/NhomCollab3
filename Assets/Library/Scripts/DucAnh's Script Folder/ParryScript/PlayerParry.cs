@@ -51,7 +51,7 @@ public class PlayerParry : PlayerActionState
 
     void Update()
     {
-        #region PARRY PROCESS
+        #region Processor
         if (!canParry)
         {
             delayTimer -= Time.deltaTime;  
@@ -86,11 +86,11 @@ public class PlayerParry : PlayerActionState
         }
         #endregion
 
+        #region Player Input
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (canParry)
             {
-
                 canParry = false;   
                 invulnerable = true;
                 standingStill = true;
@@ -100,7 +100,7 @@ public class PlayerParry : PlayerActionState
 
             }
         }
-
+        #endregion
 
         switch (_state)
         {
