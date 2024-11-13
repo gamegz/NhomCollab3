@@ -41,6 +41,8 @@ public class LevelMerchantPro : MonoBehaviour, IInteractable
     public int remainingRerolls = 4;
     [SerializeField] private TextMeshPro rerollCountText;
 
+    private bool isRandomBuffUnlocked = false;
+
 
     public Transform[] ItemSpawnSlotArray
     {
@@ -131,38 +133,53 @@ public class LevelMerchantPro : MonoBehaviour, IInteractable
     // BUFF------------------------------------------------------------------------------------------------------------------------------------------------------------
     private void GetRandomBuff()
     {
-        if (buffItemProList == null || buffItemProList.Count < 2)
+        if (isRandomBuffUnlocked == true)
         {
-            Debug.LogWarning("BUFF LIST IS EMPTY!!!");
-            return;
-        }
 
-        // Filtered list
-        List<BuffItemPro> availableBuffs = new List<BuffItemPro>(buffItemProList);
+            if (buffItemProList == null || buffItemProList.Count < 2)
+            {
+                Debug.LogWarning("BUFF LIST IS EMPTY!!!");
+                return;
+            }
 
-        //Debug.Log("Available Buffs Before: " + string.Join(", ", availableBuffs.Select(w => w.buffName)));
+            // Filtered list
+            List<BuffItemPro> availableBuffs = new List<BuffItemPro>(buffItemProList);
 
-        availableBuffs.RemoveAll(buff => selectedBuffs.Contains(buff));
+            //Debug.Log("Available Buffs Before: " + string.Join(", ", availableBuffs.Select(w => w.buffName)));
 
-        if (availableBuffs.Count < 2)
-        {
-            Debug.LogWarning("Not enough available buffs! Available buffs: " + string.Join(", ", availableBuffs.Select(w => w.buffName)));
-            return;
+            availableBuffs.RemoveAll(buff => selectedBuffs.Contains(buff));
+
+            if (availableBuffs.Count < 2)
+            {
+                Debug.LogWarning("Not enough available buffs! Available buffs: " + string.Join(", ", availableBuffs.Select(w => w.buffName)));
+                return;
+            }
+            else
+            {
+                //Debug.Log("Available Buffs After: " + string.Join(", ", availableBuffs.Select(w => w.buffName)));
+            }
+
+            selectedBuffs[0] = availableBuffs[UnityEngine.Random.Range(0, availableBuffs.Count)];
+            availableBuffs.Remove(selectedBuffs[0]);
+            selectedBuffs[1] = availableBuffs[UnityEngine.Random.Range(0, availableBuffs.Count)];
+
+            //Debug.Log("Selected Buffs: " + string.Join(", ", selectedBuffs.Select(w => w.buffName)));
+
+            buffSlotArray[0].GetBuff(selectedBuffs[0]);
+            buffSlotArray[1].GetBuff(selectedBuffs[1]);
         }
         else
         {
-            //Debug.Log("Available Buffs After: " + string.Join(", ", availableBuffs.Select(w => w.buffName)));
+
         }
-
-        selectedBuffs[0] = availableBuffs[UnityEngine.Random.Range(0, availableBuffs.Count)];
-        availableBuffs.Remove(selectedBuffs[0]);
-        selectedBuffs[1] = availableBuffs[UnityEngine.Random.Range(0, availableBuffs.Count)];
-
-        //Debug.Log("Selected Buffs: " + string.Join(", ", selectedBuffs.Select(w => w.buffName)));
-
-        buffSlotArray[0].GetBuff(selectedBuffs[0]);
-        buffSlotArray[1].GetBuff(selectedBuffs[1]);
     }
+
+    public void SetRandomBuffUnlocked(bool isUnlocked)
+    {
+        isRandomBuffUnlocked = isUnlocked;
+    }
+
+
 
     public void OnInteract()
     {
@@ -171,6 +188,7 @@ public class LevelMerchantPro : MonoBehaviour, IInteractable
             if (PlayerWallet.P_WalletInstance.DeductBioCompound(rerollCost) == true)
             {
                 GetRandomWeapon();
+                GetRandomBuff();
                 remainingRerolls--;
                 rerollCountText.text = $"Rerolls left: {remainingRerolls}";
             }

@@ -25,7 +25,6 @@ public class HomeMerchantPro : MonoBehaviour, IInteractable
     [SerializeField] private List<WeaponItemPro> weaponItemProList;
     private WeaponItemPro[] selectedWeapons = new WeaponItemPro[3];
     [SerializeField] private WeaponSlotHome[] weaponSlotArray;
-    private bool isRandomWeaponUnlocked = false;
 
 
     [Space(50)]
@@ -33,7 +32,6 @@ public class HomeMerchantPro : MonoBehaviour, IInteractable
     [SerializeField] private List<BuffItemPro> buffItemProList;
     private BuffItemPro[] selectedBuffs = new BuffItemPro[2];
     [SerializeField] private BuffSlotHome[] buffSlotArray;
-    private bool isRandomBuffUnlocked = false;
 
 
     public Transform[] ItemSpawnSlotArray
