@@ -45,8 +45,7 @@ public class PlayerWallet : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.C))  
         {
-            AddBio();
-            AddCredit();
+            AddMoney();
         }
         PrintMoney(); 
     }
@@ -76,11 +75,10 @@ public class PlayerWallet : MonoBehaviour
     {
         int creditGain = Mathf.CeilToInt(bioCompound / bioCompoundPerCredit);
 
-        // Update credits and reset BioCompound count to 0 after exchange
+        // Update credits and reset BioCompound count to 0
         credit += creditGain;
         bioCompound = 0;
     }
-
 
     public bool DeductBioCompound(int amount)
     {
@@ -117,13 +115,9 @@ public class PlayerWallet : MonoBehaviour
         moneyText.text = "BioCompound: " + bioCompound + "\nCredit: " + credit;
     }
 
-    private void AddBio()
+    private void AddMoney()
     {
         bioCompound += 500;
-    }
-
-    private void AddCredit()
-    {
         credit += 500;
     }
 }

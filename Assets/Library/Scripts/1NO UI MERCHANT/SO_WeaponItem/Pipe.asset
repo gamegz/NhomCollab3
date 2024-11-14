@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 400f0e003ed3d9a4aaad5a377b03251e, type: 3}
   m_Name: Pipe
   m_EditorClassIdentifier: 
-  weaponPrefab: {fileID: 1388084808958523712, guid: e376bf146889f77418e1c3e7efa198ce,
+  itemPrefab: {fileID: 1388084808958523712, guid: e376bf146889f77418e1c3e7efa198ce,
     type: 3}
-  weaponModel: {fileID: 7107526567429842295, guid: 37812990795a4c243a52bb8e15824677,
+  itemModel: {fileID: 7107526567429842295, guid: 37812990795a4c243a52bb8e15824677,
     type: 3}
-  weaponName: Pipe
-  weaponBioCurrencyCost: 15
-  weaponCreditCurrencyCost: 35
+  itemName: Pipe
+  itemBioCost: 53
+  itemCreditCost: 78

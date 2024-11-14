@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e64ba131aaeb874fa2c64e969403998, type: 3}
   m_Name: Buff 2
   m_EditorClassIdentifier: 
-  buffPrefab: {fileID: 8609823378016024998, guid: 35d02eedaee28054199a86309d661cad,
+  itemPrefab: {fileID: 8609823378016024998, guid: 35d02eedaee28054199a86309d661cad,
     type: 3}
-  buffModel: {fileID: 1767515727691529984, guid: f50ba7eaaafd18b48b3f5de2af2da1ee,
+  itemModel: {fileID: 1767515727691529984, guid: f50ba7eaaafd18b48b3f5de2af2da1ee,
     type: 3}
-  buffName: Buff 2
-  buffBioCurrencyCost: 20
-  buffCreditCurrencyCost: 35
+  itemName: 
+  itemBioCost: 0
+  itemCreditCost: 0

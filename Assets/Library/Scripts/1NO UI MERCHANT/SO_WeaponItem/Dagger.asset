@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 400f0e003ed3d9a4aaad5a377b03251e, type: 3}
   m_Name: Dagger
   m_EditorClassIdentifier: 
-  weaponPrefab: {fileID: 6301689132357205978, guid: 00a4270916900204799b35e77d956c2c,
+  itemPrefab: {fileID: 6301689132357205978, guid: 00a4270916900204799b35e77d956c2c,
     type: 3}
-  weaponModel: {fileID: 4749325528405420937, guid: a7c193c9566f63c47b0c53f77276ab30,
+  itemModel: {fileID: 4749325528405420937, guid: a7c193c9566f63c47b0c53f77276ab30,
     type: 3}
-  weaponName: Dagger
-  weaponBioCurrencyCost: 15
-  weaponCreditCurrencyCost: 78
+  itemName: Dagger
+  itemBioCost: 12
+  itemCreditCost: 45

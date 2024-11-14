@@ -16,10 +16,7 @@ public class WeaponSlot : MonoBehaviour, IInteractable
 
     void Update()
     {
-        if (PlayerWallet.P_WalletInstance == null)
-        {
-            Debug.Log("WeaponSlot tried to find a gameObject with the tag 'Player' but it seems you moron forgot to add it!");
-        }
+
     }
 
     public void GetWeapon(WeaponItemPro newWeapon)
@@ -31,38 +28,47 @@ public class WeaponSlot : MonoBehaviour, IInteractable
     private void DisplayeWeaponInfo()
     {
         DestroyWeaponChildren();
-        GameObject fakeWeapon = Instantiate(weapon.weaponModel, transform.position, Quaternion.identity);
+        GameObject fakeWeapon = Instantiate(weapon.itemModel, transform.position, Quaternion.identity);
         fakeWeapon.transform.SetParent(transform, true);
 
-        weaponNameText.text = weapon.weaponName;
-        weaponPriceText.text = weapon.weaponBioCurrencyCost.ToString();
+        weaponNameText.text = weapon.itemName;
+        weaponPriceText.text = weapon.itemBioCost.ToString();
     }
 
+
+    /*
+    1. Check if the player has remaining purchase turns
+    2. Check if the player has enough money 
+    3. Select the slot to spawn the item
+*/
     public void OnInteract()
     {
         Transform[] slots = LevelMerchantPro.Instance.ItemSpawnSlotArray;
-        int price = weapon.weaponBioCurrencyCost;
-        if (LevelMerchantPro.Instance.RemainingBuyTurns > 0)
+        int price = weapon.itemBioCost;
+        if (LevelMerchantPro.Instance.remainingBuyTurns > 0)
         {
             if (PlayerWallet.P_WalletInstance.DeductBioCompound(price) == true)
             {
+                
                 for (int i = 0; i < slots.Length; i++)
                 {
                     // Check if the slot doesn't have any child
                     if ((slots[i].childCount == 0))
                     {
-                        LevelMerchantPro.Instance.remainingRerolls = 0;
+                        LevelMerchantPro.Instance.ModifyRemainingRerolls(0);
                         LevelMerchantPro.Instance.ModifyRemainingBuyTurns(-1);
                         LevelMerchantPro.Instance.UpdateRerollInfo();
                         DestroyWeaponChildren();
 
-                        GameObject realWeapon = Instantiate(weapon.weaponPrefab, slots[i].position, Quaternion.identity);
+                        GameObject realWeapon = Instantiate(weapon.itemPrefab, slots[i].position, Quaternion.identity);
                         realWeapon.transform.SetParent(slots[i], true);
                         Debug.Log("Weapon spawned in slot: " + i);
                         return;
                     }
                 }
                 Debug.LogWarning("No empty slots available to spawn the weapon.");
+                // Drop at player location(Optional)
+                //GameObject realWeapon = Instantiate(weapon.itemPrefab, GameObject.FindGameObjectWithTag("Player").transform.position, Quaternion.identity);
             }
             else
             {
@@ -75,6 +81,7 @@ public class WeaponSlot : MonoBehaviour, IInteractable
         }
     }
 
+    // Remove any existing weapon objects from freeWeaponSlot before spawning a new weapon.
     private void DestroyWeaponChildren()
     {
         for (int i = transform.childCount - 1; i >= 0; i--)

@@ -104,3 +104,33 @@ public class Child : Parent
 
     public override void abstractTest() { }
 }
+
+
+
+
+
+public class MyFamily
+{
+    public int myMoney { get; private set; }
+    public void ModifyMyMoney(int amount)
+    {
+        myMoney = amount;
+    }
+
+    private int dadMoney;
+    public int DadMoney
+    {
+        get { return dadMoney + 11111; }
+    }
+    public void ModifyDadMoney(int amount)
+    {
+        dadMoney = amount;
+    }
+
+    private int momMoney;
+    public int MomMoney => momMoney;
+    public void ModifyMomMoney(int amount)
+    {
+        momMoney = amount;
+    }
+}

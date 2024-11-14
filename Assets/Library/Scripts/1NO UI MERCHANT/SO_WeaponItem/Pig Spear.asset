@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 400f0e003ed3d9a4aaad5a377b03251e, type: 3}
   m_Name: Pig Spear
   m_EditorClassIdentifier: 
-  weaponPrefab: {fileID: 1900393185583448665, guid: 53a020bafbff6654a9d479253abc17e4,
+  itemPrefab: {fileID: 1900393185583448665, guid: 53a020bafbff6654a9d479253abc17e4,
     type: 3}
-  weaponModel: {fileID: 122441938206300083, guid: af64cbf3018cb9f4498994f811122d8d,
+  itemModel: {fileID: 122441938206300083, guid: af64cbf3018cb9f4498994f811122d8d,
     type: 3}
-  weaponName: Pig Spear
-  weaponBioCurrencyCost: 86
-  weaponCreditCurrencyCost: 48
+  itemName: Pig Spear
+  itemBioCost: 45
+  itemCreditCost: 35

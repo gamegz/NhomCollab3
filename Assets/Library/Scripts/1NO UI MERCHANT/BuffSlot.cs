@@ -28,18 +28,23 @@ public class BuffSlot : MonoBehaviour, IInteractable
     private void DisplayBuffInfo()
     {
         DestroyBuffChildren();
-        GameObject fakeBuff = Instantiate(buff.buffModel, transform.position, Quaternion.identity);
+        GameObject fakeBuff = Instantiate(buff.itemModel, transform.position, Quaternion.identity);
         fakeBuff.transform.SetParent(transform, true);
 
-        buffNameText.text = buff.buffName;
-        buffPriceText.text = buff.buffBioCurrencyCost.ToString();
+        buffNameText.text = buff.itemName;
+        buffPriceText.text = buff.itemBioCost.ToString();
     }
 
+    /*
+        1. Check if the player has remaining purchase turns
+        2. Check if the player has enough money 
+        3. Select the slot to spawn the item
+    */
     public void OnInteract()
     {
         Transform[] slots = LevelMerchantPro.Instance.ItemSpawnSlotArray;
-        int price = buff.buffBioCurrencyCost;
-        if (LevelMerchantPro.Instance.RemainingBuyTurns > 0)
+        int price = buff.itemBioCost;
+        if (LevelMerchantPro.Instance.remainingBuyTurns > 0)
         {
             if (PlayerWallet.P_WalletInstance.DeductBioCompound(price) == true)
             {
@@ -49,12 +54,12 @@ public class BuffSlot : MonoBehaviour, IInteractable
                     // Check if the slot doesn't have any child
                     if ((slots[i].childCount == 0))
                     {
-                        LevelMerchantPro.Instance.remainingRerolls = 0;
+                        LevelMerchantPro.Instance.ModifyRemainingRerolls(0);
                         LevelMerchantPro.Instance.ModifyRemainingBuyTurns(-1);
                         LevelMerchantPro.Instance.UpdateRerollInfo();
                         DestroyBuffChildren();
 
-                        GameObject realBuff = Instantiate(buff.buffPrefab, slots[i].transform.position, Quaternion.identity);
+                        GameObject realBuff = Instantiate(buff.itemPrefab, slots[i].transform.position, Quaternion.identity);
                         realBuff.transform.SetParent(slots[i].transform, true);
                         return;
                     }
@@ -72,6 +77,7 @@ public class BuffSlot : MonoBehaviour, IInteractable
         }
     }
 
+    // Remove any existing weapon objects from freeWeaponSlot before spawning a new weapon.
     private void DestroyBuffChildren()
     {
         for (int i = transform.childCount - 1; i >= 0; i--)

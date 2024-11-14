@@ -16,10 +16,7 @@ public class WeaponSlotHome : MonoBehaviour, IInteractable
 
     void Update()
     {
-        if (PlayerWallet.P_WalletInstance == null)
-        {
-            Debug.Log("WeaponSlotHome tried to find a gameObject with the tag 'Player' but it seems you moron forgot to add it!");
-        }
+
     }
 
     public void GetWeapon(WeaponItemPro newWeapon)
@@ -30,18 +27,18 @@ public class WeaponSlotHome : MonoBehaviour, IInteractable
     private void DisplayeWeaponInfo()
     {
         DestroyWeaponChildren();
-        GameObject fakeWeapon = Instantiate(weapon.weaponModel, transform.position, Quaternion.identity);
+        GameObject fakeWeapon = Instantiate(weapon.itemModel, transform.position, Quaternion.identity);
         fakeWeapon.transform.SetParent(transform, true);
 
-        weaponNameText.text = weapon.weaponName;
-        weaponPriceText.text = weapon.weaponBioCurrencyCost.ToString();
+        weaponNameText.text = weapon.itemName;
+        weaponPriceText.text = weapon.itemCreditCost.ToString();
     }
 
     public void OnInteract()
     {
-        Transform[] slots = HomeMerchantPro.Instance.ItemSpawnSlotArray;
-        int price = weapon.weaponCreditCurrencyCost;
-        if (HomeMerchantPro.Instance.RemainingBuyTurns > 0)
+        Transform[] slots = HomeMerchantPro.Instance.itemSpawnSlotArray;
+        int price = weapon.itemCreditCost;
+        if (HomeMerchantPro.Instance.remainingBuyTurns > 0)
         {
             if (PlayerWallet.P_WalletInstance.DeductCredit(price) == true)
             {
@@ -53,7 +50,7 @@ public class WeaponSlotHome : MonoBehaviour, IInteractable
                         HomeMerchantPro.Instance.ModifyRemainingBuyTurns(-1);
                         DestroyWeaponChildren();
 
-                        GameObject realWeapon = Instantiate(weapon.weaponPrefab, slots[i].position, Quaternion.identity);
+                        GameObject realWeapon = Instantiate(weapon.itemPrefab, slots[i].position, Quaternion.identity);
                         realWeapon.transform.SetParent(slots[i], true);
                         Debug.Log("Weapon spawned in slot: " + i);
                         return;

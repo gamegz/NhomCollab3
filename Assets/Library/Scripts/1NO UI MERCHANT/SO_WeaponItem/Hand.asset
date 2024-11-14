@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 400f0e003ed3d9a4aaad5a377b03251e, type: 3}
   m_Name: Hand
   m_EditorClassIdentifier: 
-  weaponPrefab: {fileID: 1916387855523940637, guid: cc71e8cfb36fb204bbd49db449aba468,
+  itemPrefab: {fileID: 1916387855523940637, guid: cc71e8cfb36fb204bbd49db449aba468,
     type: 3}
-  weaponModel: {fileID: 1900496047431872144, guid: 013d8a19fe512f54a81f61a239232e53,
+  itemModel: {fileID: 1900496047431872144, guid: 013d8a19fe512f54a81f61a239232e53,
     type: 3}
-  weaponName: Hand
-  weaponBioCurrencyCost: 52
-  weaponCreditCurrencyCost: 123
+  itemName: Hand
+  itemBioCost: 54
+  itemCreditCost: 38

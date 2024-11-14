@@ -16,10 +16,7 @@ public class BuffSlotHome : MonoBehaviour, IInteractable
 
     void Update()
     {
-        if (PlayerWallet.P_WalletInstance == null)
-        {
-            Debug.Log("BuffSlotHome tried to find a gameObject with the tag 'Player' but it seems you moron forgot to add it!");
-        }
+
     }
 
     public void GetBuff(BuffItemPro newBuff)
@@ -31,18 +28,18 @@ public class BuffSlotHome : MonoBehaviour, IInteractable
     private void DisplayBuffInfo()
     {
         DestroyBuffChildren();
-        GameObject fakeBuff = Instantiate(buff.buffModel, transform.position, Quaternion.identity);
+        GameObject fakeBuff = Instantiate(buff.itemPrefab, transform.position, Quaternion.identity);
         fakeBuff.transform.SetParent(transform, true);
 
-        buffNameText.text = buff.buffName;
-        buffPriceText.text = buff.buffCreditCurrencyCost.ToString();
+        buffNameText.text = buff.itemName;
+        buffPriceText.text = buff.itemCreditCost.ToString();
     }
 
     public void OnInteract()
     {
-        Transform[] slots = HomeMerchantPro.Instance.ItemSpawnSlotArray;
-        int price = buff.buffCreditCurrencyCost;
-        if (HomeMerchantPro.Instance.RemainingBuyTurns > 0)
+        Transform[] slots = HomeMerchantPro.Instance.itemSpawnSlotArray;
+        int price = buff.itemCreditCost;
+        if (HomeMerchantPro.Instance.remainingBuyTurns > 0)
         {
             if (PlayerWallet.P_WalletInstance.DeductCredit(price) == true)
             {
@@ -54,7 +51,7 @@ public class BuffSlotHome : MonoBehaviour, IInteractable
                         HomeMerchantPro.Instance.ModifyRemainingBuyTurns(-1);
                         DestroyBuffChildren();
 
-                        GameObject realBuff = Instantiate(buff.buffPrefab, slots[i].position, Quaternion.identity);
+                        GameObject realBuff = Instantiate(buff.itemPrefab, slots[i].position, Quaternion.identity);
                         realBuff.transform.SetParent(slots[i], true);
                         return;
                     }

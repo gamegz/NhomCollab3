@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 400f0e003ed3d9a4aaad5a377b03251e, type: 3}
   m_Name: Sword
   m_EditorClassIdentifier: 
-  weaponPrefab: {fileID: 6193627069782756477, guid: 532c886b582d84349b691a5c6e2223bf,
+  itemPrefab: {fileID: 6193627069782756477, guid: 532c886b582d84349b691a5c6e2223bf,
     type: 3}
-  weaponModel: {fileID: 4698386340031912656, guid: ee79bd220d3c0514e8f2e3b82d31f1c4,
+  itemModel: {fileID: 4698386340031912656, guid: ee79bd220d3c0514e8f2e3b82d31f1c4,
     type: 3}
-  weaponName: Sword
-  weaponBioCurrencyCost: 75
-  weaponCreditCurrencyCost: 25
+  itemName: Sword
+  itemBioCost: 45
+  itemCreditCost: 12
