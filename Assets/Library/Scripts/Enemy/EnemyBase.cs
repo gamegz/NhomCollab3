@@ -173,12 +173,11 @@ namespace Enemy
             //Debug.Log(currentState);
             UpdateAttackCoolDown();
             _stateMachine.UpdateState();
-            if (isDashing) { return; }
             enemyNavAgent.speed = (canMove) ? currentSpeed / 10 : 0;
             LookAtTarget(transform, playerRef.transform, turnSpeed);
-            
-            
 
+
+            Debug.Log(canTurn);
             
         }
 
@@ -248,7 +247,6 @@ namespace Enemy
         {
             if (isDashing) { yield break; }
 
-            canTurn = false;
             canMove = false;
             //enemyNavAgent.updateRotation = false;           
             enemyNavAgent.ResetPath();
@@ -384,6 +382,19 @@ namespace Enemy
             if (projectile.TryGetComponent<EnemyProjectile>(out EnemyProjectile enemyProjectile))
             {
                 enemyProjectile.SetUp(direction, this.gameObject);
+            }
+            
+        }
+
+        public void ShootRayAttack(Vector3 direction)
+        {
+            RaycastHit hit;
+            if(Physics.Raycast(transform.position, direction, out hit, Mathf.Infinity, layerData.hostileTargetLayer))
+            {
+                if (hit.transform.gameObject.CompareTag("Player"))
+                {
+                    hit.transform.gameObject.GetComponent<IDamageable>().TakeDamage(attackDamage);
+                }
             }
             
         }
