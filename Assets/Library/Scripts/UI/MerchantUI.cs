@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class MerchantUI : MonoBehaviour, IInteractable
 {
-
     void Start()
     {
         
@@ -13,23 +12,6 @@ public class MerchantUI : MonoBehaviour, IInteractable
     void Update()
     {
         
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            Debug.Log("Enter");
-            UIManager.Instance.OnEnableMerchantInstructionText(true);
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            UIManager.Instance.OnEnableMerchantInstructionText(false);
-        }
     }
 
     public void OnInteract()
