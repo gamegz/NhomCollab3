@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 809046402752574192}
   - component: {fileID: 1358888265266968717}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: EnemyProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -31,7 +31,7 @@ Transform:
   m_Children:
   - {fileID: 6774914545203924962}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1358888265266968717
 MonoBehaviour:
@@ -60,7 +60,7 @@ GameObject:
   - component: {fileID: 2461141543708660152}
   - component: {fileID: 8617648314574887850}
   - component: {fileID: 5395559503294023849}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}

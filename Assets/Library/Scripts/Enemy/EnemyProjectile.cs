@@ -7,6 +7,7 @@ public class EnemyProjectile : MonoBehaviour
 {    
     private GameObject _owner;
     private Vector3 _shootDir = Vector3.forward;
+    private bool _deflected = false;
 
     [SerializeField] private float _bulletSpeed;
     [SerializeField] private int _damage;
@@ -14,18 +15,7 @@ public class EnemyProjectile : MonoBehaviour
 
     private void Update()
     {
-
         transform.position += _shootDir * _bulletSpeed * Time.deltaTime;
-
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            ReflectBulletReverse();
-        }
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            ReflectBulletToOwner();
-        }
-
 
         _lifeTime -= Time.deltaTime;
         if(_lifeTime <= 0)
@@ -36,10 +26,14 @@ public class EnemyProjectile : MonoBehaviour
 
     public void ReflectBulletReverse()
     {
-        ChangeShootDir(-_shootDir);
+        if (!_deflected)
+        {
+            _deflected = !_deflected;
+            ChangeShootDir(-_shootDir);
+        }
     }
 
-    public void ReflectBulletToOwner()
+    public void ReflectBulletToOwner() // [DUC ANH]: Might not use this yet, will discuss with the team.
     {
         ChangeShootDir(_owner.transform.position - transform.position);
     }
