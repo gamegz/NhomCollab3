@@ -8,9 +8,10 @@ public class PlayerStatsData
 {
     public CharacterStatsData currentCharacterStats;
 
-    public void Init()
+    public void Init(CharacterBaseStatsData baseStats)
     {
-        CharacterStatsData statsData = new CharacterStatsData();
+        currentCharacterStats = new CharacterStatsData();
+        SetBaseStats(baseStats);
     }
     public CharacterStatsData GetCharacterStats
     {
@@ -19,6 +20,11 @@ public class PlayerStatsData
 
     public void SetBaseStats(CharacterBaseStatsData characterStats)
     {
-        GetCharacterStats.SetBaseStat(characterStats);
+        //GetCharacterStats.SetBaseStat(characterStats);
+        if(currentCharacterStats == null)
+        {
+            currentCharacterStats = new CharacterStatsData();
+        }
+        currentCharacterStats.SetBaseStat(characterStats);
     }
 }

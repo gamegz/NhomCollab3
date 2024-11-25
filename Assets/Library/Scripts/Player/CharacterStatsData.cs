@@ -6,18 +6,15 @@ using System;
 [Serializable]
 public class CharacterStatsData
 {
-    public Dictionary<UpgradeType, float> upgradeLevel = new Dictionary<UpgradeType, float>()
+    public Dictionary<UpgradeType, int> upgradeLevel = new Dictionary<UpgradeType, int>()
     {
-        {UpgradeType.MovementSpeed, 1f },
-        {UpgradeType.Health, 1f },
-        {UpgradeType.FConversionRate, 1f },
-        {UpgradeType.AttackSpeed, 1f },
-    };
-
-    public Dictionary<UpgradeType, int> damageUpgradeLevel = new Dictionary<UpgradeType, int>()
-    {
+        {UpgradeType.MovementSpeed, 1 },
+        {UpgradeType.Health, 1 },
+        {UpgradeType.FConversionRate, 1 },
+        {UpgradeType.AttackSpeed, 1 },
         {UpgradeType.Damage, 1},
     };
+
 
     public Dictionary<BuffType, float> BuffTypes = new Dictionary<BuffType, float>()
     {
@@ -38,12 +35,16 @@ public class CharacterStatsData
     public void SetBaseStat(CharacterBaseStatsData baseStats)
     {
         this.baseStats = baseStats;
+        currentPlayerHealth = Health;
     }
 
     public void OnStatsUpgrade(UpgradeType upgradeType, int value)
     {
         upgradeLevel[upgradeType] += value;
-        damageUpgradeLevel[upgradeType] += value;
+        if(upgradeType == UpgradeType.Health)
+        {
+            currentPlayerHealth = Health;
+        }
     }
 
     public void OnTriggerBuff(BuffType buffType, float BuffPower)
@@ -67,8 +68,8 @@ public class CharacterStatsData
     }
 
     public void OnPlayerHealthChange(float value)
-    {
-        currentPlayerHealth += value;
+    { 
+        currentPlayerHealth -= value;
     }
 
     public float GetHealth(float modifier)
@@ -134,7 +135,7 @@ public class CharacterStatsData
     {
         get
         {
-            int modifier = DamageBuff[BuffType.Damage] + baseStats.DamageIncreasePerLevel * damageUpgradeLevel[UpgradeType.Damage];
+            int modifier = DamageBuff[BuffType.Damage] + baseStats.DamageIncreasePerLevel * upgradeLevel[UpgradeType.Damage];
             return GetDamage(modifier);
         }
     }

@@ -1,0 +1,16 @@
+{
+    "PlayerHealth": 10,
+    "PlayerDamage": 15,
+    "PlayerSpeed": 8.0,
+    "FConversionRate": 1.0,
+    "HealthBuff": 1.0,
+    "SpeedBuff": 1.0,
+    "DamageBuff": 1.0,
+    "AttackSpeedBuff": 1.0,
+    "AttackSpeed": 0.8,
+    "HealthIncreasePerLevel": 1.0,
+    "SpeedIncreasePerLevel": 0.02,
+    "FConversionRateIncreasePerLevel": 1.0,
+    "AttakSpeedIncreasePerLevel": 1.0,
+    "DamageIncreasePerLevel": 1
+}

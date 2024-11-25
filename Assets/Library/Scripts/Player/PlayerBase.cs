@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using UnityEngine.SceneManagement;
 
 public class PlayerBase : MonoBehaviour
 {
@@ -59,41 +59,41 @@ public class PlayerBase : MonoBehaviour
         buffSpeed = 1f;
     }
 
-    public float MoveSpeed
-    {
-        get
-        {
-            float modifier = buffSpeed + (SPEED_INCREASE_PER_LEVEL * moveSpeedLevel);
-            return data.MoveSpeed(modifier);
-        }
-    }
+    //public float MoveSpeed
+    //{
+    //    get
+    //    {
+    //        float modifier = buffSpeed + (SPEED_INCREASE_PER_LEVEL * moveSpeedLevel);
+    //        return data.MoveSpeed(modifier);
+    //    }
+    //}
 
-    public float Health
-    {
-        get
-        {
-            float modifier = buffHealth + (HEALTH_INCREASE_PER_LEVEL * healthLevel);
-            return data.Health(modifier);
-        }
-    }
+    //public float Health
+    //{
+    //    get
+    //    {
+    //        float modifier = buffHealth + (HEALTH_INCREASE_PER_LEVEL * healthLevel);
+    //        return data.Health(modifier);
+    //    }
+    //}
 
-    public float FConversionRate
-    {
-        get
-        {
-            float modifier = buffFConversionRate + (FCONVERSION_RATE_INCREASE_PER_LEVEL * fConversionRateLevel);
-            return data.FConversionRate(modifier);
-        }
-    }
+    //public float FConversionRate
+    //{
+    //    get
+    //    {
+    //        float modifier = buffFConversionRate + (FCONVERSION_RATE_INCREASE_PER_LEVEL * fConversionRateLevel);
+    //        return data.FConversionRate(modifier);
+    //    }
+    //}
 
-    public int Damage
-    {
-        get
-        {
-            int modifier = buffDamage + (DAMAGE_INCREASE_PER_LEVEL * damageLevel);
-            return data.Damage(modifier);
-        }
-    }
+    //public int Damage
+    //{
+    //    get
+    //    {
+    //        int modifier = buffDamage + (DAMAGE_INCREASE_PER_LEVEL * damageLevel);
+    //        return data.Damage(modifier);
+    //    }
+    //}
 
     private void OnInteractWithObject(InputAction.CallbackContext context)
     {
@@ -114,9 +114,10 @@ public class PlayerBase : MonoBehaviour
 
     public void OnUpgradeCharacter()
     {
-        moveSpeedLevel++;
-        healthLevel++;
-        fConversionRateLevel++;
+        PlayerDatas.Instance.OnStatsUpgrade(UpgradeType.MovementSpeed, 1);
+        PlayerDatas.Instance.OnStatsUpgrade(UpgradeType.Health, 1);
+        PlayerDatas.Instance.OnStatsUpgrade(UpgradeType.FConversionRate, 1);
+
     }
 
     private void OnDrawGizmos()
@@ -127,5 +128,12 @@ public class PlayerBase : MonoBehaviour
             Gizmos.DrawWireSphere(_playerTransform.position, 0.5f);
         }
         
+    }
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            SceneManager.LoadScene("Bao's Scene");
+        }
     }
 }
