@@ -186,8 +186,6 @@ MonoBehaviour:
   setAmountOfWave: 2
   amountOfEnemyPerWave: 6
   roomLock: {fileID: 1060358939}
-  _currentEnemyCount: 0
-  _currentWaveCount: 0
 --- !u!1 &119723758
 GameObject:
   m_ObjectHideFlags: 3
@@ -3381,8 +3379,6 @@ MonoBehaviour:
   setAmountOfWave: 2
   amountOfEnemyPerWave: 8
   roomLock: {fileID: 1665903994}
-  _currentEnemyCount: 0
-  _currentWaveCount: 0
 --- !u!4 &1222078729
 Transform:
   m_ObjectHideFlags: 0
@@ -3731,7 +3727,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 2125903694}
-  m_VersionIndex: 4141
+  m_VersionIndex: 4162
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
