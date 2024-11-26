@@ -34,11 +34,22 @@ public class PlayerBase : MonoBehaviour, IDamageable
             Debug.Log("its work");
         }
 
+        for(int i = 0; i < Object.FindObjectsOfType<PlayerBase>().Length; i++)
+        {
+            if (Object.FindObjectsOfType<PlayerBase>()[i] != this )
+            {
+                if (Object.FindObjectsOfType<PlayerBase>()[i].name == gameObject.name)
+                {
+                    Destroy(gameObject.transform.parent.gameObject);
+                }
+            }
+        }
         WeaponManager.CurrentWeapon += OnSaveWeaponPrefab;
     }
 
     private void OnEnable()
     {
+        SceneManager.sceneLoaded += OnSceneLoaded;
         _playerInput.Player.OnInteract.performed += OnInteractWithObject;
         _playerInput.Player.OnInteract.canceled += OnInteractWithObject;
         _playerInput.Enable();
@@ -47,6 +58,7 @@ public class PlayerBase : MonoBehaviour, IDamageable
     private void OnDisable()
     {
         WeaponManager.CurrentWeapon -= OnSaveWeaponPrefab;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
         _playerInput.Player.OnInteract.performed -= OnInteractWithObject;
         _playerInput.Player.OnInteract.canceled -= OnInteractWithObject;
         _playerInput.Disable();
@@ -140,13 +152,15 @@ public class PlayerBase : MonoBehaviour, IDamageable
         if(Input.GetKeyDown(KeyCode.Space))
         {
             SceneManager.LoadScene("Bao's Scene");
+            Debug.Log("Heyyyyy");
         }
     }
 
     public void TakeDamage(int damageAmount)
     {
         PlayerDatas.Instance.OnPlayerHealthChange(damageAmount);
-        if(PlayerDatas.Instance.GetStats.currentPlayerHealth <= 0)
+        Debug.Log(PlayerDatas.Instance.GetStats.currentPlayerHealth);
+        if (PlayerDatas.Instance.GetStats.currentPlayerHealth <= 0)
         {
             OnPlayerDeath();
         }
@@ -154,6 +168,24 @@ public class PlayerBase : MonoBehaviour, IDamageable
 
     private void OnPlayerDeath()
     {
+        GameManager.Instance.UpdateGameState(GameState.LOSE);
+    }
 
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        SetPlayerPosition();
+    }
+
+    private void SetPlayerPosition()
+    {
+        Transform spawnPoint = GameManager.Instance.GetSpawnPoint();
+        if(spawnPoint != null)
+        {
+            transform.position = spawnPoint.position;
+        }
+        else
+        {
+            Debug.Log("haha");
+        }
     }
 }

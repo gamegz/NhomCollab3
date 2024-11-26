@@ -7,6 +7,16 @@ public class CameraPersistent : MonoBehaviour
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
+        for (int i = 0; i < Object.FindObjectsOfType<CameraPersistent>().Length; i++)
+        {
+            if (Object.FindObjectsOfType<CameraPersistent>()[i] != this)
+            {
+                if (Object.FindObjectsOfType<CameraPersistent>()[i].name == gameObject.name)
+                {
+                    Destroy(gameObject);
+                }
+            }
+        }
     }
     void Start()
     {

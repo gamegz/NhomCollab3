@@ -33,6 +33,7 @@ public class PlayerDatas
         LoadBaseStats();
         LoadPlayerStats();
         playerStatsData.SetBaseStats(baseStatsData);
+        
     }
 
     private void SaveGame()

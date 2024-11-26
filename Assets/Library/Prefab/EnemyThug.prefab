@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c2c29a41a3ba0849831804829ae447f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 5
   _playerTagName: Player
 --- !u!1 &4580034224800129921
 GameObject:
@@ -272,7 +272,7 @@ Transform:
   - {fileID: 8197568303905247138}
   - {fileID: 3089266263455046874}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2082572117227567848
 MeshFilter:
@@ -418,7 +418,7 @@ MonoBehaviour:
   _shootPoint: {fileID: 0}
   _shootProjectile: {fileID: 0}
   attackCollider: {fileID: 9056635638902156682}
-  attackDamage: 1
+  attackDamage: 50
   totalAttackDuration: 1
   attackInnitTime: 0.35
   attackCooldown: 1

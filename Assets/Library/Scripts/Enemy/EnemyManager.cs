@@ -35,11 +35,12 @@ namespace Enemy.EnemyManager
 		private List<EnemyBase> enemies;
 		private List<EnemySpawnData> enemiesSpawnOnHold;
 		private float _enemySpawnOnHoldDelay = 2;
-		public GameObject PlayerChildObject;
+		private GameObject PlayerChildObject;
 
         private void Awake()
         {
 			enemies = FindObjectsOfType<EnemyBase>().ToList();
+			PlayerChildObject = GameObject.FindGameObjectWithTag("Player");
         }
 
         private void Start()

@@ -22,4 +22,12 @@ public class EnemyAttackCollider : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag(_playerTagName))
+        {
+            other.gameObject.GetComponent<IDamageable>().TakeDamage(_damage);
+        }
+    }
+
 }

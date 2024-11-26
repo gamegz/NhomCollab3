@@ -10,12 +10,14 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button CloseUpgradePanelButton;
     [SerializeField] private Button CloseMerchantPanelButton;
     [SerializeField] private Button UpgradeButton;
+    [SerializeField] private Button BackToHomeLobbyButton;
     [SerializeField] private GameObject UpgradePanel;
     [SerializeField] private GameObject MerchantPanel;
     [SerializeField] private TextMeshProUGUI HPText;
     [SerializeField] private TextMeshProUGUI MovementSpeedText;
     [SerializeField] private TextMeshProUGUI FConversionRateText;
     [SerializeField] private PlayerBase _playerBase;
+    [SerializeField] private GameObject LosePanel;
     public static UIManager Instance { get; private set; }
 
     private void Awake()
@@ -27,9 +29,10 @@ public class UIManager : MonoBehaviour
     }
     void Start()
     {
-        CloseUpgradePanelButton.onClick.AddListener(() => OnEnableUpgradePanel(false));
-        CloseMerchantPanelButton.onClick.AddListener(() => OnEnableMerchantPanel(false));
-        UpgradeButton.onClick.AddListener(OnUpgradeCharacter);
+        CloseUpgradePanelButton?.onClick.AddListener(() => OnEnableUpgradePanel(false));
+        CloseMerchantPanelButton?.onClick.AddListener(() => OnEnableMerchantPanel(false));
+        UpgradeButton?.onClick.AddListener(OnUpgradeCharacter);
+        BackToHomeLobbyButton?.onClick.AddListener(() => BackToHomeLobby());
     }
 
 
@@ -58,5 +61,15 @@ public class UIManager : MonoBehaviour
     public void OnUpgradeCharacter()
     {
         _playerBase.OnUpgradeCharacter();
+    }
+
+    public void OnEnableLosePanel()
+    {
+        LosePanel.SetActive(true);
+    }
+
+    public void BackToHomeLobby()
+    {
+        GameManager.Instance.UpdateGameState(GameState.HOMELOBBY);
     }
 }

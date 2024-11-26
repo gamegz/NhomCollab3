@@ -18,7 +18,7 @@ namespace Enemy
     Add behavior by contructing statemachine states into child class
     Changing spawn and other option
     */
-    public class EnemyBase : MonoBehaviour, IDamageable
+    public class EnemyBase : MonoBehaviour
     {
         public event Action<EnemyBase> OnEnemyDeaths;
         #region DATA CONFIG
