@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-public class PlayerBase : MonoBehaviour
+public class PlayerBase : MonoBehaviour, IDamageable
 {
     public PlayerBattleData data;
     private int moveSpeedLevel;
@@ -33,6 +33,8 @@ public class PlayerBase : MonoBehaviour
         {
             Debug.Log("its work");
         }
+
+        WeaponManager.CurrentWeapon += OnSaveWeaponPrefab;
     }
 
     private void OnEnable()
@@ -44,6 +46,7 @@ public class PlayerBase : MonoBehaviour
 
     private void OnDisable()
     {
+        WeaponManager.CurrentWeapon -= OnSaveWeaponPrefab;
         _playerInput.Player.OnInteract.performed -= OnInteractWithObject;
         _playerInput.Player.OnInteract.canceled -= OnInteractWithObject;
         _playerInput.Disable();
@@ -59,41 +62,41 @@ public class PlayerBase : MonoBehaviour
         buffSpeed = 1f;
     }
 
-    //public float MoveSpeed
-    //{
-    //    get
-    //    {
-    //        float modifier = buffSpeed + (SPEED_INCREASE_PER_LEVEL * moveSpeedLevel);
-    //        return data.MoveSpeed(modifier);
-    //    }
-    //}
+    public float MoveSpeed
+    {
+        get
+        {
+            float modifier = buffSpeed + (SPEED_INCREASE_PER_LEVEL * moveSpeedLevel);
+            return data.MoveSpeed(modifier);
+        }
+    }
 
-    //public float Health
-    //{
-    //    get
-    //    {
-    //        float modifier = buffHealth + (HEALTH_INCREASE_PER_LEVEL * healthLevel);
-    //        return data.Health(modifier);
-    //    }
-    //}
+    public float Health
+    {
+        get
+        {
+            float modifier = buffHealth + (HEALTH_INCREASE_PER_LEVEL * healthLevel);
+            return data.Health(modifier);
+        }
+    }
 
-    //public float FConversionRate
-    //{
-    //    get
-    //    {
-    //        float modifier = buffFConversionRate + (FCONVERSION_RATE_INCREASE_PER_LEVEL * fConversionRateLevel);
-    //        return data.FConversionRate(modifier);
-    //    }
-    //}
+    public float FConversionRate
+    {
+        get
+        {
+            float modifier = buffFConversionRate + (FCONVERSION_RATE_INCREASE_PER_LEVEL * fConversionRateLevel);
+            return data.FConversionRate(modifier);
+        }
+    }
 
-    //public int Damage
-    //{
-    //    get
-    //    {
-    //        int modifier = buffDamage + (DAMAGE_INCREASE_PER_LEVEL * damageLevel);
-    //        return data.Damage(modifier);
-    //    }
-    //}
+    public int Damage
+    {
+        get
+        {
+            int modifier = buffDamage + (DAMAGE_INCREASE_PER_LEVEL * damageLevel);
+            return data.Damage(modifier);
+        }
+    }
 
     private void OnInteractWithObject(InputAction.CallbackContext context)
     {
@@ -103,10 +106,7 @@ public class PlayerBase : MonoBehaviour
             foreach (Collider collide in colliders)
             {
                 IInteractable interactable = collide.GetComponent<IInteractable>();
-                if (interactable != null)
-                {
-                    interactable.OnInteract();
-                }
+                interactable?.OnInteract();
             }
         }
         
@@ -118,6 +118,12 @@ public class PlayerBase : MonoBehaviour
         PlayerDatas.Instance.OnStatsUpgrade(UpgradeType.Health, 1);
         PlayerDatas.Instance.OnStatsUpgrade(UpgradeType.FConversionRate, 1);
 
+    }
+
+    private void OnSaveWeaponPrefab()
+    {
+        Debug.Log("isITWork????");
+        DontDestroyOnLoad(gameObject.transform.parent.gameObject);
     }
 
     private void OnDrawGizmos()
@@ -135,5 +141,19 @@ public class PlayerBase : MonoBehaviour
         {
             SceneManager.LoadScene("Bao's Scene");
         }
+    }
+
+    public void TakeDamage(int damageAmount)
+    {
+        PlayerDatas.Instance.OnPlayerHealthChange(damageAmount);
+        if(PlayerDatas.Instance.GetStats.currentPlayerHealth <= 0)
+        {
+            OnPlayerDeath();
+        }
+    }
+
+    private void OnPlayerDeath()
+    {
+
     }
 }
