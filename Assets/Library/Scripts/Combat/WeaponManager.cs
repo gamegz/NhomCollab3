@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class WeaponManager : MonoBehaviour
 {
+    public delegate void CurrentWeaponHandler();
+    public static event CurrentWeaponHandler CurrentWeapon;
     //Unity new Input system
     public PlayerInput _playerInput;
 
@@ -202,7 +204,7 @@ public class WeaponManager : MonoBehaviour
                     weaponList.Remove(_currentWeapon); 
                     _currentWeapon?.transform.SetParent(null, true); 
                     _currentWeapon.GetComponent<BoxCollider>().enabled = true; 
-                    weaponList.Add(weaponToAdd); 
+                    weaponList.Add(weaponToAdd);
                 }
                 else if(weaponList.Count < _maxWeaponNum || _currentWeapon == null) 
                 {
@@ -215,7 +217,8 @@ public class WeaponManager : MonoBehaviour
                 }
                 // the whole section below is to set up the weapon we just pick up and set the boxCollider to false to immediately attack when pick up
                 _currentWeapon = weaponToAdd; 
-                _currentWeapon?.transform.SetParent(this.transform); 
+                _currentWeapon?.transform.SetParent(this.transform);
+                CurrentWeapon?.Invoke();
                 _weaponIndex = weaponList.IndexOf(_currentWeapon); 
                 _currentWeapon.transform.position = this.transform.position; 
                 _currentWeapon.transform.rotation = this.transform.rotation; 

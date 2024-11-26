@@ -31,7 +31,7 @@ public class Dagger : WeaponBase
         IDamageable damageable = other.GetComponent<IDamageable>();
         if (damageable != null)
         {
-            damageable.TakeDamage(playerBase.Damage);
+            damageable.TakeDamage(PlayerDatas.Instance.GetStats.Damage);
         }
     }
 }

@@ -121,6 +121,11 @@ public class PlayerMovement : PlayerActionState
     protected override void MovingAction()
     {
         base.MovingAction();
+        if(PlayerDatas.Instance == null || PlayerDatas.Instance.GetStats == null)
+        {
+            Debug.LogError("Warning no PlayerDatas Instance");
+            return;
+        }
         Vector3 playerMovement = new Vector3(_movement.x, 0, _movement.y) * m_PlayerBase.MoveSpeed;
         _rb.velocity = playerMovement;
     }

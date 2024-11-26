@@ -40,9 +40,9 @@ public class UIManager : MonoBehaviour
             return;
         }
 
-        HPText.text = "HP: " + _playerBase.Health.ToString();
-        MovementSpeedText.text = "Move Speed: " + _playerBase.MoveSpeed.ToString();
-        FConversionRateText.text = "FConversion Rate: " + _playerBase.FConversionRate.ToString();
+        HPText.text = "HP: " + PlayerDatas.Instance.GetStats.Health.ToString();
+        MovementSpeedText.text = "Move Speed: " + PlayerDatas.Instance.GetStats.MoveSpeed.ToString();
+        FConversionRateText.text = "FConversion Rate: " + PlayerDatas.Instance.GetStats.FConversionRate.ToString();
     }
 
     public void OnEnableUpgradePanel(bool isEnable)

@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
-
-public class PlayerBase : MonoBehaviour
+public class PlayerBase : MonoBehaviour, IDamageable
 {
     public PlayerBattleData data;
     private int moveSpeedLevel;
@@ -33,6 +33,8 @@ public class PlayerBase : MonoBehaviour
         {
             Debug.Log("its work");
         }
+
+        WeaponManager.CurrentWeapon += OnSaveWeaponPrefab;
     }
 
     private void OnEnable()
@@ -44,6 +46,7 @@ public class PlayerBase : MonoBehaviour
 
     private void OnDisable()
     {
+        WeaponManager.CurrentWeapon -= OnSaveWeaponPrefab;
         _playerInput.Player.OnInteract.performed -= OnInteractWithObject;
         _playerInput.Player.OnInteract.canceled -= OnInteractWithObject;
         _playerInput.Disable();
@@ -103,10 +106,7 @@ public class PlayerBase : MonoBehaviour
             foreach (Collider collide in colliders)
             {
                 IInteractable interactable = collide.GetComponent<IInteractable>();
-                if (interactable != null)
-                {
-                    interactable.OnInteract();
-                }
+                interactable?.OnInteract();
             }
         }
         
@@ -114,9 +114,16 @@ public class PlayerBase : MonoBehaviour
 
     public void OnUpgradeCharacter()
     {
-        moveSpeedLevel++;
-        healthLevel++;
-        fConversionRateLevel++;
+        PlayerDatas.Instance.OnStatsUpgrade(UpgradeType.MovementSpeed, 1);
+        PlayerDatas.Instance.OnStatsUpgrade(UpgradeType.Health, 1);
+        PlayerDatas.Instance.OnStatsUpgrade(UpgradeType.FConversionRate, 1);
+
+    }
+
+    private void OnSaveWeaponPrefab()
+    {
+        Debug.Log("isITWork????");
+        DontDestroyOnLoad(gameObject.transform.parent.gameObject);
     }
 
     private void OnDrawGizmos()
@@ -127,5 +134,26 @@ public class PlayerBase : MonoBehaviour
             Gizmos.DrawWireSphere(_playerTransform.position, 0.5f);
         }
         
+    }
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            SceneManager.LoadScene("Bao's Scene");
+        }
+    }
+
+    public void TakeDamage(int damageAmount)
+    {
+        PlayerDatas.Instance.OnPlayerHealthChange(damageAmount);
+        if(PlayerDatas.Instance.GetStats.currentPlayerHealth <= 0)
+        {
+            OnPlayerDeath();
+        }
+    }
+
+    private void OnPlayerDeath()
+    {
+
     }
 }
