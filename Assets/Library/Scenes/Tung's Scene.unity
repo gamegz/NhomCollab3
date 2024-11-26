@@ -294,12 +294,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &756855459 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1294344116518533962, guid: a90637570acb60e4e84133dd8cdf701f,
-    type: 3}
-  m_PrefabInstance: {fileID: 1747169148}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1017653361
 GameObject:
   m_ObjectHideFlags: 0
@@ -651,6 +645,12 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &1800580409 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -1313155429899039230, guid: a90637570acb60e4e84133dd8cdf701f,
+    type: 3}
+  m_PrefabInstance: {fileID: 1747169148}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2070649922
 GameObject:
   m_ObjectHideFlags: 0
@@ -1114,4 +1114,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Animator: {fileID: 1747169151}
-  player_lower_spine: {fileID: 756855459}
+  player_lower_spine: {fileID: 1800580409}
