@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class PlayerMovement : PlayerActionState
 {
@@ -176,6 +177,7 @@ public class PlayerMovement : PlayerActionState
 
     private void LookAtMousePosition() //Look at player mouse position
     {
+        /*
         Vector3 mousePosition = _camera.ScreenToWorldPoint(new Vector3(_mousePosition.x, _mousePosition.y, _camera.transform.position.y));
         Vector3 directionFromCharacterToMouse = mousePosition - transform.position;
         directionFromCharacterToMouse.y = 0f;
@@ -185,8 +187,20 @@ public class PlayerMovement : PlayerActionState
             Quaternion rotation = Quaternion.LookRotation(directionFromCharacterToMouse);
             transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
         }
+        */
+        float angle = Mathf.Rad2Deg * Mathf.Acos(Vector2.Dot(Commons.instance.GetMouseDir(transform.position), new Vector2(Commons.instance.CameraParentForward().x, Commons.instance.CameraParentForward().z)) / Commons.instance.GetMouseDir(transform.position).magnitude);
+        Vector3 CWCCW = Vector3.Cross((Vector3)Commons.instance.GetMouseDir(transform.position), Commons.instance.CameraParentForward());
+        if(CWCCW.y > 0)
+        {
+            transform.rotation = Quaternion.Euler(0, 360 - angle, 0);
+        }
+        else
+        {
+            transform.rotation = Quaternion.Euler(0, angle, 0);
+        }
     }
-    private void MousePos(InputAction.CallbackContext context)
+
+    public void MousePos(InputAction.CallbackContext context)
     {
         _mousePosition = context.ReadValue<Vector2>();
     }
