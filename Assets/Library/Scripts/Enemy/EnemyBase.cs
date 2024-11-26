@@ -78,6 +78,8 @@ namespace Enemy
         [SerializeField] private float _dashDistance;
         [SerializeField] private float _dashDuration;
         public float DashDuration { get { return _dashDuration; }}
+        public float DashDistance { get { return _dashDistance; }}
+
         [HideInInspector] public float currentSpeed;
         [HideInInspector] public bool isDashing;
         [HideInInspector] public bool canMove;
@@ -179,12 +181,8 @@ namespace Enemy
             //if (this == null) { return; }
             UpdateAttackCoolDown();
             _stateMachine.UpdateState();
-            if (isDashing) { return; }
             enemyNavAgent.speed = (canMove) ? currentSpeed / 10 : 0;
             LookAtTarget(transform, playerRef.transform, turnSpeed);
-            
-            
-
             
         }
 
@@ -245,11 +243,16 @@ namespace Enemy
         {
             StartCoroutine(EnemyDash(dashDirection, _dashDistance, _dashDuration));
         }
+
+        public void InnitDash(Vector3 dashDirection, float dashDistance, float dashTime)
+        {
+            StartCoroutine(EnemyDash(dashDirection, dashDistance, dashTime));
+        }
+
         private IEnumerator EnemyDash(Vector3 dashDirection, float DashDistance, float DashTime)
         {
             if (isDashing) { yield break; }
 
-            canTurn = false;
             canMove = false;
             //enemyNavAgent.updateRotation = false;           
             enemyNavAgent.ResetPath();
@@ -360,7 +363,7 @@ namespace Enemy
         #endregion
 
         #region ATTACK
-        public virtual void PresetDashAttack(Vector3 DashDirection, float attackTimeOffSet = 0)
+        public virtual void PresetDashAttack(Vector3 DashDirection)
         {
             InnitDash(DashDirection);
             InnitAttackCollider(_dashDuration);
@@ -385,6 +388,19 @@ namespace Enemy
             if (projectile.TryGetComponent<EnemyProjectile>(out EnemyProjectile enemyProjectile))
             {
                 enemyProjectile.SetUp(direction, this.gameObject);
+            }
+            
+        }
+
+        public void ShootRayAttack(Vector3 direction)
+        {
+            RaycastHit hit;
+            if(Physics.Raycast(transform.position, direction, out hit, Mathf.Infinity, layerData.hostileTargetLayer))
+            {
+                if (hit.transform.gameObject.CompareTag("Player"))
+                {
+                    hit.transform.gameObject.GetComponent<IDamageable>().TakeDamage(attackDamage);
+                }
             }
             
         }
@@ -460,8 +476,13 @@ namespace Enemy
             return location;
         }
 
-        //Get direction that is perpendicular to the direction from target to self
-        public Vector3 GetPerpendicularDirectionToTarget(bool toRight = true)
+        public Vector3 GetOffSetDirection(Vector3 direction, float offSetDegrees)
+        {
+            return direction = Quaternion.Euler(0, Random.Range(-offSetDegrees, offSetDegrees), 0) * direction;
+            
+        }
+
+        public Vector3 GetPerpendicularDirectionToPLayerTarget(bool toRight = true)
         {
 
             Vector3 dirTargetToSelf = playerRef.transform.position - transform.position;

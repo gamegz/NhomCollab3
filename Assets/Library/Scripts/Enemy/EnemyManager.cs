@@ -33,7 +33,6 @@ namespace Enemy.EnemyManager
 		private int _currentAttackToken;
 
 		private List<EnemyBase> enemies;
-		private List<EnemyBase> enemiesTokenOwner;
 		private List<EnemySpawnData> enemiesSpawnOnHold;
 		private float _enemySpawnOnHoldDelay = 2;
 		public GameObject PlayerChildObject;
@@ -65,6 +64,7 @@ namespace Enemy.EnemyManager
 		{
 			if (enemies == null) { return; }
 
+			UpdateTokenOwner();
 			foreach (EnemyBase enemy in enemies)
 			{
 				enemy.UpdateLogic();
@@ -77,7 +77,24 @@ namespace Enemy.EnemyManager
 
 		private void UpdateTokenOwner()
         {
+			_currentAttackToken = _maxAttackToken;
+			if(enemies.Count <= _maxAttackToken)
+			{
+				foreach (EnemyBase enemy in enemies)
+				{
+					enemy.isTokenOwner = true;
+				}
+				return; 
+			}
 
+			List<EnemyBase> enemiesInst = enemies.OrderBy(x => x.distanceToPlayer).ToList();
+			for (int i = 0; i < enemiesInst.Count; i++)
+			{
+				if (_currentAttackToken <= 0) { break; }
+				if (enemiesInst[i].isAttacking) { continue; }
+				enemiesInst[i].isTokenOwner = true;
+                _currentAttackToken--;
+            }
         }
 
 		private void TrySpawnOnHolders()
@@ -142,13 +159,13 @@ namespace Enemy.EnemyManager
 		private void OnTokenRequested(EnemyBase enemy)
 		{
 			if (enemy == null) { return; }
-			if (_currentAttackToken <= _maxAttackToken && _currentAttackToken > 0)
-			{
-				enemy.isTokenOwner = true;
-				_currentAttackToken--;
-            }
+            if (_currentAttackToken > 0) {
 
-		}
+                enemy.isTokenOwner = true;
+                _currentAttackToken--;
+
+            }           
+        }
 
 		private void AddActiveEnemy(EnemyBase enemy)
         {
