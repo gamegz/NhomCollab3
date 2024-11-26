@@ -175,9 +175,6 @@ namespace Enemy
             _stateMachine.UpdateState();
             enemyNavAgent.speed = (canMove) ? currentSpeed / 10 : 0;
             LookAtTarget(transform, playerRef.transform, turnSpeed);
-
-
-            Debug.Log(canTurn);
             
         }
 
