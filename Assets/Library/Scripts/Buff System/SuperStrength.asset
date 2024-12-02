@@ -9,13 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb9ea0a7bad8e5840afadde900e6c876, type: 3}
-  m_Name: Dagger
+  m_Script: {fileID: 11500000, guid: da3d1bbe4d499f041a40c7942579dbea, type: 3}
+  m_Name: SuperStrength
   m_EditorClassIdentifier: 
-  weaponName: Dagger
-  critDamageMultiplier: 0
-  critChance: 0
-  attackSpeed: 0.2
-  chargeAttackSpeed: 1
-  holdThreshold: 1
-  knockbackForce: 100
+  buffName: stroge
+  buffValue: 1000
+  type: 1

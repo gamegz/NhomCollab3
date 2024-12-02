@@ -7,6 +7,7 @@ using UnityEngine.AI;
 using Random = UnityEngine.Random;
 using System;
 
+
 namespace Enemy
 {
     //Need EnemyManager to start running
@@ -26,7 +27,6 @@ namespace Enemy
         public EnemyHostileMethod hostileMethod; //Put this as gunner for testing enemy without tokensystem
         public GameObject playerRef;
         public ActorLayerData layerData;
-        public Rigidbody rb;
         public CapsuleCollider colliderCapsule;
         [Space]
         
@@ -58,9 +58,10 @@ namespace Enemy
 
         [Tooltip("Amount of damage recive before stagger")]
         public float staggerThreshold;
-        private float _staggerThresholdCount;
         public float staggerTime;
-        private float _currentStaggerTimeLeft;
+        private float staggerThresholdCounter;
+        private float staggerTimeCounter;
+        private float knockbackForce = 0.0f;
         [HideInInspector] public bool isStagger = false;
         [HideInInspector] public bool isTargetInAttackRange;
         [HideInInspector] public bool isTokenOwner;
@@ -166,8 +167,6 @@ namespace Enemy
 
             attackCollider.enabled = false;
             attackCollider.gameObject.SetActive(false);
-            _currentStaggerTimeLeft = staggerTime;            
-            _staggerThresholdCount = staggerThreshold;
             attackCoolDownCount = attackCooldown;
 
             if (hostileMethod == EnemyHostileMethod.Gunner) { isTokenOwner = true; }
@@ -181,17 +180,20 @@ namespace Enemy
             //if (this == null) { return; }
             UpdateAttackCoolDown();
             _stateMachine.UpdateState();
-            enemyNavAgent.speed = (canMove) ? currentSpeed / 10 : 0;
+
+            enemyNavAgent.isStopped = !canMove;
+
             if (!isStagger) 
             {
                 LookAtTarget(transform, playerRef.transform, turnSpeed);
             }
-            
         }
 
         public virtual void FixedUpdateLogic()
         {
-            if (isDashing) { return; }
+            if (isDashing) return;
+            if (isStagger) return;
+
             _stateMachine.FixedUpdateState();
         }
 
@@ -254,11 +256,8 @@ namespace Enemy
             float dashDistance = DashDistance;
             Vector3 dashPoint = transform.position + dashDirection * dashDistance;
             LookAtTarget(transform.position, dashPoint);
-            NavMeshHit hit;
 
             Vector2 enemyPos = new Vector2(transform.position.x, transform.position.z);
-
-            NavMeshPath navpath = new NavMeshPath();
 
             //Note : recaculate distance and shit use when assign layers
             //if (enemyNavAgent.CalculatePath(dashPoint, enemyNavAgent.path)) //Inside navmesh
@@ -291,7 +290,7 @@ namespace Enemy
             //    }
             //}
 
-            if (NavMesh.SamplePosition(dashPoint, out hit, 0.1f, 1))
+            if (NavMesh.SamplePosition(dashPoint, out NavMeshHit hit, 0.1f, 1))
             {
                 dashPoint = hit.position;
                 dashDistance = Vector2.Distance(enemyPos, new Vector2(hit.position.x, hit.position.z)) - colliderCapsule.radius * 2;
@@ -368,14 +367,17 @@ namespace Enemy
         {
             attackCollider.gameObject.SetActive(true);
             attackCollider.enabled = true;
+
             yield return new WaitForSeconds(duration);
-            attackCollider.enabled = false;
+
             attackCollider.gameObject.SetActive(false);
+            attackCollider.enabled = false;
         }
 
         public void ShootProjectile(Vector3 direction)
         {
-            if (isStagger) { return; }
+            if (isStagger) return;
+
             GameObject projectile = Instantiate(_shootProjectile, _shootPoint.position, Quaternion.identity);
             if (projectile.TryGetComponent<EnemyProjectile>(out EnemyProjectile enemyProjectile))
             {
@@ -386,7 +388,10 @@ namespace Enemy
 
         public void ShootRayAttack(Vector3 direction)
         {
+            if (isStagger) return;
+
             RaycastHit hit;
+
             if(Physics.Raycast(transform.position, direction, out hit, Mathf.Infinity, layerData.hostileTargetLayer))
             {
                 if (hit.transform.gameObject.CompareTag("Player"))
@@ -394,7 +399,6 @@ namespace Enemy
                     hit.transform.gameObject.GetComponent<IDamageable>().TakeDamage(attackDamage);
                 }
             }
-            
         }
 
         #endregion
@@ -404,57 +408,49 @@ namespace Enemy
         public void TakeDamage(int damage)
         {
             currentHealth -= damage;
-            _staggerThresholdCount -= damage;
-            Debug.LogWarning("_staggerThresholdCount" + _staggerThresholdCount);
-            if (_staggerThresholdCount <= 0 && !isStagger)
+            staggerThresholdCounter -= damage;
+
+            if (currentHealth <= 0)
             {
-                isStagger = true;
+                Debug.Log("WAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+                OnDeath();
+            }
+            if (staggerThresholdCounter <= 0)
+            {
+                staggerThresholdCounter = staggerThreshold;
+                Stagger(knockbackForce);
             }
 
-            if (currentHealth > 0) { return; }
-            OnDeath();
+        }
+
+        public void DamagedByWeapon(WeaponData _weaponData)
+        {
+            knockbackForce = _weaponData.knockbackForce;
         }
 
 
-        Coroutine temp;
+        Coroutine staggerTimeCoroutine;
 
-        public void Staggered(int time, float knockbackStrength, Vector3 weaponPos)
+        public void Stagger(float knockbackStrength)
         {
-            if (isStagger) 
-            {
-                _currentStaggerTimeLeft = time; 
-                canMove = false;
+            Debug.Log(0);
 
-                Vector2 knockbackDir = rb.transform.position - weaponPos;
+            Vector3 knockbackDir = (this.transform.position - PlayerBase.Instance.transform.position).normalized;
+            enemyNavAgent.velocity += knockbackDir * knockbackStrength;
 
-                rb.AddForce(knockbackDir * knockbackStrength, ForceMode.Impulse);
-
-                if (temp != null) StopCoroutine(temp);
-
-                temp = StartCoroutine(StaggerTimeReduced());
-   
-            }
+            if (staggerTimeCoroutine != null) StopCoroutine(staggerTimeCoroutine);
+            staggerTimeCoroutine = StartCoroutine(StaggerTimeCoroutine());
         }
 
-        IEnumerator StaggerTimeReduced()
+        IEnumerator StaggerTimeCoroutine()
         {
-            while (_currentStaggerTimeLeft > 0)
-            {
-                Debug.LogWarning("I Love Niggas: " + _currentStaggerTimeLeft);
+            isStagger = true;
+            canMove = false;
 
-                _currentStaggerTimeLeft -= Time.deltaTime;
+            yield return new WaitForSeconds(staggerTime);
 
-                if (_currentStaggerTimeLeft <= 0)
-                {
-                    _currentStaggerTimeLeft = staggerTime;
-                    _staggerThresholdCount = staggerThreshold;
-                    isStagger = false;
-                    canMove = true;
-                    break;
-                }
-
-                yield return null;
-            }
+            isStagger = false;
+            canMove = true;
         }
 
         //private void UpdateStaggerLogic()

@@ -6,6 +6,9 @@ using UnityEngine.SceneManagement;
 
 public class PlayerBase : MonoBehaviour, IDamageable
 {
+    // THIS MUST BE A SINGLETON CLASS RIGHT?
+    public static PlayerBase Instance { get ; private set; }
+
     public PlayerBattleData data;
     private int moveSpeedLevel;
     private int healthLevel;
@@ -29,12 +32,19 @@ public class PlayerBase : MonoBehaviour, IDamageable
         //MeshRenderer childMeshRender = GetComponentInChildren<MeshRenderer>();
         //_playerTransform = childMeshRender ? childMeshRender.transform : null;
         _playerTransform = GetComponent<Transform>();
-        if( _playerInput != null)
-        {
-            Debug.Log("its work");
-        }
 
         WeaponManager.CurrentWeapon += OnSaveWeaponPrefab;
+
+        #region Singleton
+        if (!Instance)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+        #endregion
     }
 
     private void OnEnable()
@@ -124,7 +134,6 @@ public class PlayerBase : MonoBehaviour, IDamageable
 
     private void OnSaveWeaponPrefab()
     {
-        Debug.Log("isITWork????");
         DontDestroyOnLoad(gameObject.transform.parent.gameObject);
     }
 
@@ -154,9 +163,9 @@ public class PlayerBase : MonoBehaviour, IDamageable
         }
     }
 
-    public void Staggered(int timeAmount, float knockbackStrength, Vector3 playerPos)
+    public void Stagger(int timeAmount, float knockbackStrength, Vector3 playerPos)
     {
-        Debug.Log("NIGGAAA");
+
     }
 
 
