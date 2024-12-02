@@ -17,10 +17,15 @@ public class BuffBase : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("Basketball People");
-            Debug.Log("Gain" + buffData.buffName);
-            Debug.Log("Gain" + buffData.type);
-            PlayerDatas.Instance.GetStats.OnTriggerDamageBuff(buffData.type, 9999);
+            if (buffData.type == BuffType.Damage)
+            {
+                PlayerDatas.Instance.GetStats.OnTriggerDamageBuff(buffData.type, (int)buffData.buffValue);
+            }
+            else
+            {
+                PlayerDatas.Instance.GetStats.OnTriggerBuff(buffData.type, buffData.buffValue);
+            }
+
         }
 
     }

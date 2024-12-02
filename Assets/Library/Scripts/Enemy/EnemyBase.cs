@@ -412,7 +412,6 @@ namespace Enemy
 
             if (currentHealth <= 0)
             {
-                Debug.Log("WAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
                 OnDeath();
             }
             if (staggerThresholdCounter <= 0)
@@ -433,8 +432,6 @@ namespace Enemy
 
         public void Stagger(float knockbackStrength)
         {
-            Debug.Log(0);
-
             Vector3 knockbackDir = (this.transform.position - PlayerBase.Instance.transform.position).normalized;
             enemyNavAgent.velocity += knockbackDir * knockbackStrength;
 

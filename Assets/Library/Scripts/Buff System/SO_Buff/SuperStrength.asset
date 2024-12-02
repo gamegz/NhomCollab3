@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da3d1bbe4d499f041a40c7942579dbea, type: 3}
   m_Name: SuperStrength
   m_EditorClassIdentifier: 
-  buffName: stroge
-  buffValue: 1000
+  buffName: SUPERMAN
   type: 1
+  buffValue: 1000

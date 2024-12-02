@@ -162,13 +162,6 @@ public class PlayerBase : MonoBehaviour, IDamageable
             OnPlayerDeath();
         }
     }
-
-    public void Stagger(int timeAmount, float knockbackStrength, Vector3 playerPos)
-    {
-
-    }
-
-
     private void OnPlayerDeath()
     {
 

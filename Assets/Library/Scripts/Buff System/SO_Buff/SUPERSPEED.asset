@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da3d1bbe4d499f041a40c7942579dbea, type: 3}
   m_Name: SUPERSPEED
   m_EditorClassIdentifier: 
-  buffName: Usainboiz
-  buffValue: 10
+  buffName: USAINBOIZ
   type: 2
+  buffValue: 10

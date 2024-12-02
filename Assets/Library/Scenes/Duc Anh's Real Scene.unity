@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 78345297}
   - component: {fileID: 78345299}
   m_Layer: 0
-  m_Name: Buff
+  m_Name: ' Speed Buff'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -170,7 +170,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 78345296}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -39.47, y: 1.533, z: -37.27}
+  m_LocalPosition: {x: -33.18, y: 1.533, z: -37.27}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -618,7 +618,7 @@ GameObject:
   - component: {fileID: 290609161}
   - component: {fileID: 290609160}
   m_Layer: 0
-  m_Name: BuffModel
+  m_Name: DamageBuffModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1264,7 +1264,7 @@ GameObject:
   - component: {fileID: 656670244}
   - component: {fileID: 656670243}
   m_Layer: 0
-  m_Name: BuffModel
+  m_Name: SpeedBuffModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1290,7 +1290,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0161204b9b8b7fe4b817c754fa524bc5, type: 2}
+  - {fileID: 2100000, guid: c2567573ca3283941bcfc9697f48c077, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2789,7 +2789,7 @@ GameObject:
   - component: {fileID: 1575435909}
   - component: {fileID: 1575435908}
   m_Layer: 0
-  m_Name: Buff (1)
+  m_Name: Damage Buff
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

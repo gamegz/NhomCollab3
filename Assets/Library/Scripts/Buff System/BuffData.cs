@@ -6,6 +6,6 @@ using UnityEngine;
 public class BuffData : ScriptableObject
 {
     public string buffName;
-    public float buffValue;
     public BuffType type;
+    public float buffValue;
 }
