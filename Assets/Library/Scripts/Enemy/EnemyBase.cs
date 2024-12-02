@@ -182,7 +182,10 @@ namespace Enemy
             UpdateAttackCoolDown();
             _stateMachine.UpdateState();
             enemyNavAgent.speed = (canMove) ? currentSpeed / 10 : 0;
-            LookAtTarget(transform, playerRef.transform, turnSpeed);
+            if (!isStagger) 
+            {
+                LookAtTarget(transform, playerRef.transform, turnSpeed);
+            }
             
         }
 
@@ -204,22 +207,10 @@ namespace Enemy
             isTargetInAttackRange = (distanceToPlayer <= attackRange) ? true : false;
         }
 
-        //private void UpdateStaggerLogic()
-        //{
-        //    if (!isStagger) { return; }
+ 
 
-        //    if (_currentStaggerTimeLeft > 0)
-        //    {
 
-        //        _currentStaggerTimeLeft -= Time.deltaTime;
-        //    }
-        //    else
-        //    {
-        //        _currentStaggerTimeLeft = staggerTime;
-        //        _staggerThresholdCount = staggerThreshold;
-        //        isStagger = true;
-        //    }
-        //}
+        
 
         private void UpdateAttackCoolDown() {
         
@@ -384,6 +375,7 @@ namespace Enemy
 
         public void ShootProjectile(Vector3 direction)
         {
+            if (isStagger) { return; }
             GameObject projectile = Instantiate(_shootProjectile, _shootPoint.position, Quaternion.identity);
             if (projectile.TryGetComponent<EnemyProjectile>(out EnemyProjectile enemyProjectile))
             {
@@ -413,7 +405,7 @@ namespace Enemy
         {
             currentHealth -= damage;
             _staggerThresholdCount -= damage;
-
+            Debug.LogWarning("_staggerThresholdCount" + _staggerThresholdCount);
             if (_staggerThresholdCount <= 0 && !isStagger)
             {
                 isStagger = true;
@@ -422,6 +414,65 @@ namespace Enemy
             if (currentHealth > 0) { return; }
             OnDeath();
         }
+
+
+        Coroutine temp;
+
+        public void Staggered(int time, float knockbackStrength, Vector3 weaponPos)
+        {
+            if (isStagger) 
+            {
+                _currentStaggerTimeLeft = time; 
+                canMove = false;
+
+                Vector2 knockbackDir = rb.transform.position - weaponPos;
+
+                rb.AddForce(knockbackDir * knockbackStrength, ForceMode.Impulse);
+
+                if (temp != null) StopCoroutine(temp);
+
+                temp = StartCoroutine(StaggerTimeReduced());
+   
+            }
+        }
+
+        IEnumerator StaggerTimeReduced()
+        {
+            while (_currentStaggerTimeLeft > 0)
+            {
+                Debug.LogWarning("I Love Niggas: " + _currentStaggerTimeLeft);
+
+                _currentStaggerTimeLeft -= Time.deltaTime;
+
+                if (_currentStaggerTimeLeft <= 0)
+                {
+                    _currentStaggerTimeLeft = staggerTime;
+                    _staggerThresholdCount = staggerThreshold;
+                    isStagger = false;
+                    canMove = true;
+                    break;
+                }
+
+                yield return null;
+            }
+        }
+
+        //private void UpdateStaggerLogic()
+        //{
+        //    if (!isStagger) { return; }
+
+        //    if (_currentStaggerTimeLeft > 0)
+        //    {
+
+        //        _currentStaggerTimeLeft -= Time.deltaTime;
+        //    }
+        //    else
+        //    {
+        //        _currentStaggerTimeLeft = staggerTime;
+        //        _staggerThresholdCount = staggerThreshold;
+        //        isStagger = false;
+        //    }
+        //}
 
         public virtual void OnDeath()
         {

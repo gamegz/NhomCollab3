@@ -34,7 +34,7 @@ public class Pipe : WeaponBase
         IDamageable damageable = other.GetComponent<IDamageable>();
         if (damageable != null)
         {
-
+            
         }
     }
 

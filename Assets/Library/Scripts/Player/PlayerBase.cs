@@ -98,6 +98,7 @@ public class PlayerBase : MonoBehaviour, IDamageable
         }
     }
 
+
     private void OnInteractWithObject(InputAction.CallbackContext context)
     {
         if(context.performed)
@@ -119,6 +120,7 @@ public class PlayerBase : MonoBehaviour, IDamageable
         PlayerDatas.Instance.OnStatsUpgrade(UpgradeType.FConversionRate, 1);
 
     }
+
 
     private void OnSaveWeaponPrefab()
     {
@@ -151,6 +153,12 @@ public class PlayerBase : MonoBehaviour, IDamageable
             OnPlayerDeath();
         }
     }
+
+    public void Staggered(int timeAmount, float knockbackStrength, Vector3 playerPos)
+    {
+        Debug.Log("NIGGAAA");
+    }
+
 
     private void OnPlayerDeath()
     {

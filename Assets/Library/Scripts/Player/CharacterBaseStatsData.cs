@@ -29,7 +29,8 @@ public enum UpgradeType
     MovementSpeed,
     Health,
     FConversionRate,
-    AttackSpeed
+    AttackSpeed,
+    StaggerTime
 }
 
 public enum BuffType

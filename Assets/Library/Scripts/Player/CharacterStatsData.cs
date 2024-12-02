@@ -13,8 +13,8 @@ public class CharacterStatsData
         {UpgradeType.FConversionRate, 1 },
         {UpgradeType.AttackSpeed, 1 },
         {UpgradeType.Damage, 1},
+        //{UpgradeType.StaggerTime, 1f}
     };
-
 
     public Dictionary<BuffType, float> BuffTypes = new Dictionary<BuffType, float>()
     {

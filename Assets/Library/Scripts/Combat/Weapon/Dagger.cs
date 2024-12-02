@@ -32,6 +32,7 @@ public class Dagger : WeaponBase
         if (damageable != null)
         {
             damageable.TakeDamage(PlayerDatas.Instance.GetStats.Damage);
+            damageable.Staggered(5, 10, this.transform.position);
         }
     }
 }
