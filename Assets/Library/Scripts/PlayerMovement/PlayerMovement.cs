@@ -126,7 +126,7 @@ public class PlayerMovement : PlayerActionState
             Debug.LogError("Warning no PlayerDatas Instance");
             return;
         }
-        Vector3 playerMovement = new Vector3(_movement.x, 0, _movement.y) * m_PlayerBase.MoveSpeed;
+        Vector3 playerMovement = new Vector3(_movement.x, 0, _movement.y) * PlayerDatas.Instance.GetStats.MoveSpeed;
         _rb.velocity = playerMovement;
     }
 

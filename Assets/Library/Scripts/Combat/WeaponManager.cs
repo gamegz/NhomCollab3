@@ -1,10 +1,11 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class WeaponManager : MonoBehaviour
 {
+    [SerializeField] private PlayerBase player;
+
     public delegate void CurrentWeaponHandler();
     public static event CurrentWeaponHandler CurrentWeapon;
     //Unity new Input system
@@ -75,7 +76,7 @@ public class WeaponManager : MonoBehaviour
         if (isAttack) // cooldown timer betweeen attack and between normal attack and charge attack
         {
             cooldownTimer -= Time.deltaTime;
-            Debug.Log("cooldown: " + cooldownTimer);
+            //Debug.Log("cooldown: " + cooldownTimer);
             if (cooldownTimer <= 0f)
             {
                 _isNormalAttack = true;
@@ -146,6 +147,7 @@ public class WeaponManager : MonoBehaviour
                 _currentWeapon.OnInnitNormalAttack();
                 cooldownTimer = _currentWeapon._weaponData.attackSpeed;
             }
+
             isAttack = true; // set the isAttack = true again so that it will start cooldown, avoid attack with no cooldown
             ResetAttackState();
         }
@@ -190,13 +192,12 @@ public class WeaponManager : MonoBehaviour
         //Try pick up close weapon
         //If there is no space for more weapon throw the current equppied one and pick up the one on the ground else just pick up new weapon and add to list (maximum space: 2)
         Collider[] hitColliders = Physics.OverlapSphere(playerTransform.position, collectRange, layerToCheck); 
+
         foreach (var hitCollider in hitColliders)
         {
             float distanceFromItemToPlayer = Vector3.Distance(hitCollider.transform.position, playerTransform.position); 
             if (distanceFromItemToPlayer <= collectRange || distanceFromItemToPlayer <= collectRange && _currentWeapon == null) 
             {
-                
-                Debug.Log(hitCollider.gameObject.name);
                 WeaponBase weaponToAdd = hitCollider.GetComponentInChildren<WeaponBase>(); // will get the script of the weapon the sphere hit
                 if (weaponList.Count >= _maxWeaponNum) 
                 {
@@ -221,7 +222,8 @@ public class WeaponManager : MonoBehaviour
                 CurrentWeapon?.Invoke();
                 _weaponIndex = weaponList.IndexOf(_currentWeapon); 
                 _currentWeapon.transform.position = this.transform.position; 
-                _currentWeapon.transform.rotation = this.transform.rotation; 
+                _currentWeapon.transform.rotation = this.transform.rotation;
+                _currentWeapon.playerBase = player;
                 _currentWeapon.GetComponentInChildren<BoxCollider>().enabled = false; 
                 Debug.Log("current weapon: " + _currentWeapon);
             }

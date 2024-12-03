@@ -1,5 +1,5 @@
+using Enemy;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Dagger : WeaponBase
@@ -11,7 +11,7 @@ public class Dagger : WeaponBase
 
     public override void OnStopInnitNormalAttack()
     {
-        
+
     }
 
     public override void OnInnitSecondaryAttack()
@@ -26,12 +26,24 @@ public class Dagger : WeaponBase
         yield return new WaitForSeconds(0.1f);
         GetComponent<BoxCollider>().enabled = false;
     }
+
     private void OnTriggerEnter(Collider other)
     {
-        IDamageable damageable = other.GetComponent<IDamageable>();
-        if (damageable != null)
+        #region On Damage Enemy
+        // Temp solution - Please update this in feature code by creating new Interfaces
+        EnemyBase enemy = other.GetComponent<EnemyBase>();
+
+        if (enemy)
         {
-            damageable.TakeDamage(PlayerDatas.Instance.GetStats.Damage);
+            enemy.DamagedByWeapon(_weaponData);
+        }
+        #endregion
+
+        IDamageable damagable = other.GetComponent<IDamageable>();
+
+        if (damagable != null)
+        {
+            damagable.TakeDamage(_weaponData.baseWeaponDamage * PlayerDatas.Instance.GetStats.DamageModifier);
         }
     }
 }

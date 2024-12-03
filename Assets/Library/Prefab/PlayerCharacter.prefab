@@ -130,6 +130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef4790f4478e88946b8011319d2ece89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 7381951561567745206}
   weaponList: []
   collectRange: 3
   layerToCheck:

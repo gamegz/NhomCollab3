@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: Dagger
   m_EditorClassIdentifier: 
   weaponName: Dagger
-  baseDamage: 5
   critDamageMultiplier: 0
   critChance: 0
   attackSpeed: 0.2
   chargeAttackSpeed: 1
-  chargeAttackDamage: 7
-  attackStaggerForce: 0
   holdThreshold: 1
+  baseWeaponDamage: 10
+  chargeWeaponDamage: 0
+  parryDuration: 0
+  parrySpeed: 0
+  knockbackForce: 2

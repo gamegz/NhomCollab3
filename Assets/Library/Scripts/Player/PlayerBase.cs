@@ -6,6 +6,9 @@ using UnityEngine.SceneManagement;
 
 public class PlayerBase : MonoBehaviour, IDamageable
 {
+    // THIS MUST BE A SINGLETON CLASS RIGHT?
+    public static PlayerBase Instance { get ; private set; }
+
     public PlayerBattleData data;
     private int moveSpeedLevel;
     private int healthLevel;
@@ -29,10 +32,6 @@ public class PlayerBase : MonoBehaviour, IDamageable
         //MeshRenderer childMeshRender = GetComponentInChildren<MeshRenderer>();
         //_playerTransform = childMeshRender ? childMeshRender.transform : null;
         _playerTransform = GetComponent<Transform>();
-        if( _playerInput != null)
-        {
-            Debug.Log("its work");
-        }
 
         for(int i = 0; i < Object.FindObjectsOfType<PlayerBase>().Length; i++)
         {
@@ -45,6 +44,17 @@ public class PlayerBase : MonoBehaviour, IDamageable
             }
         }
         WeaponManager.CurrentWeapon += OnSaveWeaponPrefab;
+
+        #region Singleton
+        if (!Instance)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+        #endregion
     }
 
     private void OnEnable()
@@ -110,6 +120,7 @@ public class PlayerBase : MonoBehaviour, IDamageable
         }
     }
 
+
     private void OnInteractWithObject(InputAction.CallbackContext context)
     {
         if(context.performed)
@@ -132,9 +143,9 @@ public class PlayerBase : MonoBehaviour, IDamageable
 
     }
 
+
     private void OnSaveWeaponPrefab()
     {
-        Debug.Log("isITWork????");
         DontDestroyOnLoad(gameObject.transform.parent.gameObject);
     }
 
@@ -165,7 +176,6 @@ public class PlayerBase : MonoBehaviour, IDamageable
             OnPlayerDeath();
         }
     }
-
     private void OnPlayerDeath()
     {
         GameManager.Instance.UpdateGameState(GameState.LOSE);

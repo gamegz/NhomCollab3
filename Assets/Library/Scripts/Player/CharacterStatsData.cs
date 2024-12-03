@@ -8,13 +8,13 @@ public class CharacterStatsData
 {
     public Dictionary<UpgradeType, int> upgradeLevel = new Dictionary<UpgradeType, int>()
     {
-        {UpgradeType.MovementSpeed, 1 },
-        {UpgradeType.Health, 1 },
-        {UpgradeType.FConversionRate, 1 },
-        {UpgradeType.AttackSpeed, 1 },
-        {UpgradeType.Damage, 1},
+        {UpgradeType.MovementSpeed, 0 },
+        {UpgradeType.Health, 0 },
+        {UpgradeType.FConversionRate, 0 },
+        {UpgradeType.AttackSpeed, 0 },
+        {UpgradeType.Damage, 0},
+        //{UpgradeType.StaggerTime, 1f}
     };
-
 
     public Dictionary<BuffType, float> BuffTypes = new Dictionary<BuffType, float>()
     {
@@ -101,7 +101,7 @@ public class CharacterStatsData
     {
         get
         {
-            float modifier = BuffTypes[BuffType.Health] + baseStats.HealthIncreasePerLevel * upgradeLevel[UpgradeType.Health];
+            float modifier = BuffTypes[BuffType.Health] + (baseStats.HealthIncreasePerLevel * upgradeLevel[UpgradeType.Health]);
             return GetHealth(modifier);
         }
     }
@@ -109,7 +109,7 @@ public class CharacterStatsData
     {
         get
         {
-            float modifier = BuffTypes[BuffType.MovementSpeed] + baseStats.SpeedIncreasePerLevel * upgradeLevel[UpgradeType.MovementSpeed];
+            float modifier = BuffTypes[BuffType.MovementSpeed] + (baseStats.SpeedIncreasePerLevel * upgradeLevel[UpgradeType.MovementSpeed]);
             return GetMovementSpeed(modifier);
         }
     }
@@ -117,7 +117,7 @@ public class CharacterStatsData
     {
         get
         {
-            float modifier = BuffTypes[BuffType.FConversionRate] + baseStats.FConversionRateIncreasePerLevel * upgradeLevel[UpgradeType.FConversionRate];
+            float modifier = BuffTypes[BuffType.FConversionRate] + (baseStats.FConversionRateIncreasePerLevel * upgradeLevel[UpgradeType.FConversionRate]);
             return GetFConversionRate(modifier);
         }
     }
@@ -126,16 +126,16 @@ public class CharacterStatsData
     {
         get
         {
-            float modifier = BuffTypes[BuffType.AttackSpeed] + baseStats.AttakSpeedIncreasePerLevel * upgradeLevel[UpgradeType.AttackSpeed];
+            float modifier = BuffTypes[BuffType.AttackSpeed] + (baseStats.AttakSpeedIncreasePerLevel * upgradeLevel[UpgradeType.AttackSpeed]);
             return GetAttackSpeed(modifier);
         }
     }
 
-    public int Damage
+    public int DamageModifier
     {
         get
         {
-            int modifier = DamageBuff[BuffType.Damage] + baseStats.DamageIncreasePerLevel * upgradeLevel[UpgradeType.Damage];
+            int modifier = DamageBuff[BuffType.Damage] + (baseStats.DamageIncreasePerLevel * upgradeLevel[UpgradeType.Damage]);
             return GetDamage(modifier);
         }
     }
