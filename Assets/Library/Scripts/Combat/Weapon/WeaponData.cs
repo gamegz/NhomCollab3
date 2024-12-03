@@ -13,6 +13,10 @@ public class WeaponData : ScriptableObject
     public float attackSpeed;
     public float chargeAttackSpeed;
     public float holdThreshold;
+    public int baseWeaponDamage;
+    public int chargeWeaponDamage;
+    public float parryDuration;
+    public float parrySpeed;
 
     [Tooltip("Force applied to IDamabage when damaged below threshhold")]
     public float knockbackForce = 5;

@@ -18,4 +18,8 @@ MonoBehaviour:
   attackSpeed: 0.2
   chargeAttackSpeed: 1
   holdThreshold: 1
-  knockbackForce: 100
+  baseWeaponDamage: 10
+  chargeWeaponDamage: 0
+  parryDuration: 0
+  parrySpeed: 0
+  knockbackForce: 2

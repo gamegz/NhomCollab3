@@ -407,6 +407,7 @@ namespace Enemy
 
         public void TakeDamage(int damage)
         {
+            Debug.Log("Damage: " + damage);
             currentHealth -= damage;
             staggerThresholdCounter -= damage;
 
