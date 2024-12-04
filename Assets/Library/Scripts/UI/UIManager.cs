@@ -38,11 +38,7 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
-        if(_playerBase == null)
-        {
-            return;
-        }
-
+        if(HPText == null && MovementSpeedText == null && FConversionRateText == null) { return; }
         HPText.text = "HP: " + PlayerDatas.Instance.GetStats.Health.ToString();
         MovementSpeedText.text = "Move Speed: " + PlayerDatas.Instance.GetStats.MoveSpeed.ToString();
         FConversionRateText.text = "FConversion Rate: " + PlayerDatas.Instance.GetStats.FConversionRate.ToString();
@@ -60,7 +56,7 @@ public class UIManager : MonoBehaviour
 
     public void OnUpgradeCharacter()
     {
-        _playerBase.OnUpgradeCharacter();
+        PlayerBase.Instance.OnUpgradeCharacter();
     }
 
     public void OnEnableLosePanel()

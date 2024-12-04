@@ -8,6 +8,8 @@ TagManager:
   - A
   - Merchant
   - SpawnPoint
+  - GoingUp
+  - Elevator
   layers:
   - Default
   - TransparentFX

@@ -1,6 +1,6 @@
 {
-    "PlayerHealth": 10,
-    "PlayerDamage": 15,
+    "PlayerHealth": 1000,
+    "PlayerDamage": 1,
     "PlayerSpeed": 8.0,
     "FConversionRate": 1.0,
     "HealthBuff": 1.0,

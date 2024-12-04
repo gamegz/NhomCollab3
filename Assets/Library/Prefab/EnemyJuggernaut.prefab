@@ -245,14 +245,13 @@ MonoBehaviour:
   hostileMethod: 1
   playerRef: {fileID: 0}
   layerData: {fileID: 11400000, guid: 32d18213bd5db754c9ad8e424b172143, type: 2}
-  rb: {fileID: 7282496922669887621}
   colliderCapsule: {fileID: 8323215623154253670}
   maxHealth: 100
   currentHealth: 0
   _shootPoint: {fileID: 0}
   _shootProjectile: {fileID: 0}
   attackCollider: {fileID: 852843834284054012}
-  attackDamage: 50
+  attackDamage: 2
   totalAttackDuration: 4
   attackInnitTime: 1
   attackCooldown: 6

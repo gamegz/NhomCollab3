@@ -4609,6 +4609,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemySpawner: {fileID: 1222078727}
+  RoomEntranceDoor: {fileID: 0}
 --- !u!1 &1368040179
 GameObject:
   m_ObjectHideFlags: 0
@@ -8623,6 +8624,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemySpawner: {fileID: 12966441}
+  RoomEntranceDoor: {fileID: 0}
 --- !u!65 &1759145560
 BoxCollider:
   m_ObjectHideFlags: 0

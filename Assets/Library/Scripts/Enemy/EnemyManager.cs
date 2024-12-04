@@ -14,7 +14,7 @@ namespace Enemy.EnemyManager
 	//Handle updating all enemy logic
 	public class EnemyManager : MonoBehaviour
 	{
-		public delegate void OnSpawnRequestEvent(EnemyBase enemy, Vector3 location, Quaternion rotation, Action<EnemyBase> onDeathCallBack = null);
+		public delegate void OnSpawnRequestEvent(EnemyBase enemy, Vector3 location, Quaternion rotation/*, Action<EnemyBase> onDeathCallBack = null*/);
 		public static OnSpawnRequestEvent onSpawnRequestEvent;
 
 		//public delegate void OnEnemyDeathEvent(EnemyBase enemy);
@@ -41,6 +41,7 @@ namespace Enemy.EnemyManager
         {
 			enemies = FindObjectsOfType<EnemyBase>().ToList();
 			PlayerChildObject = GameObject.FindGameObjectWithTag("Player");
+			//enemiesSpawnOnHold = new List<EnemySpawnData>();
         }
 
         private void Start()
@@ -111,10 +112,11 @@ namespace Enemy.EnemyManager
             enemiesSpawnOnHold.RemoveAt(0);
 			enemies.Add(spawnedEnemy);
 			_currentAtiveEnemy++;
+			Debug.Log(enemiesSpawnOnHold);
 
 		}
 
-		public void OnSpawnRequest(EnemyBase SpawnEnemy, Vector3 SpawnLocation, Quaternion SpawnRotation, Action<EnemyBase> onDeathCallBack = null)
+		public void OnSpawnRequest(EnemyBase SpawnEnemy, Vector3 SpawnLocation, Quaternion SpawnRotation)
 		{
 			if (enemiesSpawnOnHold != null) { return; } //Request denied
 			//Might exceed max active enemy, move to on hold
@@ -124,17 +126,19 @@ namespace Enemy.EnemyManager
 				enemySpawnData.enemyToSpawn = SpawnEnemy;
 				enemySpawnData.spawnLocation = SpawnLocation;
 				enemySpawnData.spawnRotation = SpawnRotation;
-
+				Debug.Log("Added To Spawn On Hold");	
 				enemiesSpawnOnHold.Add(enemySpawnData);
-				return;
+                Debug.Log("Enemies spawn on hold: " + enemiesSpawnOnHold);
+                return;
 			} //Not exceed max enemies, can spawn.
 
 			EnemyBase spawnedEnemy = Instantiate(SpawnEnemy, SpawnLocation, SpawnRotation);
+			//Debug.Log(enemies.Count);
             spawnedEnemy.OnEnemyDeaths += OnEnemyDeath;
-			if(onDeathCallBack != null)
-			{
-				spawnedEnemy.OnEnemyDeaths += onDeathCallBack;
-			}
+			//if(onDeathCallBack != null)
+			//{
+			//	spawnedEnemy.OnEnemyDeaths += onDeathCallBack;
+			//}
             AssignPlayerChildObject(spawnedEnemy);
             AddActiveEnemy(spawnedEnemy);
 		}

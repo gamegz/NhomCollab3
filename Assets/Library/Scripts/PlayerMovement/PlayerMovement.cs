@@ -26,15 +26,17 @@ public class PlayerMovement : PlayerActionState
 
 
     //init
+    private CapsuleCollider _capsuleCollider;
     private bool isOverheated = false;
     private Coroutine regenCoroutine;
     private Coroutine dashCoroutine;
-
+    Quaternion _initialRotation;
     private Vector2 _movement;
+    private bool _isOnSlope = false;
     private Camera _camera;
     private Vector2 _mousePosition;
     PlayerBase _playerStats; // Comment if don't use.
-
+    
 
     private void Awake()
     {
@@ -43,6 +45,7 @@ public class PlayerMovement : PlayerActionState
         currentCharge = maxCharge;
         m_PlayerBase = GetComponent<PlayerBase>();
         _rb = GetComponent<Rigidbody>();
+        _capsuleCollider = GetComponent<CapsuleCollider>();
     }
 
     private void OnEnable()
@@ -64,28 +67,12 @@ public class PlayerMovement : PlayerActionState
 
     void Update()
     {
-
-        // If the player in the current state and meet the condition then move to the next state using MoveToState() method
-        switch (_state)
+        if (_playerInput.Player.Dash.WasPressedThisFrame())
         {
-            case PlayerState.Idle:
-                if (_movement != Vector2.zero)
-                {
-                    MoveToState(PlayerState.Moving);
-                }
-                break;
-            case PlayerState.Moving:
-                if (_movement == Vector2.zero)
-                {
-                    MoveToState(PlayerState.Idle);
-                }
-                else if (_playerInput.Player.Dash.WasPressedThisFrame())
-                {
-                    MoveToState(PlayerState.Dashing);
-                }
-                break;
-            case PlayerState.Dashing:
-                break;
+            if (dashCoroutine == null && currentCharge > 0)
+            {
+                dashCoroutine = StartCoroutine(Dash());
+            }
         }
 
         if (regenCoroutine == null)  //Regen whenever not dashing
@@ -97,63 +84,47 @@ public class PlayerMovement : PlayerActionState
     private void FixedUpdate()
     {
         LookAtMousePosition();
-
-        switch (_state) // this is action if they are in the state then what will happen to the character and in a FixedUpdate to handle physics
-        {
-            case PlayerState.Idle:
-                IdleAction();
-                break;
-            case PlayerState.Moving:
-                MovingAction();
-                break;
-            case PlayerState.Dashing:
-                DashingAction();
-                break;
-        }
-    }
-    
-    protected override void IdleAction()
-    {
-        base.IdleAction();
-        _rb.velocity = Vector3.zero;
+        MoveCharacter();
     }
 
-    protected override void MovingAction()
+    private void MoveCharacter()
     {
-        base.MovingAction();
-        if(PlayerDatas.Instance == null || PlayerDatas.Instance.GetStats == null)
-        {
-            Debug.LogError("Warning no PlayerDatas Instance");
-            return;
-        }
-        Vector3 playerMovement = new Vector3(_movement.x, 0, _movement.y) * PlayerDatas.Instance.GetStats.MoveSpeed;
+        var playerMovement = new Vector3(_movement.x, 0, _movement.y).normalized * PlayerDatas.Instance.GetStats.MoveSpeed;
+        playerMovement.y = _rb.velocity.y;
         _rb.velocity = playerMovement;
     }
+    
 
-    protected override void DashingAction()
+    private void OnTriggerStay(Collider other)
     {
-        base.DashingAction();
-        if (dashCoroutine == null && currentCharge > 0)
+        if (other.transform.tag == "GoingUp")
         {
-            dashCoroutine = StartCoroutine(Dash());
-        }
-        else
-        {
-            MoveToState(PlayerState.Idle);
+            if (_playerInput.Player.Dash.IsPressed())
+            {
+                if (_rb.velocity.y > 0)
+                {
+                    var velocity = _rb.velocity;
+                    velocity.y = 0;
+                    _rb.velocity = velocity;
+                }
+            }
+            else if(_rb.velocity.y > 0)
+            {
+                var velocity = _rb.velocity;
+                velocity.y = 0;
+                _rb.velocity = velocity;
+            }
         }
     }
-
-
     IEnumerator Dash()
     {
-
         currentCharge--;
         //DASH GOES HERE
-        _rb.AddForce(new Vector3(_movement.x, 0, _movement.y).normalized * dashForce, ForceMode.Impulse);
+        _rb.AddForce(_rb.velocity * dashForce, ForceMode.Impulse);
         yield return new WaitForSeconds(dashCooldown);
-        MoveToState(PlayerState.Idle);
         dashCoroutine = null;
-
+        _rb.velocity = Vector3.zero;
+        
         //Overheat check
         if (currentCharge == 0)
         {
@@ -181,19 +152,28 @@ public class PlayerMovement : PlayerActionState
 
     private void LookAtMousePosition() //Look at player mouse position
     {
-        Vector3 mousePosition = _camera.ScreenToWorldPoint(new Vector3(_mousePosition.x, _mousePosition.y, _camera.transform.position.y));
-        Vector3 directionFromCharacterToMouse = mousePosition - transform.position;
-        directionFromCharacterToMouse.y = 0f;
+        //Vector3 directionFromCharacterToMouse = _mousePosition - transform.position;
+        //Vector3 mousePosition = _camera.WorldToScreenPoint(directionFromCharacterToMouse);
 
-        if (directionFromCharacterToMouse != Vector3.zero)
-        {
-            Quaternion rotation = Quaternion.LookRotation(directionFromCharacterToMouse);
-            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
-        }
+        //directionFromCharacterToMouse.y = 0f;
+
+
+        //if (mousePosition != Vector3.zero)
+        //{
+        //    Quaternion rotation = Quaternion.LookRotation(mousePosition);
+        //    transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+        //}
+        Vector3 _mousePos = Input.mousePosition;
+        Vector3 CharacterPos = _camera.WorldToScreenPoint(transform.position);
+        Vector3 dir = _mousePos - CharacterPos;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0, -angle + 90, 0); 
+
     }
     private void MousePos(InputAction.CallbackContext context)
     {
         _mousePosition = context.ReadValue<Vector2>();
+
     }
 
     public void Move(InputAction.CallbackContext context)
@@ -203,11 +183,6 @@ public class PlayerMovement : PlayerActionState
 
     public void Dash(InputAction.CallbackContext context)
     {
-        if (context.performed)
-        {
-        }
-        else if (context.canceled)
-        {
-        }
+
     }
 }

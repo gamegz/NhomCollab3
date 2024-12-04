@@ -41,7 +41,7 @@ public class Dagger : WeaponBase
 
         IDamageable damagable = other.GetComponent<IDamageable>();
 
-        if (damagable != null)
+        if (damagable != null && !other.CompareTag("Player"))
         {
             damagable.TakeDamage(_weaponData.baseWeaponDamage * PlayerDatas.Instance.GetStats.DamageModifier);
         }

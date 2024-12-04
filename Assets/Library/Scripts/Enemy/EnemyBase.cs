@@ -19,9 +19,11 @@ namespace Enemy
     Add behavior by contructing statemachine states into child class
     Changing spawn and other option
     */
-    public class EnemyBase : MonoBehaviour
+    public class EnemyBase : MonoBehaviour, IDamageable
     {
         public event Action<EnemyBase> OnEnemyDeaths;
+        public delegate void OnCallEnemyDeath(EnemyBase enemy);
+        public static event OnCallEnemyDeath OnEnemyDeathsEvent;
         #region DATA CONFIG
 
         public EnemyHostileMethod hostileMethod; //Put this as gunner for testing enemy without tokensystem
@@ -484,6 +486,7 @@ namespace Enemy
                     break;
             }
             OnEnemyDeaths?.Invoke(this);
+            OnEnemyDeathsEvent?.Invoke(this);
             Destroy(gameObject);
 
         }

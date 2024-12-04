@@ -29,11 +29,12 @@ public class EnemySpawner : MonoBehaviour
     private void OnEnable()
     {
         OnStartSpawning();
+        EnemyBase.OnEnemyDeathsEvent += OnEnemyDeath;
     }
 
     private void OnDisable()
     {
-
+        EnemyBase.OnEnemyDeathsEvent -= OnEnemyDeath;
     }
 
     void Update()
@@ -52,11 +53,12 @@ public class EnemySpawner : MonoBehaviour
             while (_currentEnemyCount < amountOfEnemyPerWave)
             {
                 EnemyBase choosenEnemy = CalculateEnemyPerncentage();
-                EnemyManager.onSpawnRequestEvent?.Invoke(choosenEnemy, spawnPos[spawnIndex].position, spawnPos[spawnIndex].rotation, OnEnemyDeath);
+                EnemyManager.onSpawnRequestEvent?.Invoke(choosenEnemy, spawnPos[spawnIndex].position, spawnPos[spawnIndex].rotation);
                 _currentEnemyCount++;
                 spawnedEnemies = _currentEnemyCount;
                 spawnIndex = (spawnIndex + 1) % spawnPos.Count;
             }
+            
         }
 
     }

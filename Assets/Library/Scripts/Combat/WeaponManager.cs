@@ -223,7 +223,7 @@ public class WeaponManager : MonoBehaviour
                 _weaponIndex = weaponList.IndexOf(_currentWeapon); 
                 _currentWeapon.transform.position = this.transform.position; 
                 _currentWeapon.transform.rotation = this.transform.rotation;
-                _currentWeapon.playerBase = player;
+                //_currentWeapon.playerBase = player;
                 _currentWeapon.GetComponentInChildren<BoxCollider>().enabled = false; 
                 Debug.Log("current weapon: " + _currentWeapon);
             }

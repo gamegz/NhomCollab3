@@ -9,7 +9,7 @@ public class PlayerBase : MonoBehaviour, IDamageable
     // THIS MUST BE A SINGLETON CLASS RIGHT?
     public static PlayerBase Instance { get ; private set; }
 
-    public PlayerBattleData data;
+    //public PlayerBattleData data;
     private int moveSpeedLevel;
     private int healthLevel;
     private int fConversionRateLevel;
@@ -29,8 +29,6 @@ public class PlayerBase : MonoBehaviour, IDamageable
     private void Awake()
     {
          _playerInput = new PlayerInput();
-        //MeshRenderer childMeshRender = GetComponentInChildren<MeshRenderer>();
-        //_playerTransform = childMeshRender ? childMeshRender.transform : null;
         _playerTransform = GetComponent<Transform>();
 
         for(int i = 0; i < Object.FindObjectsOfType<PlayerBase>().Length; i++)
@@ -44,7 +42,7 @@ public class PlayerBase : MonoBehaviour, IDamageable
             }
         }
         WeaponManager.CurrentWeapon += OnSaveWeaponPrefab;
-
+        DontDestroyOnLoad(gameObject.transform.parent.gameObject);
         #region Singleton
         if (!Instance)
         {
@@ -84,41 +82,41 @@ public class PlayerBase : MonoBehaviour, IDamageable
         buffSpeed = 1f;
     }
 
-    public float MoveSpeed
-    {
-        get
-        {
-            float modifier = buffSpeed + (SPEED_INCREASE_PER_LEVEL * moveSpeedLevel);
-            return data.MoveSpeed(modifier);
-        }
-    }
+    //public float MoveSpeed
+    //{
+    //    get
+    //    {
+    //        float modifier = buffSpeed + (SPEED_INCREASE_PER_LEVEL * moveSpeedLevel);
+    //        return data.MoveSpeed(modifier);
+    //    }
+    //}
 
-    public float Health
-    {
-        get
-        {
-            float modifier = buffHealth + (HEALTH_INCREASE_PER_LEVEL * healthLevel);
-            return data.Health(modifier);
-        }
-    }
+    //public float Health
+    //{
+    //    get
+    //    {
+    //        float modifier = buffHealth + (HEALTH_INCREASE_PER_LEVEL * healthLevel);
+    //        return data.Health(modifier);
+    //    }
+    //}
 
-    public float FConversionRate
-    {
-        get
-        {
-            float modifier = buffFConversionRate + (FCONVERSION_RATE_INCREASE_PER_LEVEL * fConversionRateLevel);
-            return data.FConversionRate(modifier);
-        }
-    }
+    //public float FConversionRate
+    //{
+    //    get
+    //    {
+    //        float modifier = buffFConversionRate + (FCONVERSION_RATE_INCREASE_PER_LEVEL * fConversionRateLevel);
+    //        return data.FConversionRate(modifier);
+    //    }
+    //}
 
-    public int Damage
-    {
-        get
-        {
-            int modifier = buffDamage + (DAMAGE_INCREASE_PER_LEVEL * damageLevel);
-            return data.Damage(modifier);
-        }
-    }
+    //public int Damage
+    //{
+    //    get
+    //    {
+    //        int modifier = buffDamage + (DAMAGE_INCREASE_PER_LEVEL * damageLevel);
+    //        return data.Damage(modifier);
+    //    }
+    //}
 
 
     private void OnInteractWithObject(InputAction.CallbackContext context)
@@ -160,11 +158,7 @@ public class PlayerBase : MonoBehaviour, IDamageable
     }
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            SceneManager.LoadScene("Bao's Scene");
-            Debug.Log("Heyyyyy");
-        }
+
     }
 
     public void TakeDamage(int damageAmount)
@@ -195,7 +189,7 @@ public class PlayerBase : MonoBehaviour, IDamageable
         }
         else
         {
-            Debug.Log("haha");
+            //Debug.Log("haha");
         }
     }
 }
