@@ -36,13 +36,7 @@ namespace Enemy.variant
 
         public override void UpdateLogic()
         {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                isTokenOwner = !isTokenOwner;
-                //InnitDash(- GetPerpendicularVectorToTarget());
-                //Debug.Log(enemyNavAgent.CalculatePath(target.transform.position, enemyNavAgent.path));
-            }
-            base.UpdateLogic();
+            base.UpdateLogic();           
         }
 
         public override void FixedUpdateLogic()

@@ -142,10 +142,6 @@ namespace Enemy
             
         }
 
-        public void SetPlayerChildObject(GameObject playerChild)
-        {
-            playerRef = playerChild;
-        }
 
         public virtual void SetUpStateMachine()
         {
@@ -177,7 +173,7 @@ namespace Enemy
 
         public virtual void UpdateLogic()
         {
-
+            enemyNavAgent.speed = currentSpeed/10;
             //Debug.Log(currentState);
             //if (this == null) { return; }
             UpdateAttackCoolDown();

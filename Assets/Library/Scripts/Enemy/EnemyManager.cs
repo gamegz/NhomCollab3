@@ -27,21 +27,23 @@ namespace Enemy.EnemyManager
 		}
 
 		private static int _maxActiveEnemy = 9;
-		private int _currentAtiveEnemy;
 
 		private static int _maxAttackToken = 3;
 		private int _currentAttackToken;
 
-		private List<EnemyBase> enemies;
-		private List<EnemySpawnData> enemiesSpawnOnHold;
+		private List<EnemyBase> activeEnemies = new List<EnemyBase>();
+		private List<EnemySpawnData> enemiesSpawnOnHold = new List<EnemySpawnData>();
 		private float _enemySpawnOnHoldDelay = 2;
-		private GameObject PlayerChildObject;
+		private GameObject _player;
 
         private void Awake()
         {
-			enemies = FindObjectsOfType<EnemyBase>().ToList();
-			PlayerChildObject = GameObject.FindGameObjectWithTag("Player");
-			//enemiesSpawnOnHold = new List<EnemySpawnData>();
+			activeEnemies = FindObjectsOfType<EnemyBase>().ToList();
+			_player = GameObject.FindGameObjectWithTag("Player");
+			foreach(EnemyBase enemy in activeEnemies)
+            {
+				enemy.playerRef = _player;
+            }
         }
 
         private void Start()
@@ -64,10 +66,10 @@ namespace Enemy.EnemyManager
 
         private void Update()
 		{
-			if (enemies == null) { return; }
+			if (activeEnemies == null) { return; }
 
 			UpdateTokenOwner();
-			foreach (EnemyBase enemy in enemies)
+			foreach (EnemyBase enemy in activeEnemies)
 			{
 				enemy.UpdateLogic();
 				enemy.FixedUpdateLogic();
@@ -80,16 +82,16 @@ namespace Enemy.EnemyManager
 		private void UpdateTokenOwner()
         {
 			_currentAttackToken = _maxAttackToken;
-			if(enemies.Count <= _maxAttackToken)
+			if(activeEnemies.Count <= _maxAttackToken)
 			{
-				foreach (EnemyBase enemy in enemies)
+				foreach (EnemyBase enemy in activeEnemies)
 				{
 					enemy.isTokenOwner = true;
 				}
 				return; 
 			}
 
-			List<EnemyBase> enemiesInst = enemies.OrderBy(x => x.distanceToPlayer).ToList();
+			List<EnemyBase> enemiesInst = activeEnemies.OrderBy(x => x.distanceToPlayer).ToList();
 			for (int i = 0; i < enemiesInst.Count; i++)
 			{
 				if (_currentAttackToken <= 0) { break; }
@@ -102,61 +104,48 @@ namespace Enemy.EnemyManager
 		private void TrySpawnOnHolders()
 		{
 			//Cancel if no enemy to spawn or might exceed max active enemy
-			if (enemiesSpawnOnHold == null) { return; }
-			if (enemies.Count + 1 > _maxActiveEnemy) { return; } 
+			if (enemiesSpawnOnHold.Count <= 0) { return; }
+			if (activeEnemies.Count >= _maxActiveEnemy) { return; } 
 
 			//Spawn and remove used data in the list
 			EnemySpawnData firstEnemyData = enemiesSpawnOnHold[0];
+			enemiesSpawnOnHold.RemoveAt(0);
 			EnemyBase spawnedEnemy = Instantiate(firstEnemyData.enemyToSpawn, firstEnemyData.spawnLocation, firstEnemyData.spawnRotation);
-            AssignPlayerChildObject(spawnedEnemy);
-            enemiesSpawnOnHold.RemoveAt(0);
-			enemies.Add(spawnedEnemy);
-			_currentAtiveEnemy++;
+            spawnedEnemy.playerRef = _player;           
+			activeEnemies.Add(spawnedEnemy);
+			spawnedEnemy.OnEnemyDeaths += OnEnemyDeath;
 			Debug.Log(enemiesSpawnOnHold);
 
 		}
 
 		public void OnSpawnRequest(EnemyBase SpawnEnemy, Vector3 SpawnLocation, Quaternion SpawnRotation)
 		{
-			if (enemiesSpawnOnHold != null) { return; } //Request denied
 			//Might exceed max active enemy, move to on hold
-			if (enemies.Count + 1 > _maxActiveEnemy)
+			if (activeEnemies.Count >= _maxActiveEnemy)
 			{
 				EnemySpawnData enemySpawnData;
 				enemySpawnData.enemyToSpawn = SpawnEnemy;
 				enemySpawnData.spawnLocation = SpawnLocation;
 				enemySpawnData.spawnRotation = SpawnRotation;
-				Debug.Log("Added To Spawn On Hold");	
 				enemiesSpawnOnHold.Add(enemySpawnData);
                 Debug.Log("Enemies spawn on hold: " + enemiesSpawnOnHold);
                 return;
 			} //Not exceed max enemies, can spawn.
 
 			EnemyBase spawnedEnemy = Instantiate(SpawnEnemy, SpawnLocation, SpawnRotation);
-			//Debug.Log(enemies.Count);
-            spawnedEnemy.OnEnemyDeaths += OnEnemyDeath;
-			//if(onDeathCallBack != null)
-			//{
-			//	spawnedEnemy.OnEnemyDeaths += onDeathCallBack;
-			//}
-            AssignPlayerChildObject(spawnedEnemy);
-            AddActiveEnemy(spawnedEnemy);
+            spawnedEnemy.OnEnemyDeaths += OnEnemyDeath;	
+            spawnedEnemy.playerRef = _player;
+            activeEnemies.Add(spawnedEnemy);
 		}
 
-		private void AssignPlayerChildObject(EnemyBase enemy)
-		{
-			if(PlayerChildObject != null)
-			{
-				enemy.SetPlayerChildObject(PlayerChildObject);
-			}
-		}
 
 		private void OnEnemyDeath(EnemyBase enemyref)
 		{
-			RemoveActiveEnemy(enemyref);
+			activeEnemies.Remove(enemyref);
 			enemyref.OnEnemyDeaths -= OnEnemyDeath;
             if (enemyref.isTokenOwner)
             {
+				enemyref.isTokenOwner = false;
                 _currentAttackToken++;
             }
         }
@@ -170,18 +159,6 @@ namespace Enemy.EnemyManager
                 _currentAttackToken--;
 
             }           
-        }
-
-		private void AddActiveEnemy(EnemyBase enemy)
-        {
-			enemies.Add(enemy);
-			_currentAtiveEnemy++;
-
-        }
-		private void RemoveActiveEnemy(EnemyBase enemy)
-        {
-			enemies.Remove(enemy);
-			_currentAtiveEnemy--;
         }
 
 	}

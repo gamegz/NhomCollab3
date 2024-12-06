@@ -56,7 +56,6 @@ namespace Enemy.statemachine.States
 
             _enemy.isAttacking = true;
             _attackDuration -= Time.deltaTime;
-            Debug.Log(_attackDuration);
             if (_attackDuration <= 0) //Finish attack
             {
 
