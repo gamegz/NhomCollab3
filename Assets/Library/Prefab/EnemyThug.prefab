@@ -420,14 +420,14 @@ MonoBehaviour:
   attackDamage: 1
   totalAttackDuration: 1
   attackInnitTime: 0.35
-  attackCooldown: 1
+  attackCooldown: 4
   isAttacking: 0
   canAttack: 0
   attackCoolDownCount: 0
   attackRange: 2.75
   chaseToAttackTransitTime: 10
   retreatDistance: 3.24
-  maxRetreatDistance: 4
+  maxRetreatDistance: 5
   followDistance: 6
   staggerThreshold: 10
   staggerTime: 1

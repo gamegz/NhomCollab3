@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Library/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/Library/Scenes/Bao's Scene.unity
+    path: Assets/Library/Scenes/Bao's Scene/Bao's Scene.unity
     guid: 86eafca324fc286449de64afdb6d0ba5
   - enabled: 1
     path: Assets/Library/Scenes/PrototypeScene.unity

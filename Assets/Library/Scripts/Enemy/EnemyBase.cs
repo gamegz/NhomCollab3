@@ -174,14 +174,12 @@ namespace Enemy
         public virtual void UpdateLogic()
         {
             enemyNavAgent.speed = currentSpeed/10;
-            //Debug.Log(currentState);
-            //if (this == null) { return; }
             UpdateAttackCoolDown();
+
+            if(isStagger) { return; }
             _stateMachine.UpdateState();
-
             enemyNavAgent.isStopped = !canMove;
-
-            if (!isStagger) 
+            if (canTurn)
             {
                 LookAtTarget(transform, playerRef.transform, turnSpeed);
             }
@@ -448,23 +446,6 @@ namespace Enemy
             isStagger = false;
             canMove = true;
         }
-
-        //private void UpdateStaggerLogic()
-        //{
-        //    if (!isStagger) { return; }
-
-        //    if (_currentStaggerTimeLeft > 0)
-        //    {
-
-        //        _currentStaggerTimeLeft -= Time.deltaTime;
-        //    }
-        //    else
-        //    {
-        //        _currentStaggerTimeLeft = staggerTime;
-        //        _staggerThresholdCount = staggerThreshold;
-        //        isStagger = false;
-        //    }
-        //}
 
         public virtual void OnDeath()
         {
