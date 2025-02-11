@@ -23,6 +23,8 @@ public class PlayerMovement : PlayerActionState
     [SerializeField] private float dashCooldown = 1.0f;
     [SerializeField] private float regenCooldown = 2.0f;
     [SerializeField] private float overheatCooldown = 5.0f;
+    [SerializeField] private float dashDuration;
+    [SerializeField] private float dashLength;
 
 
     //init
@@ -84,7 +86,7 @@ public class PlayerMovement : PlayerActionState
     private void FixedUpdate()
     {
         LookAtMousePosition();
-        MoveCharacter();
+        MoveCharacter();  
     }
 
     private void MoveCharacter()
@@ -120,11 +122,18 @@ public class PlayerMovement : PlayerActionState
     {
         currentCharge--;
         //DASH GOES HERE
-        _rb.AddForce(_rb.velocity * dashForce, ForceMode.Impulse);
-        yield return new WaitForSeconds(dashCooldown);
+        Vector3 dashDirection = new Vector3(_movement.x, 0, _movement.y).normalized;
+        float elapsedDashTime = 0f;
+
+        while (elapsedDashTime < dashDuration)
+        {
+            _rb.AddForce(dashDirection * (dashForce / dashDuration) * Time.fixedDeltaTime, ForceMode.VelocityChange);
+            elapsedDashTime += Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
+        }
+
         dashCoroutine = null;
-        _rb.velocity = Vector3.zero;
-        
+
         //Overheat check
         if (currentCharge == 0)
         {
