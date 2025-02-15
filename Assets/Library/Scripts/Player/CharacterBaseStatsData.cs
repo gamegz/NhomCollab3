@@ -6,15 +6,20 @@ using UnityEngine;
 [Serializable]
 public class CharacterBaseStatsData 
 {
+    // make base stats for player
+    //make base buff
+    //make amount of stats increase per level: for example 1000HP -> 1100HP
     public float PlayerHealth;
     public int PlayerDamage;
     public float PlayerSpeed;
+    public float AttackSpeed;
+
     public float FConversionRate;
     public float HealthBuff;
     public float SpeedBuff;
     public float DamageBuff;
     public float AttackSpeedBuff;
-    public float AttackSpeed;
+
     public float HealthIncreasePerLevel;
     public float SpeedIncreasePerLevel;
     public float FConversionRateIncreasePerLevel;
@@ -23,7 +28,7 @@ public class CharacterBaseStatsData
 
 }
 
-public enum UpgradeType
+public enum UpgradeType // make upgrade type
 {
     Damage,
     MovementSpeed,
@@ -33,7 +38,7 @@ public enum UpgradeType
     StaggerTime
 }
 
-public enum BuffType
+public enum BuffType // make buff type
 {
     Health,
     Damage,

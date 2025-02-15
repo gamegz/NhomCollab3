@@ -24,7 +24,6 @@ public class PlayerMovement : PlayerActionState
     [SerializeField] private float regenCooldown = 2.0f;
     [SerializeField] private float overheatCooldown = 5.0f;
     [SerializeField] private float dashDuration;
-    [SerializeField] private float dashLength;
 
 
     //init

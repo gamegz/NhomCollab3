@@ -195,10 +195,12 @@ public class WeaponManager : MonoBehaviour
 
         foreach (var hitCollider in hitColliders)
         {
-            float distanceFromItemToPlayer = Vector3.Distance(hitCollider.transform.position, playerTransform.position); 
+            float distanceFromItemToPlayer = Vector3.Distance(hitCollider.transform.position, playerTransform.position);
+            
             if (distanceFromItemToPlayer <= collectRange || distanceFromItemToPlayer <= collectRange && _currentWeapon == null) 
             {
                 WeaponBase weaponToAdd = hitCollider.GetComponentInChildren<WeaponBase>(); // will get the script of the weapon the sphere hit
+
                 if (weaponList.Count >= _maxWeaponNum) 
                 {
                     //Replace weapon?   
@@ -213,32 +215,31 @@ public class WeaponManager : MonoBehaviour
                     if (_currentWeapon != null)
                     {
                         _currentWeapon.weaponModel.SetActive(false);
-                    }
-                    
+                    }  
                 }
                 // the whole section below is to set up the weapon we just pick up and set the boxCollider to false to immediately attack when pick up
-                _currentWeapon = weaponToAdd; 
-                _currentWeapon?.transform.SetParent(this.transform);
-                CurrentWeapon?.Invoke();
-                _weaponIndex = weaponList.IndexOf(_currentWeapon); 
-                _currentWeapon.transform.position = this.transform.position; 
-                _currentWeapon.transform.rotation = this.transform.rotation;
-                //_currentWeapon.playerBase = player;
-                _currentWeapon.GetComponentInChildren<BoxCollider>().enabled = false; 
-                Debug.Log("current weapon: " + _currentWeapon);
+                _currentWeapon = weaponToAdd;
+                SetUpWeaponPosition(_currentWeapon, _weaponIndex);
             }
         }
     }
 
+    private void SetUpWeaponPosition(WeaponBase currentWeapon, int weaponIndex)
+    {
+        currentWeapon?.transform.SetParent(this.transform);
+        CurrentWeapon?.Invoke();
+        weaponIndex = weaponList.IndexOf(currentWeapon);
+        currentWeapon.transform.position = this.transform.position;
+        currentWeapon.transform.rotation = this.transform.rotation;
+        currentWeapon.GetComponentInChildren<BoxCollider>().enabled = false;
+    }
+
     private void OnPickUpWeapon(InputAction.CallbackContext context) // this function will get call once when we pick up weapon (which is the "F" key)
     {
-        
-
         if (context.performed)
         {
             OnTryPickUpWeapon();
-        }
-        
+        } 
     }
 
     private void OnSwitchWeapon(InputAction.CallbackContext context)
@@ -264,8 +265,6 @@ public class WeaponManager : MonoBehaviour
 
             Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(playerTransform.position, 3f);
-        }
-        
+        } 
     }
-
 }

@@ -6,6 +6,7 @@ using System;
 [Serializable]
 public class CharacterStatsData
 {
+    // make dictionary of the upgradeLevel of each stats, pls make it a integer
     public Dictionary<UpgradeType, int> upgradeLevel = new Dictionary<UpgradeType, int>()
     {
         {UpgradeType.MovementSpeed, 0 },
@@ -16,7 +17,7 @@ public class CharacterStatsData
         //{UpgradeType.StaggerTime, 1f}
     };
 
-    public Dictionary<BuffType, float> BuffTypes = new Dictionary<BuffType, float>()
+    public Dictionary<BuffType, float> BuffTypes = new Dictionary<BuffType, float>() // this one also
     {
         {BuffType.Health, 1f},
         {BuffType.MovementSpeed, 1f },
@@ -72,6 +73,8 @@ public class CharacterStatsData
         currentPlayerHealth -= value;
     }
 
+    // make a get set function
+
     public float GetHealth(float modifier)
     {
         return baseStats.PlayerHealth * modifier;
@@ -97,6 +100,7 @@ public class CharacterStatsData
         return baseStats.AttackSpeed * modifier;
     }
 
+    // same for down here, follow the equation
     public float Health
     {
         get

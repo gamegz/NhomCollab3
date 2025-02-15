@@ -6,6 +6,7 @@ using System.IO;
 
 public class PlayerDatas
 {
+    //save/load game
     private static PlayerDatas instance;
     public static PlayerDatas Instance
     {

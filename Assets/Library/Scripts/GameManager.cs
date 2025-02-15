@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    //this class to do bunch of stuff but the important part for stats is in Awake method
     float previousTimeScale = 1f;
     bool isPaused;
     public Transform SpawnPoint;
