@@ -186,6 +186,8 @@ public class PlayerBase : MonoBehaviour, IDamageable
         if(spawnPoint != null)
         {
             transform.position = spawnPoint.position;
+            Debug.Log(transform.position);
+            Debug.Log(spawnPoint.position);
         }
         else
         {

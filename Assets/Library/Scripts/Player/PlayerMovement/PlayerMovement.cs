@@ -85,7 +85,8 @@ public class PlayerMovement : PlayerActionState
     private void FixedUpdate()
     {
         LookAtMousePosition();
-        MoveCharacter();  
+        if (_state != PlayerState.Parrying)
+            MoveCharacter();  
     }
 
     private void MoveCharacter()

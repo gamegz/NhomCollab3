@@ -21,7 +21,7 @@ public class CamFollowMouse : MonoBehaviour
 
     private void Start()
     {
-        _offset = this.transform.position - _player.transform.position;    
+        _offset = new Vector3(2.30f, 14.93f, -8.73f);
     }
 
     void Update()

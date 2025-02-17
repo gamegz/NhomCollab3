@@ -13,7 +13,7 @@ public class PlayerParry : PlayerActionState
     /* BOOLEAN VALUES */
     private bool canParry = true;
     private bool invulnerable = false;
-    private bool standingStill = false;
+    [SerializeField] private bool standingStill = false;
 
     /* NUMERICAL VALUES */
     private float delayTimer;
@@ -124,7 +124,7 @@ public class PlayerParry : PlayerActionState
     protected override void ParryingAction()
     {
         base.ParryingAction();
-        
+
         StandingStill();
     }
 
