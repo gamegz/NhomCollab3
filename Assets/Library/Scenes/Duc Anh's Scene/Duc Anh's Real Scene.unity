@@ -683,6 +683,12 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 290609158}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &353170622 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2794697307962972658, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+    type: 3}
+  m_PrefabInstance: {fileID: 1914893527}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &381098229
 GameObject:
   m_ObjectHideFlags: 0
@@ -2702,12 +2708,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1794539097 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7714385169792176263, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
-    type: 3}
-  m_PrefabInstance: {fileID: 1914893527}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1811837016
 GameObject:
   m_ObjectHideFlags: 0
@@ -2897,11 +2897,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7714385169792176263, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 1.179
-      objectReference: {fileID: 0}
     - target: {fileID: 8223221366024730654, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
         type: 3}
       propertyPath: dashForce
@@ -2912,6 +2907,31 @@ PrefabInstance:
       propertyPath: dashDuration
       value: 0.2
       objectReference: {fileID: 0}
+    - target: {fileID: 8223221366024730654, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: parryBoxSize.x
+      value: 1.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 8223221366024730654, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: parryBoxSize.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8223221366024730654, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: parryBoxSize.z
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8223221366024730654, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: parryBoxRefPoint
+      value: 
+      objectReference: {fileID: 353170622}
+    - target: {fileID: 8223221366024730654, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: bulletLayerMask.m_Bits
+      value: 16384
+      objectReference: {fileID: 0}
     - target: {fileID: 8319276657298368420, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
         type: 3}
       propertyPath: m_Name
@@ -2920,15 +2940,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7728795428013802694, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
-        type: 3}
-      insertIndex: 4
-      addedObject: {fileID: 2102892061}
-    - targetCorrespondingSourceObject: {fileID: 7728795428013802694, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2102892060}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4, type: 3}
 --- !u!1 &1937183430
 GameObject:
@@ -3150,53 +3162,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
---- !u!1 &2102892053 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7728795428013802694, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
-    type: 3}
-  m_PrefabInstance: {fileID: 1914893527}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2102892054 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3668607211282260617, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
     type: 3}
   m_PrefabInstance: {fileID: 1914893527}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2102892060
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2102892053}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84a245e79df09454ba4db892ae124862, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentState: 0
-  standingStill: 0
-  parryBoxRef: {fileID: 1794539097}
-  parryBoxSize: {x: 1.25, y: 2, z: 1.25}
-  bulletLayerMask:
-    serializedVersion: 2
-    m_Bits: 16384
-  delayTimerOrg: 2
-  invulnerableTimerOrg: 0.6
-  standStillTimerOrg: 1
---- !u!114 &2102892061
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2102892053}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e6f4243918155c4fa23311ccf68c7ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentState: 0
 --- !u!1 &2131309988
 GameObject:
   m_ObjectHideFlags: 0
