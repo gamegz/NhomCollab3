@@ -30,6 +30,7 @@ namespace Enemy
         public GameObject playerRef;
         public ActorLayerData layerData;
         public CapsuleCollider colliderCapsule;
+        public Rigidbody rb;
         [Space]
         
         
@@ -58,16 +59,25 @@ namespace Enemy
         [Tooltip("Distance to return if player too far away")]
         public float followDistance;
 
+        //Stagger
+        [Header("Stagger")]
         [Tooltip("Amount of damage recive before stagger")]
         public float staggerThreshold;
         public float staggerTime;
         private float staggerThresholdCounter;
         private float staggerTimeCounter;
-        private float knockbackForce = 0.0f;
+        public float knockbackForce = 0.0f;
         [HideInInspector] public bool isStagger = false;
         [HideInInspector] public bool isTargetInAttackRange;
         [HideInInspector] public bool isTokenOwner;
 
+        //Stun
+        [Header("STUN")]
+        public bool canBeStunned;
+        public float stunPoint;// Percentage
+        public float stunDuration;
+        [HideInInspector] public bool isStunned = false;
+        private bool hasBeenStunned = false;
 
 
         //Navigation
@@ -169,20 +179,26 @@ namespace Enemy
 
             if (hostileMethod == EnemyHostileMethod.Gunner) { isTokenOwner = true; }
             attackCollider.gameObject.GetComponent<EnemyAttackCollider>()._damage = attackDamage;
+
+            stunPoint = maxHealth * stunPoint;
         }
 
         public virtual void UpdateLogic()
         {
-            enemyNavAgent.speed = currentSpeed/10;
-            UpdateAttackCoolDown();
 
-            if(isStagger) { return; }
-            _stateMachine.UpdateState();
+            enemyNavAgent.speed = currentSpeed/10;
             enemyNavAgent.isStopped = !canMove;
             if (canTurn)
             {
                 LookAtTarget(transform, playerRef.transform, turnSpeed);
             }
+            if (isStagger) { return; }
+            if (isStunned) { return; }
+
+            UpdateAttackCoolDown();
+            _stateMachine.UpdateState();
+            
+            
         }
 
         public virtual void FixedUpdateLogic()
@@ -403,7 +419,7 @@ namespace Enemy
 
         public void TakeDamage(int damage)
         {
-            Debug.Log("Damage: " + damage);
+            //Debug.Log("Damage: " + damage);
             currentHealth -= damage;
             staggerThresholdCounter -= damage;
 
@@ -411,41 +427,58 @@ namespace Enemy
             {
                 OnDeath();
             }
-            if (staggerThresholdCounter <= 0)
+            if (isStagger == false && staggerThresholdCounter <= 0)
             {
                 staggerThresholdCounter = staggerThreshold;
                 Stagger(knockbackForce);
             }
 
+            if (canBeStunned && currentHealth < stunPoint)
+            {
+                StartCoroutine(Stun());
+            }
         }
 
         public void DamagedByWeapon(WeaponData _weaponData)
         {
-            knockbackForce = _weaponData.knockbackForce;
+            //knockbackForce = _weaponData.knockbackForce;
         }
 
 
-        Coroutine staggerTimeCoroutine;
-
         public void Stagger(float knockbackStrength)
         {
-            Vector3 knockbackDir = (this.transform.position - PlayerBase.Instance.transform.position).normalized;
-            enemyNavAgent.velocity += knockbackDir * knockbackStrength;
+            if (isStagger == true) return;
+            canMove = false;
+            isStagger = true;
+            Vector3 knockbackDir = GetDirectionIgnoreY(playerRef.transform.position, this.transform.position).normalized;
+            rb.AddForce(knockbackDir * knockbackStrength, ForceMode.Impulse);
+            Debug.LogWarning("Stagger");
 
-            if (staggerTimeCoroutine != null) StopCoroutine(staggerTimeCoroutine);
-            staggerTimeCoroutine = StartCoroutine(StaggerTimeCoroutine());
+            StartCoroutine(StaggerTimeCoroutine());
         }
 
         IEnumerator StaggerTimeCoroutine()
         {
-            isStagger = true;
-            canMove = false;
-
             yield return new WaitForSeconds(staggerTime);
 
             isStagger = false;
             canMove = true;
         }
+
+        private IEnumerator Stun()
+        {
+            isStunned = true;
+            hasBeenStunned = true;
+            canMove = false;
+            Debug.Log("Stun");
+
+            yield return new WaitForSeconds(stunDuration);
+
+            isStunned = false;
+            canMove = true;
+            Debug.Log("End Stun");
+        }
+
 
         public virtual void OnDeath()
         {
