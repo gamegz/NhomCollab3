@@ -18,39 +18,65 @@ namespace UI
         [SerializeField] int sacrificialGemCount;
         [SerializeField] Text sacrificialGemCountText;
 
+        private int _totalCurrentGemUse;
 
         int _currentPointUse;
 
         void Start()
         {
-            upgradeGroupDictionary.Add("health", healthUpgrade);
-            upgradeGroupDictionary.Add("strength", strengthUpgrade);
+            SetUpUI();
         }
 
-        //Button event
+        private void SetUpUI()
+        {
+            upgradeGroupDictionary.Add("health", healthUpgrade);
+            upgradeGroupDictionary.Add("strength", strengthUpgrade);
+            upgradeGroupDictionary.Add("speed", strengthUpgrade);
+            upgradeGroupDictionary.Add("endurance", strengthUpgrade);
+            upgradeGroupDictionary.Add("recovery", strengthUpgrade);
+            upgradeGroupDictionary.Add("dashCharge", strengthUpgrade);
+
+            foreach(UpdateUI groupUI in upgradeGroupDictionary.Values)
+            {
+                groupUI.upgradeCountText.text = " ";
+            }
+        }
+
+        #region Button Event
+        //Connect to all upgrade button
         public void OnUpgradeClick(string upgradeType)
         {
             UpdateUI upgradeTarget = upgradeGroupDictionary[upgradeType];
+            //Check amount gem required
             if(sacrificialGemCount < upgradeTarget.upgradeRequirement) { return; }
+
             upgradeTarget.upgradeCount ++;
-            upgradeTarget.upgradeCountText.text = upgradeTarget.upgradeCount.ToString();
+            upgradeTarget.upgradeCountText.text = "+" + upgradeTarget.upgradeCount.ToString();
 
             upgradeGroupDictionary[upgradeType] = upgradeTarget;
 
             sacrificialGemCount -= upgradeTarget.upgradeRequirement;
             sacrificialGemCountText.text = sacrificialGemCount.ToString();
 
+            _totalCurrentGemUse++;
+
         }
 
         public void OnConsumeGem()
         {
-            
+            PlayerDatas.Instance.OnStatsUpgrade(UpgradeType.MovementSpeed, 1);
         }
 
         public void OnCancelUpgrade()
         {
+            //Return gem
 
+            foreach (UpdateUI groupUI in upgradeGroupDictionary.Values)
+            {
+                groupUI.upgradeCountText.text = " ";
+            }
         }
+        #endregion
 
         //Event
         public void OnGemCollected()
@@ -66,6 +92,7 @@ namespace UI
             public Text statsValue;
             public int upgradeRequirement;
             public int upgradeCount;
+            public UpgradeType upgradeType;
         }
     }
 

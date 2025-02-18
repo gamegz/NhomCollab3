@@ -10,6 +10,7 @@ public class CharacterBaseStatsData
     public int PlayerDamage;
     public float PlayerSpeed;
     public float FConversionRate;
+    public int PlayerUpgradePoint;
     public float HealthBuff;
     public float SpeedBuff;
     public float DamageBuff;
@@ -26,6 +27,8 @@ public class CharacterBaseStatsData
 public enum UpgradeType
 {
     Damage,
+    DashRecovery,
+    DashCharge,
     MovementSpeed,
     Health,
     FConversionRate,
