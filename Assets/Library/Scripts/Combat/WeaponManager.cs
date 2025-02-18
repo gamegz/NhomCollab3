@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -8,6 +9,12 @@ public class WeaponManager : MonoBehaviour
 
     public delegate void CurrentWeaponHandler();
     public static event CurrentWeaponHandler CurrentWeapon;
+
+    public delegate void OnHandlingAttack();
+    public static event OnHandlingAttack AttackHandle;
+    //Courotine
+    Coroutine comboCoroutine;
+
     //Unity new Input system
     public PlayerInput _playerInput;
 
@@ -23,12 +30,19 @@ public class WeaponManager : MonoBehaviour
     private float cooldownTimer = 0f;
 
     //charge attack timer
-    private float _holdTime = 0f;
+    [SerializeField] private float _holdTime = 0f;
     private bool _isHoldAttack = false;
     private bool _startHold = false;
     /*IF you want to make the hold attacks. Try make a delay BEFORE starting the hold check
      This prevent player from registering normal attack as charge attack
      */
+    [Header("ComboSystemAndAttack")]
+    [SerializeField] int comboCounter = 0;
+    int maxComboCount = 3;
+    float comboResetTime = 1f;
+    float recoverDuration = 2f;
+    float recoverTimer = 0f;
+    [SerializeField] bool isRecovering = false;
 
     [Header("WeaponCollectRange")]
     [SerializeField] private float collectRange;
@@ -64,7 +78,7 @@ public class WeaponManager : MonoBehaviour
 
     private void Update()
     {
-        if (_startHold) // hold timer for charge attack
+        if (_startHold && !isRecovering) // hold timer for charge attack
         {
             _holdTime += Time.deltaTime;
             if(_holdTime >= _currentWeapon._weaponData.holdThreshold) // if the player hold the attack button long enough or longer than the threshold give by the current weapon
@@ -81,6 +95,14 @@ public class WeaponManager : MonoBehaviour
             {
                 _isNormalAttack = true;
                 isAttack = false;
+            }
+        }
+        if(isRecovering)
+        {
+            recoverTimer -= Time.deltaTime;
+            if (recoverTimer <= 0f)
+            {
+                isRecovering = false;
             }
         }
     }
@@ -121,9 +143,9 @@ public class WeaponManager : MonoBehaviour
 
     private void OnAttackInputPerform(InputAction.CallbackContext context)
     {
-        if (_currentWeapon == null)
+        if (_currentWeapon == null || isRecovering)
         {
-            Debug.Log("there is currently no weapon");
+            Debug.Log("there is currently no weapon or player is recovering");
             return;
         }
         _startHold = true; 
@@ -138,21 +160,63 @@ public class WeaponManager : MonoBehaviour
             {
                 Debug.Log("ChargeAttack");
                 _currentWeapon.OnInnitSecondaryAttack();
-                _startHold = false;
+                //_startHold = false;
                 cooldownTimer = _currentWeapon._weaponData.chargeAttackSpeed;
+                _startHold = false;
+                comboCounter = 0;
             }
-            else if (_isNormalAttack) //if going for combo just focus on this statement
+            else  //if going for combo just focus on this statement
             {
-                Debug.Log("Attack");
-                _currentWeapon.OnInnitNormalAttack();
-                cooldownTimer = _currentWeapon._weaponData.attackSpeed;
-            }
+                if (isRecovering) { return; }
 
+                comboCounter++;
+                if(comboCounter > maxComboCount)
+                {
+                    recoverTimer = recoverDuration;
+                    isRecovering = true;
+                    StartCoroutine(ResetFullCombo());
+                    return;
+                }
+
+                _currentWeapon.OnInnitNormalAttack();
+                AttackHandle?.Invoke();
+                Debug.Log("Attack");
+                cooldownTimer = _currentWeapon._weaponData.attackSpeed;
+
+                if(comboCoroutine != null)
+                {
+                    StopCoroutine(comboCoroutine);
+                }
+
+                comboCoroutine = StartCoroutine(ResetCombo());
+
+            }
             isAttack = true; // set the isAttack = true again so that it will start cooldown, avoid attack with no cooldown
             ResetAttackState();
         }
         //_isHoldAttack = true then charge attack and set the cooldown to weapon normal/charge attack speed and then start cooldown
         
+    }
+
+    private IEnumerator ResetCombo()
+    {
+        yield return new WaitForSeconds(comboResetTime);
+        if (comboCounter < maxComboCount)
+        {
+            recoverTimer = recoverDuration;
+            isRecovering = true;
+        }
+        comboCounter = 0;
+        _startHold = false;
+        _holdTime = 0;
+    }
+
+    private IEnumerator ResetFullCombo()
+    {
+        yield return new WaitForSeconds(comboResetTime);
+        comboCounter = 0;
+        _startHold = false;
+        _holdTime = 0;
     }
 
     private void ResetAttackState()

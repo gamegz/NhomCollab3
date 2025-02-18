@@ -1,3 +1,4 @@
+using Enemy;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,17 +25,26 @@ public class Sword : WeaponBase
 
     IEnumerator WaitToTurnOffBoxCollider()
     {
+        Debug.Log("hit");
         GetComponent<BoxCollider>().enabled = true;
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.3f);
         GetComponent<BoxCollider>().enabled = false;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-       IDamageable damageable = other.GetComponent<IDamageable>();
-        if (damageable != null)
+        EnemyBase enemy = other.GetComponent<EnemyBase>();
+
+        if (enemy)
         {
-            
+            enemy.DamagedByWeapon(_weaponData);
+        }
+
+        IDamageable damagable = other.GetComponent<IDamageable>();
+
+        if (damagable != null && !other.CompareTag("Player"))
+        {
+            damagable.TakeDamage(_weaponData.baseWeaponDamage * PlayerDatas.Instance.GetStats.DamageModifier);
         }
     }
 }
