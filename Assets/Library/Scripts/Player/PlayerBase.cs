@@ -224,9 +224,9 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         Debug.Log(currentHBProgress);
     }
 
-    public int GetHealBarProgress()
+    public float GetHealBarProgress() // For displaying UI 
     {
-        return 0; // Change this later
+        return Mathf.InverseLerp(0f, maxHBProgress, currentHBProgress); 
     }
 
     private void InitializeHealthStatesDictionary()
