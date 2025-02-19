@@ -21,6 +21,7 @@ namespace Enemy
     */
     public class EnemyBase : MonoBehaviour, IDamageable
     {
+        public static event Action OnEnemyDamaged;
         public event Action<EnemyBase> OnEnemyDeaths;
         public delegate void OnCallEnemyDeath(EnemyBase enemy);
         public static event OnCallEnemyDeath OnEnemyDeathsEvent;
@@ -406,6 +407,8 @@ namespace Enemy
             Debug.Log("Damage: " + damage);
             currentHealth -= damage;
             staggerThresholdCounter -= damage;
+
+            OnEnemyDamaged?.Invoke();
 
             if (currentHealth <= 0)
             {

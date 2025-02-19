@@ -1,15 +1,17 @@
+using Enemy;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-public class PlayerBase : MonoBehaviour, IDamageable
+public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE THE PLAYER'S RELATIONSHIP WITH OTHER SCRIPT TO PREVENT CREATING UNNECESSARY SCRIPTS [DUC ANH]
 {
-    // THIS MUST BE A SINGLETON CLASS RIGHT?
+    
     public static PlayerBase Instance { get ; private set; }
 
-    //public PlayerBattleData data;
+    // public PlayerBattleData data;
     private int moveSpeedLevel;
     private int healthLevel;
     private int fConversionRateLevel;
@@ -26,9 +28,25 @@ public class PlayerBase : MonoBehaviour, IDamageable
     [SerializeField] private LayerMask interactLayerMask;
     private Transform _playerTransform;
 
+    // System Action Stuff
+    public delegate void OnHealthModified(float modifiedHealth, bool? increased);
+    public static event OnHealthModified HealthModified;    
+    public delegate void OnHealBarFull();
+    public static event OnHealBarFull HBFull;
+
+    // Variable for Heal Bar, which is associated with hearts and Overheal
+    public enum HealthStates
+    {
+        INCREASED,
+        DECREASED
+    }
+    private Dictionary<HealthStates, bool> healthStatesDictionary;
+    private int currentHBProgress = 0;
+    private int maxHBProgress = 3;
+
     private void Awake()
     {
-         _playerInput = new PlayerInput();
+        _playerInput = new PlayerInput();
         _playerTransform = GetComponent<Transform>();
 
         for(int i = 0; i < Object.FindObjectsOfType<PlayerBase>().Length; i++)
@@ -53,6 +71,14 @@ public class PlayerBase : MonoBehaviour, IDamageable
             Destroy(this);
         }
         #endregion
+
+        // For Invoking Stuff
+        InitializeHealthStatesDictionary();
+    }
+
+    private void Start()
+    {
+        HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, SetHealthState(HealthStates.INCREASED));
     }
 
     private void OnEnable()
@@ -61,6 +87,8 @@ public class PlayerBase : MonoBehaviour, IDamageable
         _playerInput.Player.OnInteract.performed += OnInteractWithObject;
         _playerInput.Player.OnInteract.canceled += OnInteractWithObject;
         _playerInput.Enable();
+
+        EnemyBase.OnEnemyDamaged += ModifyHealBar;        
     }
 
     private void OnDisable()
@@ -70,6 +98,8 @@ public class PlayerBase : MonoBehaviour, IDamageable
         _playerInput.Player.OnInteract.performed -= OnInteractWithObject;
         _playerInput.Player.OnInteract.canceled -= OnInteractWithObject;
         _playerInput.Disable();
+        
+        EnemyBase.OnEnemyDamaged -= ModifyHealBar;
     }
 
     private void OnTriggerSpeedBuff()
@@ -161,15 +191,61 @@ public class PlayerBase : MonoBehaviour, IDamageable
 
     }
 
-    public void TakeDamage(int damageAmount)
+    public void TakeDamage(int modifiedHealth)
     {
-        PlayerDatas.Instance.OnPlayerHealthChange(damageAmount);
-        Debug.Log(PlayerDatas.Instance.GetStats.currentPlayerHealth);
+        //Debug.Log("Damage Taken: " + modifiedHealth);
+
+        PlayerDatas.Instance.OnPlayerHealthChange(modifiedHealth);
+
+        //Debug.Log(PlayerDatas.Instance.GetStats.currentPlayerHealth);
+
+        HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, SetHealthState(HealthStates.DECREASED));
+
         if (PlayerDatas.Instance.GetStats.currentPlayerHealth <= 0)
         {
             OnPlayerDeath();
         }
     }
+
+    private void ModifyHealBar() // Either increase or reset the heal bar of the player
+    {
+        currentHBProgress++;
+        if (currentHBProgress >= maxHBProgress)
+        {
+            if (PlayerDatas.Instance.GetStats.currentPlayerHealth < 5)
+            {
+                PlayerDatas.Instance.GetStats.currentPlayerHealth++;
+                HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, SetHealthState(HealthStates.INCREASED));
+            }
+            HBFull?.Invoke();
+            currentHBProgress = 0;
+        }
+
+        Debug.Log(currentHBProgress);
+    }
+
+    public int GetHealBarProgress()
+    {
+        return 0; // Change this later
+    }
+
+    private void InitializeHealthStatesDictionary()
+    {
+        healthStatesDictionary = new Dictionary<HealthStates, bool>
+        {
+            { HealthStates.INCREASED, true },
+            { HealthStates.DECREASED, false } 
+        };
+    }
+
+    private bool? SetHealthState(HealthStates state)
+    {
+        Debug.Log("Set Health State: " + state);
+        return healthStatesDictionary.ContainsKey(state) ? healthStatesDictionary[state] : (bool?)null; 
+    }
+
+
+
     private void OnPlayerDeath()
     {
         GameManager.Instance.UpdateGameState(GameState.LOSE);
