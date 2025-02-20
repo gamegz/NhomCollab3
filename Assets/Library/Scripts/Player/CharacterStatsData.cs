@@ -105,7 +105,7 @@ public class CharacterStatsData
     {
         get
         {
-            float modifier = BuffTypes[BuffType.Health] + (baseStats.HealthIncreasePerLevel * upgradeLevel[UpgradeType.Health]);
+            float modifier = (100 + upgradeLevel[UpgradeType.Health]) * 0.01f;
             return GetHealth(modifier);
         }
     }
