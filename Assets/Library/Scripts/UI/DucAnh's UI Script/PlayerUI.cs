@@ -13,10 +13,13 @@ public class PlayerUI : MonoBehaviour
     //[SerializeField] private TextMeshProUGUI levelText; // May or may not use in the future 
     [SerializeField] private Image[] playerHearts;
     private PlayerBase playerBase;
+    private Color orgHBColor;
+    private Color minColor = Color.red;
+    private Color maxColor = Color.green;
 
 
     [Header("Values")]
-    private Vector3 orgHeartScale = new Vector3(0.75f, 0.75f, 0.75f);
+    private Vector3 orgHeartScale = new Vector3(0.85f, 0.85f, 0.85f);
     private int level = 1;
     private int expRequirement = 5;
     private int expCurrent = 0;
@@ -25,20 +28,24 @@ public class PlayerUI : MonoBehaviour
 
     [Header("Coroutine Stuff")]
     private Coroutine heartCoroutine = null;
+    private Coroutine overHealingCoroutine = null;
 
     private void OnEnable()
     {
         PlayerBase.HealthModified += UpdateHealth;
-        //PlayerBase.HBFull +=  
+        PlayerBase.HBOverheal += OverHealingEffect;
     }
 
     private void OnDisable()
     {
         PlayerBase.HealthModified -= UpdateHealth;
+        PlayerBase.HBOverheal -= OverHealingEffect;
     }
 
     private void Awake()
     {
+        orgHBColor = healBarUI.color;
+
         playerBase = GetComponent<PlayerBase>();
         if (playerBase == null)
         {
@@ -72,7 +79,7 @@ public class PlayerUI : MonoBehaviour
     private void UpdateProgressFill(float value)
     {
         float curVelocity = 0f;
-        float tempValue = Mathf.SmoothDamp(healBarUI.fillAmount, value, ref curVelocity, 0.015f);
+        float tempValue = Mathf.SmoothDamp(healBarUI.fillAmount, value, ref curVelocity, 0.0075f);
         healBarUI.fillAmount = tempValue;
     }
 
@@ -85,25 +92,62 @@ public class PlayerUI : MonoBehaviour
         {
             UpdateProgressFill(progress.Value);
         }
+
     }
+
+    private void OverHealingEffect(bool isOverHealing)
+    {
+        if (overHealingCoroutine != null)
+        {
+            StopCoroutine(overHealingCoroutine);
+            overHealingCoroutine = null;
+        }
+
+        if (overHealingCoroutine == null)
+            overHealingCoroutine = StartCoroutine(OverHealingCoroutine(isOverHealing));
+
+        
+    }
+
+    private IEnumerator OverHealingCoroutine(bool isOverHealing)
+    {
+        if (isOverHealing)
+        {
+            while (healBarUI.color != minColor)
+            {
+                healBarUI.color = Color.Lerp(minColor, maxColor, playerBase.GetHealBarProgress());
+                yield return null;
+            }
+
+        }
+
+        if (!isOverHealing)
+            healBarUI.color = orgHBColor;
+
+        overHealingCoroutine = null;
+    }
+
 
     private void UpdateHealth(float modifiedHealth, bool? increased)
     {
-        //if (heartCoroutine == null) 
-        heartCoroutine = StartCoroutine(ModifyHearts(modifiedHealth, increased));
+        if (heartCoroutine != null)
+        {
+            StopCoroutine(heartCoroutine);
+            heartCoroutine = null;
+        }
+
+        if (heartCoroutine == null)
+            heartCoroutine = StartCoroutine(ModifyHearts(modifiedHealth, increased));
     }
 
     private IEnumerator ModifyHearts(float modifiedHealth, bool? increased)
     {
-        Debug.Log(increased);
-
         if (increased == true)
         {
             if (modifiedHealth <= 5)
             {
                 Vector3 currentVel = Vector3.zero;
 
-                Debug.Log("Player's Health: " + modifiedHealth);
                 for (int i = 0; i <= modifiedHealth - 1; i++)
                 {
                     while (playerHearts[i].transform.localScale != orgHeartScale)
@@ -113,10 +157,6 @@ public class PlayerUI : MonoBehaviour
                         yield return null;
                     }
 
-                    //if (!playerHearts[i].gameObject.activeSelf)
-                    //    playerHearts[i].gameObject.SetActive(true);
-
-                    //yield return null; // UNCOMMENT WHEN NECESSARY
                 }
             }
         }
@@ -138,15 +178,15 @@ public class PlayerUI : MonoBehaviour
                         yield return null;
                     }
 
-
-                    //playerHearts[i].gameObject.SetActive(false);
-
-                    //yield return null; // UNCOMMENT WHEN NECESSARY
                 }
             }
 
         }
 
-        //heartCoroutine = null;
+        heartCoroutine = null;
     }
+
+
+
+
 }

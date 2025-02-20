@@ -31,8 +31,8 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     // System Action Stuff
     public delegate void OnHealthModified(float modifiedHealth, bool? increased);
     public static event OnHealthModified HealthModified;    
-    public delegate void OnHealBarFull();
-    public static event OnHealBarFull HBFull;
+    public delegate void OnHealBarFull(bool isOverHealing);
+    public static event OnHealBarFull HBOverheal;
 
     // Variable for Heal Bar, which is associated with hearts and Overheal
     public enum HealthStates
@@ -41,8 +41,12 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         DECREASED
     }
     private Dictionary<HealthStates, bool> healthStatesDictionary;
-    private int currentHBProgress = 0;
-    private int maxHBProgress = 3;
+    private Coroutine overHealCoroutine;
+    private bool isOverHealing = false;
+    private float overHealTimer = 0f; 
+    private float currentHBProgress = 0f; 
+    private float HBMultiplier = 1f; 
+    private float maxHBProgress = 6f;
 
     private void Awake()
     {
@@ -88,7 +92,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         _playerInput.Player.OnInteract.canceled += OnInteractWithObject;
         _playerInput.Enable();
 
-        EnemyBase.OnEnemyDamaged += ModifyHealBar;        
+        EnemyBase.OnEnemyDamaged += IncreaseHealBar;        
     }
 
     private void OnDisable()
@@ -99,7 +103,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         _playerInput.Player.OnInteract.canceled -= OnInteractWithObject;
         _playerInput.Disable();
         
-        EnemyBase.OnEnemyDamaged -= ModifyHealBar;
+        EnemyBase.OnEnemyDamaged -= IncreaseHealBar;
     }
 
     private void OnTriggerSpeedBuff()
@@ -199,7 +203,14 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
 
         //Debug.Log(PlayerDatas.Instance.GetStats.currentPlayerHealth);
 
-        HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, SetHealthState(HealthStates.DECREASED));
+        if (isOverHealing)
+        {
+            HBOverheal?.Invoke(false);
+            isOverHealing = false;
+            currentHBProgress = 0;
+        }
+        else if (!isOverHealing)
+            HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, SetHealthState(HealthStates.DECREASED));
 
         if (PlayerDatas.Instance.GetStats.currentPlayerHealth <= 0)
         {
@@ -207,24 +218,60 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         }
     }
 
-    private void ModifyHealBar() // Either increase or reset the heal bar of the player
+    public void IncreaseHealBar() // Either increase or reset the heal bar of the player
     {
-        currentHBProgress++;
+        //Debug.Log("HUH?");
+
+        currentHBProgress+=HBMultiplier;
+
         if (currentHBProgress >= maxHBProgress)
         {
+            currentHBProgress = maxHBProgress;
+
             if (PlayerDatas.Instance.GetStats.currentPlayerHealth < 5)
             {
                 PlayerDatas.Instance.GetStats.currentPlayerHealth++;
                 HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, SetHealthState(HealthStates.INCREASED));
             }
-            HBFull?.Invoke();
-            currentHBProgress = 0;
+
+            if (overHealCoroutine == null)
+            {
+                isOverHealing = true;
+                overHealCoroutine = StartCoroutine(OverHealing());
+                HBOverheal?.Invoke(true);
+            }
         }
 
-        Debug.Log(currentHBProgress);
     }
 
-    public float GetHealBarProgress() // For displaying UI 
+
+    private IEnumerator OverHealing()
+    {
+        while (currentHBProgress >= 0)
+        {
+            overHealTimer += Time.deltaTime;
+
+            if (HBMultiplier < 3)
+                HBMultiplier += overHealTimer / 25000;
+            
+            else
+                HBMultiplier = 3;
+
+            currentHBProgress -= overHealTimer / 1250f;
+            yield return null;            
+        }
+
+        isOverHealing = false;
+        HBOverheal?.Invoke(false);
+        currentHBProgress = 0;
+        overHealTimer = 0;
+        HBMultiplier = 1;
+
+        overHealCoroutine = null;
+    }
+
+
+    public float GetHealBarProgress() // For displaying heal bar UI 
     {
         return Mathf.InverseLerp(0f, maxHBProgress, currentHBProgress); 
     }
@@ -240,7 +287,6 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
 
     private bool? SetHealthState(HealthStates state)
     {
-        Debug.Log("Set Health State: " + state);
         return healthStatesDictionary.ContainsKey(state) ? healthStatesDictionary[state] : (bool?)null; 
     }
 

@@ -203,7 +203,6 @@ public class PlayerMovement : MonoBehaviour
         OnParryStart?.Invoke();
 
         float elapsedInvulnerableTime = invulnerableTimerOrg;
-        float elapsedStandStillTime = standStillTimerOrg;
 
         Debug.Log("Parrying");
 
