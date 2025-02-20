@@ -122,8 +122,7 @@ public class WeaponManager : MonoBehaviour
     private void OnAttackInputPerform(InputAction.CallbackContext context)
     {
         if (_currentWeapon == null)
-        {
-            Debug.Log("there is currently no weapon");
+        {            
             return;
         }
         _startHold = true; 

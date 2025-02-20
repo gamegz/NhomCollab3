@@ -2268,7 +2268,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: CONSUME
+  m_Text: CANCEL
 --- !u!222 &618236421
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4677,7 +4677,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1977341097}
         m_TargetAssemblyTypeName: UI.UpgradeMenu, Assembly-CSharp
-        m_MethodName: OnConsumeGem
+        m_MethodName: OnCancelUpgrade
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5989,14 +5989,14 @@ MonoBehaviour:
     statsValue: {fileID: 458656878}
     upgradeRequirement: 1
     upgradeCount: 0
-    upgradeType: 1
+    upgradeType: 3
   recoveryUpgrade:
     upgradeButton: {fileID: 1056993023}
     upgradeCountText: {fileID: 1606644540}
     statsValue: {fileID: 1747362324}
     upgradeRequirement: 1
     upgradeCount: 0
-    upgradeType: 3
+    upgradeType: 5
   enduranceUgrade:
     upgradeButton: {fileID: 1188594903}
     upgradeCountText: {fileID: 288884283}
@@ -6004,13 +6004,13 @@ MonoBehaviour:
     upgradeRequirement: 1
     upgradeCount: 0
     upgradeType: 1
-  dashCharges:
+  dashChargesUpgrade:
     upgradeButton: {fileID: 186802627}
     upgradeCountText: {fileID: 240291981}
     statsValue: {fileID: 653625595}
-    upgradeRequirement: 10
+    upgradeRequirement: 8
     upgradeCount: 0
-    upgradeType: 2
+    upgradeType: 0
   sacrificialGemCount: 30
   sacrificialGemCountText: {fileID: 1988406440}
 --- !u!1 &1988406438

@@ -13,12 +13,12 @@ namespace UI
         [SerializeField] UpdateUI speedUpgrade;
         [SerializeField] UpdateUI recoveryUpgrade;
         [SerializeField] UpdateUI enduranceUgrade;
-        [SerializeField] UpdateUI dashCharges;
+        [SerializeField] UpdateUI dashChargesUpgrade;
         [Space]
-        [SerializeField] int sacrificialGemCount;
+        [SerializeField] int sacrificialGemCount; //Need to be increase from other script
         [SerializeField] Text sacrificialGemCountText;
 
-        private int _totalCurrentGemUse;
+        private int _totalCurrentGemUse; //Gem use temporary
 
         int _currentPointUse;
 
@@ -31,15 +31,13 @@ namespace UI
         {
             upgradeGroupDictionary.Add("health", healthUpgrade);
             upgradeGroupDictionary.Add("strength", strengthUpgrade);
-            upgradeGroupDictionary.Add("speed", strengthUpgrade);
-            upgradeGroupDictionary.Add("endurance", strengthUpgrade);
-            upgradeGroupDictionary.Add("recovery", strengthUpgrade);
-            upgradeGroupDictionary.Add("dashCharge", strengthUpgrade);
+            upgradeGroupDictionary.Add("speed", speedUpgrade);
+            upgradeGroupDictionary.Add("endurance", enduranceUgrade);
+            upgradeGroupDictionary.Add("recovery", recoveryUpgrade);
+            upgradeGroupDictionary.Add("dashCharge", dashChargesUpgrade);
 
-            foreach(UpdateUI groupUI in upgradeGroupDictionary.Values)
-            {
-                groupUI.upgradeCountText.text = " ";
-            }
+            ResetUpdateText();
+            sacrificialGemCountText.text = "Sacrificial Gem:" + sacrificialGemCount.ToString();
         }
 
         #region Button Event
@@ -53,35 +51,62 @@ namespace UI
             upgradeTarget.upgradeCount ++;
             upgradeTarget.upgradeCountText.text = "+" + upgradeTarget.upgradeCount.ToString();
 
-            upgradeGroupDictionary[upgradeType] = upgradeTarget;
-
+            
             sacrificialGemCount -= upgradeTarget.upgradeRequirement;
-            sacrificialGemCountText.text = sacrificialGemCount.ToString();
+            sacrificialGemCountText.text = "Sacrificial Gem:" + sacrificialGemCount.ToString();
 
-            _totalCurrentGemUse++;
+            _totalCurrentGemUse += upgradeTarget.upgradeRequirement;
 
+            upgradeGroupDictionary[upgradeType] = upgradeTarget;
         }
 
         public void OnConsumeGem()
         {
             PlayerDatas.Instance.OnStatsUpgrade(UpgradeType.MovementSpeed, 1);
+            ResetUpdateText();
+            _totalCurrentGemUse = 0;
         }
 
         public void OnCancelUpgrade()
         {
             //Return gem
+            sacrificialGemCount += _totalCurrentGemUse;
+            Debug.Log(sacrificialGemCount);
+            sacrificialGemCountText.text = "Sacrificial Gem:" + sacrificialGemCount.ToString();
+            _totalCurrentGemUse = 0;
 
             foreach (UpdateUI groupUI in upgradeGroupDictionary.Values)
             {
                 groupUI.upgradeCountText.text = " ";
             }
+
+            
         }
         #endregion
+
+        public void ResetUpdateText()
+        {
+            
+            foreach (UpdateUI groupUI in upgradeGroupDictionary.Values)
+            {
+                UpdateUI tempGroupUI = groupUI;
+                tempGroupUI.upgradeCountText.text = " ";
+                tempGroupUI.upgradeCount = 0;
+                //groupUI = tempGroupUI.upgradeCount;
+            }
+        }
+
 
         //Event
         public void OnGemCollected()
         {
 
+        }
+
+        public void OnGemAmountChange(int changeAmount)
+        {
+            sacrificialGemCount += changeAmount;
+            sacrificialGemCountText.text = sacrificialGemCount.ToString();
         }
 
         [System.Serializable]
