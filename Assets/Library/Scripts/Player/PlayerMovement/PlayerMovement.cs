@@ -5,6 +5,7 @@ using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System;
+using DG.Tweening;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -25,6 +26,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float regenCooldown = 2.0f;
     [SerializeField] private float overheatCooldown = 5.0f;
     [SerializeField] private float dashDuration;
+    public AnimationCurve animCurve;
 
     [Header("Parry Manager")]
     [SerializeField] private Transform parryBoxRefPoint; // A transform point that will spawn the parry box
@@ -55,8 +57,12 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 _mousePosition;
     private Vector2 _movement;
     private Camera _camera;
-    PlayerBase _playerStats; // Comment if don't use.
-    
+    [SerializeField] private bool isAttacking = false;
+    Vector3 originalPosition;
+    private float moveDistance = 2f;
+    private float comboMoveDistance = 2f;
+    private float moveDuration = 0.2f;
+    private float delayBeforeBackToWalking = 1f;
 
     private void Awake()
     {
@@ -76,6 +82,7 @@ public class PlayerMovement : MonoBehaviour
         _playerInput.Player.MousePos.performed += MousePos;
         _playerInput.Player.Parry.performed += Parry;
         _playerInput.Enable();
+        WeaponManager.AttackHandle += OnMoveCharacterForward;
 
         OnParryStart += () => isParrying = true;
         OnParryStop += () => isParrying = false;
@@ -88,6 +95,7 @@ public class PlayerMovement : MonoBehaviour
         _playerInput.Player.Dash.performed -= Dash;
         _playerInput.Player.Parry.performed -= Parry;
         _playerInput.Disable();
+        WeaponManager.AttackHandle -= OnMoveCharacterForward;
 
         OnParryStart -= () => isParrying = true;
         OnParryStop -= () => isParrying = false;
@@ -116,23 +124,90 @@ public class PlayerMovement : MonoBehaviour
         {
             regenCoroutine = StartCoroutine(RegenCharge());
         }
+
+        if (!isAttacking)
+        {
+            MoveCharacter();
+        }
     }
 
     private void FixedUpdate()
     {
         LookAtMousePosition();
-        MoveCharacter();  
+           
     }
 
     private void MoveCharacter()
     {
         if (isParrying) return;
+        if (isAttacking) return;
 
         var playerMovement = new Vector3(_movement.x, 0, _movement.y).normalized * PlayerDatas.Instance.GetStats.MoveSpeed;
         playerMovement.y = _rb.velocity.y;
         _rb.velocity = playerMovement;
     }
     
+    private void OnMoveCharacterForward(int ComboCounter)
+    {
+        isAttacking = true;
+        _rb.velocity = Vector3.zero;
+
+        if (ComboCounter >= 1)
+        {
+            //originalPosition = _rb.position;
+            //Vector3 attackPosition = originalPosition + transform.forward * comboMoveDistance;
+
+            //_rb.DOMove(attackPosition, moveDuration)
+            //    .SetEase(Ease.OutQuad);
+            //StartCoroutine(MoveCharacterForward(ComboCounter));
+            //MoveCharacterForwardWhenCombo(ComboCounter);
+            Debug.Log("2");
+        }
+
+        //if (ComboCounter == 1) 
+        //{
+        //    originalPosition = _rb.position;
+        //    Vector3 attackPosition = originalPosition + transform.forward * moveDistance;
+        //    StartCoroutine(MoveCharacterForward(ComboCounter));
+        //    Debug.Log("1");
+        //}
+        
+
+    }
+
+    private IEnumerator MoveCharacterForward(int ComboCounter)
+    {
+        originalPosition = _rb.position;
+        _rb.velocity = Vector3.zero;
+        float forwardSpeed = 0f;
+
+        forwardSpeed = moveDistance / moveDuration;
+        Vector3 forwardVelocity = transform.forward * forwardSpeed;
+        originalPosition = _rb.position;
+        _rb.velocity = forwardVelocity;
+        yield return new WaitForSeconds(moveDuration);
+        _rb.velocity = Vector3.zero;
+        //yield return new WaitForSeconds(0.1f);
+        //Vector3 returnVelocity = -forwardVelocity;
+        //_rb.velocity = returnVelocity;
+        //yield return new WaitForSeconds(moveDuration);
+        //_rb.velocity = Vector3.zero;
+        isAttacking = false;
+
+    }
+
+    private void MoveCharacterForwardWhenCombo(int ComboCounter)
+    {
+        originalPosition = _rb.position;
+        float forwardSpeed = 0f;
+        Debug.Log("in");
+        forwardSpeed = comboMoveDistance / moveDuration;
+        Vector3 forwardVelocity = transform.forward * forwardSpeed;
+        originalPosition = _rb.position;
+        _rb.velocity = forwardVelocity;
+        //_rb.velocity = Vector3.zero;
+        isAttacking = false;
+    }
 
     private void OnTriggerStay(Collider other)
     {
@@ -155,10 +230,12 @@ public class PlayerMovement : MonoBehaviour
             }
         }
     }
+
     IEnumerator Dash()
     {
         currentCharge--;
         //DASH GOES HERE
+        _rb.velocity = Vector3.zero;
         Vector3 dashDirection = new Vector3(_movement.x, 0, _movement.y).normalized;
         float elapsedDashTime = 0f;
 

@@ -10,7 +10,7 @@ public class WeaponManager : MonoBehaviour
     public delegate void CurrentWeaponHandler();
     public static event CurrentWeaponHandler CurrentWeapon;
 
-    public delegate void OnHandlingAttack();
+    public delegate void OnHandlingAttack(int ComboCounter);
     public static event OnHandlingAttack AttackHandle;
     //Courotine
     Coroutine comboCoroutine;
@@ -160,7 +160,6 @@ public class WeaponManager : MonoBehaviour
             {
                 Debug.Log("ChargeAttack");
                 _currentWeapon.OnInnitSecondaryAttack();
-                //_startHold = false;
                 cooldownTimer = _currentWeapon._weaponData.chargeAttackSpeed;
                 _startHold = false;
                 comboCounter = 0;
@@ -168,6 +167,9 @@ public class WeaponManager : MonoBehaviour
             else  //if going for combo just focus on this statement
             {
                 if (isRecovering) { return; }
+
+                _currentWeapon.OnInnitNormalAttack();
+                AttackHandle?.Invoke(comboCounter);
 
                 comboCounter++;
                 if(comboCounter > maxComboCount)
@@ -178,8 +180,8 @@ public class WeaponManager : MonoBehaviour
                     return;
                 }
 
-                _currentWeapon.OnInnitNormalAttack();
-                AttackHandle?.Invoke();
+                
+
                 Debug.Log("Attack");
                 cooldownTimer = _currentWeapon._weaponData.attackSpeed;
 
