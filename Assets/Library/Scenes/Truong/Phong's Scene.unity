@@ -468,6 +468,12 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &718480603 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8319276657298368420, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+    type: 3}
+  m_PrefabInstance: {fileID: 178085386}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &760135926
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1087,6 +1093,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyHuntingDog
       objectReference: {fileID: 0}
+    - target: {fileID: 5098484336238470193, guid: c64c058f101d5a743b85b2459fae9e7e,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6704119369099998506, guid: c64c058f101d5a743b85b2459fae9e7e,
         type: 3}
       propertyPath: rb
@@ -1099,13 +1110,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6704119369099998506, guid: c64c058f101d5a743b85b2459fae9e7e,
         type: 3}
+      propertyPath: playerRef
+      value: 
+      objectReference: {fileID: 718480603}
+    - target: {fileID: 6704119369099998506, guid: c64c058f101d5a743b85b2459fae9e7e,
+        type: 3}
       propertyPath: stunPoint
-      value: 0.1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6704119369099998506, guid: c64c058f101d5a743b85b2459fae9e7e,
         type: 3}
       propertyPath: staggerTime
-      value: 5
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6704119369099998506, guid: c64c058f101d5a743b85b2459fae9e7e,
         type: 3}
@@ -1120,7 +1136,7 @@ PrefabInstance:
     - target: {fileID: 6704119369099998506, guid: c64c058f101d5a743b85b2459fae9e7e,
         type: 3}
       propertyPath: knockbackForce
-      value: 1000
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 6704119369099998506, guid: c64c058f101d5a743b85b2459fae9e7e,
         type: 3}

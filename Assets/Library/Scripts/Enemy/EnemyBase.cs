@@ -74,7 +74,7 @@ namespace Enemy
         //Stun
         [Header("STUN")]
         public bool canBeStunned;
-        public float stunPoint;// Percentage
+        public int stunPoint;// Percentage
         public float stunDuration;
         [HideInInspector] public bool isStunned = false;
         private bool hasBeenStunned = false;
@@ -179,8 +179,6 @@ namespace Enemy
 
             if (hostileMethod == EnemyHostileMethod.Gunner) { isTokenOwner = true; }
             attackCollider.gameObject.GetComponent<EnemyAttackCollider>()._damage = attackDamage;
-
-            stunPoint = maxHealth * stunPoint;
         }
 
         public virtual void UpdateLogic()
@@ -433,7 +431,7 @@ namespace Enemy
                 Stagger(knockbackForce);
             }
 
-            if (canBeStunned && currentHealth < stunPoint)
+            if (canBeStunned && hasBeenStunned! && currentHealth < stunPoint)
             {
                 StartCoroutine(Stun());
             }
@@ -451,7 +449,9 @@ namespace Enemy
             canMove = false;
             isStagger = true;
             Vector3 knockbackDir = GetDirectionIgnoreY(playerRef.transform.position, this.transform.position).normalized;
-            rb.AddForce(knockbackDir * knockbackStrength, ForceMode.Impulse);
+            Debug.LogWarning(knockbackStrength);
+            //rb.AddForce(knockbackDir * knockbackStrength, ForceMode.Impulse);
+            StartCoroutine(ApplyKnockback(knockbackDir, knockbackStrength));
             Debug.LogWarning("Stagger");
 
             StartCoroutine(StaggerTimeCoroutine());
@@ -463,6 +463,19 @@ namespace Enemy
 
             isStagger = false;
             canMove = true;
+        }
+
+        private IEnumerator ApplyKnockback(Vector3 direction, float strength)
+        {
+            float knockbackTime = 0.2f; // Time the knockback effect lasts
+            float elapsedTime = 0f;
+
+            while (elapsedTime < knockbackTime)
+            {
+                transform.position += direction * (strength * Time.deltaTime);
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
         }
 
         private IEnumerator Stun()
@@ -570,7 +583,8 @@ namespace Enemy
 
         public Vector3 GetDirectionIgnoreY(Vector3 from, Vector3 to)
         {
-            return new Vector3(to.x, 2, to.z) - new Vector3(from.x, 2, from.y);
+            //return new Vector3(to.x, 2, to.z) - new Vector3(from.x, 2, from.y);
+            return new Vector3(to.x - from.x, 0, to.z - from.z);
         }
 
         public float GetDistanceToPLayer()
