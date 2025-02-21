@@ -6,7 +6,6 @@ using UnityEngine;
 public class EnemyProjectileCollider : MonoBehaviour
 {
     private EnemyProjectile enemyProjectileScript;
-    private bool deflected = false;
 
     private void Start()
     {
@@ -20,12 +19,12 @@ public class EnemyProjectileCollider : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !deflected)
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !enemyProjectileScript.GetDeflectValue())
         {
             other.gameObject.GetComponent<IDamageable>().TakeDamage(enemyProjectileScript.GetBulletDamage()); // Dealing 1 DMG to player (player has 5 hearts [could be expanded, I dont know])
             Destroy(gameObject);
         }
-        else if (other.gameObject.layer == LayerMask.NameToLayer("Enemy") && deflected)
+        else if (other.gameObject.layer == LayerMask.NameToLayer("Enemy") && enemyProjectileScript.GetDeflectValue())
         {
             Debug.Log("HUH"); 
             other.gameObject.GetComponent<IDamageable>().TakeDamage(enemyProjectileScript.GetBulletDamage() * 10); // Dealing 10 DMG to enemies

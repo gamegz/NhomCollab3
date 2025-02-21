@@ -10,40 +10,41 @@ public class PlayerUI : MonoBehaviour
 {
     [Header("Reference")]
     [SerializeField] private Image healBarUI; 
-    //[SerializeField] private TextMeshProUGUI levelText; // May or may not use in the future 
+    [SerializeField] private Image innerChargeATKBarUI; 
+    [SerializeField] private Image outerChargeATKBarUI; 
     [SerializeField] private Image[] playerHearts;
+    [SerializeField] private WeaponManager weaponManager;
+    [SerializeField] private Camera mainCamera;
+    //[SerializeField] private TextMeshProUGUI levelText; // May or may not use in the future 
     private PlayerBase playerBase;
-    private Color orgHBColor;
+    private Color orgICABcolor; // Original Inner Charge Attack Bar Color  [UI Purpose]
+    private Color orgOCABcolor; // Original Outer Charge Attack Bar Color  [UI Purpose] [THIS IS THE PARENT OF "innerChargeATKBarUI"]
+    private Color orgHBColor; // Original Heal Bar Color 
     private Color minColor = Color.red;
     private Color maxColor = Color.green;
 
 
     [Header("Values")]
-    private Vector3 orgHeartScale = new Vector3(0.85f, 0.85f, 0.85f);
-    private int level = 1;
-    private int expRequirement = 5;
-    private int expCurrent = 0;
-    private bool increaseReq = true;
+    private Vector3 orgHeartScale = new Vector3(0.85f, 0.85f, 0.85f); 
+    private Vector3 orgCABarScale = new Vector3 (1.25f, 4f, 1f); // Original Charged Attack Bar Scale [For any one who couldn't read]
+    private Vector2 targetPosition;
+    private float xCamera;
+    private float yCamera;
+    //private int level = 1;
+    //private int expRequirement = 5;
+    //private int expCurrent = 0;
+    //private bool increaseReq = true;
 
 
     [Header("Coroutine Stuff")]
     private Coroutine heartCoroutine = null;
     private Coroutine overHealingCoroutine = null;
-
-    private void OnEnable()
-    {
-        PlayerBase.HealthModified += UpdateHealth;
-        PlayerBase.HBOverheal += OverHealingEffect;
-    }
-
-    private void OnDisable()
-    {
-        PlayerBase.HealthModified -= UpdateHealth;
-        PlayerBase.HBOverheal -= OverHealingEffect;
-    }
-
+    private Coroutine chargeATKCoroutine = null;
+    
     private void Awake()
     {
+        orgICABcolor = new Color(innerChargeATKBarUI.color.r, innerChargeATKBarUI.color.g, innerChargeATKBarUI.color.b, 0f);
+        orgOCABcolor = new Color(outerChargeATKBarUI.color.r, outerChargeATKBarUI.color.g, outerChargeATKBarUI.color.b, 0.5f);
         orgHBColor = healBarUI.color;
 
         playerBase = GetComponent<PlayerBase>();
@@ -51,7 +52,42 @@ public class PlayerUI : MonoBehaviour
         {
             Debug.Log("No player base");
         }
+
+        if (weaponManager == null)
+        {
+            Debug.Log("No weapon manager");
+        }
+
+        if (mainCamera == null)
+        {
+            Debug.Log("No main camera");
+        }
+        else
+        {
+            xCamera = mainCamera.pixelWidth;
+            yCamera = mainCamera.pixelHeight;
+
+            Debug.Log(xCamera);
+            Debug.Log(yCamera);
+        }
     }
+
+    private void OnEnable()
+    {
+        PlayerBase.HealthModified += UpdateHealth;
+        PlayerBase.HBOverheal += OverHealingEffect;
+
+        WeaponManager.OnHoldChargeATK += UpdateChargeATK;
+    }
+
+    private void OnDisable()
+    {
+        PlayerBase.HealthModified -= UpdateHealth;
+        PlayerBase.HBOverheal -= OverHealingEffect;
+
+        WeaponManager.OnHoldChargeATK -= UpdateChargeATK;
+    }
+
 
     public void AddEXP() 
     {
@@ -75,25 +111,41 @@ public class PlayerUI : MonoBehaviour
 
         //Debug.Log(expCurrent + " / " + expRequirement + " [Level: " + level + "] ");
     }
-
-    private void UpdateProgressFill(float value)
-    {
-        float curVelocity = 0f;
-        float tempValue = Mathf.SmoothDamp(healBarUI.fillAmount, value, ref curVelocity, 0.0075f);
-        healBarUI.fillAmount = tempValue;
-    }
-
     private void Update()
     {
         //levelText.text = "LVL: " + level;
 
-        float? progress = playerBase?.GetHealBarProgress();
-        if (progress != null)
+        float? hbProgress = playerBase?.GetHealBarProgress();
+        if (hbProgress != null)
         {
-            UpdateProgressFill(progress.Value);
+            UpdateHBProgressFill(hbProgress.Value);
         }
 
+        float? caProgress = weaponManager ? weaponManager.GetChargeATKProgress() : null;
+        if (caProgress != null)
+        {
+            UpdateCAProgressFill(caProgress.Value);
+        }
+
+        mainCamera.transform.position = new Vector2();
+
+
     }
+
+    private void UpdateHBProgressFill(float value)
+    {
+        float curVelocity = 0f;
+        float tempValue = Mathf.SmoothDamp(healBarUI.fillAmount, value, ref curVelocity, 0.0075f);
+        healBarUI.fillAmount = tempValue;
+    }    
+    
+    private void UpdateCAProgressFill(float value)
+    {
+        float curVelocity = 0f;
+        float tempValue = Mathf.SmoothDamp(innerChargeATKBarUI.fillAmount, value, ref curVelocity, 0.0075f);
+        innerChargeATKBarUI.fillAmount = tempValue;
+    }
+
 
     private void OverHealingEffect(bool isOverHealing)
     {
@@ -187,6 +239,55 @@ public class PlayerUI : MonoBehaviour
     }
 
 
+    private void UpdateChargeATK(bool isHolding)
+    {
+        if (chargeATKCoroutine != null)
+        {
+            StopCoroutine(chargeATKCoroutine);
+            chargeATKCoroutine = null;
+        }
+
+        if (chargeATKCoroutine == null)
+            chargeATKCoroutine = StartCoroutine(ChargeAttack(isHolding));
+
+    }
+
+    private IEnumerator ChargeAttack(bool isHolding)
+    {
+        float lerpSpeed = 2.5f;
+        Vector3 curVelocity = Vector3.zero;
+
+        while (isHolding && weaponManager.GetWeaponBaseRef() != null)
+        {
+            Color tempInnerColor = Color.Lerp(orgICABcolor, Color.red, weaponManager.GetChargeATKProgress());
+            innerChargeATKBarUI.color = tempInnerColor;
+
+            Color tempOuterColor = Color.Lerp(orgOCABcolor, Color.black, weaponManager.GetChargeATKProgress());
+            outerChargeATKBarUI.color = tempOuterColor;
+
+            Vector3 tempScale = Vector3.SmoothDamp(outerChargeATKBarUI.transform.localScale, orgCABarScale, ref curVelocity, 0.025f);
+            outerChargeATKBarUI.transform.localScale = tempScale;
+
+            yield return null;
+        }
+
+        while (!isHolding && weaponManager.GetWeaponBaseRef() != null)  
+        {
+            Color tempInnerColor = Color.Lerp(innerChargeATKBarUI.color, orgICABcolor, lerpSpeed * Time.deltaTime);
+            innerChargeATKBarUI.color = tempInnerColor;
+
+            Color tempOuterColor = Color.Lerp(outerChargeATKBarUI.color, orgOCABcolor, lerpSpeed * Time.deltaTime);
+            outerChargeATKBarUI.color = tempOuterColor;
+
+            Vector3 tempScale = Vector3.SmoothDamp(outerChargeATKBarUI.transform.localScale, Vector3.zero, ref curVelocity, 0.025f);
+            outerChargeATKBarUI.transform.localScale = tempScale;
+
+            yield return null;
+        }
+
+        chargeATKCoroutine = null;
+
+    }
 
 
 }

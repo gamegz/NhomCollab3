@@ -21,7 +21,7 @@ namespace Enemy
     */
     public class EnemyBase : MonoBehaviour, IDamageable
     {
-        public static event Action OnEnemyDamaged;
+        public static event Action<bool> OnEnemyDamaged;
         public event Action<EnemyBase> OnEnemyDeaths;
         public delegate void OnCallEnemyDeath(EnemyBase enemy);
         public static event OnCallEnemyDeath OnEnemyDeathsEvent;
@@ -136,11 +136,24 @@ namespace Enemy
 
         #endregion
 
+        #region DUC ANH'S VARIABLE
+        private bool isChargedATK = false;
+        #endregion 
+
 
         public virtual void Awake()
         {                     
             SetUpStateMachine();
-            
+        }
+
+        private void OnEnable()
+        {
+            WeaponManager.OnPerformChargedATK += HitByChargedATK;
+        }
+
+        private void OnDisable()
+        {
+            WeaponManager.OnPerformChargedATK -= HitByChargedATK;
         }
 
 
@@ -205,11 +218,6 @@ namespace Enemy
             distanceToPlayer = Vector3.Distance(transform.position, playerRef.transform.position);
             isTargetInAttackRange = (distanceToPlayer <= attackRange) ? true : false;
         }
-
- 
-
-
-        
 
         private void UpdateAttackCoolDown() {
         
@@ -400,6 +408,10 @@ namespace Enemy
 
         #endregion
 
+        private void HitByChargedATK(bool hit)
+        {
+            isChargedATK = hit;
+        }
 
 
         public void TakeDamage(int damage)
@@ -408,7 +420,7 @@ namespace Enemy
             currentHealth -= damage;
             staggerThresholdCounter -= damage;
 
-            OnEnemyDamaged?.Invoke();
+            OnEnemyDamaged?.Invoke(isChargedATK);
 
             if (currentHealth <= 0)
             {
@@ -421,6 +433,8 @@ namespace Enemy
             }
 
         }
+
+
 
         public void DamagedByWeapon(WeaponData _weaponData)
         {

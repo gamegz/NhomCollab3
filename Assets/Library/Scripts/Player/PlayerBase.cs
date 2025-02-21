@@ -2,6 +2,7 @@ using Enemy;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -218,7 +219,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         }
     }
 
-    public void IncreaseHealBar() // Either increase or reset the heal bar of the player
+    public void IncreaseHealBar(bool byChargedAttack) // Either increase or reset the heal bar of the player
     {
         //Debug.Log("HUH?");
 
@@ -228,18 +229,13 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         {
             currentHBProgress = maxHBProgress;
 
-            if (PlayerDatas.Instance.GetStats.currentPlayerHealth < 5)
-            {
-                PlayerDatas.Instance.GetStats.currentPlayerHealth++;
-                HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, SetHealthState(HealthStates.INCREASED));
-            }
-
-            if (overHealCoroutine == null)
+            if (overHealCoroutine == null && byChargedAttack == true)
             {
                 isOverHealing = true;
                 overHealCoroutine = StartCoroutine(OverHealing());
                 HBOverheal?.Invoke(true);
             }
+
         }
 
     }
@@ -249,6 +245,12 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     {
         while (currentHBProgress >= 0)
         {
+            if (PlayerDatas.Instance.GetStats.currentPlayerHealth < 5 && currentHBProgress >= maxHBProgress)
+            {
+                PlayerDatas.Instance.GetStats.currentPlayerHealth++;
+                HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, SetHealthState(HealthStates.INCREASED));
+            }
+
             overHealTimer += Time.deltaTime;
 
             if (HBMultiplier < 3)

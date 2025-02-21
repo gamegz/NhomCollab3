@@ -36,6 +36,11 @@ public class EnemyProjectile : MonoBehaviour
         }
     }
 
+    public bool GetDeflectValue()
+    {
+        return _deflected;
+    }
+
     public int GetBulletDamage()
     {
         return _damage;

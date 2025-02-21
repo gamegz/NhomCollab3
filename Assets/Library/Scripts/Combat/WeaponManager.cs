@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System;
 
 public class WeaponManager : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class WeaponManager : MonoBehaviour
 
     public delegate void CurrentWeaponHandler();
     public static event CurrentWeaponHandler CurrentWeapon;
+    public static event Action<bool> OnHoldChargeATK; // Duc Anh: THIS IS FOR UI.
+    public static event Action<bool> OnPerformChargedATK;
     //Unity new Input system
     public PlayerInput _playerInput;
 
@@ -42,6 +45,8 @@ public class WeaponManager : MonoBehaviour
 
     //Since each weapon have different delay time, need to overwrite the SO_WeaponData each time _currentWeapon value changes
 
+
+
     private void Awake()
     {
         _playerInput = new PlayerInput();
@@ -67,10 +72,22 @@ public class WeaponManager : MonoBehaviour
         if (_startHold) // hold timer for charge attack
         {
             _holdTime += Time.deltaTime;
+
+            if (_holdTime <= _currentWeapon._weaponData.holdThreshold)
+            {
+                Debug.Log(_holdTime);
+            }
+
+            if (_holdTime >= 0.2f)
+            {
+                OnHoldChargeATK?.Invoke(true);
+            }
+
             if(_holdTime >= _currentWeapon._weaponData.holdThreshold) // if the player hold the attack button long enough or longer than the threshold give by the current weapon
             {                                                           //then it will notice the system to know that it is a hold attack which will notice the OnAttackInputEnd()
                 _isHoldAttack = true;                                   // method that it is a hold attack (_isHoldAttack) 
                 _isNormalAttack = false;
+                Debug.Log("Charge ATK Ready");
             }  
         }
         if (isAttack) // cooldown timer betweeen attack and between normal attack and charge attack
@@ -84,6 +101,22 @@ public class WeaponManager : MonoBehaviour
             }
         }
     }
+
+    public float GetHoldingChargeATKTime()
+    {
+        return _holdTime;
+    }
+
+    public float GetChargeATKProgress()
+    {
+        return _currentWeapon ? Mathf.InverseLerp(0f, _currentWeapon._weaponData.holdThreshold, _holdTime) : 0f;
+    }
+
+    public WeaponBase GetWeaponBaseRef()
+    {
+        return _currentWeapon;
+    }
+
 
     void OnEnable() 
     {
@@ -137,6 +170,7 @@ public class WeaponManager : MonoBehaviour
             if (_isHoldAttack)
             {
                 Debug.Log("ChargeAttack");
+                OnPerformChargedATK?.Invoke(true);
                 _currentWeapon.OnInnitSecondaryAttack();
                 _startHold = false;
                 cooldownTimer = _currentWeapon._weaponData.chargeAttackSpeed;
@@ -144,6 +178,7 @@ public class WeaponManager : MonoBehaviour
             else if (_isNormalAttack) //if going for combo just focus on this statement
             {
                 Debug.Log("Attack");
+                OnPerformChargedATK?.Invoke(false);
                 _currentWeapon.OnInnitNormalAttack();
                 cooldownTimer = _currentWeapon._weaponData.attackSpeed;
             }
@@ -161,6 +196,7 @@ public class WeaponManager : MonoBehaviour
         _startHold = false;
         _isHoldAttack = false;
         _isNormalAttack = false;
+        OnHoldChargeATK?.Invoke(false);
     }
 
     private void OnTryWeaponSwitch() // this function only get call when the OnWeaponSwitch() method get call
