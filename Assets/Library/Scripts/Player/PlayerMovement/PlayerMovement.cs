@@ -149,7 +149,7 @@ public class PlayerMovement : MonoBehaviour
     
     private void OnMoveCharacterForward(int ComboCounter)
     {
-        isAttacking = true;
+        //isAttacking = true;
         _rb.velocity = Vector3.zero;
 
         if (ComboCounter >= 1)
@@ -159,9 +159,9 @@ public class PlayerMovement : MonoBehaviour
 
             //_rb.DOMove(attackPosition, moveDuration)
             //    .SetEase(Ease.OutQuad);
-            //StartCoroutine(MoveCharacterForward(ComboCounter));
+            StartCoroutine(MoveCharacterForward(ComboCounter));
             //MoveCharacterForwardWhenCombo(ComboCounter);
-            Debug.Log("2");
+            
         }
 
         //if (ComboCounter == 1) 
@@ -177,21 +177,35 @@ public class PlayerMovement : MonoBehaviour
 
     private IEnumerator MoveCharacterForward(int ComboCounter)
     {
+        float timer = 0f;
         originalPosition = _rb.position;
         _rb.velocity = Vector3.zero;
         float forwardSpeed = 0f;
 
         forwardSpeed = moveDistance / moveDuration;
         Vector3 forwardVelocity = transform.forward * forwardSpeed;
-        originalPosition = _rb.position;
-        _rb.velocity = forwardVelocity;
+
+        while (timer < moveDuration)
+        {
+            
+            _rb.velocity = forwardVelocity;
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        //originalPosition = _rb.position;
+        //_rb.velocity = forwardVelocity;
+        Debug.Log(forwardSpeed);
         yield return new WaitForSeconds(moveDuration);
         _rb.velocity = Vector3.zero;
+        
+        
         //yield return new WaitForSeconds(0.1f);
         //Vector3 returnVelocity = -forwardVelocity;
         //_rb.velocity = returnVelocity;
         //yield return new WaitForSeconds(moveDuration);
         //_rb.velocity = Vector3.zero;
+        
+        
         isAttacking = false;
 
     }

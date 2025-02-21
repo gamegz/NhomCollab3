@@ -26,23 +26,25 @@ public class WeaponManager : MonoBehaviour
 
     //cooldown timer for normal attack and time between normal and charge attack
     private bool _isNormalAttack = true;
-    private bool isAttack = false;
+    public bool isAttack = false;
     private float cooldownTimer = 0f;
 
     //charge attack timer
     [SerializeField] private float _holdTime = 0f;
     private bool _isHoldAttack = false;
     private bool _startHold = false;
+    private float comboAttackSpeed = 0.3f;
+    
     /*IF you want to make the hold attacks. Try make a delay BEFORE starting the hold check
      This prevent player from registering normal attack as charge attack
      */
     [Header("ComboSystemAndAttack")]
     [SerializeField] int comboCounter = 0;
     int maxComboCount = 3;
-    float comboResetTime = 1f;
+    float comboResetTime = 0.6f;
     float recoverDuration = 2f;
     float recoverTimer = 0f;
-    [SerializeField] bool isRecovering = false;
+    public bool isRecovering = false;
 
     [Header("WeaponCollectRange")]
     [SerializeField] private float collectRange;
@@ -115,8 +117,7 @@ public class WeaponManager : MonoBehaviour
         _playerInput.Player.OnPickUpWeapon.performed += OnPickUpWeapon;
         _playerInput.Player.OnPickUpWeapon.canceled += OnPickUpWeapon;
         _playerInput.Player.OnSwitchWeapon.performed += OnSwitchWeapon;
-        _playerInput.Player.OnSwitchWeapon.canceled += OnSwitchWeapon;
-        
+        _playerInput.Player.OnSwitchWeapon.canceled += OnSwitchWeapon;  
     }
 
     private void OnDisable() 
@@ -164,14 +165,13 @@ public class WeaponManager : MonoBehaviour
                 _startHold = false;
                 comboCounter = 0;
             }
-            else  //if going for combo just focus on this statement
+            else if(!isAttack && !isRecovering) //if going for combo just focus on this statement
             {
                 if (isRecovering) { return; }
 
                 _currentWeapon.OnInnitNormalAttack();
-                AttackHandle?.Invoke(comboCounter);
-
-                comboCounter++;
+                
+                
                 if(comboCounter > maxComboCount)
                 {
                     recoverTimer = recoverDuration;
@@ -179,38 +179,45 @@ public class WeaponManager : MonoBehaviour
                     StartCoroutine(ResetFullCombo());
                     return;
                 }
-
                 
-
-                Debug.Log("Attack");
                 cooldownTimer = _currentWeapon._weaponData.attackSpeed;
 
                 if(comboCoroutine != null)
                 {
                     StopCoroutine(comboCoroutine);
                 }
-
+                cooldownTimer = comboAttackSpeed;
+                comboCounter++;
+                AttackHandle?.Invoke(comboCounter);
+                isAttack = true;
                 comboCoroutine = StartCoroutine(ResetCombo());
-
             }
-            isAttack = true; // set the isAttack = true again so that it will start cooldown, avoid attack with no cooldown
+            
+            //isAttack = true; // set the isAttack = true again so that it will start cooldown, avoid attack with no cooldown
             ResetAttackState();
         }
-        //_isHoldAttack = true then charge attack and set the cooldown to weapon normal/charge attack speed and then start cooldown
-        
+        //_isHoldAttack = true then charge attack and set the cooldown to weapon normal/charge attack speed and then start cooldown   
     }
 
     private IEnumerator ResetCombo()
     {
         yield return new WaitForSeconds(comboResetTime);
-        if (comboCounter < maxComboCount)
-        {
-            recoverTimer = recoverDuration;
-            isRecovering = true;
-        }
+        recoverTimer = recoverDuration;
+        isRecovering = true;
+        isAttack = true;
+        cooldownTimer = _currentWeapon._weaponData.attackSpeed;
+        //if (comboCounter < maxComboCount)
+        //{
+        //    recoverTimer = recoverDuration;
+        //    isRecovering = true;
+        //}
+        //comboCounter = 0;
+        //_startHold = false;
+        //_holdTime = 0;
+        
         comboCounter = 0;
         _startHold = false;
-        _holdTime = 0;
+        _holdTime = 0f;
     }
 
     private IEnumerator ResetFullCombo()
