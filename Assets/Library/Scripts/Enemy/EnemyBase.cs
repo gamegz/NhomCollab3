@@ -172,7 +172,7 @@ namespace Enemy
             canAttack = true;
             currentSpeed = roamSpeed;
             currentHealth = maxHealth;
-
+            staggerThresholdCounter = staggerThreshold;
             attackCollider.enabled = false;
             attackCollider.gameObject.SetActive(false);
             attackCoolDownCount = attackCooldown;
@@ -417,7 +417,6 @@ namespace Enemy
 
         public void TakeDamage(int damage)
         {
-            //Debug.Log("Damage: " + damage);
             currentHealth -= damage;
             staggerThresholdCounter -= damage;
 
@@ -431,7 +430,7 @@ namespace Enemy
                 Stagger(knockbackForce);
             }
 
-            if (canBeStunned && hasBeenStunned! && currentHealth < stunPoint)
+            if (canBeStunned && !hasBeenStunned && currentHealth < stunPoint)
             {
                 StartCoroutine(Stun());
             }
@@ -452,7 +451,6 @@ namespace Enemy
             Debug.LogWarning(knockbackStrength);
             //rb.AddForce(knockbackDir * knockbackStrength, ForceMode.Impulse);
             StartCoroutine(ApplyKnockback(knockbackDir, knockbackStrength));
-            Debug.LogWarning("Stagger");
 
             StartCoroutine(StaggerTimeCoroutine());
         }

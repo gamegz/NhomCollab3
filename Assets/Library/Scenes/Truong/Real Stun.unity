@@ -1106,7 +1106,7 @@ PrefabInstance:
     - target: {fileID: 6704119369099998506, guid: c64c058f101d5a743b85b2459fae9e7e,
         type: 3}
       propertyPath: maxHealth
-      value: 9999
+      value: 101
       objectReference: {fileID: 0}
     - target: {fileID: 6704119369099998506, guid: c64c058f101d5a743b85b2459fae9e7e,
         type: 3}
@@ -1116,7 +1116,7 @@ PrefabInstance:
     - target: {fileID: 6704119369099998506, guid: c64c058f101d5a743b85b2459fae9e7e,
         type: 3}
       propertyPath: stunPoint
-      value: 0
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 6704119369099998506, guid: c64c058f101d5a743b85b2459fae9e7e,
         type: 3}
@@ -1126,7 +1126,7 @@ PrefabInstance:
     - target: {fileID: 6704119369099998506, guid: c64c058f101d5a743b85b2459fae9e7e,
         type: 3}
       propertyPath: canBeStunned
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6704119369099998506, guid: c64c058f101d5a743b85b2459fae9e7e,
         type: 3}
@@ -1141,7 +1141,7 @@ PrefabInstance:
     - target: {fileID: 6704119369099998506, guid: c64c058f101d5a743b85b2459fae9e7e,
         type: 3}
       propertyPath: staggerThreshold
-      value: 1
+      value: 1000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
