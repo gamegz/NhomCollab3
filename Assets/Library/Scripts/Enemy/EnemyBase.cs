@@ -448,10 +448,9 @@ namespace Enemy
             canMove = false;
             isStagger = true;
             Vector3 knockbackDir = GetDirectionIgnoreY(playerRef.transform.position, this.transform.position).normalized;
-            Debug.LogWarning(knockbackStrength);
             //rb.AddForce(knockbackDir * knockbackStrength, ForceMode.Impulse);
             StartCoroutine(ApplyKnockback(knockbackDir, knockbackStrength));
-
+            Debug.Log("Stagger");
             StartCoroutine(StaggerTimeCoroutine());
         }
 
