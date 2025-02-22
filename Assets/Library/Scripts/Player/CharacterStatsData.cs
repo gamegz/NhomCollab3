@@ -11,9 +11,11 @@ public class CharacterStatsData
     {
         {UpgradeType.MovementSpeed, 0 },
         {UpgradeType.Health, 0 },
-        {UpgradeType.FConversionRate, 0 },
+        {UpgradeType.Recovery, 0 },
         {UpgradeType.AttackSpeed, 0 },
         {UpgradeType.Damage, 0},
+        {UpgradeType.DashCharge, 0},
+        {UpgradeType.DashRecovery, 0}
         //{UpgradeType.StaggerTime, 1f}
     };
 
@@ -113,7 +115,7 @@ public class CharacterStatsData
     {
         get
         {
-            float modifier = BuffTypes[BuffType.MovementSpeed] + (baseStats.SpeedIncreasePerLevel * upgradeLevel[UpgradeType.MovementSpeed]);
+            float modifier = (100 + upgradeLevel[UpgradeType.Health]) * 0.01f;
             return GetMovementSpeed(modifier);
         }
     }
@@ -121,7 +123,7 @@ public class CharacterStatsData
     {
         get
         {
-            float modifier = BuffTypes[BuffType.FConversionRate] + (baseStats.FConversionRateIncreasePerLevel * upgradeLevel[UpgradeType.FConversionRate]);
+            float modifier = (100 + upgradeLevel[UpgradeType.Health]) * 0.01f;
             return GetFConversionRate(modifier);
         }
     }
@@ -130,7 +132,7 @@ public class CharacterStatsData
     {
         get
         {
-            float modifier = BuffTypes[BuffType.AttackSpeed] + (baseStats.AttakSpeedIncreasePerLevel * upgradeLevel[UpgradeType.AttackSpeed]);
+            float modifier = (100 + upgradeLevel[UpgradeType.Health]) * 0.01f;
             return GetAttackSpeed(modifier);
         }
     }

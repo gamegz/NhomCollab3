@@ -137,7 +137,7 @@ public class PlayerBase : MonoBehaviour, IDamageable
     {
         PlayerDatas.Instance.OnStatsUpgrade(UpgradeType.MovementSpeed, 1);
         PlayerDatas.Instance.OnStatsUpgrade(UpgradeType.Health, 1);
-        PlayerDatas.Instance.OnStatsUpgrade(UpgradeType.FConversionRate, 1);
+        PlayerDatas.Instance.OnStatsUpgrade(UpgradeType.Recovery, 1);
 
     }
 

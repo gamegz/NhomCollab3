@@ -21,10 +21,9 @@ public class CharacterBaseStatsData
     public float DamageBuff;
     public float AttackSpeedBuff;
 
-    public float HealthIncreasePerLevel;
-    public float SpeedIncreasePerLevel;
-    public float FConversionRateIncreasePerLevel;
-    public float AttakSpeedIncreasePerLevel;
+    public int healthUpgradeAmount;
+    public int speedUpgradeAmount;
+    public int strengthUpgradeAmount;
     public int DamageIncreasePerLevel;
 
 }
@@ -36,9 +35,8 @@ public enum UpgradeType // make upgrade type
     DashCharge,
     MovementSpeed,
     Health,
-    FConversionRate,
-    AttackSpeed,
-    StaggerTime
+    Recovery,
+    AttackSpeed
 }
 
 public enum BuffType // make buff type

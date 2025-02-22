@@ -8,6 +8,7 @@ namespace UI
     public class UpgradeMenu : MonoBehaviour
     {
         Dictionary<string, UpdateUI> upgradeGroupDictionary = new Dictionary<string, UpdateUI>();
+        Dictionary<string, UpdateUI> tempDic = new Dictionary<string, UpdateUI>();
         [SerializeField] UpdateUI healthUpgrade;
         [SerializeField] UpdateUI strengthUpgrade;
         [SerializeField] UpdateUI speedUpgrade;
@@ -29,12 +30,15 @@ namespace UI
 
         private void SetUpUI()
         {
-            upgradeGroupDictionary.Add("health", healthUpgrade);
-            upgradeGroupDictionary.Add("strength", strengthUpgrade);
-            upgradeGroupDictionary.Add("speed", speedUpgrade);
-            upgradeGroupDictionary.Add("endurance", enduranceUgrade);
-            upgradeGroupDictionary.Add("recovery", recoveryUpgrade);
-            upgradeGroupDictionary.Add("dashCharge", dashChargesUpgrade);
+            upgradeGroupDictionary = new Dictionary<string, UpdateUI>
+            {
+                { "health", healthUpgrade },
+                { "strength", strengthUpgrade },
+                { "speed", speedUpgrade },
+                { "endurance", enduranceUgrade },
+                { "recovery", recoveryUpgrade },
+                { "dashCharge", dashChargesUpgrade },
+            };           
 
             ResetUpdateText();
             sacrificialGemCountText.text = "Sacrificial Gem:" + sacrificialGemCount.ToString();
@@ -58,6 +62,7 @@ namespace UI
             _totalCurrentGemUse += upgradeTarget.upgradeRequirement;
 
             upgradeGroupDictionary[upgradeType] = upgradeTarget;
+            tempDic = upgradeGroupDictionary;
         }
 
         public void OnConsumeGem()
@@ -71,34 +76,56 @@ namespace UI
         {
             //Return gem
             sacrificialGemCount += _totalCurrentGemUse;
-            Debug.Log(sacrificialGemCount);
             sacrificialGemCountText.text = "Sacrificial Gem:" + sacrificialGemCount.ToString();
             _totalCurrentGemUse = 0;
 
-            foreach (UpdateUI groupUI in upgradeGroupDictionary.Values)
-            {
-                groupUI.upgradeCountText.text = " ";
-            }
+            ResetUpdateText();
 
-            
+
+
         }
         #endregion
 
         public void ResetUpdateText()
         {
-            
-            foreach (UpdateUI groupUI in upgradeGroupDictionary.Values)
+
+            //foreach (UpdateUI groupUI in upgradeGroupDictionary.Values)
+            //{
+            //    UpdateUI tempGroupUI = groupUI;
+            //    tempGroupUI.upgradeCountText.text = " ";
+            //    tempGroupUI.upgradeCount = 0;
+            //    //groupUI = tempGroupUI.upgradeCount;
+            //}
+
+            List<string> tempUIKey = new List<string>(upgradeGroupDictionary.Keys);
+            foreach (string key in tempUIKey)
             {
-                UpdateUI tempGroupUI = groupUI;
+                UpdateUI tempGroupUI = upgradeGroupDictionary[key];
                 tempGroupUI.upgradeCountText.text = " ";
                 tempGroupUI.upgradeCount = 0;
-                //groupUI = tempGroupUI.upgradeCount;
+                upgradeGroupDictionary[key] = tempGroupUI;
             }
+
+
+            //foreach (var (key, value) in tempDic)
+            //{
+            //    UpdateUI temp = tempDic[key];
+            //    temp.upgradeCountText.text = " ";
+            //    temp.upgradeCount = 0;
+            //    tempDic[key] = temp;
+            //}
+
+
         }
 
 
         //Event
         public void OnGemCollected()
+        {
+
+        }
+
+        public void OnPlayerStatChange()
         {
 
         }

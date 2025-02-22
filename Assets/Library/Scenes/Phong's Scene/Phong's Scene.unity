@@ -5973,7 +5973,7 @@ MonoBehaviour:
     upgradeButton: {fileID: 411134859}
     upgradeCountText: {fileID: 1488911815}
     statsValue: {fileID: 1488911815}
-    upgradeRequirement: 5
+    upgradeRequirement: 10
     upgradeCount: 0
     upgradeType: 2
   strengthUpgrade:
@@ -6008,9 +6008,9 @@ MonoBehaviour:
     upgradeButton: {fileID: 186802627}
     upgradeCountText: {fileID: 240291981}
     statsValue: {fileID: 653625595}
-    upgradeRequirement: 8
+    upgradeRequirement: 5
     upgradeCount: 0
-    upgradeType: 0
+    upgradeType: 2
   sacrificialGemCount: 30
   sacrificialGemCountText: {fileID: 1988406440}
 --- !u!1 &1988406438
