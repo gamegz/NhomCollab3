@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: Sword
   m_EditorClassIdentifier: 
   weaponName: Sword
-  baseDamage: 10
   critDamageMultiplier: 0
   critChance: 0
   attackSpeed: 2
   chargeAttackSpeed: 3
-  chargeAttackDamage: 12
-  attackStaggerForce: 0
   holdThreshold: 3
+  baseWeaponDamage: 100
+  chargeWeaponDamage: 0
+  parryDuration: 0
+  parrySpeed: 0
+  knockbackForce: 5

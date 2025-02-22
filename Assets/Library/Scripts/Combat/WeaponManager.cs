@@ -28,6 +28,8 @@ public class WeaponManager : MonoBehaviour
     private bool _isNormalAttack = true;
     public bool isAttack = false;
     private float cooldownTimer = 0f;
+    public bool isDashingToCancelAction = false;
+    public bool isAllowToCancelAction = false;
 
     //charge attack timer
     [SerializeField] private float _holdTime = 0f;
@@ -63,6 +65,7 @@ public class WeaponManager : MonoBehaviour
         _playerInput = new PlayerInput();
         playerTransform = transform.parent ?? transform;
         _currentWeapon = GetComponentInChildren<WeaponBase>();
+        PlayerMovement.dashCancel += DashingToCancelAction;
         if(_currentWeapon != null)
         {
             weaponList.Add(_currentWeapon);
@@ -78,6 +81,11 @@ public class WeaponManager : MonoBehaviour
         } 
     }
 
+    private void OnDestroy()
+    {
+        PlayerMovement.dashCancel -= DashingToCancelAction;
+    }
+
     private void Update()
     {
         if (_startHold && !isRecovering) // hold timer for charge attack
@@ -87,12 +95,18 @@ public class WeaponManager : MonoBehaviour
             {                                                           //then it will notice the system to know that it is a hold attack which will notice the OnAttackInputEnd()
                 _isHoldAttack = true;                                   // method that it is a hold attack (_isHoldAttack) 
                 _isNormalAttack = false;
-            }  
+            }
+            if (isDashingToCancelAction)
+            {
+                _isHoldAttack = false;
+                _startHold = false;
+                _holdTime = 0;
+                isAllowToCancelAction = false;
+            }
         }
         if (isAttack) // cooldown timer betweeen attack and between normal attack and charge attack
         {
             cooldownTimer -= Time.deltaTime;
-            //Debug.Log("cooldown: " + cooldownTimer);
             if (cooldownTimer <= 0f)
             {
                 _isNormalAttack = true;
@@ -142,6 +156,15 @@ public class WeaponManager : MonoBehaviour
         } 
     }
 
+    private void DashingToCancelAction()
+    {
+        if(isAllowToCancelAction)
+        {
+            isDashingToCancelAction = true;
+            comboCounter = 0;
+        }
+    }
+
     private void OnAttackInputPerform(InputAction.CallbackContext context)
     {
         if (_currentWeapon == null || isRecovering)
@@ -149,7 +172,8 @@ public class WeaponManager : MonoBehaviour
             Debug.Log("there is currently no weapon or player is recovering");
             return;
         }
-        _startHold = true; 
+        _startHold = true;
+        isAllowToCancelAction = true;
         _holdTime = 0f; // always set the _holdTimer back to 0 when start click to avoid accumulate holdTime if player just do normal attack
     }
 
@@ -157,11 +181,22 @@ public class WeaponManager : MonoBehaviour
     {
         if( _currentWeapon != null)
         {
+            if(isDashingToCancelAction)
+            {
+                isDashingToCancelAction = false;
+                return;
+            }
             if (_isHoldAttack)
             {
                 Debug.Log("ChargeAttack");
                 _currentWeapon.OnInnitSecondaryAttack();
+                AttackHandle?.Invoke(comboCounter);
                 cooldownTimer = _currentWeapon._weaponData.chargeAttackSpeed;
+
+                isAllowToCancelAction = false;
+
+                recoverTimer = recoverDuration;
+                isRecovering = true;
                 _startHold = false;
                 comboCounter = 0;
             }
@@ -186,6 +221,7 @@ public class WeaponManager : MonoBehaviour
                 {
                     StopCoroutine(comboCoroutine);
                 }
+
                 cooldownTimer = comboAttackSpeed;
                 comboCounter++;
                 AttackHandle?.Invoke(comboCounter);
@@ -202,19 +238,14 @@ public class WeaponManager : MonoBehaviour
     private IEnumerator ResetCombo()
     {
         yield return new WaitForSeconds(comboResetTime);
+
+        isDashingToCancelAction = false;
+        isAllowToCancelAction = false;
+
         recoverTimer = recoverDuration;
         isRecovering = true;
         isAttack = true;
         cooldownTimer = _currentWeapon._weaponData.attackSpeed;
-        //if (comboCounter < maxComboCount)
-        //{
-        //    recoverTimer = recoverDuration;
-        //    isRecovering = true;
-        //}
-        //comboCounter = 0;
-        //_startHold = false;
-        //_holdTime = 0;
-        
         comboCounter = 0;
         _startHold = false;
         _holdTime = 0f;

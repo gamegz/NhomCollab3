@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System;
+
 using DG.Tweening;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public static event Action dashCancel;
+
     [Header("References")]
     private PlayerBase m_PlayerBase;
     protected Rigidbody _rb;
@@ -133,8 +135,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        LookAtMousePosition();
-           
+        LookAtMousePosition();     
     }
 
     private void MoveCharacter()
@@ -151,28 +152,7 @@ public class PlayerMovement : MonoBehaviour
     {
         //isAttacking = true;
         _rb.velocity = Vector3.zero;
-
-        if (ComboCounter >= 1)
-        {
-            //originalPosition = _rb.position;
-            //Vector3 attackPosition = originalPosition + transform.forward * comboMoveDistance;
-
-            //_rb.DOMove(attackPosition, moveDuration)
-            //    .SetEase(Ease.OutQuad);
-            StartCoroutine(MoveCharacterForward(ComboCounter));
-            //MoveCharacterForwardWhenCombo(ComboCounter);
-            
-        }
-
-        //if (ComboCounter == 1) 
-        //{
-        //    originalPosition = _rb.position;
-        //    Vector3 attackPosition = originalPosition + transform.forward * moveDistance;
-        //    StartCoroutine(MoveCharacterForward(ComboCounter));
-        //    Debug.Log("1");
-        //}
-        
-
+        StartCoroutine(MoveCharacterForward(ComboCounter));
     }
 
     private IEnumerator MoveCharacterForward(int ComboCounter)
@@ -192,12 +172,10 @@ public class PlayerMovement : MonoBehaviour
             timer += Time.deltaTime;
             yield return null;
         }
-        //originalPosition = _rb.position;
-        //_rb.velocity = forwardVelocity;
         Debug.Log(forwardSpeed);
         yield return new WaitForSeconds(moveDuration);
         _rb.velocity = Vector3.zero;
-        
+        isAttacking = false;
         
         //yield return new WaitForSeconds(0.1f);
         //Vector3 returnVelocity = -forwardVelocity;
@@ -206,7 +184,6 @@ public class PlayerMovement : MonoBehaviour
         //_rb.velocity = Vector3.zero;
         
         
-        isAttacking = false;
 
     }
 
@@ -250,16 +227,32 @@ public class PlayerMovement : MonoBehaviour
         currentCharge--;
         //DASH GOES HERE
         _rb.velocity = Vector3.zero;
+        yield return new WaitForSeconds(0.1f);
         Vector3 dashDirection = new Vector3(_movement.x, 0, _movement.y).normalized;
         float elapsedDashTime = 0f;
 
-        while (elapsedDashTime < dashDuration)
-        {
-            _rb.AddForce(dashDirection * (dashForce / dashDuration) * Time.fixedDeltaTime, ForceMode.VelocityChange);
-            elapsedDashTime += Time.fixedDeltaTime;
-            yield return new WaitForFixedUpdate();
-        }
+        float dashSpeedWhenStandStill = dashForce / dashDuration;
+        Vector3 dashDirectionWhenStandStill = (transform.forward * dashSpeedWhenStandStill);
 
+        if(_rb.velocity == Vector3.zero)
+        {
+            while(elapsedDashTime < dashDuration)
+            {
+                _rb.AddForce(dashDirectionWhenStandStill * Time.fixedDeltaTime, ForceMode.VelocityChange); 
+                elapsedDashTime += Time.fixedDeltaTime;
+                yield return new WaitForFixedUpdate();
+            }
+        }
+        else
+        {
+            while (elapsedDashTime < dashDuration)
+            {
+                _rb.AddForce(dashDirection * (dashForce / dashDuration) * Time.fixedDeltaTime, ForceMode.VelocityChange);
+                elapsedDashTime += Time.fixedDeltaTime;
+                yield return new WaitForFixedUpdate();
+            }
+        }
+        dashCancel?.Invoke();
         dashCoroutine = null;
 
         //Overheat check

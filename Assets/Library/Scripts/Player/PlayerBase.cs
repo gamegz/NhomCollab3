@@ -177,6 +177,12 @@ public class PlayerBase : MonoBehaviour, IDamageable
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        StartCoroutine(WaitForSceneLoad());
+    }
+
+    private IEnumerator WaitForSceneLoad()
+    {
+        yield return new WaitForSeconds(0.05f);
         SetPlayerPosition();
     }
 
