@@ -35,6 +35,14 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     public delegate void OnHealBarFull(bool isOverHealing);
     public static event OnHealBarFull HBOverheal;
 
+    #region Animation Activation
+    public delegate void OnOverHealReady();
+    public static event OnOverHealReady OverHealReady;    
+    public delegate void OnOverHealActivated();
+    public static event OnOverHealActivated OverHealActivated;
+    #endregion
+
+
     // Variable for Heal Bar, which is associated with hearts and Overheal
     public enum HealthStates
     {
@@ -44,6 +52,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     private Dictionary<HealthStates, bool> healthStatesDictionary;
     private Coroutine overHealCoroutine;
     private bool isOverHealing = false;
+    private bool overHealReady = false;
     private float overHealTimer = 0f; 
     private float currentHBProgress = 0f; 
     private float HBMultiplier = 1f; 
@@ -225,7 +234,13 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
 
         currentHBProgress+=HBMultiplier;
 
-        if (currentHBProgress >= maxHBProgress)
+        if (currentHBProgress == maxHBProgress && !overHealReady)
+        {
+            overHealReady = true;
+            OverHealReady?.Invoke();
+        }
+
+        if (currentHBProgress > maxHBProgress)
         {
             currentHBProgress = maxHBProgress;
 
@@ -233,6 +248,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
             {
                 isOverHealing = true;
                 overHealCoroutine = StartCoroutine(OverHealing());
+                OverHealActivated?.Invoke();
                 HBOverheal?.Invoke(true);
             }
 
@@ -263,6 +279,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
             yield return null;            
         }
 
+        overHealReady = false;
         isOverHealing = false;
         HBOverheal?.Invoke(false);
         currentHBProgress = 0;

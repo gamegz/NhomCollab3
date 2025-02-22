@@ -9,12 +9,13 @@ using UnityEditor.Compilation;
 public class PlayerUI : MonoBehaviour
 {
     [Header("Reference")]
-    [SerializeField] private Image healBarUI; 
-    [SerializeField] private Image innerChargeATKBarUI; 
-    [SerializeField] private Image outerChargeATKBarUI; 
+    [SerializeField] private Image healBarUI;
+    [SerializeField] private Image innerChargeATKBarUI;
+    [SerializeField] private Image outerChargeATKBarUI;
     [SerializeField] private Image[] playerHearts;
     [SerializeField] private WeaponManager weaponManager;
     [SerializeField] private Camera mainCamera;
+    [SerializeField] private Animator overHealAnimator;
     //[SerializeField] private TextMeshProUGUI levelText; // May or may not use in the future 
     private PlayerBase playerBase;
     private Color orgICABcolor; // Original Inner Charge Attack Bar Color  [UI Purpose]
@@ -25,11 +26,8 @@ public class PlayerUI : MonoBehaviour
 
 
     [Header("Values")]
-    private Vector3 orgHeartScale = new Vector3(0.85f, 0.85f, 0.85f); 
-    private Vector3 orgCABarScale = new Vector3 (1.25f, 4f, 1f); // Original Charged Attack Bar Scale [For any one who couldn't read]
-    private Vector2 targetPosition;
-    private float xCamera;
-    private float yCamera;
+    private Vector3 orgHeartScale = new Vector3(0.85f, 0.85f, 0.85f);
+    private Vector3 orgCABarScale = new Vector3(1.25f, 4f, 1f); // Original Charged Attack Bar Scale [For any one who couldn't read]
     //private int level = 1;
     //private int expRequirement = 5;
     //private int expCurrent = 0;
@@ -40,9 +38,14 @@ public class PlayerUI : MonoBehaviour
     private Coroutine heartCoroutine = null;
     private Coroutine overHealingCoroutine = null;
     private Coroutine chargeATKCoroutine = null;
-    
+
     private void Awake()
     {
+        if (overHealAnimator == null)
+        {
+            Debug.Log("There isn't any Over Heal animator");
+        }
+
         orgICABcolor = new Color(innerChargeATKBarUI.color.r, innerChargeATKBarUI.color.g, innerChargeATKBarUI.color.b, 0f);
         orgOCABcolor = new Color(outerChargeATKBarUI.color.r, outerChargeATKBarUI.color.g, outerChargeATKBarUI.color.b, 0.5f);
         orgHBColor = healBarUI.color;
@@ -62,20 +65,14 @@ public class PlayerUI : MonoBehaviour
         {
             Debug.Log("No main camera");
         }
-        else
-        {
-            xCamera = mainCamera.pixelWidth;
-            yCamera = mainCamera.pixelHeight;
-
-            Debug.Log(xCamera);
-            Debug.Log(yCamera);
-        }
     }
 
     private void OnEnable()
     {
         PlayerBase.HealthModified += UpdateHealth;
         PlayerBase.HBOverheal += OverHealingEffect;
+        PlayerBase.OverHealReady += OverHealReadyAnimation;
+        PlayerBase.OverHealActivated += OverHealAnimatedAnimation;
 
         WeaponManager.OnHoldChargeATK += UpdateChargeATK;
     }
@@ -84,12 +81,14 @@ public class PlayerUI : MonoBehaviour
     {
         PlayerBase.HealthModified -= UpdateHealth;
         PlayerBase.HBOverheal -= OverHealingEffect;
+        PlayerBase.OverHealReady -= OverHealReadyAnimation;
+        PlayerBase.OverHealActivated -= OverHealAnimatedAnimation;
 
         WeaponManager.OnHoldChargeATK -= UpdateChargeATK;
     }
 
 
-    public void AddEXP() 
+    public void AddEXP()
     {
         //expCurrent++;
 
@@ -127,23 +126,43 @@ public class PlayerUI : MonoBehaviour
             UpdateCAProgressFill(caProgress.Value);
         }
 
-        mainCamera.transform.position = new Vector2();
-
-
     }
 
+
+    #region UI Functions
     private void UpdateHBProgressFill(float value)
     {
         float curVelocity = 0f;
         float tempValue = Mathf.SmoothDamp(healBarUI.fillAmount, value, ref curVelocity, 0.0075f);
         healBarUI.fillAmount = tempValue;
-    }    
-    
+    }
+
     private void UpdateCAProgressFill(float value)
     {
+        Vector2 targetPosition = mainCamera.WorldToScreenPoint(this.transform.position);
+
         float curVelocity = 0f;
         float tempValue = Mathf.SmoothDamp(innerChargeATKBarUI.fillAmount, value, ref curVelocity, 0.0075f);
         innerChargeATKBarUI.fillAmount = tempValue;
+
+        if (innerChargeATKBarUI.fillAmount >= 0.975f) // 1: Bar is filled 
+        {
+
+            float xRandomOffset = UnityEngine.Random.Range(Screen.width * (-0.01f), Screen.height * (0.01f)); // Bruh... I really had to put in UnityEngine before it.
+            float yRandomOffset = UnityEngine.Random.Range(Screen.height * (-0.005f), Screen.height * (0.005f)); 
+
+            // Scale Y offset based on screen size
+            float yOffset = Screen.height * 0.075f; // 7.5% of screen height
+            outerChargeATKBarUI.transform.position = new Vector2(targetPosition.x + xRandomOffset, (targetPosition.y + yOffset) + yRandomOffset);
+
+        }
+        else
+        {
+            // Scale Y offset based on screen size
+            float yOffset = Screen.height * 0.075f; // 7.5% of screen height
+            outerChargeATKBarUI.transform.position = new Vector2(targetPosition.x, targetPosition.y + yOffset);            
+        }
+
     }
 
 
@@ -157,8 +176,6 @@ public class PlayerUI : MonoBehaviour
 
         if (overHealingCoroutine == null)
             overHealingCoroutine = StartCoroutine(OverHealingCoroutine(isOverHealing));
-
-        
     }
 
     private IEnumerator OverHealingCoroutine(bool isOverHealing)
@@ -219,7 +236,7 @@ public class PlayerUI : MonoBehaviour
             {
                 Vector3 currentVel = Vector3.zero;
 
-                Debug.Log("Player's Health: " + modifiedHealth);    
+                Debug.Log("Player's Health: " + modifiedHealth);
                 for (int i = 4; i >= modifiedHealth; i--)
                 {
 
@@ -271,7 +288,7 @@ public class PlayerUI : MonoBehaviour
             yield return null;
         }
 
-        while (!isHolding && weaponManager.GetWeaponBaseRef() != null)  
+        while (!isHolding && weaponManager.GetWeaponBaseRef() != null)
         {
             Color tempInnerColor = Color.Lerp(innerChargeATKBarUI.color, orgICABcolor, lerpSpeed * Time.deltaTime);
             innerChargeATKBarUI.color = tempInnerColor;
@@ -289,5 +306,18 @@ public class PlayerUI : MonoBehaviour
 
     }
 
+    #endregion
 
+    #region UI Animation 
+    private void OverHealReadyAnimation() 
+    {
+        overHealAnimator.Play("Over Heal Ready Animation", 0); // Animator.Play(string Animation Name, Animation Layer (Base Layer = 0, ...))
+    }
+
+    private void OverHealAnimatedAnimation()
+    {
+        overHealAnimator.Play("Over Heal Activated Animation", 0);
+    }
+
+    #endregion
 }

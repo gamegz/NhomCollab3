@@ -7,6 +7,16 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public enum ACTIONSTATE
+    {
+        IDLE,
+        MOVING,
+        DASHING,
+        PARRYING
+    }
+    public ACTIONSTATE PlayerState { get; private set; } // In case other scripts need to be aware of the player's action state! [JUST IN CASE]
+
+
     [Header("References")]
     private PlayerBase m_PlayerBase;
     protected Rigidbody _rb;
@@ -96,7 +106,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (_playerInput.Player.Dash.WasPressedThisFrame())
         {
-            if (dashCoroutine == null && currentCharge > 0)
+            if (PlayerState != ACTIONSTATE.PARRYING && dashCoroutine == null && currentCharge > 0)
             {
                 dashCoroutine = StartCoroutine(Dash());
             }
@@ -104,7 +114,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (_playerInput.Player.Parry.WasPressedThisFrame()) // Was pressed this frame is cool
         {
-            if (parryCoroutine == null && canParry)
+            if (PlayerState != ACTIONSTATE.DASHING && parryCoroutine == null && canParry)
             {
                 parryCoroutine = StartCoroutine(Parry());
             }
@@ -115,6 +125,7 @@ public class PlayerMovement : MonoBehaviour
         {
             regenCoroutine = StartCoroutine(RegenCharge());
         }
+
     }
 
     private void FixedUpdate()
@@ -126,6 +137,11 @@ public class PlayerMovement : MonoBehaviour
     private void MoveCharacter()
     {
         if (isParrying) return;
+
+        if (_rb.velocity != Vector3.zero)
+            PlayerState = ACTIONSTATE.MOVING;
+        else
+            PlayerState = ACTIONSTATE.IDLE;
 
         var playerMovement = new Vector3(_movement.x, 0, _movement.y).normalized * PlayerDatas.Instance.GetStats.MoveSpeed;
         playerMovement.y = _rb.velocity.y;
@@ -163,6 +179,8 @@ public class PlayerMovement : MonoBehaviour
 
         while (elapsedDashTime < dashDuration)
         {
+            PlayerState = ACTIONSTATE.DASHING;
+
             _rb.AddForce(dashDirection * (dashForce / dashDuration) * Time.fixedDeltaTime, ForceMode.VelocityChange);
             elapsedDashTime += Time.fixedDeltaTime;
             yield return new WaitForFixedUpdate();
@@ -207,6 +225,8 @@ public class PlayerMovement : MonoBehaviour
 
         while (elapsedInvulnerableTime >= 0)
         {
+            PlayerState = ACTIONSTATE.PARRYING;
+
             elapsedInvulnerableTime -= Time.deltaTime;  // Use Time.deltaTime for frame-based time tracking
 
             Collider[] colliders = Physics.OverlapBox(parryBoxRefPoint.position, parryBoxSize / 2, transform.rotation, bulletLayerMask);
