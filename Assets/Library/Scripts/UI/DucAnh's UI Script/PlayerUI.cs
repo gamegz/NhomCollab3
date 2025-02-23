@@ -15,7 +15,8 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private Image[] playerHearts;
     [SerializeField] private WeaponManager weaponManager;
     [SerializeField] private Camera mainCamera;
-    [SerializeField] private Animator overHealAnimator;
+    [SerializeField] private Animator healTextAnimator;
+    private TextMeshProUGUI healText;
     //[SerializeField] private TextMeshProUGUI levelText; // May or may not use in the future 
     private PlayerBase playerBase;
     private Color orgICABcolor; // Original Inner Charge Attack Bar Color  [UI Purpose]
@@ -41,14 +42,23 @@ public class PlayerUI : MonoBehaviour
 
     private void Awake()
     {
-        if (overHealAnimator == null)
-        {
+        if (healTextAnimator == null)
             Debug.Log("There isn't any Over Heal animator");
+        else
+        {
+            healText = healTextAnimator.GetComponent<TextMeshProUGUI>();
+            
+            if (healText == null)
+            {
+                Debug.Log("Heal text wasn't assigned");
+            }
         }
 
         orgICABcolor = new Color(innerChargeATKBarUI.color.r, innerChargeATKBarUI.color.g, innerChargeATKBarUI.color.b, 0f);
         orgOCABcolor = new Color(outerChargeATKBarUI.color.r, outerChargeATKBarUI.color.g, outerChargeATKBarUI.color.b, 0.5f);
         orgHBColor = healBarUI.color;
+
+        playerHearts[playerHearts.Length - 1].transform.localScale = Vector3.zero;
 
         playerBase = GetComponent<PlayerBase>();
         if (playerBase == null)
@@ -71,8 +81,8 @@ public class PlayerUI : MonoBehaviour
     {
         PlayerBase.HealthModified += UpdateHealth;
         PlayerBase.HBOverheal += OverHealingEffect;
-        PlayerBase.OverHealReady += OverHealReadyAnimation;
-        PlayerBase.OverHealActivated += OverHealAnimatedAnimation;
+        PlayerBase.HealReady += ReadyTextAnimation;
+        PlayerBase.HealActivated += ActivatedTextAnimation;
 
         WeaponManager.OnHoldChargeATK += UpdateChargeATK;
     }
@@ -81,8 +91,8 @@ public class PlayerUI : MonoBehaviour
     {
         PlayerBase.HealthModified -= UpdateHealth;
         PlayerBase.HBOverheal -= OverHealingEffect;
-        PlayerBase.OverHealReady -= OverHealReadyAnimation;
-        PlayerBase.OverHealActivated -= OverHealAnimatedAnimation;
+        PlayerBase.HealReady -= ReadyTextAnimation;
+        PlayerBase.HealActivated -= ActivatedTextAnimation;
 
         WeaponManager.OnHoldChargeATK -= UpdateChargeATK;
     }
@@ -180,18 +190,33 @@ public class PlayerUI : MonoBehaviour
 
     private IEnumerator OverHealingCoroutine(bool isOverHealing)
     {
+        Vector3 currentVel = Vector3.zero; 
+
         if (isOverHealing)
         {
             while (healBarUI.color != minColor)
             {
                 healBarUI.color = Color.Lerp(minColor, maxColor, playerBase.GetHealBarProgress());
+
+                Vector3 tempScale = Vector3.SmoothDamp(playerHearts[5].transform.localScale, orgHeartScale, ref currentVel, 0.0125f);
+                playerHearts[5].transform.localScale = tempScale;
+
                 yield return null;
             }
 
         }
 
         if (!isOverHealing)
+        {
             healBarUI.color = orgHBColor;
+
+            while (playerHearts[5].transform.localScale != Vector3.zero)
+            {
+                Vector3 tempScale = Vector3.SmoothDamp(playerHearts[playerHearts.Length - 1].transform.localScale, Vector3.zero, ref currentVel, 0.0125f);
+                playerHearts[5].transform.localScale = tempScale;
+                yield return null;
+            }
+        }
 
         overHealingCoroutine = null;
     }
@@ -221,7 +246,7 @@ public class PlayerUI : MonoBehaviour
                 {
                     while (playerHearts[i].transform.localScale != orgHeartScale)
                     {
-                        Vector3 tempScale = Vector3.SmoothDamp(playerHearts[i].transform.localScale, orgHeartScale, ref currentVel, 0.05f);
+                        Vector3 tempScale = Vector3.SmoothDamp(playerHearts[i].transform.localScale, orgHeartScale, ref currentVel, 0.0125f);
                         playerHearts[i].transform.localScale = tempScale;
                         yield return null;
                     }
@@ -242,7 +267,7 @@ public class PlayerUI : MonoBehaviour
 
                     while (playerHearts[i].transform.localScale != Vector3.zero)
                     {
-                        Vector3 tempScale = Vector3.SmoothDamp(playerHearts[i].transform.localScale, Vector3.zero, ref currentVel, 0.05f);
+                        Vector3 tempScale = Vector3.SmoothDamp(playerHearts[i].transform.localScale, Vector3.zero, ref currentVel, 0.0125f);
                         playerHearts[i].transform.localScale = tempScale;
                         yield return null;
                     }
@@ -309,14 +334,20 @@ public class PlayerUI : MonoBehaviour
     #endregion
 
     #region UI Animation 
-    private void OverHealReadyAnimation() 
+    private void ReadyTextAnimation(bool isReady, string displayText) 
     {
-        overHealAnimator.Play("Over Heal Ready Animation", 0); // Animator.Play(string Animation Name, Animation Layer (Base Layer = 0, ...))
+        healText.text = displayText;
+
+        if (isReady)
+            healTextAnimator.Play("Ready Text Animation", 0); // Animator.Play(string Animation Name, Animation Layer (Base Layer = 0, ...))
+                    
+        else
+            healTextAnimator.Play("Not Ready Text Animation", 0);
     }
 
-    private void OverHealAnimatedAnimation()
+    private void ActivatedTextAnimation()
     {
-        overHealAnimator.Play("Over Heal Activated Animation", 0);
+        healTextAnimator.Play("Activated Text Animation", 0);
     }
 
     #endregion
