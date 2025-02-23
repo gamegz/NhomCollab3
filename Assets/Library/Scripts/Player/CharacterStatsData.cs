@@ -92,9 +92,9 @@ public class CharacterStatsData
         return baseStats.PlayerSpeed * modifier;
     }
 
-    public float GetFConversionRate(float modifier)
+    public float GetRecovery(float modifier)
     {
-        return baseStats.FConversionRate * modifier;
+        return baseStats.PlayerRecovery * modifier;
     }
 
     public float GetAttackSpeed(float modifier)
@@ -115,16 +115,16 @@ public class CharacterStatsData
     {
         get
         {
-            float modifier = (100 + upgradeLevel[UpgradeType.Health]) * 0.01f;
+            float modifier = (100 + upgradeLevel[UpgradeType.MovementSpeed]) * 0.01f;
             return GetMovementSpeed(modifier);
         }
     }
-    public float FConversionRate
+    public float Recovery
     {
         get
         {
-            float modifier = (100 + upgradeLevel[UpgradeType.Health]) * 0.01f;
-            return GetFConversionRate(modifier);
+            float modifier = (100 + upgradeLevel[UpgradeType.Recovery]) * 0.01f;
+            return GetRecovery(modifier);
         }
     }
 
@@ -141,7 +141,7 @@ public class CharacterStatsData
     {
         get
         {
-            int modifier = DamageBuff[BuffType.Damage] + (baseStats.DamageIncreasePerLevel * upgradeLevel[UpgradeType.Damage]);
+            int modifier = (int)((100 + upgradeLevel[UpgradeType.Health]) * 0.01f);
             return GetDamage(modifier);
         }
     }
