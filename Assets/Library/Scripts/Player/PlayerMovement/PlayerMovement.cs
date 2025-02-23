@@ -55,16 +55,17 @@ public class PlayerMovement : MonoBehaviour
     private bool _isOnSlope = false;
     private Coroutine regenCoroutine;
     private Coroutine dashCoroutine;
+    private Coroutine stopMovementCoroutine;
     Quaternion _initialRotation;
     private Vector2 _mousePosition;
     private Vector2 _movement;
     private Camera _camera;
-    [SerializeField] private bool isAttacking = false;
-    Vector3 originalPosition;
+    private bool isAttacking = false;
     private float moveDistance = 2f;
-    private float comboMoveDistance = 2f;
     private float moveDuration = 0.2f;
     private float delayBeforeBackToWalking = 1f;
+    public bool isRecovering = false;
+
 
     private void Awake()
     {
@@ -85,6 +86,7 @@ public class PlayerMovement : MonoBehaviour
         _playerInput.Player.Parry.performed += Parry;
         _playerInput.Enable();
         WeaponManager.AttackHandle += OnMoveCharacterForward;
+        WeaponManager.HandleMovementWhenRecover += StopMovementDuringRecoveryState;
 
         OnParryStart += () => isParrying = true;
         OnParryStop += () => isParrying = false;
@@ -98,9 +100,16 @@ public class PlayerMovement : MonoBehaviour
         _playerInput.Player.Parry.performed -= Parry;
         _playerInput.Disable();
         WeaponManager.AttackHandle -= OnMoveCharacterForward;
+        WeaponManager.HandleMovementWhenRecover -= StopMovementDuringRecoveryState;
 
         OnParryStart -= () => isParrying = true;
         OnParryStop -= () => isParrying = false;
+    }
+
+    private void OnDestroy()
+    {
+        WeaponManager.AttackHandle -= OnMoveCharacterForward;
+        WeaponManager.HandleMovementWhenRecover -= StopMovementDuringRecoveryState;
     }
 
     void Update()
@@ -127,30 +136,45 @@ public class PlayerMovement : MonoBehaviour
             regenCoroutine = StartCoroutine(RegenCharge());
         }
 
-        if (!isAttacking)
-        {
-            MoveCharacter();
-        }
+        
     }
 
     private void FixedUpdate()
     {
-        LookAtMousePosition();     
+        LookAtMousePosition();
+        MoveCharacter();
     }
 
     private void MoveCharacter()
     {
-        if (isParrying) return;
-        if (isAttacking) return;
+        if (isParrying) return;;
+        if (isRecovering || isAttacking)
+        {
+            _rb.velocity = new Vector3(0, _rb.velocity.y, 0);
+            return;
+        }
 
         var playerMovement = new Vector3(_movement.x, 0, _movement.y).normalized * PlayerDatas.Instance.GetStats.MoveSpeed;
         playerMovement.y = _rb.velocity.y;
         _rb.velocity = playerMovement;
     }
+
+    private void StopMovementDuringRecoveryState()
+    {
+        stopMovementCoroutine = StartCoroutine(WaitToReactivateMovementAfterRecovery());
+    }
+
+    private IEnumerator WaitToReactivateMovementAfterRecovery()
+    {
+        _rb.velocity = Vector3.zero;
+        isRecovering = true;
+        yield return new WaitForSeconds(1.2f);
+        isRecovering = false;
+        stopMovementCoroutine = null;
+    }
     
     private void OnMoveCharacterForward(int ComboCounter)
     {
-        //isAttacking = true;
         _rb.velocity = Vector3.zero;
         StartCoroutine(MoveCharacterForward(ComboCounter));
     }
@@ -158,46 +182,19 @@ public class PlayerMovement : MonoBehaviour
     private IEnumerator MoveCharacterForward(int ComboCounter)
     {
         float timer = 0f;
-        originalPosition = _rb.position;
         _rb.velocity = Vector3.zero;
-        float forwardSpeed = 0f;
-
-        forwardSpeed = moveDistance / moveDuration;
-        Vector3 forwardVelocity = transform.forward * forwardSpeed;
+        isAttacking = true;
+        Vector3 forwardForce = transform.forward * (moveDistance / moveDuration);
 
         while (timer < moveDuration)
         {
-            
-            _rb.velocity = forwardVelocity;
-            timer += Time.deltaTime;
-            yield return null;
+            _rb.AddForce(forwardForce, ForceMode.Impulse);
+            timer += Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
         }
-        Debug.Log(forwardSpeed);
-        yield return new WaitForSeconds(moveDuration);
         _rb.velocity = Vector3.zero;
         isAttacking = false;
-        
-        //yield return new WaitForSeconds(0.1f);
-        //Vector3 returnVelocity = -forwardVelocity;
-        //_rb.velocity = returnVelocity;
-        //yield return new WaitForSeconds(moveDuration);
-        //_rb.velocity = Vector3.zero;
-        
-        
-
-    }
-
-    private void MoveCharacterForwardWhenCombo(int ComboCounter)
-    {
-        originalPosition = _rb.position;
-        float forwardSpeed = 0f;
-        Debug.Log("in");
-        forwardSpeed = comboMoveDistance / moveDuration;
-        Vector3 forwardVelocity = transform.forward * forwardSpeed;
-        originalPosition = _rb.position;
-        _rb.velocity = forwardVelocity;
-        //_rb.velocity = Vector3.zero;
-        isAttacking = false;
+        stopMovementCoroutine = StartCoroutine(WaitToReactivateMovementAfterRecovery());
     }
 
     private void OnTriggerStay(Collider other)
@@ -227,7 +224,7 @@ public class PlayerMovement : MonoBehaviour
         currentCharge--;
         //DASH GOES HERE
         _rb.velocity = Vector3.zero;
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForFixedUpdate();
         Vector3 dashDirection = new Vector3(_movement.x, 0, _movement.y).normalized;
         float elapsedDashTime = 0f;
 
@@ -254,7 +251,7 @@ public class PlayerMovement : MonoBehaviour
         }
         dashCancel?.Invoke();
         dashCoroutine = null;
-
+        isRecovering = false;
         //Overheat check
         if (currentCharge == 0)
         {

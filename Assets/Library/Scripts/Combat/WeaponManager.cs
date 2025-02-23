@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,9 @@ public class WeaponManager : MonoBehaviour
 
     public delegate void OnHandlingAttack(int ComboCounter);
     public static event OnHandlingAttack AttackHandle;
+
+    public delegate void handleMovementWhenRecover();
+    public static event handleMovementWhenRecover HandleMovementWhenRecover;
     //Courotine
     Coroutine comboCoroutine;
 
@@ -26,10 +30,10 @@ public class WeaponManager : MonoBehaviour
 
     //cooldown timer for normal attack and time between normal and charge attack
     private bool _isNormalAttack = true;
-    public bool isAttack = false;
+    private bool isAttack = false;
     private float cooldownTimer = 0f;
-    public bool isDashingToCancelAction = false;
-    public bool isAllowToCancelAction = false;
+    private bool isDashingToCancelAction = false;
+    private bool isAllowToCancelAction = false;
 
     //charge attack timer
     [SerializeField] private float _holdTime = 0f;
@@ -169,10 +173,12 @@ public class WeaponManager : MonoBehaviour
     {
         if (_currentWeapon == null || isRecovering)
         {
-            Debug.Log("there is currently no weapon or player is recovering");
             return;
         }
-        _startHold = true;
+        if (!isAttack)
+        {
+            _startHold = true;
+        }
         isAllowToCancelAction = true;
         _holdTime = 0f; // always set the _holdTimer back to 0 when start click to avoid accumulate holdTime if player just do normal attack
     }
@@ -197,17 +203,25 @@ public class WeaponManager : MonoBehaviour
 
                 recoverTimer = recoverDuration;
                 isRecovering = true;
+                HandleMovementWhenRecover?.Invoke();
+
                 _startHold = false;
                 comboCounter = 0;
             }
             else if(!isAttack && !isRecovering) //if going for combo just focus on this statement
             {
                 if (isRecovering) { return; }
+                if(_holdTime >= 0.5f) 
+                { 
+                    _holdTime = 0f;
+                    _startHold = false;
+                    return; 
+                }
 
                 _currentWeapon.OnInnitNormalAttack();
                 
                 
-                if(comboCounter > maxComboCount)
+                if(comboCounter >= maxComboCount)
                 {
                     recoverTimer = recoverDuration;
                     isRecovering = true;
@@ -221,7 +235,8 @@ public class WeaponManager : MonoBehaviour
                 {
                     StopCoroutine(comboCoroutine);
                 }
-
+                
+                
                 cooldownTimer = comboAttackSpeed;
                 comboCounter++;
                 AttackHandle?.Invoke(comboCounter);
@@ -241,18 +256,21 @@ public class WeaponManager : MonoBehaviour
 
         isDashingToCancelAction = false;
         isAllowToCancelAction = false;
-
+        
         recoverTimer = recoverDuration;
         isRecovering = true;
+        
         isAttack = true;
         cooldownTimer = _currentWeapon._weaponData.attackSpeed;
         comboCounter = 0;
+        
         _startHold = false;
         _holdTime = 0f;
     }
 
     private IEnumerator ResetFullCombo()
     {
+        HandleMovementWhenRecover?.Invoke();
         yield return new WaitForSeconds(comboResetTime);
         comboCounter = 0;
         _startHold = false;
