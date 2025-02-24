@@ -187,12 +187,13 @@ namespace Enemy
 
         public virtual void UpdateLogic()
         {
-            enemyNavAgent.speed = currentSpeed/10;
+            
             UpdateAttackCoolDown();
 
             if(isStagger) { return; }
             _stateMachine.UpdateState();
             enemyNavAgent.isStopped = !canMove;
+            enemyNavAgent.speed = currentSpeed/10;
             if (canTurn)
             {
                 LookAtTarget(transform, playerRef.transform, turnSpeed);

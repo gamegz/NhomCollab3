@@ -1253,12 +1253,6 @@ LightingSettings:
   m_PVRTiledBaking: 0
   m_NumRaysToShootPerTexel: -1
   m_RespectSceneVisibilityWhenBakingGI: 0
---- !u!95 &807144870 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 1415826574016019457, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
-    type: 3}
-  m_PrefabInstance: {fileID: 1914893527}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &846883184
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1332,18 +1326,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b16bf4a18fef4004f90a263a09cc453d, type: 3}
---- !u!114 &866299034 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1456614673066990989, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
-    type: 3}
-  m_PrefabInstance: {fileID: 1914893527}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &875083330 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8737689703999565024, guid: 6043f70dd60ae51409e25f8dcb5cb009,
@@ -2675,26 +2657,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1811837017}
     m_Modifications:
-    - target: {fileID: 1658478206797379963, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
-        type: 3}
-      propertyPath: healTextAnimator
-      value: 
-      objectReference: {fileID: 807144870}
-    - target: {fileID: 1658478206797379963, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
-        type: 3}
-      propertyPath: playerHearts.Array.size
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1658478206797379963, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
-        type: 3}
-      propertyPath: playerHearts.Array.data[5]
-      value: 
-      objectReference: {fileID: 866299034}
-    - target: {fileID: 2492532549415754588, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
-        type: 3}
-      propertyPath: m_Name
-      value: HealReadyText
-      objectReference: {fileID: 0}
     - target: {fileID: 2738424787811903257, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
         type: 3}
       propertyPath: m_RootOrder
@@ -2754,16 +2716,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PlayerCharacter
-      objectReference: {fileID: 0}
-    - target: {fileID: 8693623417626708870, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 350
-      objectReference: {fileID: 0}
-    - target: {fileID: 8693623417626708870, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

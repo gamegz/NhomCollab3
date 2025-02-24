@@ -226,7 +226,8 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
             PlayerDatas.Instance.OnPlayerHealthChange(modifiedHealth);
 
             HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, SetHealthState(HealthStates.DECREASED));
-            
+
+
         }
 
         if (PlayerDatas.Instance.GetStats.currentPlayerHealth <= 0)
@@ -270,7 +271,6 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         }
 
     }
-
 
     private IEnumerator OverHealing()
     {
@@ -319,7 +319,6 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     {
         return healthStatesDictionary.ContainsKey(state) ? healthStatesDictionary[state] : (bool?)null; 
     }
-
 
 
     private void OnPlayerDeath()

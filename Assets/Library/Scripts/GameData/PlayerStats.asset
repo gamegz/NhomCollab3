@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlayerStats
   m_EditorClassIdentifier: 
   baseStats:
-    Health: 10
+    Health: 5
     movementSpeed: 8
     fConversionRate: 1
-    Damage: 15
+    Damage: 10
