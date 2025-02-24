@@ -6039,6 +6039,16 @@ PrefabInstance:
       propertyPath: m_Interpolate
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6687400806132288522, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: comboResetTime
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6687400806132288522, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: recoverDuration
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 8223221366024730654, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
         type: 3}
       propertyPath: dashForce

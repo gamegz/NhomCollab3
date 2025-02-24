@@ -47,8 +47,9 @@ public class WeaponManager : MonoBehaviour
     [Header("ComboSystemAndAttack")]
     [SerializeField] int comboCounter = 0;
     int maxComboCount = 3;
-    float comboResetTime = 0.6f;
-    float recoverDuration = 2f;
+    [Tooltip("Listen wait time for combo input")]
+    [SerializeField] private float comboResetTime = 0.6f;
+    [SerializeField] private float recoverDuration = 2f;
     float recoverTimer = 0f;
     public bool isRecovering = false;
 
@@ -224,8 +225,8 @@ public class WeaponManager : MonoBehaviour
                 
                 if(comboCounter >= maxComboCount)
                 {
-                    recoverTimer = recoverDuration;
-                    isRecovering = true;
+                    //recoverTimer = recoverDuration;
+                    //isRecovering = true;
                     StartCoroutine(ResetFullCombo());
                     return;
                 }
@@ -243,6 +244,7 @@ public class WeaponManager : MonoBehaviour
                 AttackHandle?.Invoke(comboCounter);
                 isAttack = true;
                 comboCoroutine = StartCoroutine(ResetCombo());
+
             }
             
             //isAttack = true; // set the isAttack = true again so that it will start cooldown, avoid attack with no cooldown
@@ -257,11 +259,11 @@ public class WeaponManager : MonoBehaviour
 
         isDashingToCancelAction = false;
         isAllowToCancelAction = false;
-        
+
         recoverTimer = recoverDuration;
         isRecovering = true;
-        
-        isAttack = true;
+
+        //isAttack = true;
         cooldownTimer = _currentWeapon._weaponData.attackSpeed;
         comboCounter = 0;
         
