@@ -337,17 +337,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void LookAtMousePosition() //Look at player mouse position
     {
-        //Vector3 directionFromCharacterToMouse = _mousePosition - transform.position;
-        //Vector3 mousePosition = _camera.WorldToScreenPoint(directionFromCharacterToMouse);
-
-        //directionFromCharacterToMouse.y = 0f;
-
-
-        //if (mousePosition != Vector3.zero)
-        //{
-        //    Quaternion rotation = Quaternion.LookRotation(mousePosition);
-        //    transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
-        //}
+        if(isAttacking)
+        {
+            return;
+        }
         Vector3 _mousePos = Input.mousePosition;
         Vector3 CharacterPos = _camera.WorldToScreenPoint(transform.position);
         Vector3 dir = _mousePos - CharacterPos;

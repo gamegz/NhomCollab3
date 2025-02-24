@@ -192,6 +192,7 @@ public class WeaponManager : MonoBehaviour
                 isDashingToCancelAction = false;
                 return;
             }
+
             if (_isHoldAttack)
             {
                 Debug.Log("ChargeAttack");
