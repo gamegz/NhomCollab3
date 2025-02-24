@@ -61,8 +61,8 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 _movement;
     private Camera _camera;
     private bool isAttacking = false;
-    private float moveDistance = 2f;
-    private float moveDuration = 0.2f;
+    [SerializeField] private float moveDistance = 2f;
+    [SerializeField] private float moveDuration = 0.2f;
     private float delayBeforeBackToWalking = 1f;
     public bool isRecovering = false;
 
