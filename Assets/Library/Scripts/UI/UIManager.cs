@@ -41,7 +41,7 @@ public class UIManager : MonoBehaviour
         if(HPText == null && MovementSpeedText == null && FConversionRateText == null) { return; }
         HPText.text = "HP: " + PlayerDatas.Instance.GetStats.Health.ToString();
         MovementSpeedText.text = "Move Speed: " + PlayerDatas.Instance.GetStats.MoveSpeed.ToString();
-        FConversionRateText.text = "FConversion Rate: " + PlayerDatas.Instance.GetStats.FConversionRate.ToString();
+        //FConversionRateText.text = "FConversion Rate: " + PlayerDatas.Instance.GetStats.FConversionRate.ToString();
     }
 
     public void OnEnableUpgradePanel(bool isEnable)
