@@ -5,11 +5,17 @@ using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-using DG.Tweening;
-
 public class PlayerMovement : MonoBehaviour
 {
-    public static event Action dashCancel;
+    public enum ACTIONSTATE
+    {
+        IDLE,
+        MOVING,
+        DASHING,
+        PARRYING
+    }
+    public ACTIONSTATE PlayerState { get; private set; } // In case other scripts need to be aware of the player's action state! [JUST IN CASE]
+
 
     [Header("References")]
     private PlayerBase m_PlayerBase;
@@ -28,7 +34,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float regenCooldown = 2.0f;
     [SerializeField] private float overheatCooldown = 5.0f;
     [SerializeField] private float dashDuration;
-    public AnimationCurve animCurve;
 
     [Header("Parry Manager")]
     [SerializeField] private Transform parryBoxRefPoint; // A transform point that will spawn the parry box
@@ -59,12 +64,8 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 _mousePosition;
     private Vector2 _movement;
     private Camera _camera;
-    [SerializeField] private bool isAttacking = false;
-    Vector3 originalPosition;
-    private float moveDistance = 2f;
-    private float comboMoveDistance = 2f;
-    private float moveDuration = 0.2f;
-    private float delayBeforeBackToWalking = 1f;
+    PlayerBase _playerStats; // Comment if don't use.
+    
 
     private void Awake()
     {
@@ -84,7 +85,6 @@ public class PlayerMovement : MonoBehaviour
         _playerInput.Player.MousePos.performed += MousePos;
         _playerInput.Player.Parry.performed += Parry;
         _playerInput.Enable();
-        WeaponManager.AttackHandle += OnMoveCharacterForward;
 
         OnParryStart += () => isParrying = true;
         OnParryStop += () => isParrying = false;
@@ -97,7 +97,6 @@ public class PlayerMovement : MonoBehaviour
         _playerInput.Player.Dash.performed -= Dash;
         _playerInput.Player.Parry.performed -= Parry;
         _playerInput.Disable();
-        WeaponManager.AttackHandle -= OnMoveCharacterForward;
 
         OnParryStart -= () => isParrying = true;
         OnParryStop -= () => isParrying = false;
@@ -107,7 +106,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (_playerInput.Player.Dash.WasPressedThisFrame())
         {
-            if (dashCoroutine == null && currentCharge > 0)
+            if (PlayerState != ACTIONSTATE.PARRYING && dashCoroutine == null && currentCharge > 0)
             {
                 dashCoroutine = StartCoroutine(Dash());
             }
@@ -115,7 +114,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (_playerInput.Player.Parry.WasPressedThisFrame()) // Was pressed this frame is cool
         {
-            if (parryCoroutine == null && canParry)
+            if (PlayerState != ACTIONSTATE.DASHING && parryCoroutine == null && canParry)
             {
                 parryCoroutine = StartCoroutine(Parry());
             }
@@ -127,78 +126,28 @@ public class PlayerMovement : MonoBehaviour
             regenCoroutine = StartCoroutine(RegenCharge());
         }
 
-        if (!isAttacking)
-        {
-            MoveCharacter();
-        }
     }
 
     private void FixedUpdate()
     {
-        LookAtMousePosition();     
+        LookAtMousePosition();
+        MoveCharacter();  
     }
 
     private void MoveCharacter()
     {
         if (isParrying) return;
-        if (isAttacking) return;
+
+        if (_rb.velocity != Vector3.zero)
+            PlayerState = ACTIONSTATE.MOVING;
+        else
+            PlayerState = ACTIONSTATE.IDLE;
 
         var playerMovement = new Vector3(_movement.x, 0, _movement.y).normalized * PlayerDatas.Instance.GetStats.MoveSpeed;
         playerMovement.y = _rb.velocity.y;
         _rb.velocity = playerMovement;
     }
     
-    private void OnMoveCharacterForward(int ComboCounter)
-    {
-        //isAttacking = true;
-        _rb.velocity = Vector3.zero;
-        StartCoroutine(MoveCharacterForward(ComboCounter));
-    }
-
-    private IEnumerator MoveCharacterForward(int ComboCounter)
-    {
-        float timer = 0f;
-        originalPosition = _rb.position;
-        _rb.velocity = Vector3.zero;
-        float forwardSpeed = 0f;
-
-        forwardSpeed = moveDistance / moveDuration;
-        Vector3 forwardVelocity = transform.forward * forwardSpeed;
-
-        while (timer < moveDuration)
-        {
-            
-            _rb.velocity = forwardVelocity;
-            timer += Time.deltaTime;
-            yield return null;
-        }
-        Debug.Log(forwardSpeed);
-        yield return new WaitForSeconds(moveDuration);
-        _rb.velocity = Vector3.zero;
-        isAttacking = false;
-        
-        //yield return new WaitForSeconds(0.1f);
-        //Vector3 returnVelocity = -forwardVelocity;
-        //_rb.velocity = returnVelocity;
-        //yield return new WaitForSeconds(moveDuration);
-        //_rb.velocity = Vector3.zero;
-        
-        
-
-    }
-
-    private void MoveCharacterForwardWhenCombo(int ComboCounter)
-    {
-        originalPosition = _rb.position;
-        float forwardSpeed = 0f;
-        Debug.Log("in");
-        forwardSpeed = comboMoveDistance / moveDuration;
-        Vector3 forwardVelocity = transform.forward * forwardSpeed;
-        originalPosition = _rb.position;
-        _rb.velocity = forwardVelocity;
-        //_rb.velocity = Vector3.zero;
-        isAttacking = false;
-    }
 
     private void OnTriggerStay(Collider other)
     {
@@ -221,38 +170,22 @@ public class PlayerMovement : MonoBehaviour
             }
         }
     }
-
     IEnumerator Dash()
     {
         currentCharge--;
         //DASH GOES HERE
-        _rb.velocity = Vector3.zero;
-        yield return new WaitForSeconds(0.1f);
         Vector3 dashDirection = new Vector3(_movement.x, 0, _movement.y).normalized;
         float elapsedDashTime = 0f;
 
-        float dashSpeedWhenStandStill = dashForce / dashDuration;
-        Vector3 dashDirectionWhenStandStill = (transform.forward * dashSpeedWhenStandStill);
+        while (elapsedDashTime < dashDuration)
+        {
+            PlayerState = ACTIONSTATE.DASHING;
 
-        if(_rb.velocity == Vector3.zero)
-        {
-            while(elapsedDashTime < dashDuration)
-            {
-                _rb.AddForce(dashDirectionWhenStandStill * Time.fixedDeltaTime, ForceMode.VelocityChange); 
-                elapsedDashTime += Time.fixedDeltaTime;
-                yield return new WaitForFixedUpdate();
-            }
+            _rb.AddForce(dashDirection * (dashForce / dashDuration) * Time.fixedDeltaTime, ForceMode.VelocityChange);
+            elapsedDashTime += Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
         }
-        else
-        {
-            while (elapsedDashTime < dashDuration)
-            {
-                _rb.AddForce(dashDirection * (dashForce / dashDuration) * Time.fixedDeltaTime, ForceMode.VelocityChange);
-                elapsedDashTime += Time.fixedDeltaTime;
-                yield return new WaitForFixedUpdate();
-            }
-        }
-        dashCancel?.Invoke();
+
         dashCoroutine = null;
 
         //Overheat check
@@ -287,12 +220,13 @@ public class PlayerMovement : MonoBehaviour
         OnParryStart?.Invoke();
 
         float elapsedInvulnerableTime = invulnerableTimerOrg;
-        float elapsedStandStillTime = standStillTimerOrg;
 
         Debug.Log("Parrying");
 
         while (elapsedInvulnerableTime >= 0)
         {
+            PlayerState = ACTIONSTATE.PARRYING;
+
             elapsedInvulnerableTime -= Time.deltaTime;  // Use Time.deltaTime for frame-based time tracking
 
             Collider[] colliders = Physics.OverlapBox(parryBoxRefPoint.position, parryBoxSize / 2, transform.rotation, bulletLayerMask);

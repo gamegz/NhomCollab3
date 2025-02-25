@@ -250,7 +250,7 @@ GameObject:
   - component: {fileID: 2228317731585772334}
   - component: {fileID: 531018669308337807}
   - component: {fileID: 658246089199424761}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: EnemyThug
   m_TagString: Untagged
   m_Icon: {fileID: 0}

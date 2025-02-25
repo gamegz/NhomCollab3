@@ -21,6 +21,7 @@ namespace Enemy
     */
     public class EnemyBase : MonoBehaviour, IDamageable
     {
+        public static event Action<bool> OnEnemyDamaged;
         public event Action<EnemyBase> OnEnemyDeaths;
         public delegate void OnCallEnemyDeath(EnemyBase enemy);
         public static event OnCallEnemyDeath OnEnemyDeathsEvent;
@@ -30,7 +31,6 @@ namespace Enemy
         public GameObject playerRef;
         public ActorLayerData layerData;
         public CapsuleCollider colliderCapsule;
-        public Rigidbody rb;
         [Space]
         
         
@@ -59,25 +59,16 @@ namespace Enemy
         [Tooltip("Distance to return if player too far away")]
         public float followDistance;
 
-        //Stagger
-        [Header("Stagger")]
         [Tooltip("Amount of damage recive before stagger")]
         public float staggerThreshold;
         public float staggerTime;
         private float staggerThresholdCounter;
         private float staggerTimeCounter;
-        public float knockbackForce = 0.0f;
+        private float knockbackForce = 0.0f;
         [HideInInspector] public bool isStagger = false;
         [HideInInspector] public bool isTargetInAttackRange;
         [HideInInspector] public bool isTokenOwner;
 
-        //Stun
-        [Header("STUN")]
-        public bool canBeStunned;
-        public int stunPoint;// Percentage
-        public float stunDuration;
-        [HideInInspector] public bool isStunned = false;
-        private bool hasBeenStunned = false;
 
 
         //Navigation
@@ -145,11 +136,24 @@ namespace Enemy
 
         #endregion
 
+        #region DUC ANH'S VARIABLE
+        private bool isChargedATK = false;
+        #endregion 
+
 
         public virtual void Awake()
         {                     
             SetUpStateMachine();
-            
+        }
+
+        private void OnEnable()
+        {
+            WeaponManager.OnPerformChargedATK += HitByChargedATK;
+        }
+
+        private void OnDisable()
+        {
+            WeaponManager.OnPerformChargedATK -= HitByChargedATK;
         }
 
 
@@ -172,7 +176,7 @@ namespace Enemy
             canAttack = true;
             currentSpeed = roamSpeed;
             currentHealth = maxHealth;
-            staggerThresholdCounter = staggerThreshold;
+
             attackCollider.enabled = false;
             attackCollider.gameObject.SetActive(false);
             attackCoolDownCount = attackCooldown;
@@ -183,20 +187,17 @@ namespace Enemy
 
         public virtual void UpdateLogic()
         {
+            
+            UpdateAttackCoolDown();
 
-            enemyNavAgent.speed = currentSpeed/10;
+            if(isStagger) { return; }
+            _stateMachine.UpdateState();
             enemyNavAgent.isStopped = !canMove;
+            enemyNavAgent.speed = currentSpeed/10;
             if (canTurn)
             {
                 LookAtTarget(transform, playerRef.transform, turnSpeed);
             }
-            if (isStagger) { return; }
-            if (isStunned) { return; }
-
-            UpdateAttackCoolDown();
-            _stateMachine.UpdateState();
-            
-            
         }
 
         public virtual void FixedUpdateLogic()
@@ -218,11 +219,6 @@ namespace Enemy
             distanceToPlayer = Vector3.Distance(transform.position, playerRef.transform.position);
             isTargetInAttackRange = (distanceToPlayer <= attackRange) ? true : false;
         }
-
- 
-
-
-        
 
         private void UpdateAttackCoolDown() {
         
@@ -413,82 +409,61 @@ namespace Enemy
 
         #endregion
 
+        private void HitByChargedATK(bool hit)
+        {
+            isChargedATK = hit;
+        }
 
 
         public void TakeDamage(int damage)
         {
+            Debug.Log("Damage: " + damage);
             currentHealth -= damage;
             staggerThresholdCounter -= damage;
+
+            OnEnemyDamaged?.Invoke(isChargedATK);
 
             if (currentHealth <= 0)
             {
                 OnDeath();
             }
-            if (isStagger == false && staggerThresholdCounter <= 0)
+            if (staggerThresholdCounter <= 0)
             {
                 staggerThresholdCounter = staggerThreshold;
                 Stagger(knockbackForce);
             }
 
-            if (canBeStunned && !hasBeenStunned && currentHealth < stunPoint)
-            {
-                StartCoroutine(Stun());
-            }
         }
+
+
 
         public void DamagedByWeapon(WeaponData _weaponData)
         {
-            //knockbackForce = _weaponData.knockbackForce;
+            knockbackForce = _weaponData.knockbackForce;
         }
 
 
+        Coroutine staggerTimeCoroutine;
+
         public void Stagger(float knockbackStrength)
         {
-            if (isStagger == true) return;
-            canMove = false;
-            isStagger = true;
-            Vector3 knockbackDir = GetDirectionIgnoreY(playerRef.transform.position, this.transform.position).normalized;
-            //rb.AddForce(knockbackDir * knockbackStrength, ForceMode.Impulse);
-            StartCoroutine(ApplyKnockback(knockbackDir, knockbackStrength));
-            Debug.Log("Stagger");
-            StartCoroutine(StaggerTimeCoroutine());
+            Vector3 knockbackDir = (this.transform.position - PlayerBase.Instance.transform.position).normalized;
+            enemyNavAgent.velocity += knockbackDir * knockbackStrength;
+
+            if (staggerTimeCoroutine != null) StopCoroutine(staggerTimeCoroutine);
+            staggerTimeCoroutine = StartCoroutine(StaggerTimeCoroutine());
         }
 
         IEnumerator StaggerTimeCoroutine()
         {
+            isStagger = true;
+            canMove = false;
+
             yield return new WaitForSeconds(staggerTime);
 
             isStagger = false;
             canMove = true;
         }
-
-        private IEnumerator ApplyKnockback(Vector3 direction, float strength)
-        {
-            float knockbackTime = 0.2f; // Time the knockback effect lasts
-            float elapsedTime = 0f;
-
-            while (elapsedTime < knockbackTime)
-            {
-                transform.position += direction * (strength * Time.deltaTime);
-                elapsedTime += Time.deltaTime;
-                yield return null;
-            }
-        }
-
-        private IEnumerator Stun()
-        {
-            isStunned = true;
-            hasBeenStunned = true;
-            canMove = false;
-            Debug.Log("Stun");
-
-            yield return new WaitForSeconds(stunDuration);
-
-            isStunned = false;
-            canMove = true;
-            Debug.Log("End Stun");
-        }
-
 
         public virtual void OnDeath()
         {
@@ -580,8 +555,7 @@ namespace Enemy
 
         public Vector3 GetDirectionIgnoreY(Vector3 from, Vector3 to)
         {
-            //return new Vector3(to.x, 2, to.z) - new Vector3(from.x, 2, from.y);
-            return new Vector3(to.x - from.x, 0, to.z - from.z);
+            return new Vector3(to.x, 2, to.z) - new Vector3(from.x, 2, from.y);
         }
 
         public float GetDistanceToPLayer()

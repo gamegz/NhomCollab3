@@ -84,7 +84,7 @@ GameObject:
   - component: {fileID: 5071117140408281458}
   - component: {fileID: 5822318548057199715}
   - component: {fileID: 3275692932611902173}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: EnemyUnderBoss
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -107,7 +107,7 @@ Transform:
   - {fileID: 5537075440511601233}
   - {fileID: 2099823919637676737}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5276282376671262937
 MeshFilter:

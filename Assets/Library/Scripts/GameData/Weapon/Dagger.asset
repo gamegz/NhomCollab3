@@ -17,9 +17,9 @@ MonoBehaviour:
   critChance: 0
   attackSpeed: 0.2
   chargeAttackSpeed: 1
-  holdThreshold: 1
+  holdThreshold: 0.75
   baseWeaponDamage: 10
-  chargeWeaponDamage: 0
+  chargeWeaponDamage: 100
   parryDuration: 0
   parrySpeed: 0
   knockbackForce: 2

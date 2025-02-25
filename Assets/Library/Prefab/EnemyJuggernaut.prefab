@@ -84,7 +84,7 @@ GameObject:
   - component: {fileID: 7282496922669887621}
   - component: {fileID: 3333122706734568538}
   - component: {fileID: 184925720130392033}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: EnemyJuggernaut
   m_TagString: Untagged
   m_Icon: {fileID: 0}
