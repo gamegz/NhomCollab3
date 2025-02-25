@@ -214,7 +214,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     }
     private void Update()
     {
-        Debug.Log("Player Health: " + PlayerDatas.Instance.GetStats.currentPlayerHealth);
+        //Debug.Log("Player Health: " + PlayerDatas.Instance.GetStats.currentPlayerHealth);
     }
 
     public void TakeDamage(int modifiedHealth) // ACTIVATED WHEN TAKING DAMAGE
