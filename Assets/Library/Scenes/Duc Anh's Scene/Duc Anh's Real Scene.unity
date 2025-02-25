@@ -2539,6 +2539,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 674412924}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1609941298 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 64826341837172047, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+    type: 3}
+  m_PrefabInstance: {fileID: 1914893527}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &1625398894 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1983894394847595608, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+    type: 3}
+  m_PrefabInstance: {fileID: 1914893527}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1670164994
 GameObject:
   m_ObjectHideFlags: 0
@@ -2657,6 +2669,33 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1811837017}
     m_Modifications:
+    - target: {fileID: 64826341837172047, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: m_Name
+      value: HeartContainer
+      objectReference: {fileID: 0}
+    - target: {fileID: 1658478206797379963, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: playerHeart
+      value: 
+      objectReference: {fileID: 1539769722832446676, guid: 8cb75f04aabf6f24c9b6d18f3e0af583,
+        type: 3}
+    - target: {fileID: 1658478206797379963, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: heartSpawnPos
+      value: 
+      objectReference: {fileID: 1625398894}
+    - target: {fileID: 1658478206797379963, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: overHealHeart
+      value: 
+      objectReference: {fileID: 8495895409632297313, guid: 9ad7c35b819c212409d1b060c01c4abe,
+        type: 3}
+    - target: {fileID: 1658478206797379963, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: heartContainer
+      value: 
+      objectReference: {fileID: 1609941298}
     - target: {fileID: 2738424787811903257, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
         type: 3}
       propertyPath: m_RootOrder
@@ -2711,6 +2750,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7381951561567745206, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: maxHealth
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8319276657298368420, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
         type: 3}

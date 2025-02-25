@@ -30,26 +30,27 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     private Transform _playerTransform;
 
     // System Action Stuff
-    public delegate void OnHealthModified(float modifiedHealth, bool? increased);
+    public delegate void OnHealthModified(float modifiedHealth, float maxHealth, bool? increased);
     public static event OnHealthModified HealthModified;    
     public delegate void OnHealBarFull(bool isOverHealing);
     public static event OnHealBarFull HBOverheal;
 
-    #region Animation Activation
+    #region Animation Related Stuff
     public delegate void OnHealReady(bool isReady, string displayText);
     public static event OnHealReady HealReady;    
     public delegate void OnHealActivated();
     public static event OnHealActivated HealActivated;
+    private Coroutine switchReadyTextCoroutine = null;
     #endregion
 
-    // Variable for Heal Bar, which is associated with hearts and Overheal
+    #region Heal Bar & Over Heal Stuff
     public enum HealthStates
     {
         INCREASED,
         DECREASED
     }
     private Dictionary<HealthStates, bool> healthStatesDictionary;
-    private Coroutine overHealCoroutine;
+    private Coroutine overHealCoroutine = null;
     private bool isOverHealing = false;
     private bool overHealReady = false;
     private float overHealTimer = 0f; 
@@ -57,6 +58,15 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     private float clampedHBValue = 0f; 
     private float HBMultiplier = 1f; 
     private float maxHBProgress = 6f;
+    #endregion
+
+    #region Health Stuff
+    [Tooltip("Health Update Level <=> Amount of health added to player's highest current health")]
+    //[SerializeField] private float healthUpgradeAmount = 1f; // Will be used when the upgrade system is established
+    [SerializeField] private float maxHealth = 3;
+
+    #endregion
+
 
     private void Awake()
     {
@@ -92,7 +102,9 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
 
     private void Start()
     {
-        HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, SetHealthState(HealthStates.INCREASED));
+        PlayerDatas.Instance.GetStats.currentPlayerHealth = maxHealth;
+
+        HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, maxHealth, SetHealthState(HealthStates.INCREASED));
     }
 
     private void OnEnable()
@@ -203,37 +215,53 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     private void Update()
     {
         Debug.Log("Player Health: " + PlayerDatas.Instance.GetStats.currentPlayerHealth);
-
     }
 
     public void TakeDamage(int modifiedHealth) // ACTIVATED WHEN TAKING DAMAGE
     {
         if (isOverHealing)
         {
-            HBOverheal?.Invoke(false);
             isOverHealing = false;
             currentHBProgress = 0;
             clampedHBValue = 0;
         }
         else if (!isOverHealing)
         {
-            if (currentHBProgress == maxHBProgress && PlayerDatas.Instance.GetStats.currentPlayerHealth >= 4)
+            if (currentHBProgress == maxHBProgress && PlayerDatas.Instance.GetStats.currentPlayerHealth >= maxHealth - 1)
             {
+                if (switchReadyTextCoroutine != null)
+                {
+                    StopCoroutine(switchReadyTextCoroutine);
+                    switchReadyTextCoroutine = null;
+                }
+
+                if (currentHBProgress == maxHBProgress && switchReadyTextCoroutine == null)
+                    switchReadyTextCoroutine = StartCoroutine(SwitchTextReadyAnim());
+                
+                else
+                    HealReady?.Invoke(false, "[  Attack To Enter Over Heal  ]"); 
+
                 overHealReady = false;
-                HealReady?.Invoke(false, "[  Over Heal Ready  ]"); 
             }
             
             PlayerDatas.Instance.OnPlayerHealthChange(modifiedHealth);
 
-            HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, SetHealthState(HealthStates.DECREASED));
-
-
+            HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, maxHealth, SetHealthState(HealthStates.DECREASED));
         }
 
         if (PlayerDatas.Instance.GetStats.currentPlayerHealth <= 0)
         {
             OnPlayerDeath();
         }
+    }
+
+    private IEnumerator SwitchTextReadyAnim()
+    {
+        HealReady?.Invoke(false, "[  Attack To Enter Over Heal  ]");
+        yield return new WaitForSeconds(0.5f);
+        HealReady?.Invoke(true, "[  Charged Attack To Heal  ]");
+
+        switchReadyTextCoroutine = null;
     }
 
     public void IncreaseHealBar(bool byChargedAttack) // ACTIVATED WHEN HITTING AN ENEMY
@@ -243,25 +271,25 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
 
         if (clampedHBValue == maxHBProgress)
         {
-            if (PlayerDatas.Instance.GetStats.currentPlayerHealth == 5 && !overHealReady)
+            if (PlayerDatas.Instance.GetStats.currentPlayerHealth == maxHealth && !overHealReady)
             {
                 overHealReady = true;
                 HealReady?.Invoke(true, "[  Attack To Enter Over Heal  ]"); 
             }
-            else if (PlayerDatas.Instance.GetStats.currentPlayerHealth < 5)
+            else if (PlayerDatas.Instance.GetStats.currentPlayerHealth < maxHealth)
             {
                 HealReady?.Invoke(true, "[  Charged Attack To Heal  ]");
             }
 
-            if (PlayerDatas.Instance.GetStats.currentPlayerHealth < 5 && byChargedAttack)
+            if (PlayerDatas.Instance.GetStats.currentPlayerHealth < maxHealth && byChargedAttack)
             {
                 currentHBProgress = 0;
                 PlayerDatas.Instance.GetStats.currentPlayerHealth++;
 
                 HealActivated?.Invoke();
-                HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, SetHealthState(HealthStates.INCREASED));
+                HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, maxHealth, SetHealthState(HealthStates.INCREASED));
             }
-            else if (currentHBProgress > maxHBProgress && PlayerDatas.Instance.GetStats.currentPlayerHealth == 5 && overHealCoroutine == null)
+            else if (currentHBProgress > maxHBProgress && PlayerDatas.Instance.GetStats.currentPlayerHealth == maxHealth && overHealCoroutine == null)
             { 
                 isOverHealing = true;
                 overHealCoroutine = StartCoroutine(OverHealing());

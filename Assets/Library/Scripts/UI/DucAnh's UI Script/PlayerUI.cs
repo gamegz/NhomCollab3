@@ -9,13 +9,18 @@ using UnityEditor.Compilation;
 public class PlayerUI : MonoBehaviour
 {
     [Header("Reference")]
-    [SerializeField] private Image healBarUI;
+    [SerializeField] private WeaponManager weaponManager;
+    [SerializeField] private Animator healTextAnimator;
     [SerializeField] private Image innerChargeATKBarUI;
     [SerializeField] private Image outerChargeATKBarUI;
-    [SerializeField] private Image[] playerHearts;
-    [SerializeField] private WeaponManager weaponManager;
+    [SerializeField] private Transform heartSpawnPos;
+    [SerializeField] private Image overHealHeart; // Prefab reference
+    [SerializeField] private Image playerHeart; // Prefab reference
+    [SerializeField] private GameObject heartContainer; // Heart's parent (to make things less messy when spawning in hearts)
     [SerializeField] private Camera mainCamera;
-    [SerializeField] private Animator healTextAnimator;
+    [SerializeField] private Image healBarUI;
+    private List<Image> heartList = new List<Image>();
+    private Image tempOverHealHeart = null;
     private TextMeshProUGUI healText;
     //[SerializeField] private TextMeshProUGUI levelText; // May or may not use in the future 
     private PlayerBase playerBase;
@@ -27,6 +32,8 @@ public class PlayerUI : MonoBehaviour
 
 
     [Header("Values")]
+    [SerializeField] private float xOffsetHeartPercent = 0.05f;
+    private float xOffsetHeartValue = 0f;
     private Vector3 orgHeartScale = new Vector3(0.85f, 0.85f, 0.85f);
     private Vector3 orgCABarScale = new Vector3(1.25f, 4f, 1f); // Original Charged Attack Bar Scale [For any one who couldn't read]
     //private int level = 1;
@@ -42,6 +49,8 @@ public class PlayerUI : MonoBehaviour
 
     private void Awake()
     {
+        xOffsetHeartValue = Screen.width * xOffsetHeartPercent;
+
         if (healTextAnimator == null)
             Debug.Log("There isn't any Over Heal animator");
         else
@@ -58,7 +67,7 @@ public class PlayerUI : MonoBehaviour
         orgOCABcolor = new Color(outerChargeATKBarUI.color.r, outerChargeATKBarUI.color.g, outerChargeATKBarUI.color.b, 0.5f);
         orgHBColor = healBarUI.color;
 
-        playerHearts[playerHearts.Length - 1].transform.localScale = Vector3.zero;
+        //playerHearts[playerHearts.Length - 1].transform.localScale = Vector3.zero;
 
         playerBase = GetComponent<PlayerBase>();
         if (playerBase == null)
@@ -74,6 +83,11 @@ public class PlayerUI : MonoBehaviour
         if (mainCamera == null)
         {
             Debug.Log("No main camera");
+        }
+
+        if (heartSpawnPos == null)
+        {
+            Debug.Log("No heart spawn position");
         }
     }
 
@@ -136,6 +150,8 @@ public class PlayerUI : MonoBehaviour
             UpdateCAProgressFill(caProgress.Value);
         }
 
+        xOffsetHeartValue = Screen.width * xOffsetHeartPercent;
+
     }
 
 
@@ -192,37 +208,48 @@ public class PlayerUI : MonoBehaviour
     {
         Vector3 currentVel = Vector3.zero; 
 
-        if (isOverHealing)
+        if (isOverHealing == true)
         {
+            Vector3 spawnPos = heartList[heartList.Count - 1].transform.position + new Vector3(xOffsetHeartValue, 0f, 0f);
+
+            tempOverHealHeart = Instantiate(overHealHeart, spawnPos, Quaternion.identity, heartContainer.transform);
+
             while (healBarUI.color != minColor)
             {
                 healBarUI.color = Color.Lerp(minColor, maxColor, playerBase.GetHealBarProgress());
 
-                Vector3 tempScale = Vector3.SmoothDamp(playerHearts[5].transform.localScale, orgHeartScale, ref currentVel, 0.0125f);
-                playerHearts[5].transform.localScale = tempScale;
+                Vector3 tempScale = Vector3.SmoothDamp(tempOverHealHeart.transform.localScale, orgHeartScale, ref currentVel, 0.0125f);
+                tempOverHealHeart.transform.localScale = tempScale;
 
                 yield return null;
             }
 
         }
 
-        if (!isOverHealing)
-        {
+        else if (isOverHealing == false)
+        { 
             healBarUI.color = orgHBColor;
+                
+            Debug.Log("Stop Over Healing.");
 
-            while (playerHearts[5].transform.localScale != Vector3.zero)
+            Debug.Log(tempOverHealHeart.transform.localScale);
+
+            while (tempOverHealHeart.transform.localScale != Vector3.zero)
             {
-                Vector3 tempScale = Vector3.SmoothDamp(playerHearts[playerHearts.Length - 1].transform.localScale, Vector3.zero, ref currentVel, 0.0125f);
-                playerHearts[5].transform.localScale = tempScale;
+                Vector3 tempScale = Vector3.SmoothDamp(tempOverHealHeart.transform.localScale, Vector3.zero, ref currentVel, 0.0125f);
+                tempOverHealHeart.transform.localScale = tempScale;
+
                 yield return null;
             }
+            
+            tempOverHealHeart = null; // Not affiliated with heart list for safety purpose
         }
 
         overHealingCoroutine = null;
     }
 
 
-    private void UpdateHealth(float modifiedHealth, bool? increased)
+    private void UpdateHealth(float modifiedHealth, float maxHealth, bool? increased)
     {
         if (heartCoroutine != null)
         {
@@ -230,55 +257,60 @@ public class PlayerUI : MonoBehaviour
             heartCoroutine = null;
         }
 
-        if (heartCoroutine == null)
-            heartCoroutine = StartCoroutine(ModifyHearts(modifiedHealth, increased));
+        heartCoroutine = StartCoroutine(ModifyHearts(modifiedHealth, maxHealth, increased));
     }
 
-    private IEnumerator ModifyHearts(float modifiedHealth, bool? increased)
+    private IEnumerator ModifyHearts(float modifiedHealth, float maxHealth, bool? increased)
     {
+        Vector3 currentVel = Vector3.zero;
+
         if (increased == true)
         {
-            if (modifiedHealth <= 5)
+            if (modifiedHealth <= maxHealth)
             {
-                Vector3 currentVel = Vector3.zero;
+                int heartsToSpawn = (int)modifiedHealth - heartList.Count;
 
-                for (int i = 0; i <= modifiedHealth - 1; i++)
+                for (int i = 0; i < heartsToSpawn; i++)
                 {
-                    while (playerHearts[i].transform.localScale != orgHeartScale)
+                    Vector3 spawnPos = heartList.Count == 0
+                        ? heartSpawnPos.position // First heart at spawn position
+                        : heartList[heartList.Count - 1].transform.position + new Vector3(xOffsetHeartValue, 0, 0); // Next hearts beside the last one
+
+                    Image tempHeart = Instantiate(playerHeart, spawnPos, Quaternion.identity, heartContainer.transform);
+                    heartList.Add(tempHeart);
+
+                    while (tempHeart.transform.localScale != orgHeartScale)
                     {
-                        Vector3 tempScale = Vector3.SmoothDamp(playerHearts[i].transform.localScale, orgHeartScale, ref currentVel, 0.0125f);
-                        playerHearts[i].transform.localScale = tempScale;
+                        tempHeart.transform.localScale = Vector3.SmoothDamp(tempHeart.transform.localScale, orgHeartScale, ref currentVel, 0.0125f);
                         yield return null;
                     }
-
                 }
             }
         }
-
         else if (increased == false)
         {
-            if (modifiedHealth > 0)
+            if (modifiedHealth >= 0 && heartList.Count > 0)
             {
-                Vector3 currentVel = Vector3.zero;
+                int heartsToRemove = heartList.Count - (int)modifiedHealth;
 
-                Debug.Log("Player's Health: " + modifiedHealth);
-                for (int i = 4; i >= modifiedHealth; i--)
+                for (int i = 0; i < heartsToRemove; i++)
                 {
+                    Image lastHeart = heartList[heartList.Count - 1];
 
-                    while (playerHearts[i].transform.localScale != Vector3.zero)
+                    while (lastHeart.transform.localScale != Vector3.zero)
                     {
-                        Vector3 tempScale = Vector3.SmoothDamp(playerHearts[i].transform.localScale, Vector3.zero, ref currentVel, 0.0125f);
-                        playerHearts[i].transform.localScale = tempScale;
+                        lastHeart.transform.localScale = Vector3.SmoothDamp(lastHeart.transform.localScale, Vector3.zero, ref currentVel, 0.0125f);
                         yield return null;
                     }
 
+                    heartList.RemoveAt(heartList.Count - 1);
                 }
             }
-
         }
 
         heartCoroutine = null;
     }
+
 
 
     private void UpdateChargeATK(bool isHolding)
