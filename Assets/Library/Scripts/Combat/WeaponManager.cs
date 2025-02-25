@@ -111,6 +111,11 @@ public class WeaponManager : MonoBehaviour
                 _holdTime = 0;
                 isAllowToCancelAction = false;
             }
+
+            if (_holdTime >= 0.2f)
+            {
+                OnHoldChargeATK?.Invoke(true);
+            }
         }
         if (isAttack) // cooldown timer betweeen attack and between normal attack and charge attack
         {
@@ -291,6 +296,7 @@ public class WeaponManager : MonoBehaviour
 
         _startHold = false;
         _holdTime = 0f;
+
     }
 
     private IEnumerator ResetFullCombo()
@@ -308,6 +314,7 @@ public class WeaponManager : MonoBehaviour
         _startHold = false;
         _isHoldAttack = false;
         _isNormalAttack = false;
+        OnHoldChargeATK?.Invoke(false);
     }
 
     private void OnTryWeaponSwitch() // this function only get call when the OnWeaponSwitch() method get call
