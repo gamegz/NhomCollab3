@@ -303,4 +303,5 @@ public class WeaponManager : MonoBehaviour
             Gizmos.DrawWireSphere(playerTransform.position, 3f);
         } 
     }
+
 }
