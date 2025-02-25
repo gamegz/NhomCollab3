@@ -40,7 +40,7 @@ public class WeaponManager : MonoBehaviour
     private bool _isHoldAttack = false;
     private bool _startHold = false;
     private float comboAttackSpeed = 0.3f;
-    
+
     /*IF you want to make the hold attacks. Try make a delay BEFORE starting the hold check
      This prevent player from registering normal attack as charge attack
      */
@@ -71,7 +71,7 @@ public class WeaponManager : MonoBehaviour
         playerTransform = transform.parent ?? transform;
         _currentWeapon = GetComponentInChildren<WeaponBase>();
         PlayerMovement.dashCancel += DashingToCancelAction;
-        if(_currentWeapon != null)
+        if (_currentWeapon != null)
         {
             weaponList.Add(_currentWeapon);
             if (weaponList.Count > 0)
@@ -83,7 +83,7 @@ public class WeaponManager : MonoBehaviour
             {
                 Debug.Log("weaponList is empty");
             }
-        } 
+        }
     }
 
     private void OnDestroy()
@@ -96,7 +96,7 @@ public class WeaponManager : MonoBehaviour
         if (_startHold && !isRecovering) // hold timer for charge attack
         {
             _holdTime += Time.deltaTime;
-            if(_holdTime >= _currentWeapon._weaponData.holdThreshold) // if the player hold the attack button long enough or longer than the threshold give by the current weapon
+            if (_holdTime >= _currentWeapon._weaponData.holdThreshold) // if the player hold the attack button long enough or longer than the threshold give by the current weapon
             {                                                           //then it will notice the system to know that it is a hold attack which will notice the OnAttackInputEnd()
                 _isHoldAttack = true;                                   // method that it is a hold attack (_isHoldAttack) 
                 _isNormalAttack = false;
@@ -118,7 +118,7 @@ public class WeaponManager : MonoBehaviour
                 isAttack = false;
             }
         }
-        if(isRecovering)
+        if (isRecovering)
         {
             recoverTimer -= Time.deltaTime;
             if (recoverTimer <= 0f)
@@ -128,7 +128,7 @@ public class WeaponManager : MonoBehaviour
         }
     }
 
-    void OnEnable() 
+    void OnEnable()
     {
         _playerInput.Enable();
         _playerInput.Player.Attack.performed += OnAttackInputPerform;
@@ -136,10 +136,10 @@ public class WeaponManager : MonoBehaviour
         _playerInput.Player.OnPickUpWeapon.performed += OnPickUpWeapon;
         _playerInput.Player.OnPickUpWeapon.canceled += OnPickUpWeapon;
         _playerInput.Player.OnSwitchWeapon.performed += OnSwitchWeapon;
-        _playerInput.Player.OnSwitchWeapon.canceled += OnSwitchWeapon;  
+        _playerInput.Player.OnSwitchWeapon.canceled += OnSwitchWeapon;
     }
 
-    private void OnDisable() 
+    private void OnDisable()
     {
         _playerInput.Disable();
         _playerInput.Player.Attack.performed -= OnAttackInputPerform;
@@ -150,20 +150,20 @@ public class WeaponManager : MonoBehaviour
         _playerInput.Player.OnSwitchWeapon.canceled -= OnSwitchWeapon;
     }
 
-    private void Innit(WeaponBase StartingWeapon) 
+    private void Innit(WeaponBase StartingWeapon)
     {
         //Set current weapon
         //Enable Current weapon
-        if(_currentWeapon != null)
+        if (_currentWeapon != null)
         {
             _currentWeapon = StartingWeapon;
             _currentWeapon.GetComponent<BoxCollider>().enabled = false;
-        } 
+        }
     }
 
     private void DashingToCancelAction()
     {
-        if(isAllowToCancelAction)
+        if (isAllowToCancelAction)
         {
             isDashingToCancelAction = true;
             comboCounter = 0;
@@ -186,9 +186,9 @@ public class WeaponManager : MonoBehaviour
 
     private void OnAttackInputEnd(InputAction.CallbackContext context) // this is Unity new input event for when the player release the mouse button
     {
-        if( _currentWeapon != null)
+        if (_currentWeapon != null)
         {
-            if(isDashingToCancelAction)
+            if (isDashingToCancelAction)
             {
                 isDashingToCancelAction = false;
                 return;
@@ -210,35 +210,35 @@ public class WeaponManager : MonoBehaviour
                 _startHold = false;
                 comboCounter = 0;
             }
-            else if(!isAttack && !isRecovering) //if going for combo just focus on this statement
+            else if (!isAttack && !isRecovering) //if going for combo just focus on this statement
             {
                 if (isRecovering) { return; }
-                if(_holdTime >= 0.5f) 
-                { 
+                if (_holdTime >= 0.5f)
+                {
                     _holdTime = 0f;
                     _startHold = false;
-                    return; 
+                    return;
                 }
 
                 _currentWeapon.OnInnitNormalAttack();
-                
-                
-                if(comboCounter >= maxComboCount)
+
+
+                if (comboCounter >= maxComboCount)
                 {
                     //recoverTimer = recoverDuration;
                     //isRecovering = true;
                     StartCoroutine(ResetFullCombo());
                     return;
                 }
-                
+
                 cooldownTimer = _currentWeapon._weaponData.attackSpeed;
 
-                if(comboCoroutine != null)
+                if (comboCoroutine != null)
                 {
                     StopCoroutine(comboCoroutine);
                 }
-                
-                
+
+
                 cooldownTimer = comboAttackSpeed;
                 comboCounter++;
                 AttackHandle?.Invoke(comboCounter);
@@ -246,7 +246,7 @@ public class WeaponManager : MonoBehaviour
                 comboCoroutine = StartCoroutine(ResetCombo());
 
             }
-            
+
             //isAttack = true; // set the isAttack = true again so that it will start cooldown, avoid attack with no cooldown
             ResetAttackState();
         }
@@ -266,7 +266,7 @@ public class WeaponManager : MonoBehaviour
         //isAttack = true;
         cooldownTimer = _currentWeapon._weaponData.attackSpeed;
         comboCounter = 0;
-        
+
         _startHold = false;
         _holdTime = 0f;
     }
@@ -290,7 +290,7 @@ public class WeaponManager : MonoBehaviour
 
     private void OnTryWeaponSwitch() // this function only get call when the OnWeaponSwitch() method get call
     {
-        if(weaponList.Count <= 1) { return; }
+        if (weaponList.Count <= 1) { return; }
 
         //Try get next weapon in list
         //Switch between 2 weapon in the list
@@ -298,9 +298,9 @@ public class WeaponManager : MonoBehaviour
         bool activeState;
         for (int i = 0; i < weaponList.Count;)
         {
-            activeState = (i == _weaponIndex) ? true : false; 
+            activeState = (i == _weaponIndex) ? true : false;
             weaponList[i].weaponModel.SetActive(activeState);
-            if(activeState)
+            if (activeState)
             {
                 _currentWeapon = weaponList[i];
                 Debug.Log(_currentWeapon.name);
@@ -311,36 +311,36 @@ public class WeaponManager : MonoBehaviour
 
     private void OnTryPickUpWeapon() // this function only call when the OnPickUpWeapon() method get call
     {
-        
+
         //Sphere cast To check for weapon
         //Compare distance when detect more than 1 weapon
         //Try pick up close weapon
         //If there is no space for more weapon throw the current equppied one and pick up the one on the ground else just pick up new weapon and add to list (maximum space: 2)
-        Collider[] hitColliders = Physics.OverlapSphere(playerTransform.position, collectRange, layerToCheck); 
+        Collider[] hitColliders = Physics.OverlapSphere(playerTransform.position, collectRange, layerToCheck);
 
         foreach (var hitCollider in hitColliders)
         {
             float distanceFromItemToPlayer = Vector3.Distance(hitCollider.transform.position, playerTransform.position);
-            
-            if (distanceFromItemToPlayer <= collectRange || distanceFromItemToPlayer <= collectRange && _currentWeapon == null) 
+
+            if (distanceFromItemToPlayer <= collectRange || distanceFromItemToPlayer <= collectRange && _currentWeapon == null)
             {
                 WeaponBase weaponToAdd = hitCollider.GetComponentInChildren<WeaponBase>(); // will get the script of the weapon the sphere hit
 
-                if (weaponList.Count >= _maxWeaponNum) 
+                if (weaponList.Count >= _maxWeaponNum)
                 {
                     //Replace weapon?   
-                    weaponList.Remove(_currentWeapon); 
-                    _currentWeapon?.transform.SetParent(null, true); 
-                    _currentWeapon.GetComponent<BoxCollider>().enabled = true; 
+                    weaponList.Remove(_currentWeapon);
+                    _currentWeapon?.transform.SetParent(null, true);
+                    _currentWeapon.GetComponent<BoxCollider>().enabled = true;
                     weaponList.Add(weaponToAdd);
                 }
-                else if(weaponList.Count < _maxWeaponNum || _currentWeapon == null) 
+                else if (weaponList.Count < _maxWeaponNum || _currentWeapon == null)
                 {
                     weaponList.Add(weaponToAdd);
                     if (_currentWeapon != null)
                     {
                         _currentWeapon.weaponModel.SetActive(false);
-                    }  
+                    }
                 }
                 // the whole section below is to set up the weapon we just pick up and set the boxCollider to false to immediately attack when pick up
                 _currentWeapon = weaponToAdd;
@@ -364,7 +364,7 @@ public class WeaponManager : MonoBehaviour
         if (context.performed)
         {
             OnTryPickUpWeapon();
-        } 
+        }
     }
 
     private void OnSwitchWeapon(InputAction.CallbackContext context)
@@ -380,7 +380,7 @@ public class WeaponManager : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        if(playerTransform != null)
+        if (playerTransform != null)
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(playerTransform.position, 5f);
@@ -390,6 +390,6 @@ public class WeaponManager : MonoBehaviour
 
             Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(playerTransform.position, 3f);
-        } 
+        }
     }
 }

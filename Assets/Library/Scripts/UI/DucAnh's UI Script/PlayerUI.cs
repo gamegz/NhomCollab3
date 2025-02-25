@@ -98,7 +98,7 @@ public class PlayerUI : MonoBehaviour
         PlayerBase.HealReady += ReadyTextAnimation;
         PlayerBase.HealActivated += ActivatedTextAnimation;
 
-        WeaponManager.OnHoldChargeATK += UpdateChargeATK;
+        //WeaponManager.OnHoldChargeATK += UpdateChargeATK;
     }
 
     private void OnDisable()
@@ -108,7 +108,7 @@ public class PlayerUI : MonoBehaviour
         PlayerBase.HealReady -= ReadyTextAnimation;
         PlayerBase.HealActivated -= ActivatedTextAnimation;
 
-        WeaponManager.OnHoldChargeATK -= UpdateChargeATK;
+        //WeaponManager.OnHoldChargeATK -= UpdateChargeATK;
     }
 
 
@@ -144,11 +144,11 @@ public class PlayerUI : MonoBehaviour
             UpdateHBProgressFill(hbProgress.Value);
         }
 
-        float? caProgress = weaponManager ? weaponManager.GetChargeATKProgress() : null;
-        if (caProgress != null)
-        {
-            UpdateCAProgressFill(caProgress.Value);
-        }
+        //float? caProgress = weaponManager ? weaponManager.GetChargeATKProgress() : null;
+        //if (caProgress != null)
+        //{
+        //    UpdateCAProgressFill(caProgress.Value);
+        //}
 
         xOffsetHeartValue = Screen.width * xOffsetHeartPercent;
 
@@ -322,47 +322,46 @@ public class PlayerUI : MonoBehaviour
             chargeATKCoroutine = null;
         }
 
-        if (chargeATKCoroutine == null)
-            chargeATKCoroutine = StartCoroutine(ChargeAttack(isHolding));
-
+        //if (chargeATKCoroutine == null)
+        //    chargeATKCoroutine = StartCoroutine(ChargeAttack(isHolding));
     }
 
-    private IEnumerator ChargeAttack(bool isHolding)
-    {
-        float lerpSpeed = 2.5f;
-        Vector3 curVelocity = Vector3.zero;
+    //private IEnumerator ChargeAttack(bool isHolding)
+    //{
+    //    float lerpSpeed = 2.5f;
+    //    Vector3 curVelocity = Vector3.zero;
 
-        while (isHolding && weaponManager.GetWeaponBaseRef() != null)
-        {
-            Color tempInnerColor = Color.Lerp(orgICABcolor, Color.red, weaponManager.GetChargeATKProgress());
-            innerChargeATKBarUI.color = tempInnerColor;
+    //    while (isHolding && weaponManager.GetWeaponBaseRef() != null)
+    //    {
+    //        Color tempInnerColor = Color.Lerp(orgICABcolor, Color.red, weaponManager.GetChargeATKProgress());
+    //        innerChargeATKBarUI.color = tempInnerColor;
 
-            Color tempOuterColor = Color.Lerp(orgOCABcolor, Color.black, weaponManager.GetChargeATKProgress());
-            outerChargeATKBarUI.color = tempOuterColor;
+    //        Color tempOuterColor = Color.Lerp(orgOCABcolor, Color.black, weaponManager.GetChargeATKProgress());
+    //        outerChargeATKBarUI.color = tempOuterColor;
 
-            Vector3 tempScale = Vector3.SmoothDamp(outerChargeATKBarUI.transform.localScale, orgCABarScale, ref curVelocity, 0.025f);
-            outerChargeATKBarUI.transform.localScale = tempScale;
+    //        Vector3 tempScale = Vector3.SmoothDamp(outerChargeATKBarUI.transform.localScale, orgCABarScale, ref curVelocity, 0.025f);
+    //        outerChargeATKBarUI.transform.localScale = tempScale;
 
-            yield return null;
-        }
+    //        yield return null;
+    //    }
 
-        while (!isHolding && weaponManager.GetWeaponBaseRef() != null)
-        {
-            Color tempInnerColor = Color.Lerp(innerChargeATKBarUI.color, orgICABcolor, lerpSpeed * Time.deltaTime);
-            innerChargeATKBarUI.color = tempInnerColor;
+    //    while (!isHolding && weaponManager.GetWeaponBaseRef() != null)
+    //    {
+    //        Color tempInnerColor = Color.Lerp(innerChargeATKBarUI.color, orgICABcolor, lerpSpeed * Time.deltaTime);
+    //        innerChargeATKBarUI.color = tempInnerColor;
 
-            Color tempOuterColor = Color.Lerp(outerChargeATKBarUI.color, orgOCABcolor, lerpSpeed * Time.deltaTime);
-            outerChargeATKBarUI.color = tempOuterColor;
+    //        Color tempOuterColor = Color.Lerp(outerChargeATKBarUI.color, orgOCABcolor, lerpSpeed * Time.deltaTime);
+    //        outerChargeATKBarUI.color = tempOuterColor;
 
-            Vector3 tempScale = Vector3.SmoothDamp(outerChargeATKBarUI.transform.localScale, Vector3.zero, ref curVelocity, 0.025f);
-            outerChargeATKBarUI.transform.localScale = tempScale;
+    //        Vector3 tempScale = Vector3.SmoothDamp(outerChargeATKBarUI.transform.localScale, Vector3.zero, ref curVelocity, 0.025f);
+    //        outerChargeATKBarUI.transform.localScale = tempScale;
 
-            yield return null;
-        }
+    //        yield return null;
+    //    }
 
-        chargeATKCoroutine = null;
+    //    chargeATKCoroutine = null;
 
-    }
+    //}
 
     #endregion
 

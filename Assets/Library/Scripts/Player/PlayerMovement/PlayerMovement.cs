@@ -32,7 +32,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Parry Manager")]
     [SerializeField] private Transform parryBoxRefPoint; // A transform point that will spawn the parry box
-    [SerializeField] private Vector3 parryBoxSize = new Vector3(1, 1, 1); 
+    [SerializeField] private Vector3 parryBoxSize = new Vector3(1, 1, 1);
     [SerializeField] private LayerMask bulletLayerMask; // Detects bullet via layermask
     [SerializeField] private float invulnerableTimerOrg = 0.6f;
     [SerializeField] private float standStillTimerOrg = 1f;
@@ -128,7 +128,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 parryCoroutine = StartCoroutine(Parry());
             }
-            else { Debug.Log("Apparently...");  }
+            else { Debug.Log("Apparently..."); }
         }
 
         if (regenCoroutine == null)  //Regen whenever not dashing
@@ -136,7 +136,6 @@ public class PlayerMovement : MonoBehaviour
             regenCoroutine = StartCoroutine(RegenCharge());
         }
 
-        
     }
 
     private void FixedUpdate()
@@ -147,7 +146,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void MoveCharacter()
     {
-        if (isParrying) return;;
+        if (isParrying) return; ;
         if (isRecovering || isAttacking)
         {
             _rb.velocity = new Vector3(0, _rb.velocity.y, 0);
@@ -172,7 +171,7 @@ public class PlayerMovement : MonoBehaviour
         isRecovering = false;
         stopMovementCoroutine = null;
     }
-    
+
     private void OnMoveCharacterForward(int ComboCounter)
     {
         _rb.velocity = Vector3.zero;
@@ -210,7 +209,7 @@ public class PlayerMovement : MonoBehaviour
                     _rb.velocity = velocity;
                 }
             }
-            else if(_rb.velocity.y > 0)
+            else if (_rb.velocity.y > 0)
             {
                 var velocity = _rb.velocity;
                 velocity.y = 0;
@@ -231,11 +230,11 @@ public class PlayerMovement : MonoBehaviour
         float dashSpeedWhenStandStill = dashForce / dashDuration;
         Vector3 dashDirectionWhenStandStill = (transform.forward * dashSpeedWhenStandStill);
 
-        if(_rb.velocity == Vector3.zero)
+        if (_rb.velocity == Vector3.zero)
         {
-            while(elapsedDashTime < dashDuration)
+            while (elapsedDashTime < dashDuration)
             {
-                _rb.AddForce(dashDirectionWhenStandStill * Time.fixedDeltaTime, ForceMode.VelocityChange); 
+                _rb.AddForce(dashDirectionWhenStandStill * Time.fixedDeltaTime, ForceMode.VelocityChange);
                 elapsedDashTime += Time.fixedDeltaTime;
                 yield return new WaitForFixedUpdate();
             }
@@ -316,7 +315,7 @@ public class PlayerMovement : MonoBehaviour
             if (immobileCoroutine == null)
                 immobileCoroutine = StartCoroutine(StandStill());
 
-            yield return null;  
+            yield return null;
         }
 
     }
@@ -337,7 +336,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void LookAtMousePosition() //Look at player mouse position
     {
-        if(isAttacking)
+        if (isAttacking)
         {
             return;
         }
@@ -345,7 +344,7 @@ public class PlayerMovement : MonoBehaviour
         Vector3 CharacterPos = _camera.WorldToScreenPoint(transform.position);
         Vector3 dir = _mousePos - CharacterPos;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, -angle + 90, 0); 
+        transform.rotation = Quaternion.Euler(0, -angle + 90, 0);
 
     }
     private void MousePos(InputAction.CallbackContext context)
@@ -362,8 +361,8 @@ public class PlayerMovement : MonoBehaviour
     public void Dash(InputAction.CallbackContext context)
     {
 
-    }    
-    
+    }
+
     public void Parry(InputAction.CallbackContext context)
     {
 
