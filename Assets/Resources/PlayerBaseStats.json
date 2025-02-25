@@ -1,5 +1,5 @@
 {
-    "PlayerHealth": 1000,
+    "PlayerHealth": 5,
     "PlayerDamage": 1,
     "PlayerSpeed": 8.0,
     "FConversionRate": 1.0,

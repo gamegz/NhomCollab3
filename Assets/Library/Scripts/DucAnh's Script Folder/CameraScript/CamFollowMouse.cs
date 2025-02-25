@@ -30,7 +30,6 @@ public class CamFollowMouse : MonoBehaviour
         CameraWork();
     }
 
-
     void CameraWork()
     {
         // 1. Get the player position in screen space and mouse position

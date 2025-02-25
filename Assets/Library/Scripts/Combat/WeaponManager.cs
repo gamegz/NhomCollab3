@@ -1,8 +1,7 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System;
 
 public class WeaponManager : MonoBehaviour
 {
@@ -10,15 +9,8 @@ public class WeaponManager : MonoBehaviour
 
     public delegate void CurrentWeaponHandler();
     public static event CurrentWeaponHandler CurrentWeapon;
-
-    public delegate void OnHandlingAttack(int ComboCounter);
-    public static event OnHandlingAttack AttackHandle;
-
-    public delegate void handleMovementWhenRecover();
-    public static event handleMovementWhenRecover HandleMovementWhenRecover;
-    //Courotine
-    Coroutine comboCoroutine;
-
+    public static event Action<bool> OnHoldChargeATK; // Duc Anh: THIS IS FOR UI.
+    public static event Action<bool> OnPerformChargedATK;
     //Unity new Input system
     public PlayerInput _playerInput;
 
@@ -32,26 +24,14 @@ public class WeaponManager : MonoBehaviour
     private bool _isNormalAttack = true;
     private bool isAttack = false;
     private float cooldownTimer = 0f;
-    private bool isDashingToCancelAction = false;
-    private bool isAllowToCancelAction = false;
 
     //charge attack timer
-    [SerializeField] private float _holdTime = 0f;
+    private float _holdTime = 0f;
     private bool _isHoldAttack = false;
     private bool _startHold = false;
-    private float comboAttackSpeed = 0.3f;
-    
     /*IF you want to make the hold attacks. Try make a delay BEFORE starting the hold check
      This prevent player from registering normal attack as charge attack
      */
-    [Header("ComboSystemAndAttack")]
-    [SerializeField] int comboCounter = 0;
-    int maxComboCount = 3;
-    [Tooltip("Listen wait time for combo input")]
-    [SerializeField] private float comboResetTime = 0.6f;
-    [SerializeField] private float recoverDuration = 2f;
-    float recoverTimer = 0f;
-    public bool isRecovering = false;
 
     [Header("WeaponCollectRange")]
     [SerializeField] private float collectRange;
@@ -65,12 +45,13 @@ public class WeaponManager : MonoBehaviour
 
     //Since each weapon have different delay time, need to overwrite the SO_WeaponData each time _currentWeapon value changes
 
+
+
     private void Awake()
     {
         _playerInput = new PlayerInput();
         playerTransform = transform.parent ?? transform;
         _currentWeapon = GetComponentInChildren<WeaponBase>();
-        PlayerMovement.dashCancel += DashingToCancelAction;
         if(_currentWeapon != null)
         {
             weaponList.Add(_currentWeapon);
@@ -86,47 +67,56 @@ public class WeaponManager : MonoBehaviour
         } 
     }
 
-    private void OnDestroy()
-    {
-        PlayerMovement.dashCancel -= DashingToCancelAction;
-    }
-
     private void Update()
     {
-        if (_startHold && !isRecovering) // hold timer for charge attack
+        if (_startHold) // hold timer for charge attack
         {
             _holdTime += Time.deltaTime;
+
+            if (_holdTime <= _currentWeapon._weaponData.holdThreshold)
+            {
+                Debug.Log(_holdTime);
+            }
+
+            if (_holdTime >= 0.2f)
+            {
+                OnHoldChargeATK?.Invoke(true);
+            }
+
             if(_holdTime >= _currentWeapon._weaponData.holdThreshold) // if the player hold the attack button long enough or longer than the threshold give by the current weapon
             {                                                           //then it will notice the system to know that it is a hold attack which will notice the OnAttackInputEnd()
                 _isHoldAttack = true;                                   // method that it is a hold attack (_isHoldAttack) 
                 _isNormalAttack = false;
-            }
-            if (isDashingToCancelAction)
-            {
-                _isHoldAttack = false;
-                _startHold = false;
-                _holdTime = 0;
-                isAllowToCancelAction = false;
-            }
+                Debug.Log("Charge ATK Ready");
+            }  
         }
         if (isAttack) // cooldown timer betweeen attack and between normal attack and charge attack
         {
             cooldownTimer -= Time.deltaTime;
+            //Debug.Log("cooldown: " + cooldownTimer);
             if (cooldownTimer <= 0f)
             {
                 _isNormalAttack = true;
                 isAttack = false;
             }
         }
-        if(isRecovering)
-        {
-            recoverTimer -= Time.deltaTime;
-            if (recoverTimer <= 0f)
-            {
-                isRecovering = false;
-            }
-        }
     }
+
+    public float GetHoldingChargeATKTime()
+    {
+        return _holdTime;
+    }
+
+    public float GetChargeATKProgress()
+    {
+        return _currentWeapon ? Mathf.InverseLerp(0f, _currentWeapon._weaponData.holdThreshold, _holdTime) : 0f;
+    }
+
+    public WeaponBase GetWeaponBaseRef()
+    {
+        return _currentWeapon;
+    }
+
 
     void OnEnable() 
     {
@@ -136,7 +126,8 @@ public class WeaponManager : MonoBehaviour
         _playerInput.Player.OnPickUpWeapon.performed += OnPickUpWeapon;
         _playerInput.Player.OnPickUpWeapon.canceled += OnPickUpWeapon;
         _playerInput.Player.OnSwitchWeapon.performed += OnSwitchWeapon;
-        _playerInput.Player.OnSwitchWeapon.canceled += OnSwitchWeapon;  
+        _playerInput.Player.OnSwitchWeapon.canceled += OnSwitchWeapon;
+        
     }
 
     private void OnDisable() 
@@ -161,26 +152,14 @@ public class WeaponManager : MonoBehaviour
         } 
     }
 
-    private void DashingToCancelAction()
-    {
-        if(isAllowToCancelAction)
-        {
-            isDashingToCancelAction = true;
-            comboCounter = 0;
-        }
-    }
-
     private void OnAttackInputPerform(InputAction.CallbackContext context)
     {
-        if (_currentWeapon == null || isRecovering)
+        if (_currentWeapon == null)
         {
+            Debug.Log("there is currently no weapon");
             return;
         }
-        if (!isAttack)
-        {
-            _startHold = true;
-        }
-        isAllowToCancelAction = true;
+        _startHold = true; 
         _holdTime = 0f; // always set the _holdTimer back to 0 when start click to avoid accumulate holdTime if player just do normal attack
     }
 
@@ -188,96 +167,27 @@ public class WeaponManager : MonoBehaviour
     {
         if( _currentWeapon != null)
         {
-            if(isDashingToCancelAction)
-            {
-                isDashingToCancelAction = false;
-                return;
-            }
-
             if (_isHoldAttack)
             {
                 Debug.Log("ChargeAttack");
+                OnPerformChargedATK?.Invoke(true);
                 _currentWeapon.OnInnitSecondaryAttack();
-                AttackHandle?.Invoke(comboCounter);
-                cooldownTimer = _currentWeapon._weaponData.chargeAttackSpeed;
-
-                isAllowToCancelAction = false;
-
-                recoverTimer = recoverDuration;
-                isRecovering = true;
-                HandleMovementWhenRecover?.Invoke();
-
                 _startHold = false;
-                comboCounter = 0;
+                cooldownTimer = _currentWeapon._weaponData.chargeAttackSpeed;
             }
-            else if(!isAttack && !isRecovering) //if going for combo just focus on this statement
+            else if (_isNormalAttack) //if going for combo just focus on this statement
             {
-                if (isRecovering) { return; }
-                if(_holdTime >= 0.5f) 
-                { 
-                    _holdTime = 0f;
-                    _startHold = false;
-                    return; 
-                }
-
+                Debug.Log("Attack");
+                OnPerformChargedATK?.Invoke(false);
                 _currentWeapon.OnInnitNormalAttack();
-                
-                
-                if(comboCounter >= maxComboCount)
-                {
-                    //recoverTimer = recoverDuration;
-                    //isRecovering = true;
-                    StartCoroutine(ResetFullCombo());
-                    return;
-                }
-                
                 cooldownTimer = _currentWeapon._weaponData.attackSpeed;
-
-                if(comboCoroutine != null)
-                {
-                    StopCoroutine(comboCoroutine);
-                }
-                
-                
-                cooldownTimer = comboAttackSpeed;
-                comboCounter++;
-                AttackHandle?.Invoke(comboCounter);
-                isAttack = true;
-                comboCoroutine = StartCoroutine(ResetCombo());
-
             }
-            
-            //isAttack = true; // set the isAttack = true again so that it will start cooldown, avoid attack with no cooldown
+
+            isAttack = true; // set the isAttack = true again so that it will start cooldown, avoid attack with no cooldown
             ResetAttackState();
         }
-        //_isHoldAttack = true then charge attack and set the cooldown to weapon normal/charge attack speed and then start cooldown   
-    }
-
-    private IEnumerator ResetCombo()
-    {
-        yield return new WaitForSeconds(comboResetTime);
-
-        isDashingToCancelAction = false;
-        isAllowToCancelAction = false;
-
-        recoverTimer = recoverDuration;
-        isRecovering = true;
-
-        //isAttack = true;
-        cooldownTimer = _currentWeapon._weaponData.attackSpeed;
-        comboCounter = 0;
+        //_isHoldAttack = true then charge attack and set the cooldown to weapon normal/charge attack speed and then start cooldown
         
-        _startHold = false;
-        _holdTime = 0f;
-    }
-
-    private IEnumerator ResetFullCombo()
-    {
-        HandleMovementWhenRecover?.Invoke();
-        yield return new WaitForSeconds(comboResetTime);
-        comboCounter = 0;
-        _startHold = false;
-        _holdTime = 0;
     }
 
     private void ResetAttackState()
@@ -286,6 +196,7 @@ public class WeaponManager : MonoBehaviour
         _startHold = false;
         _isHoldAttack = false;
         _isNormalAttack = false;
+        OnHoldChargeATK?.Invoke(false);
     }
 
     private void OnTryWeaponSwitch() // this function only get call when the OnWeaponSwitch() method get call

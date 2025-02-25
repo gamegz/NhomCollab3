@@ -21,6 +21,7 @@ namespace Enemy
     */
     public class EnemyBase : MonoBehaviour, IDamageable
     {
+        public static event Action<bool> OnEnemyDamaged;
         public event Action<EnemyBase> OnEnemyDeaths;
         public delegate void OnCallEnemyDeath(EnemyBase enemy);
         public static event OnCallEnemyDeath OnEnemyDeathsEvent;
@@ -135,11 +136,24 @@ namespace Enemy
 
         #endregion
 
+        #region DUC ANH'S VARIABLE
+        private bool isChargedATK = false;
+        #endregion 
+
 
         public virtual void Awake()
         {                     
             SetUpStateMachine();
-            
+        }
+
+        private void OnEnable()
+        {
+            WeaponManager.OnPerformChargedATK += HitByChargedATK;
+        }
+
+        private void OnDisable()
+        {
+            WeaponManager.OnPerformChargedATK -= HitByChargedATK;
         }
 
 
@@ -173,12 +187,13 @@ namespace Enemy
 
         public virtual void UpdateLogic()
         {
-            enemyNavAgent.speed = currentSpeed/10;
+            
             UpdateAttackCoolDown();
 
             if(isStagger) { return; }
             _stateMachine.UpdateState();
             enemyNavAgent.isStopped = !canMove;
+            enemyNavAgent.speed = currentSpeed/10;
             if (canTurn)
             {
                 LookAtTarget(transform, playerRef.transform, turnSpeed);
@@ -204,11 +219,6 @@ namespace Enemy
             distanceToPlayer = Vector3.Distance(transform.position, playerRef.transform.position);
             isTargetInAttackRange = (distanceToPlayer <= attackRange) ? true : false;
         }
-
- 
-
-
-        
 
         private void UpdateAttackCoolDown() {
         
@@ -399,6 +409,10 @@ namespace Enemy
 
         #endregion
 
+        private void HitByChargedATK(bool hit)
+        {
+            isChargedATK = hit;
+        }
 
 
         public void TakeDamage(int damage)
@@ -406,6 +420,8 @@ namespace Enemy
             Debug.Log("Damage: " + damage);
             currentHealth -= damage;
             staggerThresholdCounter -= damage;
+
+            OnEnemyDamaged?.Invoke(isChargedATK);
 
             if (currentHealth <= 0)
             {
@@ -418,6 +434,8 @@ namespace Enemy
             }
 
         }
+
+
 
         public void DamagedByWeapon(WeaponData _weaponData)
         {

@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 4196268588769183956}
   - component: {fileID: 5335208897705796368}
   - component: {fileID: 8416440061526373778}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: EnemyBackFalcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.AssetImporters;
 using UnityEngine;
+using System;
 
 //Handle colllision logic and bouncing to shooter
 public class EnemyProjectile : MonoBehaviour
@@ -12,6 +14,7 @@ public class EnemyProjectile : MonoBehaviour
     [SerializeField] private float _bulletSpeed;
     [SerializeField] private int _damage;
     [SerializeField] private float _lifeTime;
+
 
     private void Update()
     {
@@ -33,6 +36,16 @@ public class EnemyProjectile : MonoBehaviour
         }
     }
 
+    public bool GetDeflectValue()
+    {
+        return _deflected;
+    }
+
+    public int GetBulletDamage()
+    {
+        return _damage;
+    }
+
     public void ReflectBulletToOwner() // [DUC ANH]: Might not use this yet, will discuss with the team.
     {
         ChangeShootDir(_owner.transform.position - transform.position);
@@ -51,18 +64,5 @@ public class EnemyProjectile : MonoBehaviour
         _shootDir = caculatedShootDir;
         transform.rotation = Quaternion.LookRotation(shootDir);
     }
-
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            other.gameObject.GetComponent<IDamageable>().TakeDamage(_damage);
-            Destroy(gameObject);
-        }
-
-    }
-
-
 
 }
