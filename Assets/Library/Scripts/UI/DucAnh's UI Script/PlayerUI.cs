@@ -303,6 +303,7 @@ public class PlayerUI : MonoBehaviour
                         yield return null;
                     }
 
+                    Destroy(heartList[heartList.Count - 1].gameObject);
                     heartList.RemoveAt(heartList.Count - 1);
                 }
             }

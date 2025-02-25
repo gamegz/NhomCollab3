@@ -56,8 +56,8 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     private float overHealTimer = 0f; 
     private float currentHBProgress = 0f; 
     private float clampedHBValue = 0f; 
-    private float HBMultiplier = 1f; 
-    private float maxHBProgress = 6f;
+    [SerializeField] private float HBIncreaseAmount = 1f; 
+    [SerializeField] private float maxHBRequirement = 6f;
     #endregion
 
     #region Health Stuff
@@ -227,7 +227,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         }
         else if (!isOverHealing)
         {
-            if (currentHBProgress == maxHBProgress && PlayerDatas.Instance.GetStats.currentPlayerHealth >= maxHealth - 1)
+            if (currentHBProgress == maxHBRequirement && PlayerDatas.Instance.GetStats.currentPlayerHealth >= maxHealth - 1)
             {
                 if (switchReadyTextCoroutine != null)
                 {
@@ -235,7 +235,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
                     switchReadyTextCoroutine = null;
                 }
 
-                if (currentHBProgress == maxHBProgress && switchReadyTextCoroutine == null)
+                if (currentHBProgress == maxHBRequirement && switchReadyTextCoroutine == null)
                     switchReadyTextCoroutine = StartCoroutine(SwitchTextReadyAnim());
                 
                 else
@@ -266,10 +266,10 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
 
     public void IncreaseHealBar(bool byChargedAttack) // ACTIVATED WHEN HITTING AN ENEMY
     {
-        currentHBProgress = Mathf.Clamp(currentHBProgress + HBMultiplier, 0, maxHBProgress + 1);
-        clampedHBValue = Mathf.Clamp(currentHBProgress, 0, maxHBProgress);
+        currentHBProgress = Mathf.Clamp(currentHBProgress + HBIncreaseAmount, 0, maxHBRequirement + 1);
+        clampedHBValue = Mathf.Clamp(currentHBProgress, 0, maxHBRequirement);
 
-        if (clampedHBValue == maxHBProgress)
+        if (clampedHBValue == maxHBRequirement)
         {
             if (PlayerDatas.Instance.GetStats.currentPlayerHealth == maxHealth && !overHealReady)
             {
@@ -289,7 +289,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
                 HealActivated?.Invoke();
                 HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, maxHealth, SetHealthState(HealthStates.INCREASED));
             }
-            else if (currentHBProgress > maxHBProgress && PlayerDatas.Instance.GetStats.currentPlayerHealth == maxHealth && overHealCoroutine == null)
+            else if (currentHBProgress > maxHBRequirement && PlayerDatas.Instance.GetStats.currentPlayerHealth == maxHealth && overHealCoroutine == null)
             { 
                 isOverHealing = true;
                 overHealCoroutine = StartCoroutine(OverHealing());
@@ -306,11 +306,11 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         {
             overHealTimer += Time.deltaTime;
 
-            if (HBMultiplier < 3)
-                HBMultiplier += overHealTimer / 25000;
+            if (HBIncreaseAmount < 3)
+                HBIncreaseAmount += overHealTimer / 25000;
             
             else
-                HBMultiplier = 3;
+                HBIncreaseAmount = 3;
 
             clampedHBValue -= overHealTimer / 1250f;
             currentHBProgress = clampedHBValue;
@@ -323,7 +323,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         currentHBProgress = 0;
         clampedHBValue = 0; 
         overHealTimer = 0;
-        HBMultiplier = 1;
+        HBIncreaseAmount = 1;
 
         overHealCoroutine = null;
     }
@@ -331,7 +331,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
 
     public float GetHealBarProgress() // For displaying heal bar UI 
     {
-        return Mathf.InverseLerp(0f, maxHBProgress, currentHBProgress); 
+        return Mathf.InverseLerp(0f, maxHBRequirement, currentHBProgress); 
     }
 
     private void InitializeHealthStatesDictionary()
