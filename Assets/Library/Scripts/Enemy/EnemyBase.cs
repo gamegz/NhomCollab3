@@ -148,12 +148,12 @@ namespace Enemy
 
         private void OnEnable()
         {
-            //WeaponManager.OnPerformChargedATK += HitByChargedATK;
+            WeaponManager.OnPerformChargedATK += HitByChargedATK;
         }
 
         private void OnDisable()
         {
-            //WeaponManager.OnPerformChargedATK -= HitByChargedATK;
+            WeaponManager.OnPerformChargedATK -= HitByChargedATK;
         }
 
 

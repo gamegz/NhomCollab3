@@ -55,6 +55,7 @@ public class GameManager : MonoBehaviour
     public Transform GetSpawnPoint()
     {
         Transform spawnPoint = GameObject.FindWithTag("SpawnPoint").transform;
+        //Transform spawnPoint = SpawnPoint.transform;
         if (spawnPoint != null)
         {
             return spawnPoint;
@@ -64,7 +65,6 @@ public class GameManager : MonoBehaviour
             return null;
         }
     }
-
 }
 
 public enum GameState

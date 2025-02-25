@@ -16,6 +16,9 @@ public class WeaponManager : MonoBehaviour
 
     public delegate void handleMovementWhenRecover();
     public static event handleMovementWhenRecover HandleMovementWhenRecover;
+
+    public static event Action<bool> OnHoldChargeATK; // Duc Anh: THIS IS FOR UI.
+    public static event Action<bool> OnPerformChargedATK;
     //Courotine
     Coroutine comboCoroutine;
 
@@ -126,6 +129,23 @@ public class WeaponManager : MonoBehaviour
                 isRecovering = false;
             }
         }
+
+
+    }
+
+    public float GetHoldingChargeATKTime()
+    {
+        return _holdTime;
+    }
+
+    public float GetChargeATKProgress()
+    {
+        return _currentWeapon ? Mathf.InverseLerp(0f, _currentWeapon._weaponData.holdThreshold, _holdTime) : 0f;
+    }
+
+    public WeaponBase GetWeaponBaseRef()
+    {
+        return _currentWeapon;
     }
 
     void OnEnable()
@@ -206,6 +226,7 @@ public class WeaponManager : MonoBehaviour
                 recoverTimer = recoverDuration;
                 isRecovering = true;
                 HandleMovementWhenRecover?.Invoke();
+                OnPerformChargedATK?.Invoke(true);
 
                 _startHold = false;
                 comboCounter = 0;
@@ -242,6 +263,7 @@ public class WeaponManager : MonoBehaviour
                 cooldownTimer = comboAttackSpeed;
                 comboCounter++;
                 AttackHandle?.Invoke(comboCounter);
+                OnPerformChargedATK?.Invoke(false);
                 isAttack = true;
                 comboCoroutine = StartCoroutine(ResetCombo());
 
