@@ -59,16 +59,24 @@ namespace Enemy
         [Tooltip("Distance to return if player too far away")]
         public float followDistance;
 
+        [Header("Stagger")]
         [Tooltip("Amount of damage recive before stagger")]
         public float staggerThreshold;
         public float staggerTime;
         private float staggerThresholdCounter;
         private float staggerTimeCounter;
-        private float knockbackForce = 0.0f;
+        public float knockbackForce = 0.0f;
         [HideInInspector] public bool isStagger = false;
         [HideInInspector] public bool isTargetInAttackRange;
         [HideInInspector] public bool isTokenOwner;
 
+        //Stun
+        [Header("STUN")]
+        public bool canBeStunned;
+        public int stunPoint;// Percentage
+        public float stunDuration;
+        [HideInInspector] public bool isStunned = false;
+        private bool hasBeenStunned = false;
 
 
         //Navigation
@@ -432,6 +440,10 @@ namespace Enemy
                 staggerThresholdCounter = staggerThreshold;
                 Stagger(knockbackForce);
             }
+            if (canBeStunned && !hasBeenStunned && currentHealth < stunPoint)
+            {
+                StartCoroutine(Stun());
+            }
 
         }
 
@@ -439,7 +451,7 @@ namespace Enemy
 
         public void DamagedByWeapon(WeaponData _weaponData)
         {
-            knockbackForce = _weaponData.knockbackForce;
+            //knockbackForce = _weaponData.knockbackForce;
         }
 
 
@@ -447,22 +459,50 @@ namespace Enemy
 
         public void Stagger(float knockbackStrength)
         {
-            Vector3 knockbackDir = (this.transform.position - PlayerBase.Instance.transform.position).normalized;
-            enemyNavAgent.velocity += knockbackDir * knockbackStrength;
+            if (isStagger == true) return;
+            canMove = false;
+            isStagger = true;
+            Vector3 knockbackDir = GetDirectionIgnoreY(playerRef.transform.position, this.transform.position).normalized;
+            //rb.AddForce(knockbackDir * knockbackStrength, ForceMode.Impulse);
+            StartCoroutine(ApplyKnockback(knockbackDir, knockbackStrength));
+            Debug.Log("Stagger");
+            StartCoroutine(StaggerTimeCoroutine());
 
-            if (staggerTimeCoroutine != null) StopCoroutine(staggerTimeCoroutine);
-            staggerTimeCoroutine = StartCoroutine(StaggerTimeCoroutine());
         }
 
         IEnumerator StaggerTimeCoroutine()
         {
-            isStagger = true;
-            canMove = false;
-
             yield return new WaitForSeconds(staggerTime);
 
             isStagger = false;
             canMove = true;
+        }
+
+        private IEnumerator ApplyKnockback(Vector3 direction, float strength)
+        {
+            float knockbackTime = 0.2f; // Time the knockback effect lasts
+            float elapsedTime = 0f;
+
+            while (elapsedTime < knockbackTime)
+            {
+                transform.position += direction * (strength * Time.deltaTime);
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+        }
+
+        private IEnumerator Stun()
+        {
+            isStunned = true;
+            hasBeenStunned = true;
+            canMove = false;
+            Debug.Log("Stun");
+
+            yield return new WaitForSeconds(stunDuration);
+
+            isStunned = false;
+            canMove = true;
+            Debug.Log("End Stun");
         }
 
         public virtual void OnDeath()

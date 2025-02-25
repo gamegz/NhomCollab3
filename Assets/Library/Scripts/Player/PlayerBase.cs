@@ -110,6 +110,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
+
         _playerInput.Player.OnInteract.performed += OnInteractWithObject;
         _playerInput.Player.OnInteract.canceled += OnInteractWithObject;
         _playerInput.Enable();
@@ -361,6 +362,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
 
     private IEnumerator WaitForSceneLoad()
     {
+        yield return new WaitUntil(() => GameManager.Instance.GetSpawnPoint() != null);
         yield return new WaitForSeconds(0.5f);
         SetPlayerPosition();
     }
@@ -368,7 +370,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     private void SetPlayerPosition()
     {
         Transform spawnPoint = GameManager.Instance.GetSpawnPoint();
-        if(spawnPoint != null)
+        if (spawnPoint != null)
         {
             transform.position = spawnPoint.position;
         }

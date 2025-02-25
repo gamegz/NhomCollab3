@@ -429,11 +429,16 @@ MonoBehaviour:
   retreatDistance: 3.24
   maxRetreatDistance: 5
   followDistance: 6
-  staggerThreshold: 10
-  staggerTime: 1
+  staggerThreshold: 1
+  staggerTime: 0.2
+  knockbackForce: 10
   isStagger: 0
   isTargetInAttackRange: 0
   isTokenOwner: 0
+  canBeStunned: 1
+  stunPoint: 9998
+  stunDuration: 10
+  isStunned: 0
   enemyNavAgent: {fileID: 531018669308337807}
   followSpeed: 67
   retreatSpeed: 120
