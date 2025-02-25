@@ -15,8 +15,8 @@ MonoBehaviour:
   weaponName: Sword
   critDamageMultiplier: 0
   critChance: 0
-  attackSpeed: 2
-  chargeAttackSpeed: 3
+  attackSpeed: 0.7
+  chargeAttackSpeed: 1.3
   holdThreshold: 3
   baseWeaponDamage: 100
   chargeWeaponDamage: 0
