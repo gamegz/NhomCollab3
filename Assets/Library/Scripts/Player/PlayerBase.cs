@@ -361,7 +361,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
 
     private IEnumerator WaitForSceneLoad()
     {
-        yield return new WaitForSeconds(0.05f);
+        yield return new WaitForSeconds(0.2f);
         SetPlayerPosition();
     }
 
