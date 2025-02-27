@@ -19,8 +19,6 @@ public class WeaponManager : MonoBehaviour
     public delegate void handleMovementWhenRecover();
     public static event handleMovementWhenRecover HandleMovementWhenRecover;
 
-    public static event Action<bool> OnHoldChargeATK; // Duc Anh: THIS IS FOR UI.
-    public static event Action<bool> OnPerformChargedATK;
     //Courotine
     Coroutine comboCoroutine;
 
@@ -205,7 +203,7 @@ public class WeaponManager : MonoBehaviour
             return;
         }
 
-        }
+        
         if (!isAttack)
         {
             _startHold = true;

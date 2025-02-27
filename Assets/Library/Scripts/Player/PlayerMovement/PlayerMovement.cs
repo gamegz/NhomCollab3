@@ -55,6 +55,7 @@ public class PlayerMovement : MonoBehaviour
     private bool _isOnSlope = false;
     private Coroutine regenCoroutine;
     private Coroutine dashCoroutine;
+    private Coroutine stopMovementCoroutine;
     Quaternion _initialRotation;
     private Vector2 _mousePosition;
     private Vector2 _movement;
