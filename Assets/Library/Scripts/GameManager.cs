@@ -15,7 +15,8 @@ public class GameManager : MonoBehaviour
     {
         PlayerDatas.Instance.LoadGame();
         PlayerDatas.Instance.GetStats.currentPlayerHealth = PlayerDatas.Instance.GetStats.Health;
-        if(Instance == null)
+        Rigidbody rb = PlayerBase.Instance.GetComponent<Rigidbody>();
+        if (Instance == null)
         {
             Instance = this;
         }
@@ -54,7 +55,7 @@ public class GameManager : MonoBehaviour
 
     public Transform GetSpawnPoint()
     {
-        Transform spawnPoint = GameObject.FindWithTag("SpawnPoint").transform;
+        Transform spawnPoint = GameObject.FindWithTag("SpawnPoint").transform;;
         if (spawnPoint != null)
         {
             return spawnPoint;

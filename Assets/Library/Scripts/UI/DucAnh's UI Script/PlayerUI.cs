@@ -324,7 +324,6 @@ public class PlayerUI : MonoBehaviour
 
         if (chargeATKCoroutine == null)
             chargeATKCoroutine = StartCoroutine(ChargeAttack(isHolding));
-
     }
 
     private IEnumerator ChargeAttack(bool isHolding)
