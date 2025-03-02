@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
-using UnityEditor.Compilation;
+
 
 public class PlayerUI : MonoBehaviour
 {
@@ -230,9 +230,9 @@ public class PlayerUI : MonoBehaviour
         { 
             healBarUI.color = orgHBColor;
                 
-            Debug.Log("Stop Over Healing.");
+            //Debug.Log("Stop Over Healing.");
 
-            Debug.Log(tempOverHealHeart.transform.localScale);
+            //Debug.Log(tempOverHealHeart.transform.localScale);
 
             while (tempOverHealHeart.transform.localScale != Vector3.zero)
             {

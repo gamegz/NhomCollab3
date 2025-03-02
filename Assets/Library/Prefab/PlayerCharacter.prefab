@@ -33,7 +33,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 960, y: 0}
+  m_AnchoredPosition: {x: 123, y: -81}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &132933792198710650
@@ -936,7 +936,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1893771244891984632
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1058,7 +1058,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 41.17157, y: 83.09204}
+  m_AnchoredPosition: {x: 41.17157, y: -73.90796}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5206785916635896017
@@ -1295,7 +1295,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1200, y: 300}
+  m_AnchoredPosition: {x: -513, y: 285}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3533773153248156211
@@ -1531,7 +1531,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -710.9703, y: 431.0432}
+  m_AnchoredPosition: {x: -842, y: 448}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2758309433295606730
@@ -1580,6 +1580,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 7381951561567745206}
   weaponList: []
+  _holdTime: 0
+  comboCounter: 0
+  comboResetTime: 0.35
+  recoverDuration: 0.2
+  isRecovering: 0
   collectRange: 3
   layerToCheck:
     serializedVersion: 2
@@ -1619,7 +1624,7 @@ RectTransform:
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2606,7 +2611,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 350, y: 0}
+  m_AnchoredPosition: {x: 350, y: -157}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2613903146333019389
@@ -4313,21 +4318,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f31d281281c67d408a075bc59854626, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dashForce: 45
   rotationSpeed: 15
+  standStillTimeAfterAttackRecover: 0.2
   maxCharge: 3
   currentCharge: 0
-  dashCooldown: 1
-  regenCooldown: 2
-  overheatCooldown: 5
+  dashRecoverTimePerCharge: 4.8
+  dashInputCooldown: 0.2
+  dashRegenMultiplier: 1
+  dashForce: 45
   dashDuration: 0.2
+  animCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   parryBoxRefPoint: {fileID: 2794697307962972658}
   parryBoxSize: {x: 1.25, y: 2, z: 1.5}
   bulletLayerMask:
     serializedVersion: 2
     m_Bits: 16384
   invulnerableTimerOrg: 0.6
-  standStillTimerOrg: 1
+  standStillTimerOrg: 0.3
+  moveDistance: 0.5
+  moveDuration: 0.2
+  isRecovering: 0
 --- !u!114 &7381951561567745206
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4344,8 +4359,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   HBIncreaseAmount: 1
-  maxHBRequirement: 6
-  maxHealth: 10
+  maxHBRequirement: 4
+  maxHealth: 5
+  invulTimeAfterDamaged: 0.5
 --- !u!114 &1658478206797379963
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4776,7 +4792,7 @@ Transform:
   - {fileID: 3396010017111260613}
   - {fileID: 3438858582349556901}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8487215999029970427
 GameObject:
@@ -4984,7 +5000,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96

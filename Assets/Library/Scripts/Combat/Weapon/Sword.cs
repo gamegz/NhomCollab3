@@ -8,7 +8,7 @@ public class Sword : WeaponBase
 {
     public override void OnInnitNormalAttack()
     {
-        Debug.Log("attack");
+        //Debug.Log("attack");
         StartCoroutine(WaitToTurnOffBoxCollider());
     }
 
@@ -19,13 +19,13 @@ public class Sword : WeaponBase
 
     public override void OnInnitSecondaryAttack()
     {
-        Debug.Log("charge attack");
+        //Debug.Log("charge attack");
         StartCoroutine(WaitToTurnOffBoxCollider());
     }
 
     IEnumerator WaitToTurnOffBoxCollider()
     {
-        Debug.Log("hit");
+        //Debug.Log("hit");
         GetComponent<BoxCollider>().enabled = true;
         yield return new WaitForSeconds(0.3f);
         GetComponent<BoxCollider>().enabled = false;
@@ -44,7 +44,7 @@ public class Sword : WeaponBase
 
         if (damagable != null && !other.CompareTag("Player"))
         {
-            damagable.TakeDamage(_weaponData.baseWeaponDamage * PlayerDatas.Instance.GetStats.DamageModifier);
+            damagable.TakeDamage(_weaponData.baseWeaponDamage);
         }
     }
 }

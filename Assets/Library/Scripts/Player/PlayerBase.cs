@@ -64,6 +64,12 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     [Tooltip("Health Update Level <=> Amount of health added to player's highest current health")]
     //[SerializeField] private float healthUpgradeAmount = 1f; // Will be used when the upgrade system is established
     [SerializeField] private float maxHealth = 3;
+    [Tooltip("The amount of time player became immune to damage after being hit")]
+    [SerializeField] private float invulTimeAfterDamaged = 0.5f;
+    private float invulTimeAfterDamagedCount;
+    private bool canBeDamage = true;
+    private Coroutine damageImmuneCoroutine;
+    public bool CanBeDamage => canBeDamage;
 
     #endregion
 
@@ -103,7 +109,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     private void Start()
     {
         PlayerDatas.Instance.GetStats.currentPlayerHealth = maxHealth;
-
+        invulTimeAfterDamagedCount = invulTimeAfterDamaged;
         HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, maxHealth, SetHealthState(HealthStates.INCREASED));
     }
 
@@ -220,6 +226,8 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
 
     public void TakeDamage(int modifiedHealth) // ACTIVATED WHEN TAKING DAMAGE
     {
+        if(!canBeDamage) { return; }
+
         if (isOverHealing)
         {
             isOverHealing = false;
@@ -254,6 +262,31 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         {
             OnPlayerDeath();
         }
+
+        damageImmuneCoroutine = StartCoroutine(CanDamageStatusCountDown(invulTimeAfterDamaged));
+    }
+
+    public void StartImmunityCoroutine(float immunityTime)
+    {
+        invulTimeAfterDamagedCount = immunityTime;
+        if(damageImmuneCoroutine == null)
+        {
+            damageImmuneCoroutine = StartCoroutine(CanDamageStatusCountDown(immunityTime));
+        }
+    }
+    private IEnumerator CanDamageStatusCountDown(float invulTime)
+    {
+        Debug.Log("Can not be damage");
+        canBeDamage = false;
+        invulTimeAfterDamagedCount = invulTime;
+        //yield return new WaitForSeconds(invulTime);
+        while(invulTimeAfterDamagedCount > 0)
+        {
+            invulTimeAfterDamagedCount -= Time.deltaTime;
+            yield return null;
+        }
+        Debug.Log("can be damage now");
+        canBeDamage = true;
     }
 
     private IEnumerator SwitchTextReadyAnim()

@@ -15,55 +15,54 @@ public class PlayerMovement : MonoBehaviour
     private PlayerBase m_PlayerBase;
     protected Rigidbody _rb;
     private PlayerInput _playerInput;
+    private Camera _camera;
+    private CapsuleCollider _capsuleCollider;
 
     [Header("Movement")]
     //private float playerSpeed;
-    [SerializeField] private float dashForce;
     [SerializeField] private float rotationSpeed;
+    [SerializeField] private float standStillTimeAfterAttackRecover;
+    private Vector3 moveDirection;
+    private bool isTryMove;
+    private Vector2 _mousePosition;
+    private Vector2 _movement;
+    private bool _isOnSlope = false;
 
     [Header("Dash Manager")]
     [SerializeField] int maxCharge = 3;
     [SerializeField] int currentCharge;
-    [SerializeField] private float dashCooldown = 1.0f;
-    [SerializeField] private float regenCooldown = 2.0f;
-    [SerializeField] private float overheatCooldown = 5.0f;
+    [SerializeField] private float dashRecoverTimePerCharge = 1f;
+    [SerializeField] private float dashInputCooldown = 0.3f;
+    [SerializeField] private float dashRegenMultiplier = 1.0f;
+    [SerializeField] private float dashForce;
     [SerializeField] private float dashDuration;
     public AnimationCurve animCurve;
+    private bool canDash = true;
+    private bool isDashing;
+    private float dashRecoverTimePerChargeCount;
 
     [Header("Parry Manager")]
     [SerializeField] private Transform parryBoxRefPoint; // A transform point that will spawn the parry box
     [SerializeField] private Vector3 parryBoxSize = new Vector3(1, 1, 1);
-    [SerializeField] private LayerMask bulletLayerMask; // Detects bullet via layermask
+    [SerializeField] private LayerMask bulletLayerMask; 
     [SerializeField] private float invulnerableTimerOrg = 0.6f;
     [SerializeField] private float standStillTimerOrg = 1f;
-
-
-    // [ INITIALIZATION ]
-
-
-    // [ PARRY RELATED ]
     public static event Action OnParryStart;
     public static event Action OnParryStop;
     private bool canParry = true;
     private bool isParrying = false;
     private Coroutine parryCoroutine;
     private Coroutine immobileCoroutine;
-
-    // [ ALL THE OTHER STUFF {Please Organize This Script For Me OMGGGGG}]
-    private CapsuleCollider _capsuleCollider;
-    private bool isOverheated = false;
-    private bool _isOnSlope = false;
-    private Coroutine regenCoroutine;
+    
+   
     private Coroutine dashCoroutine;
     private Coroutine stopMovementCoroutine;
     Quaternion _initialRotation;
-    private Vector2 _mousePosition;
-    private Vector2 _movement;
-    private Camera _camera;
+    
+    
     private bool isAttacking = false;
     [SerializeField] private float moveDistance = 2f;
     [SerializeField] private float moveDuration = 0.2f;
-    private float delayBeforeBackToWalking = 1f;
     public bool isRecovering = false;
 
 
@@ -80,7 +79,7 @@ public class PlayerMovement : MonoBehaviour
     private void OnEnable()
     {
         _playerInput.Player.Move.performed += Move;
-        _playerInput.Player.Move.canceled += Move;
+        _playerInput.Player.Move.canceled += OnMoveCancel;
         _playerInput.Player.Dash.performed += Dash;
         _playerInput.Player.MousePos.performed += MousePos;
         _playerInput.Player.Parry.performed += Parry;
@@ -95,7 +94,7 @@ public class PlayerMovement : MonoBehaviour
     private void OnDisable()
     {
         _playerInput.Player.Move.performed -= Move;
-        _playerInput.Player.Move.canceled -= Move;
+        _playerInput.Player.Move.canceled -= OnMoveCancel;
         _playerInput.Player.Dash.performed -= Dash;
         _playerInput.Player.Parry.performed -= Parry;
         _playerInput.Disable();
@@ -106,48 +105,78 @@ public class PlayerMovement : MonoBehaviour
         OnParryStop -= () => isParrying = false;
     }
 
-    void Update()
+    private void Start()
     {
-        if (_playerInput.Player.Dash.WasPressedThisFrame())
-        {
-            if (dashCoroutine == null && currentCharge > 0)
-            {
-                dashCoroutine = StartCoroutine(Dash());
-            }
-        }
+        
+    }
 
-        if (_playerInput.Player.Parry.WasPressedThisFrame()) // Was pressed this frame is cool
-        {
-            if (parryCoroutine == null && canParry)
-            {
-                parryCoroutine = StartCoroutine(Parry());
-            }
-            else { Debug.Log("Apparently..."); }
-        }
-
-        if (regenCoroutine == null)  //Regen whenever not dashing
-        {
-            regenCoroutine = StartCoroutine(RegenCharge());
-        }
-
+    private void Update()
+    {
+        RechargeDash();
     }
 
     private void FixedUpdate()
     {
+        if (isParrying) return;
+        if (isDashing) return;
+        if (isAttacking) return;
         LookAtMousePosition();
         MoveCharacter();
     }
 
+    #region INPUT_LISTENER
+
+    private void MousePos(InputAction.CallbackContext context)
+    {
+        _mousePosition = context.ReadValue<Vector2>();
+
+    }
+
+    public void Move(InputAction.CallbackContext context)
+    {
+        _movement = context.ReadValue<Vector2>();
+        isTryMove = true;
+    }
+
+    public void OnMoveCancel(InputAction.CallbackContext context)
+    {
+        _movement = context.ReadValue<Vector2>();
+        isTryMove = false;
+        //_rb.velocity = new Vector3(0, _rb.velocity.y, 0); 
+    }
+
+    public void Dash(InputAction.CallbackContext context)
+    {
+        if(currentCharge <= 0 ) { return; }
+        if (dashCoroutine == null && canDash)
+        {
+            dashCoroutine = StartCoroutine(Dash());
+        }
+    }
+
+    public void Parry(InputAction.CallbackContext context)
+    {
+        if (parryCoroutine == null && canParry)
+        {
+            parryCoroutine = StartCoroutine(Parry());
+        }
+    }
+
+    #endregion
+
+
+    #region MOVEMENT
     private void MoveCharacter()
     {
-        if (isParrying) return; ;
+        
         if (isRecovering || isAttacking)
         {
             _rb.velocity = new Vector3(0, _rb.velocity.y, 0);
             return;
         }
 
-        var playerMovement = new Vector3(_movement.x, 0, _movement.y).normalized * PlayerDatas.Instance.GetStats.MoveSpeed;
+        moveDirection = new Vector3(_movement.x, 0, _movement.y).normalized;
+        var playerMovement = moveDirection * PlayerDatas.Instance.GetStats.MoveSpeed;
         playerMovement.y = _rb.velocity.y;
         _rb.velocity = playerMovement;
     }
@@ -161,7 +190,7 @@ public class PlayerMovement : MonoBehaviour
     {
         _rb.velocity = Vector3.zero;
         isRecovering = true;
-        yield return new WaitForSeconds(1.2f);
+        yield return new WaitForSeconds(standStillTimeAfterAttackRecover);
         isRecovering = false;
         stopMovementCoroutine = null;
     }
@@ -212,63 +241,52 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region DASH
+
     IEnumerator Dash()
     {
-        currentCharge--;
-        //DASH GOES HERE
+        CancelParry();
         _rb.velocity = Vector3.zero;
-        yield return new WaitForFixedUpdate();
-        Vector3 dashDirection = new Vector3(_movement.x, 0, _movement.y).normalized;
+        canDash = false;
+              
+        Vector3 dashDirection = (_playerInput.Player.Move.IsPressed()) ? moveDirection : transform.forward;
+        
+        
+        yield return new WaitForFixedUpdate();       
         float elapsedDashTime = 0f;
-
-        float dashSpeedWhenStandStill = dashForce / dashDuration;
-        Vector3 dashDirectionWhenStandStill = (transform.forward * dashSpeedWhenStandStill);
-
-        if (_rb.velocity == Vector3.zero)
+        isDashing = true;       
+        while (elapsedDashTime < dashDuration)
         {
-            while (elapsedDashTime < dashDuration)
-            {
-                _rb.AddForce(dashDirectionWhenStandStill * Time.fixedDeltaTime, ForceMode.VelocityChange);
-                elapsedDashTime += Time.fixedDeltaTime;
-                yield return new WaitForFixedUpdate();
-            }
+            _rb.AddForce(dashDirection * (dashForce / dashDuration) * Time.fixedDeltaTime, ForceMode.VelocityChange);
+            elapsedDashTime += Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
         }
-        else
-        {
-            while (elapsedDashTime < dashDuration)
-            {
-                _rb.AddForce(dashDirection * (dashForce / dashDuration) * Time.fixedDeltaTime, ForceMode.VelocityChange);
-                elapsedDashTime += Time.fixedDeltaTime;
-                yield return new WaitForFixedUpdate();
-            }
-        }
+
         dashCancel?.Invoke();
         dashCoroutine = null;
+        isDashing = false;
+        currentCharge--;
 
-        //Overheat check
-        if (currentCharge == 0)
-        {
-            StartCoroutine(HandleOverheat());
-        }
+        yield return new WaitForSeconds(dashInputCooldown);
+        canDash = true;      
     }
 
-    private IEnumerator RegenCharge()
+    private void RechargeDash()
     {
-        yield return new WaitForSeconds(regenCooldown);
-        if (currentCharge < maxCharge && !isOverheated) //avoid overload
+        if (currentCharge >= maxCharge) { return; }
+        dashRecoverTimePerChargeCount += Time.deltaTime * dashRegenMultiplier;
+        if (dashRecoverTimePerChargeCount > dashRecoverTimePerCharge)
         {
             currentCharge++;
+            dashRecoverTimePerChargeCount = 0;
         }
-        regenCoroutine = null;  // Reset coroutine reference when regen is done
     }
 
-    private IEnumerator HandleOverheat()
-    {
-        isOverheated = true;
-        yield return new WaitForSeconds(overheatCooldown);
-        isOverheated = false;
-    }
+    #endregion
 
+    #region PARRY
 
     private IEnumerator Parry()
     {
@@ -279,11 +297,13 @@ public class PlayerMovement : MonoBehaviour
         float elapsedInvulnerableTime = invulnerableTimerOrg;
         float elapsedStandStillTime = standStillTimerOrg;
 
+        m_PlayerBase.StartImmunityCoroutine(invulnerableTimerOrg);
+
         Debug.Log("Parrying");
 
         while (elapsedInvulnerableTime >= 0)
         {
-            elapsedInvulnerableTime -= Time.deltaTime;  // Use Time.deltaTime for frame-based time tracking
+            elapsedInvulnerableTime -= Time.deltaTime;
 
             Collider[] colliders = Physics.OverlapBox(parryBoxRefPoint.position, parryBoxSize / 2, transform.rotation, bulletLayerMask);
 
@@ -291,17 +311,13 @@ public class PlayerMovement : MonoBehaviour
             {
                 for (int i = 0; i < colliders.Length; i++)
                 {
-                    GameObject actualBullet = colliders[i].transform.parent.gameObject; // I had to access the parent for some reason...
+                    GameObject actualBullet = colliders[i].transform.gameObject; 
 
                     EnemyProjectile bulletScript = actualBullet.GetComponent<EnemyProjectile>();
 
                     if (bulletScript != null)
                     {
                         bulletScript.ReflectBulletReverse();
-                    }
-                    else
-                    {
-                        Debug.Log("Something wrong with calling the script from bulletScript");
                     }
                 }
             }
@@ -314,6 +330,15 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
+    private void CancelParry()
+    {
+        StopCoroutine(StandStill());
+        OnParryStop?.Invoke();
+        canParry = true;       
+        parryCoroutine = null;
+        immobileCoroutine = null;
+    }
+
     private IEnumerator StandStill()
     {
         _rb.velocity = Vector3.zero;
@@ -324,16 +349,15 @@ public class PlayerMovement : MonoBehaviour
 
         canParry = true;
 
-        parryCoroutine = null; // Gotta make sure the coroutine is null to match the condition above! And also, cleans up each coroutine after each use! ^^
+        // Gotta make sure the coroutine is null to match the condition above! And also, cleans up each coroutine after each use
+        parryCoroutine = null; 
         immobileCoroutine = null;
     }
 
+    #endregion
+
     private void LookAtMousePosition() //Look at player mouse position
     {
-        if (isAttacking)
-        {
-            return;
-        }
         Vector3 _mousePos = Input.mousePosition;
         Vector3 CharacterPos = _camera.WorldToScreenPoint(transform.position);
         Vector3 dir = _mousePos - CharacterPos;
@@ -341,26 +365,7 @@ public class PlayerMovement : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, -angle + 90, 0);
 
     }
-    private void MousePos(InputAction.CallbackContext context)
-    {
-        _mousePosition = context.ReadValue<Vector2>();
 
-    }
-
-    public void Move(InputAction.CallbackContext context)
-    {
-        _movement = context.ReadValue<Vector2>();
-    }
-
-    public void Dash(InputAction.CallbackContext context)
-    {
-
-    }
-
-    public void Parry(InputAction.CallbackContext context)
-    {
-
-    }
 
     void OnDrawGizmos()
     {

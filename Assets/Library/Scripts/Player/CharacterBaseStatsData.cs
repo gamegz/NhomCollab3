@@ -6,9 +6,7 @@ using UnityEngine;
 [Serializable]
 public class CharacterBaseStatsData 
 {
-    // make base stats for player
-    //make base buff
-    //make amount of stats increase per level: for example 1000HP -> 1100HP
+    //Player Base stats
     public float PlayerHealth;
     public int PlayerDamage;
     public float PlayerSpeed;
@@ -20,11 +18,13 @@ public class CharacterBaseStatsData
     public int PlayerCurrentLevel;
     public int PlayerMaxLevel;
 
+    //Buff - NOTE: WILL NOT BE USE
     public float HealthBuff;
     public float SpeedBuff;
     public float DamageBuff;
     public float AttackSpeedBuff;
 
+    //Amount of percent to add when upgrade - unchange in gameplay
     public int HealthUpgradeAmount;
     public int SpeedUpgradeAmount;
     public int StrengthUpgradeAmount;
@@ -32,7 +32,24 @@ public class CharacterBaseStatsData
     public int DashChargeUpgradeAmount;
     public int DashRecoveryUpgradeAmount;
 
+    //Max level of stats - unchange in gameplay
+    public int HealthMaxLevel;
+    public int SpeedMaxLevel;
+    public int StrengMaxLevel;
+    public int RecoveryMaxLevel;
+    public int DashChargeMaxLevel;
+    public int DashRecoveryMaxLevel;
+
+    //Current Level of stats
+    public int HealthCurrentLevel;
+    public int SpeedCurrentLevel;
+    public int StrengthCurrentLevel;
+    public int RecoveryCurrentLevel;
+    public int DashChargeCurrentLevel;
+    public int DashRecoveryCurrentLevel;   
 }
+
+
 
 public enum UpgradeType // make upgrade type
 {

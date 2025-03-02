@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.AssetImporters;
 using UnityEngine;
 using System;
 
@@ -36,16 +35,6 @@ public class EnemyProjectile : MonoBehaviour
         }
     }
 
-    public bool GetDeflectValue()
-    {
-        return _deflected;
-    }
-
-    public int GetBulletDamage()
-    {
-        return _damage;
-    }
-
     public void ReflectBulletToOwner() // [DUC ANH]: Might not use this yet, will discuss with the team.
     {
         ChangeShootDir(_owner.transform.position - transform.position);
@@ -65,4 +54,18 @@ public class EnemyProjectile : MonoBehaviour
         transform.rotation = Quaternion.LookRotation(shootDir);
     }
 
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !_deflected)
+        {
+            other.gameObject.GetComponent<IDamageable>().TakeDamage(_damage); // Dealing 1 DMG to player (player has 5 hearts [could be expanded, I dont know])
+            Destroy(gameObject);
+        }
+        else if (other.gameObject.layer == LayerMask.NameToLayer("Enemy") && _deflected)
+        {
+            other.gameObject.GetComponent<IDamageable>().TakeDamage(_damage * 10); // Dealing 10 DMG to enemies
+            Destroy(gameObject);
+        }
+    }
 }

@@ -18,6 +18,36 @@ public class CharacterStatsData
         {UpgradeType.DashRecovery, 0}
         //{UpgradeType.StaggerTime, 1f}
     };
+    public struct UpgradeStats
+    {
+        public int baseStats;
+        public int upgradeAmount;
+        public int upgradeRequirement;
+        public int maxUpgradeLevel;
+        public int currentUpgradeLevel;
+
+        public UpgradeStats(int baseStats, int upgradeAmount, int upgradeRequirement, int maxUpgradeLevel, int currentUpgradeLevel)
+        {
+            this.baseStats = baseStats;
+            this.upgradeAmount = upgradeAmount;
+            this.upgradeRequirement = upgradeRequirement;
+            this.maxUpgradeLevel = maxUpgradeLevel;
+            this.currentUpgradeLevel = currentUpgradeLevel;
+        }
+    }
+
+    public UpgradeStats speedUpgradeStats;
+    public UpgradeStats healthUpgradeStats;
+    public UpgradeStats recoveryUpgradeStats;
+    public UpgradeStats damageUpgradeStats;
+    public UpgradeStats dashChargeUpgradeStats;
+    public UpgradeStats dashRecoveryUpgradeStats;
+
+
+    //public Dictionary<UpgradeType, UpgradeStats> upgradeGroupDic = new Dictionary<UpgradeType, UpgradeStats>()
+    //{
+    //    {UpgradeType.MovementSpeed, speedUpgradeStats}
+    //};
 
     public Dictionary<BuffType, float> BuffTypes = new Dictionary<BuffType, float>() // this one also
     {

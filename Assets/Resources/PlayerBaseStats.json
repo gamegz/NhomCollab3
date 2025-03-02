@@ -7,7 +7,7 @@
     "SpeedBuff": 1.0,
     "DamageBuff": 1.0,
     "AttackSpeedBuff": 1.0,
-    "AttackSpeed": 0.8,
+    "AttackSpeed": 0.3,
 
   
     "PlayerRecovery": 1,

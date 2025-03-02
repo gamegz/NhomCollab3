@@ -63,8 +63,8 @@ namespace Enemy
         [Tooltip("Amount of damage recive before stagger")]
         public float staggerThreshold;
         public float staggerTime;
-        private float staggerThresholdCounter;
         private float staggerTimeCounter;
+        private float staggerThresholdCounter;        
         public float knockbackForce = 0.0f;
         [HideInInspector] public bool isStagger = false;
         [HideInInspector] public bool isTargetInAttackRange;
@@ -184,10 +184,12 @@ namespace Enemy
             canAttack = true;
             currentSpeed = roamSpeed;
             currentHealth = maxHealth;
+            stunPoint = (canBeStunned) ? stunPoint : maxHealth;
 
             attackCollider.enabled = false;
             attackCollider.gameObject.SetActive(false);
             attackCoolDownCount = attackCooldown;
+            staggerTimeCounter = staggerTime;
 
             if (hostileMethod == EnemyHostileMethod.Gunner) { isTokenOwner = true; }
             attackCollider.gameObject.GetComponent<EnemyAttackCollider>()._damage = attackDamage;
@@ -195,10 +197,10 @@ namespace Enemy
 
         public virtual void UpdateLogic()
         {
-            
-            UpdateAttackCoolDown();
-
             if(isStagger) { return; }
+            if(isStunned) { return; }
+
+            UpdateAttackCoolDown();
             _stateMachine.UpdateState();
             enemyNavAgent.isStopped = !canMove;
             enemyNavAgent.speed = currentSpeed/10;
@@ -425,7 +427,7 @@ namespace Enemy
 
         public void TakeDamage(int damage)
         {
-            Debug.Log("Damage: " + damage);
+            //Debug.Log("Damage: " + damage);
             currentHealth -= damage;
             staggerThresholdCounter -= damage;
 
@@ -438,9 +440,10 @@ namespace Enemy
             if (staggerThresholdCounter <= 0)
             {
                 staggerThresholdCounter = staggerThreshold;
+                staggerTimeCounter = staggerTime;
                 Stagger(knockbackForce);
             }
-            if (canBeStunned && !hasBeenStunned && currentHealth < stunPoint)
+            if (currentHealth < stunPoint)
             {
                 StartCoroutine(Stun());
             }
@@ -465,15 +468,20 @@ namespace Enemy
             Vector3 knockbackDir = GetDirectionIgnoreY(playerRef.transform.position, this.transform.position).normalized;
             //rb.AddForce(knockbackDir * knockbackStrength, ForceMode.Impulse);
             StartCoroutine(ApplyKnockback(knockbackDir, knockbackStrength));
-            Debug.Log("Stagger");
             StartCoroutine(StaggerTimeCoroutine());
 
         }
 
         IEnumerator StaggerTimeCoroutine()
         {
-            yield return new WaitForSeconds(staggerTime);
+            while (staggerTimeCounter > 0)
+            {
+                staggerTimeCounter -= Time.deltaTime;
+                yield return null;
+            }
+            //yield return new WaitForSeconds(staggerTime);
 
+            staggerTimeCounter = staggerTime;
             isStagger = false;
             canMove = true;
         }
@@ -493,6 +501,7 @@ namespace Enemy
 
         private IEnumerator Stun()
         {
+            if(hasBeenStunned) { yield return null; }
             isStunned = true;
             hasBeenStunned = true;
             canMove = false;

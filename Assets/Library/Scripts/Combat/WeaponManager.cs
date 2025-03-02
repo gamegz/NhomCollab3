@@ -199,7 +199,7 @@ public class WeaponManager : MonoBehaviour
     {
         if (_currentWeapon == null || isRecovering)
         {
-            Debug.Log("there is currently no weapon");
+            //Debug.Log("there is currently no weapon");
             return;
         }
 
