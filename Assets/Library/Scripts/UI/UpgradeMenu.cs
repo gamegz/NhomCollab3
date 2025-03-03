@@ -67,7 +67,6 @@ namespace UI
 
         public void OnConsumeGem()
         {
-            PlayerDatas.Instance.OnStatsUpgrade(UpgradeType.MovementSpeed, 1);
             ResetUpdateText();
             _totalCurrentGemUse = 0;
         }
@@ -88,15 +87,6 @@ namespace UI
 
         public void ResetUpdateText()
         {
-
-            //foreach (UpdateUI groupUI in upgradeGroupDictionary.Values)
-            //{
-            //    UpdateUI tempGroupUI = groupUI;
-            //    tempGroupUI.upgradeCountText.text = " ";
-            //    tempGroupUI.upgradeCount = 0;
-            //    //groupUI = tempGroupUI.upgradeCount;
-            //}
-
             List<string> tempUIKey = new List<string>(upgradeGroupDictionary.Keys);
             foreach (string key in tempUIKey)
             {
@@ -105,16 +95,6 @@ namespace UI
                 tempGroupUI.upgradeCount = 0;
                 upgradeGroupDictionary[key] = tempGroupUI;
             }
-
-
-            //foreach (var (key, value) in tempDic)
-            //{
-            //    UpdateUI temp = tempDic[key];
-            //    temp.upgradeCountText.text = " ";
-            //    temp.upgradeCount = 0;
-            //    tempDic[key] = temp;
-            //}
-
 
         }
 
