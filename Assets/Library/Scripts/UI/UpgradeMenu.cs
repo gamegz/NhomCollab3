@@ -11,6 +11,7 @@ namespace UI
     {
         //Refs'
         [SerializeField] private StatsUpgrade statsUpgradeCS;
+        [SerializeField] private GameObject upgradeMenuObj;
 
         [Space]
         //Dictionary<string, UpdateUI> upgradeGroupDictionary = new Dictionary<string, UpdateUI>();
@@ -35,15 +36,6 @@ namespace UI
 
         private void SetUpUI()
         {
-            //upgradeGroupDictionary = new Dictionary<string, UpdateUI>
-            //{
-            //    { "Health", healthUpgrade },
-            //    { "Strength", strengthUpgrade },
-            //    { "MovementSpeed", speedUpgrade },
-            //    { "DashRecovery", enduranceUgrade },
-            //    { "Recovery", recoveryUpgrade },
-            //    { "DashCharge", dashChargesUpgrade },
-            //};
 
             upgradeUIDictionary = new Dictionary<UpgradeType, UpdateUI>
             {
@@ -72,13 +64,9 @@ namespace UI
             int currentLevel = statsUpgradeCS.UpgradeGroupDic[upgradeEnum].currentLevel;
             int maxLevel = statsUpgradeCS.UpgradeGroupDic[upgradeEnum].maxLevel;
 
-            Debug.Log(maxLevel);
-
             //Check upgrade condition
             if (statsUpgradeCS.GemCount < gemRequiredForUpgrade) { return; }
-            if (currentLevel >= maxLevel) { return; }
-
-            
+            if (currentLevel >= maxLevel) { return; }            
 
             //Changes values from the UIgroup
             upgradeTarget.upgradeCount++;
@@ -157,6 +145,18 @@ namespace UI
 
         }
 
+
+        public void CloseMenu()
+        {
+            upgradeMenuObj.SetActive(false);
+            Time.timeScale = 1;
+        }
+
+        public void OpenMenu()
+        {
+            Time.timeScale = 0;
+            upgradeMenuObj.SetActive(true);
+        }
 
         //Event
         public void OnGemCollected()

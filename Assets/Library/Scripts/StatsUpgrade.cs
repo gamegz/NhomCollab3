@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//This class keep track of the upgrade stats
-
-//When upgrade, the ugrade UI script calls this class Functions
+//This class keep track of the Upgrade stats and Upgrade fomula
+//Upgrade function will change the base stats
+//Sending value to feed to Upgrade menu UI
 public class StatsUpgrade : MonoBehaviour
 {
     Dictionary<UpgradeType, UpgradeGroup> upgradeGroupDic = new Dictionary<UpgradeType, UpgradeGroup>();
@@ -22,7 +22,20 @@ public class StatsUpgrade : MonoBehaviour
 
     private void Start()
     {
+        SetUpUpgradeGroup();
+    }
 
+    private void SetUpUpgradeGroup()
+    {
+        //Assign base stats
+        healthUpgradeGroup.baseStat = PlayerDatas.Instance.GetStats.BaseHealth;
+        speedUpgradeGroup.baseStat = PlayerDatas.Instance.GetStats.BaseMoveSpeed;
+        strengthUpgradeGroup.baseStat = PlayerDatas.Instance.GetStats.BaseDamage;
+        recoveryUpgradeGroup.baseStat = PlayerDatas.Instance.GetStats.BaseRecovery;
+        dashChargeUpgradeGroup.baseStat = PlayerDatas.Instance.GetStats.BaseMaxDashCharge;
+        dashRecoveryUpgradeGroup.baseStat = PlayerDatas.Instance.GetStats.BaseDashRecovery;
+
+        //Create dic
         upgradeGroupDic = new Dictionary<UpgradeType, UpgradeGroup>
         {
             {UpgradeType.Health, healthUpgradeGroup},
@@ -34,26 +47,31 @@ public class StatsUpgrade : MonoBehaviour
         };
     }
 
+
+    //Call from the UpgradeUI - CONSUME button
     public void UpgradeStats(UpgradeType upgradeType, int upgradeNum)
     {
         UpgradeGroup upgradeTarget = upgradeGroupDic[upgradeType];
         upgradeTarget.currentLevel += upgradeNum;
         upgradeTarget.trueStats = GetCurrentStats(
-            upgradeTarget.baseStat,
-            upgradeTarget.upgradePercentIncrease,
-            upgradeTarget.currentLevel,
-            upgradeNum);
+        upgradeTarget.baseStat,
+        upgradeTarget.upgradePercentIncrease,
+        upgradeTarget.currentLevel,
+        upgradeNum);
+
+        //Replace the stats
+        PlayerDatas.Instance.GetStats.OnStatsUpgrade(upgradeType, upgradeTarget.trueStats);
 
         upgradeGroupDic[upgradeType] = upgradeTarget;
     }
 
-    public int GetCurrentStats(int baseStat, int upgradePercentIncrease, int currentLevel, int upgradeNum)
+    public float GetCurrentStats(float baseStat, int upgradePercentIncrease, int currentLevel, int upgradeNum)
     {
         float percentIncrease = 100 + (upgradePercentIncrease * (upgradeNum + currentLevel));
-        return  (int)((baseStat / 100) * percentIncrease); 
+        return  ((baseStat / 100) * percentIncrease); 
     }
 
-    //Temp for UI
+    //Temp for UI stats text
     public int GetPercentIncrease(UpgradeType upgradeType, int upgradeNum)
     {
         int increaseAmount = upgradeGroupDic[upgradeType].upgradePercentIncrease;
@@ -67,12 +85,15 @@ public class StatsUpgrade : MonoBehaviour
 //Only change currentLevel and trueStats in gameplay
 public struct UpgradeGroup
 {
-    public int baseStat;
+    [HideInInspector]
+    public float baseStat;
     public int upgradePercentIncrease;
     public int upgradeRequirement;
+    [HideInInspector]
     public int currentLevel;
     public int maxLevel;
-    public int trueStats;
+    [HideInInspector]
+    public float trueStats;
 
     public UpgradeGroup(int baseStat, int upgradePercentIncrease, int upgradeRequirement, int currentLevel, int maxLevel, int trueStats)
     {

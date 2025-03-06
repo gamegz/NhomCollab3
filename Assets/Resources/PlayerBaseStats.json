@@ -1,26 +1,31 @@
 {
-    "PlayerHealth": 5,
-    "PlayerDamage": 1,
-    "PlayerSpeed": 8.0,
-    "FConversionRate": 1.0,
-    "HealthBuff": 1.0,
-    "SpeedBuff": 1.0,
-    "DamageBuff": 1.0,
-    "AttackSpeedBuff": 1.0,
-    "AttackSpeed": 0.3,
+  "PlayerHealth": 5,
+  "PlayerDamage": 1,
+  "PlayerMoveSpeed": 8.0,
+  "PlayerAttackSpeed": 0.3,
+  "PlayerRecovery": 1,
+  "PlayerDashCharge": 1,
+  "PlayerDashRecovery": 1,
 
-  
-    "PlayerRecovery": 1,
-    "PlayerDashCharge": 1,
-    "PlayerDashRecovery": 1,
+  "healthStat": 5,
+  "damageStat": 1,
+  "moveSpeedStat": 8,
+  "attackSpeedStat": 0.3,
+  "recoveryStat": 1,
+  "dashChargeStat": 1,
+  "dashRecoveryStat ": 5,
 
-    "HealthUpgradeAmount": 100,
-    "SpeedUpgradeAmount": 2,
-    "StrengthUpgradeAmount": 2,
-    "RecoveryUpgradeAmount": 2,
-    "DashChargeUpgradeAmount": 100,
-    "DashRecoveryUpgradeAmount": 2
+  "HealthBuff": 1.0,
+  "SpeedBuff": 1.0,
+  "DamageBuff": 1.0,
+  "AttackSpeedBuff": 1.0,
+  "AttackSpeed": 0.3,
 
-  
+  "HealthCurrentLevel" : 0,
+  "SpeedCurrentLevel": 0,
+  "StrengthCurrentLevel" : 0,
+  "RecoveryCurrentLevel": 0,
+  "DashChargeCurrentLevel": 0,
+  "DashRecoveryCurrentLevel" : 0
 
 }

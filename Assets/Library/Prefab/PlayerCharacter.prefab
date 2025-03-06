@@ -33,7 +33,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 123, y: -81}
+  m_AnchoredPosition: {x: 123, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &132933792198710650
@@ -564,7 +564,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -276, y: 0}
+  m_AnchoredPosition: {x: -276, y: -44}
   m_SizeDelta: {x: 122.900024, y: 43.400024}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4055994935707858179
@@ -649,10 +649,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1506058780110328603}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 2769685232698336782}
+        m_TargetAssemblyTypeName: UI.UpgradeMenu, Assembly-CSharp
+        m_MethodName: CloseMenu
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2147,7 +2147,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -49}
   m_SizeDelta: {x: 307.04, y: 76.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6360888491825078436
@@ -2478,7 +2478,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 230, y: 0}
+  m_AnchoredPosition: {x: 230, y: -12}
   m_SizeDelta: {x: 195.33002, y: 58.400024}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &6134438008826220025
@@ -2611,7 +2611,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 350, y: -157}
+  m_AnchoredPosition: {x: 350, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2613903146333019389
@@ -4401,52 +4401,46 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthUpgradeGroup:
-    baseStat: 0
-    upgradeType: 0
-    upgradePercentIncrease: 0
-    upgradeRequirement: 1
+    baseStat: 2
+    upgradePercentIncrease: 100
+    upgradeRequirement: 15
     currentLevel: 0
-    maxLevel: 0
+    maxLevel: 100
     trueStats: 0
   speedUpgradeGroup:
-    baseStat: 0
-    upgradeType: 0
-    upgradePercentIncrease: 0
-    upgradeRequirement: 0
+    baseStat: 30
+    upgradePercentIncrease: 5
+    upgradeRequirement: 1
     currentLevel: 0
-    maxLevel: 0
+    maxLevel: 100
     trueStats: 0
   strengthUpgradeGroup:
-    baseStat: 0
-    upgradeType: 0
-    upgradePercentIncrease: 0
-    upgradeRequirement: 0
+    baseStat: 40
+    upgradePercentIncrease: 5
+    upgradeRequirement: 1
     currentLevel: 0
-    maxLevel: 0
+    maxLevel: 100
     trueStats: 0
   recoveryUpgradeGroup:
-    baseStat: 0
-    upgradeType: 0
-    upgradePercentIncrease: 0
-    upgradeRequirement: 0
+    baseStat: 20
+    upgradePercentIncrease: 5
+    upgradeRequirement: 1
     currentLevel: 0
-    maxLevel: 0
+    maxLevel: 100
     trueStats: 0
   dashChargeUpgradeGroup:
-    baseStat: 0
-    upgradeType: 0
-    upgradePercentIncrease: 0
-    upgradeRequirement: 0
+    baseStat: 1
+    upgradePercentIncrease: 100
+    upgradeRequirement: 10
     currentLevel: 0
-    maxLevel: 0
+    maxLevel: 100
     trueStats: 0
   dashRecoveryUpgradeGroup:
-    baseStat: 0
-    upgradeType: 0
-    upgradePercentIncrease: 0
-    upgradeRequirement: 0
+    baseStat: 1
+    upgradePercentIncrease: 5
+    upgradeRequirement: 1
     currentLevel: 0
-    maxLevel: 0
+    maxLevel: 100
     trueStats: 0
 --- !u!1 &7884316285447633503
 GameObject:
@@ -4698,6 +4692,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   statsUpgradeCS: {fileID: 2187396922590123604}
+  upgradeMenuObj: {fileID: 1506058780110328603}
   healthUpgrade:
     upgradeButton: {fileID: 3221978277078442401}
     upgradeCountText: {fileID: 4998846829198707391}
@@ -4727,13 +4722,13 @@ MonoBehaviour:
     upgradeCountText: {fileID: 8991838665764508861}
     statsValue: {fileID: 3138528439529080688}
     upgradeCount: 0
-    upgradeType: 1
+    upgradeType: 2
   dashChargesUpgrade:
     upgradeButton: {fileID: 6902230125031494481}
     upgradeCountText: {fileID: 7716655949325912261}
     statsValue: {fileID: 2727567561319876893}
     upgradeCount: 0
-    upgradeType: 2
+    upgradeType: 3
   sacrificialGemCountText: {fileID: 7713162186220727371}
 --- !u!1 &8164850199630052405
 GameObject:

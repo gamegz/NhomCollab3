@@ -7,7 +7,7 @@ using System;
 public class CharacterStatsData
 {
     // make dictionary of the upgradeLevel of each stats, pls make it a integer
-    public Dictionary<UpgradeType, int> upgradeLevel = new Dictionary<UpgradeType, int>()
+    public Dictionary<UpgradeType, float> upgradeLevel = new Dictionary<UpgradeType, float>()
     {
         {UpgradeType.MovementSpeed, 0 },
         {UpgradeType.Health, 0 },
@@ -39,7 +39,6 @@ public class CharacterStatsData
         {BuffType.FConversionRate, 1f },
         {BuffType.AttackSpeed, 1f},
     };
-
     public Dictionary<BuffType, int> DamageBuff = new Dictionary<BuffType, int>()
     {
         {BuffType.Damage, 1},
@@ -54,13 +53,19 @@ public class CharacterStatsData
         currentPlayerHealth = Health;
     }
 
-    public void OnStatsUpgrade(UpgradeType upgradeType, int value)
+    //Change the value directly - called by StatsUpgrade script
+    public void OnStatsUpgrade(UpgradeType upgradeType, float value)
     {
         upgradeLevel[upgradeType] += value;
         if(upgradeType == UpgradeType.Health)
         {
             currentPlayerHealth = Health;
         }
+    }
+
+    public void OnStatReset()
+    {
+
     }
 
     public void OnTriggerBuff(BuffType buffType, float BuffPower)
@@ -88,74 +93,25 @@ public class CharacterStatsData
         currentPlayerHealth -= value;
     }
 
-    // make a get set function
 
-    public float GetHealth(float modifier)
-    {
-        return baseStats.PlayerHealth * modifier;
-    }
+    public float BaseHealth => baseStats.PlayerHealth;
+    public float BaseMoveSpeed => baseStats.PlayerMoveSpeed;
+    public float BaseRecovery => baseStats.PlayerRecovery;
+    public float BaseAttackSpeed => baseStats.PlayerAttackSpeed;
+    //Player only hold 1 weapon
+    public int BaseDamage => baseStats.PlayerDamage;
+    public int BaseMaxDashCharge => baseStats.PlayerDashCharge;
+    public float BaseDashRecovery => baseStats.PlayerDashRecovery;
+    
 
-    public int GetDamage(int modifier)
-    {
-        return baseStats.PlayerDamage * modifier;
-    }
 
-    public float GetMovementSpeed(float modifier)
-    {
-        return baseStats.PlayerSpeed * modifier;
-    }
-
-    public float GetRecovery(float modifier)
-    {
-        return baseStats.PlayerRecovery * modifier;
-    }
-
-    public float GetAttackSpeed(float modifier)
-    {
-        return baseStats.AttackSpeed * modifier;
-    }
-
-    // same for down here, follow the equation
-    public float Health
-    {
-        get
-        {
-            float modifier = (100 + upgradeLevel[UpgradeType.Health]) * 0.01f;
-            return GetHealth(modifier);
-        }
-    }
-    public float MoveSpeed
-    {
-        get
-        {
-            float modifier = (100 + upgradeLevel[UpgradeType.MovementSpeed]) * 0.01f;
-            return GetMovementSpeed(modifier);
-        }
-    }
-    public float Recovery
-    {
-        get
-        {
-            float modifier = (100 + upgradeLevel[UpgradeType.Recovery]) * 0.01f;
-            return GetRecovery(modifier);
-        }
-    }
-
-    public float AttackSpeed
-    {
-        get
-        {
-            float modifier = (100 + upgradeLevel[UpgradeType.Health]) * 0.01f;
-            return GetAttackSpeed(modifier);
-        }
-    }
-
-    public int DamageModifier
-    {
-        get
-        {
-            int modifier = (int)((100 + upgradeLevel[UpgradeType.Health]) * 0.01f);
-            return GetDamage(modifier);
-        }
-    }
+    //True stats after upgrade - implement these stats
+    public float Health => baseStats.healthStat;
+    public float MoveSpeed => baseStats.moveSpeedStat;
+    public float Recovery => baseStats.recoveryStat;
+    public float AttackSpeed => baseStats.attackSpeedStat;
+    //Player only hold 1 weapon
+    public int Damage => baseStats.damageStat;
+    public int MaxDashCharge => baseStats.dashChargeStat;
+    public float DashRecovery => baseStats.dashRecoveryStat;
 }
