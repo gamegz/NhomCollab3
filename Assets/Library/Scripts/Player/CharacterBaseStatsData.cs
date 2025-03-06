@@ -32,13 +32,13 @@ public class CharacterBaseStatsData
     public int DashChargeUpgradeAmount;
     public int DashRecoveryUpgradeAmount;
 
-    //Max level of stats - unchange in gameplay
-    public int HealthMaxLevel;
-    public int SpeedMaxLevel;
-    public int StrengMaxLevel;
-    public int RecoveryMaxLevel;
-    public int DashChargeMaxLevel;
-    public int DashRecoveryMaxLevel;
+    ////Max level of stats - unchange in gameplay
+    //public int HealthMaxLevel;
+    //public int SpeedMaxLevel;
+    //public int StrengMaxLevel;
+    //public int RecoveryMaxLevel;
+    //public int DashChargeMaxLevel;
+    //public int DashRecoveryMaxLevel;
 
     //Current Level of stats
     public int HealthCurrentLevel;
@@ -53,6 +53,7 @@ public class CharacterBaseStatsData
 
 public enum UpgradeType // make upgrade type
 {
+    Strength,
     Damage,
     DashRecovery,
     DashCharge,

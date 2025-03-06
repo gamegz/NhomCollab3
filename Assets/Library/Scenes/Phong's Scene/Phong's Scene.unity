@@ -136,6 +136,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyUnderBoss
       objectReference: {fileID: 0}
+    - target: {fileID: 772790172236855413, guid: 6043f70dd60ae51409e25f8dcb5cb009,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8737689703999565024, guid: 6043f70dd60ae51409e25f8dcb5cb009,
         type: 3}
       propertyPath: m_RootOrder
@@ -576,6 +581,106 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2187396922590123604, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: speedUpgradeGroup.baseStat
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 2187396922590123604, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: speedUpgradeGroup.maxLevel
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2187396922590123604, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: healthUpgradeGroup.baseStat
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2187396922590123604, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: healthUpgradeGroup.maxLevel
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2187396922590123604, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: recoveryUpgradeGroup.baseStat
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2187396922590123604, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: recoveryUpgradeGroup.maxLevel
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2187396922590123604, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: strengthUpgradeGroup.baseStat
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 2187396922590123604, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: strengthUpgradeGroup.maxLevel
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2187396922590123604, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: dashChargeUpgradeGroup.baseStat
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2187396922590123604, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: dashChargeUpgradeGroup.maxLevel
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2187396922590123604, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: speedUpgradeGroup.upgradeRequirement
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2187396922590123604, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: healthUpgradeGroup.upgradeRequirement
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2187396922590123604, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: recoveryUpgradeGroup.upgradeRequirement
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2187396922590123604, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: strengthUpgradeGroup.upgradeRequirement
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2187396922590123604, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: speedUpgradeGroup.upgradePercentIncrease
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2187396922590123604, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: dashChargeUpgradeGroup.upgradeRequirement
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2187396922590123604, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: healthUpgradeGroup.upgradePercentIncrease
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2187396922590123604, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: recoveryUpgradeGroup.upgradePercentIncrease
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2187396922590123604, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: strengthUpgradeGroup.upgradePercentIncrease
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2187396922590123604, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: dashChargeUpgradeGroup.upgradePercentIncrease
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 2738424787811903257, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
         type: 3}
       propertyPath: m_RootOrder
@@ -630,6 +735,46 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769685232698336782, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: enduranceUgrade.upgradeType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769685232698336782, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: dashChargesUpgrade.upgradeType
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2816143347936762824, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -40
+      objectReference: {fileID: 0}
+    - target: {fileID: 2895727903856568629, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2895727903856568629, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3398890146568315406, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 57
+      objectReference: {fileID: 0}
+    - target: {fileID: 6610845323898873331, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -39
+      objectReference: {fileID: 0}
+    - target: {fileID: 7606644793423301425, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -9
       objectReference: {fileID: 0}
     - target: {fileID: 8319276657298368420, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
         type: 3}
@@ -1583,6 +1728,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: EnemyHuntingDog
+      objectReference: {fileID: 0}
+    - target: {fileID: 3594091063411068764, guid: c64c058f101d5a743b85b2459fae9e7e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6704119369099998506, guid: c64c058f101d5a743b85b2459fae9e7e,
         type: 3}

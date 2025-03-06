@@ -792,7 +792,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: dashCharge
+          m_StringArgument: DashCharge
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &1506058780110328603
@@ -936,7 +936,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1893771244891984632
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1624,7 +1624,7 @@ RectTransform:
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1661,7 +1661,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 1
-  m_FillAmount: 1
+  m_FillAmount: 0
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -2362,7 +2362,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: strength
+          m_StringArgument: Strength
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &4901136149222663758
@@ -2944,7 +2944,7 @@ GameObject:
   - component: {fileID: 1293725105683361749}
   - component: {fileID: 1026755495771335389}
   m_Layer: 5
-  m_Name: Button
+  m_Name: SliderEXP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3057,7 +3057,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 1
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -3352,7 +3352,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: health
+          m_StringArgument: Health
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &6475361446076599282
@@ -3486,7 +3486,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: endurance
+          m_StringArgument: DashRecovery
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &6478904546171519750
@@ -4020,7 +4020,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: speed
+          m_StringArgument: MovementSpeed
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &7711999252951975865
@@ -4118,6 +4118,7 @@ GameObject:
   - component: {fileID: 8223221366024730654}
   - component: {fileID: 7381951561567745206}
   - component: {fileID: 1658478206797379963}
+  - component: {fileID: 2187396922590123604}
   m_Layer: 9
   m_Name: PlayerCharacter
   m_TagString: Player
@@ -4387,6 +4388,66 @@ MonoBehaviour:
   mainCamera: {fileID: 3740092316141691799}
   healBarUI: {fileID: 3332070077459371104}
   xOffsetHeartPercent: 0.05
+--- !u!114 &2187396922590123604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7728795428013802694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b33ff4a28aacf3542a9d85c9544cc1e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthUpgradeGroup:
+    baseStat: 0
+    upgradeType: 0
+    upgradePercentIncrease: 0
+    upgradeRequirement: 1
+    currentLevel: 0
+    maxLevel: 0
+    trueStats: 0
+  speedUpgradeGroup:
+    baseStat: 0
+    upgradeType: 0
+    upgradePercentIncrease: 0
+    upgradeRequirement: 0
+    currentLevel: 0
+    maxLevel: 0
+    trueStats: 0
+  strengthUpgradeGroup:
+    baseStat: 0
+    upgradeType: 0
+    upgradePercentIncrease: 0
+    upgradeRequirement: 0
+    currentLevel: 0
+    maxLevel: 0
+    trueStats: 0
+  recoveryUpgradeGroup:
+    baseStat: 0
+    upgradeType: 0
+    upgradePercentIncrease: 0
+    upgradeRequirement: 0
+    currentLevel: 0
+    maxLevel: 0
+    trueStats: 0
+  dashChargeUpgradeGroup:
+    baseStat: 0
+    upgradeType: 0
+    upgradePercentIncrease: 0
+    upgradeRequirement: 0
+    currentLevel: 0
+    maxLevel: 0
+    trueStats: 0
+  dashRecoveryUpgradeGroup:
+    baseStat: 0
+    upgradeType: 0
+    upgradePercentIncrease: 0
+    upgradeRequirement: 0
+    currentLevel: 0
+    maxLevel: 0
+    trueStats: 0
 --- !u!1 &7884316285447633503
 GameObject:
   m_ObjectHideFlags: 0
@@ -4636,49 +4697,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e321b53b6ad2c2044bdbb0bcec56e71c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  statsUpgradeCS: {fileID: 2187396922590123604}
   healthUpgrade:
     upgradeButton: {fileID: 3221978277078442401}
     upgradeCountText: {fileID: 4998846829198707391}
-    statsValue: {fileID: 4998846829198707391}
-    upgradeRequirement: 10
+    statsValue: {fileID: 429497906510692191}
     upgradeCount: 0
     upgradeType: 2
   strengthUpgrade:
     upgradeButton: {fileID: 4017421623180843929}
     upgradeCountText: {fileID: 6177619509679583062}
     statsValue: {fileID: 8738287802833218055}
-    upgradeRequirement: 1
     upgradeCount: 0
     upgradeType: 0
   speedUpgrade:
     upgradeButton: {fileID: 1285303784321977624}
     upgradeCountText: {fileID: 8867376175277151151}
     statsValue: {fileID: 1752631756049220442}
-    upgradeRequirement: 1
     upgradeCount: 0
     upgradeType: 3
   recoveryUpgrade:
     upgradeButton: {fileID: 7545334443890349275}
     upgradeCountText: {fileID: 6546589885336281801}
     statsValue: {fileID: 4498022650670469250}
-    upgradeRequirement: 1
     upgradeCount: 0
     upgradeType: 5
   enduranceUgrade:
     upgradeButton: {fileID: 5701191992749993484}
     upgradeCountText: {fileID: 8991838665764508861}
     statsValue: {fileID: 3138528439529080688}
-    upgradeRequirement: 1
     upgradeCount: 0
     upgradeType: 1
   dashChargesUpgrade:
     upgradeButton: {fileID: 6902230125031494481}
     upgradeCountText: {fileID: 7716655949325912261}
     statsValue: {fileID: 2727567561319876893}
-    upgradeRequirement: 5
     upgradeCount: 0
     upgradeType: 2
-  sacrificialGemCount: 30
   sacrificialGemCountText: {fileID: 7713162186220727371}
 --- !u!1 &8164850199630052405
 GameObject:
@@ -5154,6 +5209,6 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: recovery
+          m_StringArgument: Recovery
           m_BoolArgument: 0
         m_CallState: 2

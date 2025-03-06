@@ -13,7 +13,7 @@ public class CharacterStatsData
         {UpgradeType.Health, 0 },
         {UpgradeType.Recovery, 0 },
         {UpgradeType.AttackSpeed, 0 },
-        {UpgradeType.Damage, 0},
+        {UpgradeType.Strength, 0},
         {UpgradeType.DashCharge, 0},
         {UpgradeType.DashRecovery, 0}
         //{UpgradeType.StaggerTime, 1f}

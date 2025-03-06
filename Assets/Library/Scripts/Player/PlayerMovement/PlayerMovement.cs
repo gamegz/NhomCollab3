@@ -23,7 +23,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float rotationSpeed;
     [SerializeField] private float standStillTimeAfterAttackRecover;
     private Vector3 moveDirection;
-    private bool isTryMove;
     private Vector2 _mousePosition;
     private Vector2 _movement;
     private bool _isOnSlope = false;
@@ -135,13 +134,11 @@ public class PlayerMovement : MonoBehaviour
     public void Move(InputAction.CallbackContext context)
     {
         _movement = context.ReadValue<Vector2>();
-        isTryMove = true;
     }
 
     public void OnMoveCancel(InputAction.CallbackContext context)
     {
         _movement = context.ReadValue<Vector2>();
-        isTryMove = false;
         //_rb.velocity = new Vector3(0, _rb.velocity.y, 0); 
     }
 
