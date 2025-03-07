@@ -71,7 +71,7 @@ public class PlayerDatas
 
     public CharacterStatsData GetStats => playerStatsData?.GetCharacterStats;
 
-    public void OnStatsUpgrade(UpgradeType upgradeType, int value)
+    public void OnStatsUpgrade(UpgradeType upgradeType, float value)
     {
         playerStatsData.GetCharacterStats.OnStatsUpgrade(upgradeType, value);
         SaveGame();

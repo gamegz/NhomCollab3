@@ -40,7 +40,7 @@ namespace UI
             upgradeUIDictionary = new Dictionary<UpgradeType, UpdateUI>
             {
                 { UpgradeType.Health, healthUpgrade },
-                { UpgradeType.Strength, strengthUpgrade },
+                { UpgradeType.Damage, strengthUpgrade },
                 { UpgradeType.MovementSpeed, speedUpgrade },
                 { UpgradeType.DashRecovery, enduranceUgrade },
                 { UpgradeType.Recovery, recoveryUpgrade },

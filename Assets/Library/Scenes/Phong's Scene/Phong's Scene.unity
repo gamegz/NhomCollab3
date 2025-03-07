@@ -159,7 +159,7 @@ PrefabInstance:
     - target: {fileID: 8737689703999565024, guid: 6043f70dd60ae51409e25f8dcb5cb009,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -11.25
+      value: -48
       objectReference: {fileID: 0}
     - target: {fileID: 8737689703999565024, guid: 6043f70dd60ae51409e25f8dcb5cb009,
         type: 3}
@@ -581,6 +581,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2187396922590123604, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: speedUpgradeGroup.upgradePercentIncrease
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2738424787811903257, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
         type: 3}
       propertyPath: m_RootOrder
@@ -635,6 +640,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769685232698336782, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: speedUpgrade.upgradeType
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769685232698336782, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: healthUpgrade.upgradeType
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769685232698336782, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: enduranceUgrade.upgradeType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769685232698336782, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: recoveryUpgrade.upgradeType
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769685232698336782, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: dashChargesUpgrade.upgradeType
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2895727903856568629, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
         type: 3}
@@ -1557,7 +1587,7 @@ PrefabInstance:
     - target: {fileID: 1337840784358735848, guid: c64c058f101d5a743b85b2459fae9e7e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -32.910553
+      value: -54.5
       objectReference: {fileID: 0}
     - target: {fileID: 1337840784358735848, guid: c64c058f101d5a743b85b2459fae9e7e,
         type: 3}

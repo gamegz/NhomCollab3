@@ -16,15 +16,7 @@ public class CharacterBaseStatsData
     public float PlayerRecovery;
     public int PlayerDashCharge;
     public int PlayerDashRecovery;
-
-    //PlayerTrueStats - Implement these stats
-    public float healthStat;
-    public int damageStat;
-    public float moveSpeedStat;
-    public float attackSpeedStat;
-    public float recoveryStat;
-    public int dashChargeStat;
-    public float dashRecoveryStat;
+    
 
     public int PlayerGemCount; //Number of gem
     public int PlayerMaxLevel;
@@ -54,26 +46,20 @@ public class CharacterBaseStatsData
 
     //Current Level of stats
 
-    public int HealthCurrentLevel;
-    public int SpeedCurrentLevel;
-    public int StrengthCurrentLevel;
-    public int RecoveryCurrentLevel;
-    public int DashChargeCurrentLevel;
-    public int DashRecoveryCurrentLevel;   
+       
 }
 
 
 
 public enum UpgradeType // make upgrade type
 {
-    Strength,
     Damage,
     DashRecovery,
     DashCharge,
     MovementSpeed,
     Health,
     Recovery,
-    AttackSpeed
+    //AttackSpeed
 }
 
 public enum BuffType // make buff type

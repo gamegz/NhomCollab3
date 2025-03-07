@@ -40,7 +40,7 @@ public class StatsUpgrade : MonoBehaviour
         {
             {UpgradeType.Health, healthUpgradeGroup},
             {UpgradeType.MovementSpeed, speedUpgradeGroup},
-            {UpgradeType.Strength, strengthUpgradeGroup},
+            {UpgradeType.Damage, strengthUpgradeGroup},
             {UpgradeType.Recovery, recoveryUpgradeGroup},
             {UpgradeType.DashCharge, dashChargeUpgradeGroup},
             {UpgradeType.DashRecovery, dashRecoveryUpgradeGroup},
@@ -58,9 +58,9 @@ public class StatsUpgrade : MonoBehaviour
         upgradeTarget.upgradePercentIncrease,
         upgradeTarget.currentLevel,
         upgradeNum);
-
+        Debug.Log("Speed: " + upgradeTarget.trueStats);
         //Replace the stats
-        PlayerDatas.Instance.GetStats.OnStatsUpgrade(upgradeType, upgradeTarget.trueStats);
+        PlayerDatas.Instance.OnStatsUpgrade(upgradeType, upgradeTarget.trueStats);
 
         upgradeGroupDic[upgradeType] = upgradeTarget;
     }
