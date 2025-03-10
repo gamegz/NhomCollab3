@@ -33,7 +33,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 123, y: -81}
+  m_AnchoredPosition: {x: 123, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &132933792198710650
@@ -4318,15 +4318,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f31d281281c67d408a075bc59854626, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 15
-  standStillTimeAfterAttackRecover: 0.2
+  rotationSpeed: 0
+  standStillTimeAfterAttackRecover: 0
   maxCharge: 3
   currentCharge: 0
-  dashRecoverTimePerCharge: 4.8
-  dashInputCooldown: 0.2
+  dashRecoverTimePerCharge: 1
+  dashInputCooldown: 0.3
   dashRegenMultiplier: 1
-  dashForce: 45
-  dashDuration: 0.2
+  dashForce: 0
+  dashDuration: 0
   animCurve:
     serializedVersion: 2
     m_Curve: []
@@ -4334,13 +4334,13 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   parryBoxRefPoint: {fileID: 2794697307962972658}
-  parryBoxSize: {x: 1.25, y: 2, z: 1.5}
+  parryBoxSize: {x: 1.25, y: 2, z: 1}
   bulletLayerMask:
     serializedVersion: 2
     m_Bits: 16384
   invulnerableTimerOrg: 0.6
-  standStillTimerOrg: 0.3
-  moveDistance: 0.5
+  standStillTimerOrg: 1
+  moveDistance: 2
   moveDuration: 0.2
   isRecovering: 0
 --- !u!114 &7381951561567745206
@@ -4360,7 +4360,7 @@ MonoBehaviour:
     m_Bits: 128
   HBIncreaseAmount: 1
   maxHBRequirement: 4
-  maxHealth: 5
+  maxHealth: 10
   invulTimeAfterDamaged: 0.5
 --- !u!114 &1658478206797379963
 MonoBehaviour:
@@ -4792,7 +4792,7 @@ Transform:
   - {fileID: 3396010017111260613}
   - {fileID: 3438858582349556901}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8487215999029970427
 GameObject:
