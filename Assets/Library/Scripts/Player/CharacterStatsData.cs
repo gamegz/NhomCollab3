@@ -57,7 +57,6 @@ public class CharacterStatsData
         healthStat = baseStats.PlayerHealth;
         damageStat = baseStats.PlayerDamage;
         moveSpeedStat = baseStats.PlayerMoveSpeed;
-        //attackSpeedStat = baseStats.PlayerAttackSpeed;
         recoveryStat = baseStats.PlayerRecovery;
         dashChargeStat = baseStats.PlayerDashCharge;
         dashRecoveryStat = baseStats.PlayerDashRecovery;
@@ -79,9 +78,6 @@ public class CharacterStatsData
             case UpgradeType.Recovery:
                 recoveryStat = value;
                 break;
-            //case UpgradeType.AttackSpeed:
-            //    attackSpeedStat = value;
-            //    break;
             case UpgradeType.Damage:
                 damageStat = value;
                 break;

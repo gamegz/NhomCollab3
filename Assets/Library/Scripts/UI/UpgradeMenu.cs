@@ -32,6 +32,10 @@ namespace UI
         void Start()
         {
             SetUpUI();
+            foreach(UpdateUI upgradeUI in upgradeUIDictionary.Values)
+            {
+                Debug.Log("upgrade Count: " + upgradeUI.upgradeCount);
+            }
         }
 
         private void SetUpUI()
@@ -66,8 +70,8 @@ namespace UI
 
             //Check upgrade condition
             if (statsUpgradeCS.GemCount < gemRequiredForUpgrade) { return; }
-            if (currentLevel >= maxLevel) { return; }            
-
+            if (currentLevel >= maxLevel) { return; }
+            Debug.Log("currentLevel" + currentLevel);
             //Changes values from the UIgroup
             upgradeTarget.upgradeCount++;
             upgradeTarget.upgradeCountText.text = "+" + upgradeTarget.upgradeCount.ToString();

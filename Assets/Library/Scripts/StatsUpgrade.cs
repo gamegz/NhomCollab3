@@ -23,6 +23,7 @@ public class StatsUpgrade : MonoBehaviour
     private void Start()
     {
         SetUpUpgradeGroup();
+        
     }
 
     private void SetUpUpgradeGroup()
@@ -34,7 +35,7 @@ public class StatsUpgrade : MonoBehaviour
         recoveryUpgradeGroup.baseStat = PlayerDatas.Instance.GetStats.BaseRecovery;
         dashChargeUpgradeGroup.baseStat = PlayerDatas.Instance.GetStats.BaseMaxDashCharge;
         dashRecoveryUpgradeGroup.baseStat = PlayerDatas.Instance.GetStats.BaseDashRecovery;
-
+        Debug.Log(speedUpgradeGroup.baseStat);
         //Create dic
         upgradeGroupDic = new Dictionary<UpgradeType, UpgradeGroup>
         {
@@ -58,7 +59,6 @@ public class StatsUpgrade : MonoBehaviour
         upgradeTarget.upgradePercentIncrease,
         upgradeTarget.currentLevel,
         upgradeNum);
-        
         //Replace the stats
         PlayerDatas.Instance.OnStatsUpgrade(upgradeType, upgradeTarget.trueStats);
         upgradeGroupDic[upgradeType] = upgradeTarget;
