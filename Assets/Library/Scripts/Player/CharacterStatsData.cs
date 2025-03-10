@@ -97,9 +97,9 @@ public class CharacterStatsData
         }
     }
 
-    public void OnStatReset()
+    public void ReassignBaseStats(CharacterBaseStatsData baseStats)
     {
-
+        this.baseStats = baseStats; // Just assign the reference, do NOT reset upgraded stats
     }
 
     //public void OnTriggerBuff(BuffType buffType, float BuffPower)

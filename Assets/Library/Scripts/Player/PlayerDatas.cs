@@ -31,10 +31,9 @@ public class PlayerDatas
 
     public void LoadGame()
     {
+        //playerStatsData.SetBaseStats(baseStatsData);
         LoadBaseStats();
         LoadPlayerStats();
-        playerStatsData.SetBaseStats(baseStatsData);
-        
     }
 
     private void SaveGame()
@@ -48,6 +47,7 @@ public class PlayerDatas
     {
         TextAsset baseStatsTextAssets = Resources.Load<TextAsset>("PlayerBaseStats");
         baseStatsData = JsonConvert.DeserializeObject<CharacterBaseStatsData>(baseStatsTextAssets.text);
+        Debug.Log("LoadBase");
     }
 
     private void LoadPlayerStats()
@@ -57,7 +57,12 @@ public class PlayerDatas
             string json = File.ReadAllText(saveFilePath);
             playerStatsData = JsonConvert.DeserializeObject<PlayerStatsData>(json);
             Debug.Log("Player Stats Loaded: " + json);
+            if (playerStatsData.GetCharacterStats != null)
+            {
+                playerStatsData.GetCharacterStats.ReassignBaseStats(baseStatsData);
+            }
             Debug.LogWarning(Application.persistentDataPath);
+            Debug.Log("LoadStats");
         }
         else
         {

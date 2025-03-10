@@ -50,7 +50,7 @@ public class StatsUpgrade : MonoBehaviour
 
     //Call from the UpgradeUI - CONSUME button
     public void UpgradeStats(UpgradeType upgradeType, int upgradeNum)
-    {
+    {  
         UpgradeGroup upgradeTarget = upgradeGroupDic[upgradeType];
         upgradeTarget.currentLevel += upgradeNum;
         upgradeTarget.trueStats = GetCurrentStats(
@@ -58,10 +58,9 @@ public class StatsUpgrade : MonoBehaviour
         upgradeTarget.upgradePercentIncrease,
         upgradeTarget.currentLevel,
         upgradeNum);
-        Debug.Log("Speed: " + upgradeTarget.trueStats);
+        
         //Replace the stats
         PlayerDatas.Instance.OnStatsUpgrade(upgradeType, upgradeTarget.trueStats);
-
         upgradeGroupDic[upgradeType] = upgradeTarget;
     }
 
