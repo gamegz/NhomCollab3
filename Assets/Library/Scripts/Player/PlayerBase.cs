@@ -198,9 +198,9 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
 
     public void OnUpgradeCharacter()
     {
-        PlayerDatas.Instance.OnStatsUpgrade(UpgradeType.MovementSpeed, 1);
-        PlayerDatas.Instance.OnStatsUpgrade(UpgradeType.Health, 1);
-        PlayerDatas.Instance.OnStatsUpgrade(UpgradeType.Recovery, 1);
+        //PlayerDatas.Instance.OnStatsUpgrade(UpgradeType.MovementSpeed, 1);
+        //PlayerDatas.Instance.OnStatsUpgrade(UpgradeType.Health, 1);
+        //PlayerDatas.Instance.OnStatsUpgrade(UpgradeType.Recovery, 1);
 
     }
 

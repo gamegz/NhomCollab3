@@ -23,7 +23,7 @@ public class StatsUpgrade : MonoBehaviour
     private void Start()
     {
         SetUpUpgradeGroup();
-        
+        LoadLevelFromData(PlayerDatas.Instance.GetStats);
     }
 
     private void SetUpUpgradeGroup()
@@ -60,7 +60,8 @@ public class StatsUpgrade : MonoBehaviour
         upgradeTarget.currentLevel,
         upgradeNum);
         //Replace the stats
-        PlayerDatas.Instance.OnStatsUpgrade(upgradeType, upgradeTarget.trueStats);
+        PlayerDatas.Instance.playerStatsData.SetUpgradeLevel(upgradeType, upgradeTarget.currentLevel);
+        PlayerDatas.Instance.OnStatsUpgrade(upgradeType, upgradeTarget.trueStats, this);
         upgradeGroupDic[upgradeType] = upgradeTarget;
     }
 
@@ -77,6 +78,29 @@ public class StatsUpgrade : MonoBehaviour
         int currentLevel = upgradeGroupDic[upgradeType].currentLevel;
 
         return 100 + (increaseAmount * (upgradeNum + currentLevel));
+    }
+
+    public void LoadLevelFromData(CharacterStatsData stats)
+    {
+        Dictionary<UpgradeType, int> levelMapping = new Dictionary<UpgradeType, int>
+        {
+            { UpgradeType.Health, stats.HealthCurrentLevel },
+            { UpgradeType.MovementSpeed, stats.SpeedCurrentLevel },
+            { UpgradeType.Damage, stats.StrengthCurrentLevel },
+            { UpgradeType.Recovery, stats.RecoveryCurrentLevel },
+            { UpgradeType.DashCharge, stats.DashChargeCurrentLevel },
+            { UpgradeType.DashRecovery, stats.DashRecoveryCurrentLevel }
+        };
+
+        foreach (var pair in levelMapping)
+        {
+            if (upgradeGroupDic.ContainsKey(pair.Key))
+            {
+                UpgradeGroup group = upgradeGroupDic[pair.Key];
+                group.currentLevel = pair.Value;
+                upgradeGroupDic[pair.Key] = group;
+            }
+        }
     }
 }
 

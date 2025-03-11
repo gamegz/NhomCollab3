@@ -22,30 +22,7 @@ public class CharacterStatsData
     public int DashChargeCurrentLevel;
     public int DashRecoveryCurrentLevel;
 
-    // make dictionary of the upgradeLevel of each stats, pls make it a integer
-    //public Dictionary<UpgradeType, float> upgradeLevel = new Dictionary<UpgradeType, float>()
-    //{
-    //    {UpgradeType.MovementSpeed, 0},
-    //    {UpgradeType.Health,  0},
-    //    {UpgradeType.Recovery, 0 },
-    //    {UpgradeType.AttackSpeed,  0},
-    //    {UpgradeType.Strength, 0},
-    //    {UpgradeType.DashCharge, 0},
-    //    {UpgradeType.DashRecovery, 0}
-    //};
-
-
-    //public Dictionary<BuffType, float> BuffTypes = new Dictionary<BuffType, float>() // this one also
-    //{
-    //    {BuffType.Health, 1f},
-    //    {BuffType.MovementSpeed, 1f },
-    //    {BuffType.FConversionRate, 1f },
-    //    {BuffType.AttackSpeed, 1f},
-    //};
-    //public Dictionary<BuffType, int> DamageBuff = new Dictionary<BuffType, int>()
-    //{
-    //    {BuffType.Damage, 1},
-    //};
+    public Dictionary<UpgradeType, int> upgradeLevels = new Dictionary<UpgradeType, int>();
 
     private CharacterBaseStatsData baseStats;
     public float currentPlayerHealth;
@@ -65,27 +42,33 @@ public class CharacterStatsData
     }
 
     //Change the value directly - called by StatsUpgrade script
-    public void OnStatsUpgrade(UpgradeType upgradeType, float value)
+    public void OnStatsUpgrade(UpgradeType upgradeType, float value, int level)
     {
         switch (upgradeType)
         {
             case UpgradeType.Health:
                 healthStat = value;
+                HealthCurrentLevel = level;
                 break;
             case UpgradeType.MovementSpeed:
                 moveSpeedStat = value;
+                SpeedCurrentLevel = level;
                 break;
             case UpgradeType.Recovery:
                 recoveryStat = value;
+                RecoveryCurrentLevel = level;
                 break;
             case UpgradeType.Damage:
                 damageStat = value;
+                StrengthCurrentLevel = level;
                 break;
             case UpgradeType.DashCharge:
                 dashChargeStat = value;
+                DashChargeCurrentLevel = level;
                 break;
             case UpgradeType.DashRecovery:
                 dashRecoveryStat = value;
+                DashRecoveryCurrentLevel = level;
                 break;
             default:
                 Debug.LogWarning("Unknown UpgradeType: " + upgradeType);

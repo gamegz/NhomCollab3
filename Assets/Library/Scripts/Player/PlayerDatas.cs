@@ -36,7 +36,7 @@ public class PlayerDatas
         LoadPlayerStats();
     }
 
-    private void SaveGame()
+    public void SaveGame()
     {
         string json = JsonConvert.SerializeObject(playerStatsData, Formatting.Indented);
         File.WriteAllText(saveFilePath, json);
@@ -76,10 +76,13 @@ public class PlayerDatas
 
     public CharacterStatsData GetStats => playerStatsData?.GetCharacterStats;
 
-    public void OnStatsUpgrade(UpgradeType upgradeType, float value)
+    public void OnStatsUpgrade(UpgradeType upgradeType, float value, StatsUpgrade statsUpgrade)
     {
-        playerStatsData.GetCharacterStats.OnStatsUpgrade(upgradeType, value);
+        int newLevel = playerStatsData.GetUpgradeLevel(upgradeType);
+        playerStatsData.GetCharacterStats.OnStatsUpgrade(upgradeType, value, newLevel);
+        playerStatsData.SetUpgradeLevel(upgradeType, newLevel);
         SaveGame();
+        statsUpgrade?.LoadLevelFromData(playerStatsData.GetCharacterStats);
     }
 
     public void OnPlayerHealthChange(int Health)
