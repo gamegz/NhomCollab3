@@ -6,12 +6,10 @@ namespace Enemy.statemachine.States
 {
     public class EnemyStateBossRoam : EnemyAttackState
     {
-        private GameObject summonObj;
         private BossEnemyBase bossEnemy;
 
-        public EnemyStateBossRoam(BossEnemyBase enemy, EnemyStateMachine enemyStateMachine, GameObject summonObject) : base(enemy, enemyStateMachine)
+        public EnemyStateBossRoam(BossEnemyBase enemy, EnemyStateMachine enemyStateMachine) : base(enemy, enemyStateMachine)
         {
-            summonObj = summonObject;
             bossEnemy = enemy;
         }
 
