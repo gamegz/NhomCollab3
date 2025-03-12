@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 809046402752574192}
   - component: {fileID: 5136226074004574491}
-  - component: {fileID: 2892655224260157037}
   - component: {fileID: -6077802067139653028}
+  - component: {fileID: 4708543988957564143}
   m_Layer: 14
-  m_Name: EnemyProjectile
+  m_Name: DemonicProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4767452944218749296}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -32.51, y: 2.48, z: -20.326}
+  m_LocalPosition: {x: -32.51, y: 2.48, z: -20.347}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -53,29 +53,6 @@ MonoBehaviour:
   _reflectedDamage: 10
   _lifeTime: 6
   projectileDeflectMethod: 1
---- !u!136 &2892655224260157037
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4767452944218749296}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.17
-  m_Height: 0.46261215
-  m_Direction: 2
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.29}
 --- !u!54 &-6077802067139653028
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -103,6 +80,27 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 64
   m_CollisionDetection: 2
+--- !u!65 &4708543988957564143
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4767452944218749296}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.92, y: 0.07, z: 0.4}
+  m_Center: {x: 0, y: 0, z: -0.07}
 --- !u!1 &5502351085723136990
 GameObject:
   m_ObjectHideFlags: 0
@@ -130,8 +128,8 @@ Transform:
   m_GameObject: {fileID: 5502351085723136990}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
-  m_ConstrainProportionsScale: 1
+  m_LocalScale: {x: 1, y: 0.22, z: 0.17}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 809046402752574192}
   m_RootOrder: -1
@@ -164,7 +162,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1351cd38f545b9448ae8948c1c1cde40, type: 2}
+  - {fileID: 2100000, guid: 0256a6df5cccf6a47aff4d89871bd166, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

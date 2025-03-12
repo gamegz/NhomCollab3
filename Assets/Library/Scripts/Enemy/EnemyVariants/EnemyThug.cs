@@ -29,19 +29,12 @@ namespace Enemy.variant
             enemyRetreatState = new EnemyStateRetreat(this, _stateMachine);
             enemyFollowState = new EnemyStateFollow(this, _stateMachine);
             _stateMachine.SetStartState(enemyRoamState);       
-            //currentState = EnemyState.Roam;
         }
 
 
 
         public override void UpdateLogic()
         {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                isTokenOwner = !isTokenOwner;
-                //InnitDash(- GetPerpendicularVectorToTarget());
-                //Debug.Log(enemyNavAgent.CalculatePath(target.transform.position, enemyNavAgent.path));
-            }
             base.UpdateLogic();
         }
 

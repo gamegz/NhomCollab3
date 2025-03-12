@@ -96,6 +96,7 @@ namespace Enemy.EnemyManager
 			{
 				if (_currentAttackToken <= 0) { break; }
 				if (enemiesInst[i].isAttacking) { continue; }
+
 				enemiesInst[i].isTokenOwner = true;
                 _currentAttackToken--;
             }

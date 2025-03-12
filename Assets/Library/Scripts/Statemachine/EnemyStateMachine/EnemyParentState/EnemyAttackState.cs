@@ -9,6 +9,7 @@ namespace Enemy.statemachine.States
     {
         public EnemyAttackState(EnemyBase enemy, EnemyStateMachine enemyStateMachine) : base(enemy, enemyStateMachine)
         {
+
         }
 
         public override void EnterState()

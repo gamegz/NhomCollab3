@@ -59,6 +59,8 @@ namespace Enemy
         [Tooltip("Distance to return if player too far away")]
         public float followDistance;
 
+
+        [Space]
         [Header("Stagger")]
         [Tooltip("Amount of damage recive before stagger")]
         public float staggerThreshold;
@@ -425,7 +427,7 @@ namespace Enemy
         }
 
 
-        public void TakeDamage(int damage)
+        public virtual void TakeDamage(int damage)
         {
             //Debug.Log("Damage: " + damage);
             currentHealth -= damage;
@@ -457,8 +459,6 @@ namespace Enemy
             //knockbackForce = _weaponData.knockbackForce;
         }
 
-
-        Coroutine staggerTimeCoroutine;
 
         public void Stagger(float knockbackStrength)
         {
