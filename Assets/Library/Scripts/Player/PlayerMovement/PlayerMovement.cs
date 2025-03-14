@@ -52,6 +52,9 @@ public class PlayerMovement : MonoBehaviour
     private bool isParrying = false;
     private Coroutine parryCoroutine;
     private Coroutine immobileCoroutine;
+
+    [Header("Animation")]
+    [SerializeField] private PlayerAnimation playerAnimation;
     
    
     private Coroutine dashCoroutine;
@@ -176,6 +179,8 @@ public class PlayerMovement : MonoBehaviour
         var playerMovement = moveDirection * PlayerDatas.Instance.GetStats.MoveSpeed;
         playerMovement.y = _rb.velocity.y;
         _rb.velocity = playerMovement;
+        playerAnimation.Move(_movement.x, _movement.y);
+
     }
 
     private void StopMovementDuringRecoveryState()
