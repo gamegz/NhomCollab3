@@ -8621,6 +8621,11 @@ PrefabInstance:
       propertyPath: dashForce
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 8223221366024730654, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+        type: 3}
+      propertyPath: playerUpperSpine
+      value: 
+      objectReference: {fileID: 1092067250}
     - target: {fileID: 8319276657298368420, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
         type: 3}
       propertyPath: m_Name
@@ -8800,6 +8805,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1041937591}
   m_CullTransparentMesh: 1
+--- !u!4 &1092067250 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 921078043610010317, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
+    type: 3}
+  m_PrefabInstance: {fileID: 1007805211}
+  m_PrefabAsset: {fileID: 0}
 --- !u!43 &1092599890
 Mesh:
   m_ObjectHideFlags: 0

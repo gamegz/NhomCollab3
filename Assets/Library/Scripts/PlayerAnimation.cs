@@ -27,4 +27,9 @@ public class PlayerAnimation : MonoBehaviour
         animator.SetFloat("X", x);
         animator.SetFloat("Y", y);
     }
+
+    public void RotateUpperBody(Transform playerLowerSpine, Vector3 mousePos)
+    {
+        playerLowerSpine.LookAt(transform.position + mousePos);
+    }
 }

@@ -55,6 +55,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Animation")]
     [SerializeField] private PlayerAnimation playerAnimation;
+    [SerializeField] private Transform playerUpperSpine;
     
    
     private Coroutine dashCoroutine;
@@ -365,7 +366,7 @@ public class PlayerMovement : MonoBehaviour
         Vector3 dir = _mousePos - CharacterPos;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, -angle + 90, 0);
-
+        playerAnimation.RotateUpperBody(playerUpperSpine, dir);
     }
 
 
