@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class ProjectileFollow : EnemyProjectile
 {
-    public Transform player;
+    public Transform target;
     [SerializeField] protected float turnSpeed;
     [SerializeField] protected float steerCorectionSpeed = 0.01f;
 
     public override void Update()
     {
         base.Update();
-        LookAtTarget(player, turnSpeed);
+        LookAtTarget(target, turnSpeed);
     }
 
     public override void FixedUpdate()
@@ -36,6 +36,13 @@ public class ProjectileFollow : EnemyProjectile
         Vector3 dirToTarget = target.position - transform.position;
         Quaternion rotation = Quaternion.LookRotation(dirToTarget, Vector3.up);
         transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.deltaTime * speed);
+    }
+
+    public void SetUp(Vector3 shootDir, GameObject owner, Transform followTarget)
+    {
+        target = followTarget;
+        ChangeShootDir(shootDir);
+        _owner = owner;
     }
 
 }

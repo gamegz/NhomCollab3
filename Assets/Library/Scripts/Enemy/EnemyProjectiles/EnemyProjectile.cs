@@ -74,7 +74,7 @@ public class EnemyProjectile : MonoBehaviour
         _owner = owner;
     }
 
-    private void ChangeShootDir(Vector3 shootDir)
+    protected void ChangeShootDir(Vector3 shootDir)
     {
         shootDir = shootDir.normalized;
         Vector3 caculatedShootDir = new Vector3(shootDir.x, 0, shootDir.z);
@@ -83,19 +83,21 @@ public class EnemyProjectile : MonoBehaviour
     }
 
 
-    public virtual void OnTriggerEnter(Collider other)
+    protected virtual void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !_deflected)
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
+            if(_deflected) { return; }
             other.gameObject.GetComponent<IDamageable>().TakeDamage(_damage);
             Destroy(gameObject);
         }
-        else if (other.gameObject.layer == LayerMask.NameToLayer("Enemy") && _deflected)
+        else if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
+            if (!_deflected) { return; }
             other.gameObject.GetComponent<IDamageable>().TakeDamage(_reflectedDamage);
             Destroy(gameObject);
         }
-        else
+        else if (other.gameObject.layer == LayerMask.NameToLayer("WalkableGround") )
         {
             Destroy(gameObject);
         }

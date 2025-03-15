@@ -8,7 +8,7 @@ public class SummonHandProjectile : ProjectileFollow
 
     private void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        target = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     public override void Update()
@@ -16,7 +16,7 @@ public class SummonHandProjectile : ProjectileFollow
         UpdateLifeTime();
         followDelayTime -= Time.deltaTime;
         if (followDelayTime > 0) { return; }
-        LookAtTarget(player, turnSpeed);
+        LookAtTarget(target, turnSpeed);
                       
     }
 
@@ -38,7 +38,7 @@ public class SummonHandProjectile : ProjectileFollow
         }
     }
 
-    public override void OnTriggerEnter(Collider other)
+    protected override void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !_deflected)
         {
