@@ -252,7 +252,7 @@ public class WeaponManager : MonoBehaviour
                 }
 
                 _currentWeapon.OnInnitNormalAttack();
-                playerAnimation.Attack();
+                
 
 
                 if (comboCounter >= maxComboCount)
@@ -273,6 +273,7 @@ public class WeaponManager : MonoBehaviour
 
                 cooldownTimer = comboAttackSpeed;
                 comboCounter++;
+                playerAnimation.Attack(comboCounter);
                 AttackHandle?.Invoke(comboCounter);
                 OnPerformChargedATK?.Invoke(false);
                 isAttack = true;

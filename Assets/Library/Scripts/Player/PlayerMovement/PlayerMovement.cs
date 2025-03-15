@@ -180,7 +180,7 @@ public class PlayerMovement : MonoBehaviour
         var playerMovement = moveDirection * PlayerDatas.Instance.GetStats.MoveSpeed;
         playerMovement.y = _rb.velocity.y;
         _rb.velocity = playerMovement;
-        playerAnimation.Move(_movement.x, _movement.y);
+        playerAnimation.Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
     }
 
@@ -366,7 +366,7 @@ public class PlayerMovement : MonoBehaviour
         Vector3 dir = _mousePos - CharacterPos;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, -angle + 90, 0);
-        playerAnimation.RotateUpperBody(playerUpperSpine, dir);
+        //playerAnimation.RotateUpperBody(playerUpperSpine, dir);
     }
 
 
