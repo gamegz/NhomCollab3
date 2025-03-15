@@ -1,38 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Enemy.statemachine;
-
 
 namespace Enemy.statemachine.States
 {
-    public class EnemyRetreatState : BaseEnemyState
+    public class EnemyStateBossRoam : EnemyAttackState
     {
-        public EnemyRetreatState(EnemyBase enemy, EnemyStateMachine enemyStateMachine) : base(enemy, enemyStateMachine)
-        {
+        private BossEnemyBase bossEnemy;
 
+        public EnemyStateBossRoam(BossEnemyBase enemy, EnemyStateMachine enemyStateMachine) : base(enemy, enemyStateMachine)
+        {
+            bossEnemy = enemy;
         }
 
         public override void EnterState()
         {
-            _enemy.currentState = EnemyBase.EnemyState.Retreat;
-            _enemy.currentSpeed = _enemy.followSpeed;
+            base.EnterState();
         }
 
         public override void FixedUpdateS()
         {
-            
+            base.FixedUpdateS();
         }
 
         public override void UpdateState()
         {
-            
+            base.UpdateState();
         }
 
         public override void ExitState()
         {
-            
+            base.ExitState();
         }
     }
 }
-

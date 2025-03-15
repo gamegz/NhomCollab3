@@ -5,13 +5,13 @@ using UnityEngine;
 
 namespace Enemy.statemachine.States
 {
-    public class EnemyStateAttackProjectile : EnemyAttackState
+    public class EnemyStateAttackBoss : EnemyAttackState
     {
         private float _attackInnitTimeCount;
         private float _attackDuration;
         private Vector3 _attackDir;
 
-        public EnemyStateAttackProjectile(EnemyBase enemy, EnemyStateMachine enemyStateMachine) : base(enemy, enemyStateMachine)
+        public EnemyStateAttackBoss(EnemyBase enemy, EnemyStateMachine enemyStateMachine) : base(enemy, enemyStateMachine)
         {
 
         }
@@ -19,17 +19,18 @@ namespace Enemy.statemachine.States
         public override void EnterState()
         {
             base.EnterState();
+            _enemy.currentSpeed = _enemy.chaseSpeed;
             _attackInnitTimeCount = _enemy.attackInnitTime;
             _attackDuration = _enemy.totalAttackDuration;
             Vector3 attackChargePos = _enemy.GetNavLocationByDirection(_enemy.transform.position,
                                                                   _enemy.playerRef.transform.position - _enemy.transform.position,
-                                                                  _enemy.distanceToPlayer * 1.6f, 1);
+                                                                  _enemy.distanceToPlayer + 1.7f, 1);
             _enemy.enemyNavAgent.SetDestination(attackChargePos);
             _attackDir = _enemy.GetDirectionToPlayer();
-            _enemy.currentSpeed = _enemy.chaseSpeed;
+            _enemy.canTurn = false;
         }
 
-      
+
         public override void FixedUpdateS()
         {
             base.FixedUpdateS();
@@ -44,14 +45,14 @@ namespace Enemy.statemachine.States
             if (_attackInnitTimeCount > 0)
             {
                 _attackInnitTimeCount -= Time.deltaTime;
-                if(_attackInnitTimeCount <= 0)
-                {
-                    _enemy.ShootProjectile(_enemy.GetDirectionToPlayer());
-                    _enemy.isAttacking = true; //Start attack
-                }
-                
-            }
 
+                if (_attackInnitTimeCount <= 0)
+                {
+                    _enemy.InnitAttackCollider(0.2f);
+                    _enemy.isAttacking = true;
+                }
+
+            }
 
             if (!_enemy.isAttacking) { return; }
             _attackDuration -= Time.deltaTime;
@@ -68,20 +69,19 @@ namespace Enemy.statemachine.States
                             _ownerStateMachine.SwitchState(_enemy.enemyRetreatState);
                             break;
                         }
-                        
-                        
-                        _ownerStateMachine.SwitchState(_enemy.enemyFollowState);                       
+
+
+                        _ownerStateMachine.SwitchState(_enemy.enemyFollowState);
                         break;
                     case false:
-
                         _ownerStateMachine.SwitchState(_enemy.enemyRetreatState);
                         break;
                 }
-            
+
             }
 
         }
-        
+
         public override void ExitState()
         {
             base.ExitState();
@@ -89,4 +89,3 @@ namespace Enemy.statemachine.States
         }
     }
 }
-

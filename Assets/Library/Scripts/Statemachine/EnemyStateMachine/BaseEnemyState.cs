@@ -29,6 +29,13 @@ namespace Enemy.statemachine
             _ownerStateMachine = enemyStateMachine;
         }
 
+        public virtual void SetUpState(EnemyBase enemy, EnemyStateMachine enemyStateMachine)
+        {
+            _enemy = enemy;
+            _enemyNavMeshAgent = enemy.enemyNavAgent;
+            _ownerStateMachine = enemyStateMachine;
+        }
+
         public abstract override  void EnterState();
         public abstract override void FixedUpdateS();
         public abstract override void UpdateState();

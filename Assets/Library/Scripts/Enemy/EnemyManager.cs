@@ -26,9 +26,8 @@ namespace Enemy.EnemyManager
 			public Quaternion spawnRotation;
 		}
 
-		private static int _maxActiveEnemy = 9;
-
-		private static int _maxAttackToken = 3;
+		[SerializeField] private int _maxActiveEnemy = 9;
+		[SerializeField] private int _maxAttackToken = 3;
 		private int _currentAttackToken;
 
 		private List<EnemyBase> activeEnemies = new List<EnemyBase>();
@@ -94,10 +93,12 @@ namespace Enemy.EnemyManager
 			List<EnemyBase> enemiesInst = activeEnemies.OrderBy(x => x.distanceToPlayer).ToList();
 			for (int i = 0; i < enemiesInst.Count; i++)
 			{
+				//enemiesInst[i].isTokenOwner = false;
 				if (_currentAttackToken <= 0) { break; }
-				if (enemiesInst[i].isAttacking) { continue; }
-				enemiesInst[i].isTokenOwner = true;
-                _currentAttackToken--;
+				if (!enemiesInst[i].isAttacking) {
+					enemiesInst[i].isTokenOwner = true;
+					_currentAttackToken--;					
+				}
             }
         }
 

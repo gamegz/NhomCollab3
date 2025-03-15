@@ -27,7 +27,7 @@ namespace Enemy
         public static event OnCallEnemyDeath OnEnemyDeathsEvent;
         #region DATA CONFIG
 
-        public EnemyHostileMethod hostileMethod; //Put this as gunner for testing enemy without tokensystem
+
         public GameObject playerRef;
         public ActorLayerData layerData;
         public CapsuleCollider colliderCapsule;
@@ -59,6 +59,8 @@ namespace Enemy
         [Tooltip("Distance to return if player too far away")]
         public float followDistance;
 
+
+        [Space]
         [Header("Stagger")]
         [Tooltip("Amount of damage recive before stagger")]
         public float staggerThreshold;
@@ -69,6 +71,7 @@ namespace Enemy
         [HideInInspector] public bool isStagger = false;
         [HideInInspector] public bool isTargetInAttackRange;
         [HideInInspector] public bool isTokenOwner;
+        [SerializeField] private bool isTokenUser = true;
 
         //Stun
         [Header("STUN")]
@@ -118,13 +121,6 @@ namespace Enemy
         [Header("DeathConfig")]
         [SerializeField] private int _dropValue;
         public DeathMethod deathMethod;
-
-        public enum EnemyHostileMethod
-        {
-            Melee,
-            Gunner, //Unaffected by token
-            MeleeGunner
-        }
 
         public enum EnemyState { 
             Roam,
@@ -179,6 +175,7 @@ namespace Enemy
         public virtual void Start()
         {
             enemyNavAgent.updateRotation = false;
+            isStagger = false;
             canMove = true;
             canTurn = true;
             canAttack = true;
@@ -191,7 +188,7 @@ namespace Enemy
             attackCoolDownCount = attackCooldown;
             staggerTimeCounter = staggerTime;
 
-            if (hostileMethod == EnemyHostileMethod.Gunner) { isTokenOwner = true; }
+            if(!isTokenUser) { isTokenOwner = true; }
             attackCollider.gameObject.GetComponent<EnemyAttackCollider>()._damage = attackDamage;
         }
 
@@ -199,7 +196,7 @@ namespace Enemy
         {
             if(isStagger) { return; }
             if(isStunned) { return; }
-
+            distanceToPlayer = Vector3.Distance(transform.position, playerRef.transform.position);
             UpdateAttackCoolDown();
             _stateMachine.UpdateState();
             enemyNavAgent.isStopped = !canMove;
@@ -243,6 +240,8 @@ namespace Enemy
             attackCoolDownCount = attackCooldown;
             canAttack = false;
             isAttacking = false;
+            if(!isTokenUser) { return; }
+            isTokenOwner = false;
         } //Call when finish attack
 
         #region LOGIC IMPLEMENT
@@ -250,15 +249,15 @@ namespace Enemy
         #region MOVEMENT DASH
         public void InnitDash(Vector3 dashDirection)
         {
-            StartCoroutine(EnemyDash(dashDirection, _dashDistance, _dashDuration));
+            StartCoroutine(Dash(dashDirection, _dashDistance, _dashDuration));
         }
 
         public void InnitDash(Vector3 dashDirection, float dashDistance, float dashTime)
         {
-            StartCoroutine(EnemyDash(dashDirection, dashDistance, dashTime));
+            StartCoroutine(Dash(dashDirection, dashDistance, dashTime));
         }
 
-        private IEnumerator EnemyDash(Vector3 dashDirection, float DashDistance, float DashTime)
+        public IEnumerator Dash(Vector3 dashDirection, float DashDistance, float DashTime)
         {
             if (isDashing) { yield break; }
 
@@ -271,7 +270,7 @@ namespace Enemy
             dashDirection = dashDirection.normalized;
             float dashDistance = DashDistance;
             Vector3 dashPoint = transform.position + dashDirection * dashDistance;
-            LookAtTarget(transform.position, dashPoint);
+            LookAtTarget(dashPoint);
 
             Vector2 enemyPos = new Vector2(transform.position.x, transform.position.z);
 
@@ -359,10 +358,10 @@ namespace Enemy
             transform.rotation = rotation;
         }
 
-        public void LookAtTarget(Vector3 center, Vector3 target)
+        public void LookAtTarget(Vector3 target)
         {
             if (!canTurn) { return; }
-            Vector3 dirToTarget = target - center;
+            Vector3 dirToTarget = GetDirectionIgnoreY(transform.position, target);
             Quaternion rotation = Quaternion.LookRotation(dirToTarget, Vector3.up);
             transform.rotation = rotation;
         }
@@ -392,8 +391,6 @@ namespace Enemy
 
         public void ShootProjectile(Vector3 direction)
         {
-            if (isStagger) return;
-
             GameObject projectile = Instantiate(_shootProjectile, _shootPoint.position, Quaternion.identity);
             if (projectile.TryGetComponent<EnemyProjectile>(out EnemyProjectile enemyProjectile))
             {
@@ -425,7 +422,7 @@ namespace Enemy
         }
 
 
-        public void TakeDamage(int damage)
+        public virtual void TakeDamage(int damage)
         {
             //Debug.Log("Damage: " + damage);
             currentHealth -= damage;
@@ -457,8 +454,6 @@ namespace Enemy
             //knockbackForce = _weaponData.knockbackForce;
         }
 
-
-        Coroutine staggerTimeCoroutine;
 
         public void Stagger(float knockbackStrength)
         {
@@ -541,19 +536,30 @@ namespace Enemy
 
         #region HELPER
 
-        public Vector3 GetRandomNavmeshLocation()
+        public Vector3 GetRandomNavmeshLocationAroundSelf(float range)
         {
             //Get a random point in a circle around target
-            Vector3 randomDirection = transform.position + Random.insideUnitSphere * roamRadius;
+            Vector3 randomDirection = transform.position + Random.insideUnitSphere * range;
             NavMeshHit hitData;
             Vector3 finalPosition = Vector3.zero;
-            if (NavMesh.SamplePosition(randomDirection, out hitData, roamRadius, 1))
+            if (NavMesh.SamplePosition(randomDirection, out hitData, range, 1))
             {
                 finalPosition = hitData.position;
             }
-
-            //Debug.Log(finalPosition);
             return finalPosition;
+        }
+
+
+        public Vector3 GetNavMeshLocationAroundAPoint(Vector3 center, float checkRadius)
+        {
+            Vector3 location = transform.position;
+            NavMeshHit hitData;
+            if (NavMesh.SamplePosition(location, out hitData, checkRadius, 1))
+            {
+                location = hitData.position;
+            }
+
+            return location;
         }
 
         public Vector3 GetNavLocationByDirection(Vector3 startingPoint, Vector3 direction, float checkDistance, float checkRadiusAroundHitLocation)
@@ -612,6 +618,18 @@ namespace Enemy
             distanceToPlayer = Vector3.Distance(transform.position, playerRef.transform.position);
             return distanceToPlayer;
         } //Get straight distance to player
+
+        public float GetDistanceToPLayerIgnoreY()
+        {
+            Vector3 playerPos = playerRef.transform.position;
+            Vector3 agentPos = transform.position;
+            playerPos.y = 0;
+            agentPos.y = 0;
+
+            distanceToPlayer = Vector3.Distance(agentPos, playerPos);
+            return distanceToPlayer;
+        } //Get straight distance to player
+
         public float GetNavMeshTrueDistanceToPlayer()
         {
             var corners = enemyNavAgent.path.corners;

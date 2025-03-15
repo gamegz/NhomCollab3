@@ -129,7 +129,7 @@ namespace Enemy.statemachine.States
         public void RoamLocationRandom()
         {
             _enemy.canMove = true;
-            _roamLocation = _enemy.GetRandomNavmeshLocation();
+            _roamLocation = _enemy.GetRandomNavmeshLocationAroundSelf(_enemy.roamRadius);
             _enemyNavMeshAgent.SetDestination(_roamLocation);
             _currentRoamDelayCountDown = _enemy.roamCountDown;
         }
