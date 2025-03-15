@@ -67,6 +67,8 @@ public class WeaponManager : MonoBehaviour
     //------------------------
 
     //Since each weapon have different delay time, need to overwrite the SO_WeaponData each time _currentWeapon value changes
+    [Header("Animation")]
+    [SerializeField] private PlayerAnimation playerAnimation;
 
     private void Awake()
     {
@@ -250,6 +252,7 @@ public class WeaponManager : MonoBehaviour
                 }
 
                 _currentWeapon.OnInnitNormalAttack();
+                
 
 
                 if (comboCounter >= maxComboCount)
@@ -270,6 +273,7 @@ public class WeaponManager : MonoBehaviour
 
                 cooldownTimer = comboAttackSpeed;
                 comboCounter++;
+                playerAnimation.Attack(comboCounter);
                 AttackHandle?.Invoke(comboCounter);
                 OnPerformChargedATK?.Invoke(false);
                 isAttack = true;
