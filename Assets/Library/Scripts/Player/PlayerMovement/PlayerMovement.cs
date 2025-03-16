@@ -16,7 +16,6 @@ public class PlayerMovement : MonoBehaviour
     protected Rigidbody _rb;
     private PlayerInput _playerInput;
     private Camera _camera;
-    private CapsuleCollider _capsuleCollider;
 
     [Header("Movement")]
     //private float playerSpeed;
@@ -55,7 +54,6 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Animation")]
     [SerializeField] private PlayerAnimation playerAnimation;
-    [SerializeField] private Transform playerUpperSpine;
     
    
     private Coroutine dashCoroutine;
@@ -76,7 +74,6 @@ public class PlayerMovement : MonoBehaviour
         currentCharge = maxCharge;
         m_PlayerBase = GetComponent<PlayerBase>();
         _rb = GetComponent<Rigidbody>();
-        _capsuleCollider = GetComponent<CapsuleCollider>();
     }
 
     private void OnEnable()

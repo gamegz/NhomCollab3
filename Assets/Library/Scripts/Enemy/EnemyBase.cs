@@ -32,6 +32,7 @@ namespace Enemy
         public StatsUpgrade playerStatsRef;
         public ActorLayerData layerData;
         public CapsuleCollider colliderCapsule;
+        public GameObject expPrefab;
         [Space]
         
         
@@ -122,7 +123,7 @@ namespace Enemy
         [Header("DeathConfig")]
         [SerializeField] private int _dropValue;
         public DeathMethod deathMethod;
-        [SerializeField] private GameObject expPrefab;
+        
 
         public enum EnemyState { 
             Roam,
@@ -150,6 +151,7 @@ namespace Enemy
         public virtual void Awake()
         {                     
             SetUpStateMachine();
+
         }
 
         private void OnEnable()
@@ -526,18 +528,17 @@ namespace Enemy
                 case DeathMethod.Freeze:
                     break;
             }
-            GameObject expObj = Instantiate(expPrefab, transform.position, Quaternion.identity);
+            Vector3 spawnPosition = transform.position - new Vector3(0, 0.5f, 0);
+            GameObject expObj = Instantiate(expPrefab, spawnPosition, Quaternion.identity);
             ExpOrb expOrb = expObj.GetComponent<ExpOrb>();
+            if(expOrb == null || playerRef == null || playerStatsRef == null || expObj == null) { Debug.LogWarning("missing Reference");  return; } 
             expOrb.SetExp(_dropValue, playerStatsRef, playerRef);
             OnEnemyDeaths?.Invoke(this);
             OnEnemyDeathsEvent?.Invoke(this);
             Destroy(gameObject);
-
         }
 
         #endregion
-
-
 
         #region HELPER
 

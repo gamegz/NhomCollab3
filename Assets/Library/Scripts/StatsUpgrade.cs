@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UI;
 using UnityEngine;
 
 //This class keep track of the Upgrade stats and Upgrade fomula
@@ -18,10 +19,12 @@ public class StatsUpgrade : MonoBehaviour
     public UpgradeGroup dashRecoveryUpgradeGroup;
     [Space]
 
-    [SerializeField] private int gemCount = 0;
-    [SerializeField] private float expCount;
-    [SerializeField] private float maxExpPerLevel;
+    private int gemCount = 0;
+    public float currentExp;
+    public float maxExpPerLevel;
     [SerializeField] private float expMultiplier;
+    [SerializeField] private UpgradeMenu upgradeMenu;
+    private float expOverflow = 0f;
     public int GemCount { get { return gemCount; } set { gemCount = value; } }
 
     private void Start()
@@ -32,12 +35,17 @@ public class StatsUpgrade : MonoBehaviour
 
     public void AddExp(float expAmount)
     {
-        expCount += expAmount;
-        if(expCount >= maxExpPerLevel)
+        currentExp += expAmount;
+        while (currentExp >= maxExpPerLevel)
         {
+            expOverflow = currentExp - maxExpPerLevel;
             gemCount++;
             maxExpPerLevel *= expMultiplier;
+            currentExp = 0;
+            currentExp = expOverflow;
         }
+        if(upgradeMenu == null) { Debug.LogWarning("Missing upgradeMenu Reference, please assign it in StatsUpgrade"); return; }
+        upgradeMenu.UpdateExpBar(currentExp, maxExpPerLevel);
     }
 
     private void SetUpUpgradeGroup()

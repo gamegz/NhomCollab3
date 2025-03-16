@@ -12,6 +12,7 @@ namespace UI
         //Refs'
         [SerializeField] private StatsUpgrade statsUpgradeCS;
         [SerializeField] private GameObject upgradeMenuObj;
+        [SerializeField] private Slider expSlider;
 
         [Space]
         //Dictionary<string, UpdateUI> upgradeGroupDictionary = new Dictionary<string, UpdateUI>();
@@ -27,6 +28,7 @@ namespace UI
         [SerializeField] Text sacrificialGemCountText;
 
         private int _totalCurrentGemUse; //Gem use temporary
+        private float targetValue;
         
        
         void Start()
@@ -35,6 +37,32 @@ namespace UI
             foreach(UpdateUI upgradeUI in upgradeUIDictionary.Values)
             {
                 Debug.Log("upgrade Count: " + upgradeUI.upgradeCount);
+            }
+        }
+
+        public void UpdateExpBar(float currentExpAmount, float maxExpAmount)
+        {
+            if(expSlider != null)
+            {
+                targetValue = currentExpAmount / maxExpAmount;
+                StartCoroutine(UpdateExpGauge());
+            }
+            else
+            {
+                Debug.LogWarning("Missing Slider Reference");
+            }
+        }
+
+        IEnumerator UpdateExpGauge()
+        {
+            float timer = 0f;
+            float maxTimer = 0.2f;
+            while(timer < maxTimer)
+            {
+                expSlider.value = Mathf.Lerp(expSlider.value, targetValue, maxTimer);
+                timer += Time.deltaTime;
+
+                yield return null;
             }
         }
 

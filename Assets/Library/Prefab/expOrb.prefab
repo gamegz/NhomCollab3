@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3609329142486373593}
   - component: {fileID: 4682231196631368367}
+  - component: {fileID: 6870163090678305451}
   m_Layer: 0
   m_Name: expOrb
   m_TagString: Untagged
@@ -54,6 +55,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.3, y: 0.3, z: 0.3}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6870163090678305451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2387019987830430215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17db113c787f9dc4c8f936c6f6a12d78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 10
 --- !u!1 &8413848416705502949
 GameObject:
   m_ObjectHideFlags: 0

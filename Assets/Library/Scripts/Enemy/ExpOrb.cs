@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,12 +16,23 @@ public class ExpOrb : MonoBehaviour
     {
         _boxCollider = GetComponent<BoxCollider>();
         _boxCollider.enabled = false;
+        StartFloatingAnimation();
     }
     void Start()
     {
         
     }
 
+    private void StartFloatingAnimation()
+    {
+        transform.DOMoveY(transform.position.y + 0.3f, 1f)
+            .SetLoops(-1, LoopType.Yoyo) 
+            .SetEase(Ease.InOutSine); 
+
+        transform.DORotate(new Vector3(0, 360, 0), 2f, RotateMode.FastBeyond360)
+            .SetLoops(-1, LoopType.Restart) 
+            .SetEase(Ease.Linear); 
+    }
 
     void Update()
     {
@@ -47,8 +59,9 @@ public class ExpOrb : MonoBehaviour
     {
         if(other.gameObject.tag == "Player")
         {
+            transform.DOKill();
             _playerStatsRef.AddExp(_expAmount);
-            Destroy(this);
+            Destroy(this.gameObject);
         }
     }
 }

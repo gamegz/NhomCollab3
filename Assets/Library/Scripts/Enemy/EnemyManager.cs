@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System;
+using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Enemy.EnemyManager
 {
@@ -36,15 +37,17 @@ namespace Enemy.EnemyManager
 		private GameObject _player;
 		StatsUpgrade _playerStatsUpgrade;
 
+		[Header("ExpPrefab")]
+		[SerializeField] private GameObject _expPrefab;
+
         private void Awake()
         {
 			activeEnemies = FindObjectsOfType<EnemyBase>().ToList();
 			_player = GameObject.FindGameObjectWithTag("Player");
-			_playerStatsUpgrade = _player.GetComponent<StatsUpgrade>();
+			_playerStatsUpgrade = FindObjectOfType<StatsUpgrade>();
 			foreach(EnemyBase enemy in activeEnemies)
             {
 				enemy.playerRef = _player;
-				enemy.playerStatsRef = _playerStatsUpgrade;
             }
         }
 
@@ -115,8 +118,10 @@ namespace Enemy.EnemyManager
 			EnemySpawnData firstEnemyData = enemiesSpawnOnHold[0];
 			enemiesSpawnOnHold.RemoveAt(0);
 			EnemyBase spawnedEnemy = Instantiate(firstEnemyData.enemyToSpawn, firstEnemyData.spawnLocation, firstEnemyData.spawnRotation);
-            spawnedEnemy.playerRef = _player;           
-			activeEnemies.Add(spawnedEnemy);
+            spawnedEnemy.playerRef = _player;
+            spawnedEnemy.expPrefab = _expPrefab;
+            spawnedEnemy.playerStatsRef = _playerStatsUpgrade;
+            activeEnemies.Add(spawnedEnemy);
 			spawnedEnemy.OnEnemyDeaths += OnEnemyDeath;
 			Debug.Log(enemiesSpawnOnHold);
 
@@ -139,6 +144,8 @@ namespace Enemy.EnemyManager
 			EnemyBase spawnedEnemy = Instantiate(SpawnEnemy, SpawnLocation, SpawnRotation);
             spawnedEnemy.OnEnemyDeaths += OnEnemyDeath;	
             spawnedEnemy.playerRef = _player;
+			spawnedEnemy.expPrefab = _expPrefab;
+            spawnedEnemy.playerStatsRef = _playerStatsUpgrade;
             activeEnemies.Add(spawnedEnemy);
 		}
 
