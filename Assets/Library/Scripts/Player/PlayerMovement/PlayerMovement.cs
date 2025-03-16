@@ -300,6 +300,7 @@ public class PlayerMovement : MonoBehaviour
         m_PlayerBase.StartImmunityCoroutine(invulnerableTimerOrg);
 
         Debug.Log("Parrying");
+        playerAnimation.Parry();
 
         while (elapsedInvulnerableTime >= 0)
         {

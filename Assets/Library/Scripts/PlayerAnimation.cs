@@ -20,10 +20,10 @@ public class PlayerAnimation : MonoBehaviour
     //    animator.SetBool("IsDashForward", isForward);
     //}
 
-    //public void Parry()
-    //{
-    //    animator.SetTrigger("Parry");
-    //}
+    public void Parry()
+    {
+        animator.SetTrigger("Parry");
+    }
 
     public void Attack(int attackType)
     {
