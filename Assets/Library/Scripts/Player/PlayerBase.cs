@@ -276,7 +276,6 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     }
     private IEnumerator CanDamageStatusCountDown(float invulTime)
     {
-        Debug.Log("Can not be damage");
         canBeDamage = false;
         invulTimeAfterDamagedCount = invulTime;
         //yield return new WaitForSeconds(invulTime);
@@ -285,7 +284,6 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
             invulTimeAfterDamagedCount -= Time.deltaTime;
             yield return null;
         }
-        Debug.Log("can be damage now");
         canBeDamage = true;
     }
 

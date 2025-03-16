@@ -4,13 +4,18 @@ using UnityEngine;
 
 namespace Enemy.statemachine.States
 {
-    public class EnemyStateBossRetreat : EnemyAttackState
+    public class EnemyStateBossRetreat : EnemyRetreatState
     {
         private BossEnemyBase bossEnemy;
 
         public EnemyStateBossRetreat(BossEnemyBase enemy, EnemyStateMachine enemyStateMachine) : base(enemy, enemyStateMachine)
         {
             bossEnemy = enemy;
+        }
+        public override void SetUpState(EnemyBase enemy, EnemyStateMachine enemyStateMachine)
+        {
+            bossEnemy = (BossEnemyBase)enemy;
+            base.SetUpState(enemy, enemyStateMachine);
         }
 
         public override void EnterState()

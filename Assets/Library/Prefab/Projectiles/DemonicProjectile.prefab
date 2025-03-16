@@ -51,7 +51,7 @@ MonoBehaviour:
   _bulletSpeed: 5
   _damage: 1
   _reflectedDamage: 10
-  _lifeTime: 6
+  _lifeTime: 7
   projectileDeflectMethod: 1
 --- !u!54 &-6077802067139653028
 Rigidbody:

@@ -305,11 +305,11 @@ namespace Enemy
             //    }
             //}
 
-            if (NavMesh.SamplePosition(dashPoint, out NavMeshHit hit, 0.1f, 1))
-            {
-                dashPoint = hit.position;
-                dashDistance = Vector2.Distance(enemyPos, new Vector2(hit.position.x, hit.position.z)) - colliderCapsule.radius * 2;
-            }
+            //if (NavMesh.SamplePosition(dashPoint, out NavMeshHit hit, 0.1f, 1))
+            //{
+            //    dashPoint = hit.position;
+            //    dashDistance = Vector2.Distance(enemyPos, new Vector2(hit.position.x, hit.position.z)) - colliderCapsule.radius * 2;
+            //}
             
 
             //Recaculate dash duration when distance is changed
@@ -318,6 +318,7 @@ namespace Enemy
             //Dashing
             float dashSpeed = dashDistance / DashTime;
             float dashDurationCount = DashTime;
+            
 
             while (dashDurationCount > 0)
             {
@@ -352,7 +353,6 @@ namespace Enemy
 
         public void LookAtTarget(Transform center, Transform target)
         {
-            if (!canTurn) { return; }
             Vector3 dirToTarget = target.position - center.position;
             Quaternion rotation = Quaternion.LookRotation(dirToTarget, Vector3.up);
             transform.rotation = rotation;
@@ -360,7 +360,6 @@ namespace Enemy
 
         public void LookAtTarget(Vector3 target)
         {
-            if (!canTurn) { return; }
             Vector3 dirToTarget = GetDirectionIgnoreY(transform.position, target);
             Quaternion rotation = Quaternion.LookRotation(dirToTarget, Vector3.up);
             transform.rotation = rotation;
@@ -552,7 +551,8 @@ namespace Enemy
 
         public Vector3 GetNavMeshLocationAroundAPoint(Vector3 center, float checkRadius)
         {
-            Vector3 location = transform.position;
+            int angle = Random.Range(0, 361);
+            Vector3 location = new Vector3(center.x + checkRadius * Mathf.Cos(angle), center.y, center.z + checkRadius * Mathf.Sin(angle));
             NavMeshHit hitData;
             if (NavMesh.SamplePosition(location, out hitData, checkRadius, 1))
             {
@@ -610,7 +610,7 @@ namespace Enemy
 
         public Vector3 GetDirectionIgnoreY(Vector3 from, Vector3 to)
         {
-            return new Vector3(to.x, 2, to.z) - new Vector3(from.x, 2, from.y);
+            return new Vector3(to.x, 0, to.z) - new Vector3(from.x, 0, from.z);
         }
 
         public float GetDistanceToPLayer()
@@ -623,8 +623,8 @@ namespace Enemy
         {
             Vector3 playerPos = playerRef.transform.position;
             Vector3 agentPos = transform.position;
-            playerPos.y = 0;
-            agentPos.y = 0;
+            playerPos.y = agentPos.y;
+
 
             distanceToPlayer = Vector3.Distance(agentPos, playerPos);
             return distanceToPlayer;
