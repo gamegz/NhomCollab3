@@ -58,10 +58,8 @@ public class EnemySpawner : MonoBehaviour
                 _currentEnemyCount++;
                 spawnedEnemies = _currentEnemyCount;
                 spawnIndex = (spawnIndex + 1) % spawnPos.Count;   
-            }
-            
+            }  
         }
-
     }
 
     private void OnEnemyDeath(EnemyBase enemy)
@@ -89,8 +87,13 @@ public class EnemySpawner : MonoBehaviour
         OnStartSpawning();
     }
 
-    private void OnFinishCurrentRoom()
+    public void OnFinishCurrentRoom()
     {
+        ExpOrb[] expOrbs = FindObjectsOfType<ExpOrb>();
+        foreach (ExpOrb expOrb in expOrbs)
+        {
+            expOrb.AllowToMoveTowardPlayer();
+        }
         roomLock.SetActive(false);
         this.gameObject.SetActive(false);
     }

@@ -34,14 +34,17 @@ namespace Enemy.EnemyManager
 		private List<EnemySpawnData> enemiesSpawnOnHold = new List<EnemySpawnData>();
 		private float _enemySpawnOnHoldDelay = 2;
 		private GameObject _player;
+		StatsUpgrade _playerStatsUpgrade;
 
         private void Awake()
         {
 			activeEnemies = FindObjectsOfType<EnemyBase>().ToList();
 			_player = GameObject.FindGameObjectWithTag("Player");
+			_playerStatsUpgrade = _player.GetComponent<StatsUpgrade>();
 			foreach(EnemyBase enemy in activeEnemies)
             {
 				enemy.playerRef = _player;
+				enemy.playerStatsRef = _playerStatsUpgrade;
             }
         }
 

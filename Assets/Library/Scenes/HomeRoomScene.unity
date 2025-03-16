@@ -11055,6 +11055,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19beb50c444020943ad58ef694d1b3a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _maxActiveEnemy: 9
+  _maxAttackToken: 3
 --- !u!4 &1318962206
 Transform:
   m_ObjectHideFlags: 0

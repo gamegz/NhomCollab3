@@ -29,6 +29,7 @@ namespace Enemy
 
 
         public GameObject playerRef;
+        public StatsUpgrade playerStatsRef;
         public ActorLayerData layerData;
         public CapsuleCollider colliderCapsule;
         [Space]
@@ -121,6 +122,7 @@ namespace Enemy
         [Header("DeathConfig")]
         [SerializeField] private int _dropValue;
         public DeathMethod deathMethod;
+        [SerializeField] private GameObject expPrefab;
 
         public enum EnemyState { 
             Roam,
@@ -524,6 +526,9 @@ namespace Enemy
                 case DeathMethod.Freeze:
                     break;
             }
+            GameObject expObj = Instantiate(expPrefab, transform.position, Quaternion.identity);
+            ExpOrb expOrb = expObj.GetComponent<ExpOrb>();
+            expOrb.SetExp(_dropValue, playerStatsRef, playerRef);
             OnEnemyDeaths?.Invoke(this);
             OnEnemyDeathsEvent?.Invoke(this);
             Destroy(gameObject);

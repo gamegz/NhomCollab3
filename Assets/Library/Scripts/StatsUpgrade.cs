@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,13 +18,26 @@ public class StatsUpgrade : MonoBehaviour
     public UpgradeGroup dashRecoveryUpgradeGroup;
     [Space]
 
-    private int gemCount = 1000;
+    [SerializeField] private int gemCount = 0;
+    [SerializeField] private float expCount;
+    [SerializeField] private float maxExpPerLevel;
+    [SerializeField] private float expMultiplier;
     public int GemCount { get { return gemCount; } set { gemCount = value; } }
 
     private void Start()
     {
         SetUpUpgradeGroup();
         LoadLevelFromData(PlayerDatas.Instance.GetStats);
+    }
+
+    public void AddExp(float expAmount)
+    {
+        expCount += expAmount;
+        if(expCount >= maxExpPerLevel)
+        {
+            gemCount++;
+            maxExpPerLevel *= expMultiplier;
+        }
     }
 
     private void SetUpUpgradeGroup()
