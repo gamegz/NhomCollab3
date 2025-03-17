@@ -73,9 +73,9 @@ public class BossEnemyBase : EnemyBase ///This is getting messy af
         enemyAttackSummon1.SetUpState(this, _stateMachine);
         enemyAttackSummon2.SetUpState(this, _stateMachine);
         enemyAttackRanged1.SetUpState(this, _stateMachine);
-        //enemyAttackUltimate1.SetUpState(this, _stateMachine);
+        enemyAttackUltimate1.SetUpState(this, _stateMachine);
 
-        _stateMachine.SetStartState(enemyAttackMelee1);
+        _stateMachine.SetStartState(enemyAttackUltimate1);
     }
 
     public override void Start()

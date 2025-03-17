@@ -55,7 +55,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1078383842555543702}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -2.29, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -112,6 +112,7 @@ GameObject:
   - component: {fileID: 158341549736915200}
   - component: {fileID: 3219533520370896641}
   - component: {fileID: 4250791426807900134}
+  - component: {fileID: 4571463391670170831}
   m_Layer: 8
   m_Name: BOSS
   m_TagString: Untagged
@@ -201,7 +202,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 3.3
-  m_Speed: 1.5
+  m_Speed: 20
   m_Acceleration: 20
   avoidancePriority: 98
   m_AngularSpeed: 200
@@ -287,7 +288,7 @@ MonoBehaviour:
   enemyAttackSummon1: {fileID: 158341549736915200}
   enemyAttackSummon2: {fileID: 3219533520370896641}
   enemyAttackRanged1: {fileID: 4250791426807900134}
-  enemyAttackUltimate1: {fileID: 0}
+  enemyAttackUltimate1: {fileID: 4571463391670170831}
   bossRoam: {fileID: 0}
   bossChase: {fileID: 0}
   bossRetreat: {fileID: 0}
@@ -405,11 +406,32 @@ MonoBehaviour:
   lazerEffect: {fileID: 3390022297192941786}
   retreatDistance: 5
   innitTime: 1
-  changeDirTime: 2
-  attackDelayTime: 0.5
-  exitStateTime: 1
+  changeDirTime: 1.6
+  attackDelayTime: 0.3
+  exitStateTime: 2
   damage: 1
   shootLocation: {fileID: 6714997775346324657}
+--- !u!114 &4571463391670170831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2352698667018029962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7aeddfab997130a4c8f1bec9f6a23249, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  summonObj: {fileID: 4767452944218749296, guid: 34ed0d02ce480b7489604deddaf484af,
+    type: 3}
+  innitTime: 2
+  attackDelay: 4
+  spawnNum: 50
+  spawnDelay: 0.1
+  exitStateDelay: 2
+  shootLocation: {fileID: 8636833326243772507}
+  teleportLocation: {fileID: 0}
 --- !u!1 &2378704449289924926
 GameObject:
   m_ObjectHideFlags: 0
@@ -2167,7 +2189,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 6250
+  m_VersionIndex: 6253
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
