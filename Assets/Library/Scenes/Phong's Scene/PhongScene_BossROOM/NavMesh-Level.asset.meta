@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Library/Scenes/Phong's Scene/PhongScene_BossROOM/NavMesh-Level.asset.meta
 guid: 3ae32948859b04c4eaed19f7027bda0a
+========
+guid: 4ece318152cfa844988e450ee5e05b29
+>>>>>>>> BetaMapBlockout:Assets/Library/Scenes/BlockoutScene/Blockout1/NavMesh-Level.asset.meta
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 23800000
