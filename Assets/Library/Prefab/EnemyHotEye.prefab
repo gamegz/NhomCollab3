@@ -257,14 +257,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58b57586071908844b638a78293bf5f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hostileMethod: 1
   playerRef: {fileID: 0}
+  playerStatsRef: {fileID: 0}
   layerData: {fileID: 11400000, guid: 32d18213bd5db754c9ad8e424b172143, type: 2}
   colliderCapsule: {fileID: 1862864338622019370}
+  expPrefab: {fileID: 0}
   maxHealth: 100
   currentHealth: 0
   _shootPoint: {fileID: 3006090078677051963}
-  _shootProjectile: {fileID: 0}
+  _shootProjectile: {fileID: 4767452944218749296, guid: 4e8dc9d9b8c3b2b459c045bd00c1c747,
+    type: 3}
   attackCollider: {fileID: 5023247952844353073}
   attackDamage: 1
   totalAttackDuration: 4
@@ -280,9 +282,15 @@ MonoBehaviour:
   followDistance: 14
   staggerThreshold: 10
   staggerTime: 1
+  knockbackForce: 0
   isStagger: 0
   isTargetInAttackRange: 0
   isTokenOwner: 0
+  isTokenUser: 1
+  canBeStunned: 0
+  stunPoint: 0
+  stunDuration: 0
+  isStunned: 0
   enemyNavAgent: {fileID: 4739490711755708341}
   followSpeed: 70
   retreatSpeed: 60

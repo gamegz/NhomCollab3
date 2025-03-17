@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerAnimation : MonoBehaviour
 {
     //optimization
+    [SerializeField] Transform player_lower_spine;
     Vector2 localMovement;
     Vector2 moveVector2D;
     Vector2 forwardVector2D;
@@ -39,5 +40,11 @@ public class PlayerAnimation : MonoBehaviour
 
         animator.SetFloat("X", localMovement.x);
         animator.SetFloat("Y", localMovement.y);
+
+        deltaAngle = Vector3.SignedAngle(transform.forward, Commons.instance.GetMouseDir(transform.position), Vector3.up);
+        deltaAngle = Mathf.Clamp(deltaAngle, -1, 1);
+        //animator.SetFloat("Turn", deltaAngle);
+
+        player_lower_spine.LookAt(transform.position + (Vector3)Commons.instance.GetMouseDir(transform.position));
     }
 }
