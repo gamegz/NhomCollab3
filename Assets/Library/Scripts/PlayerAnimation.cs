@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class PlayerAnimation : MonoBehaviour
 {
-    //[SerializeField] Animator m_Animator;
-    [SerializeField] Transform player_lower_spine;
-
     //optimization
     Vector2 localMovement;
     Vector2 moveVector2D;
