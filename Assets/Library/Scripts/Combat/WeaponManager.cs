@@ -78,7 +78,6 @@ public class WeaponManager : MonoBehaviour
         PlayerMovement.dashCancel += DashingToCancelAction;
         if (_currentWeapon != null)
         {
-            //weaponList.Add(_currentWeapon);
             if (weaponList.Count > 0)
             {
                 Innit(weaponList[0]);
