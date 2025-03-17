@@ -29,6 +29,7 @@ public class Dagger : WeaponBase
 
     private void OnTriggerEnter(Collider other)
     {
+
         #region On Damage Enemy
         // Temp solution - Please update this in feature code by creating new Interfaces
         EnemyBase enemy = other.GetComponent<EnemyBase>();

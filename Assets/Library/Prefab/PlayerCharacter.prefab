@@ -4236,15 +4236,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f31d281281c67d408a075bc59854626, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 15
-  standStillTimeAfterAttackRecover: 0.2
+  rotationSpeed: 0
+  standStillTimeAfterAttackRecover: 0
   maxCharge: 3
   currentCharge: 0
-  dashRecoverTimePerCharge: 4.8
-  dashInputCooldown: 0.2
+  dashRecoverTimePerCharge: 1
+  dashInputCooldown: 0.3
   dashRegenMultiplier: 1
-  dashForce: 45
-  dashDuration: 0.2
+  dashForce: 0
+  dashDuration: 0
   animCurve:
     serializedVersion: 2
     m_Curve: []
@@ -4252,7 +4252,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   parryBoxRefPoint: {fileID: 2794697307962972658}
-  parryBoxSize: {x: 1.25, y: 2, z: 1.5}
+  parryBoxSize: {x: 1.25, y: 2, z: 1}
   bulletLayerMask:
     serializedVersion: 2
     m_Bits: 16384
@@ -4279,6 +4279,7 @@ MonoBehaviour:
     m_Bits: 128
   HBIncreaseAmount: 1
   maxHBRequirement: 4
+  maxHealth: 10
   invulTimeAfterDamaged: 0.5
 --- !u!114 &1658478206797379963
 MonoBehaviour:
