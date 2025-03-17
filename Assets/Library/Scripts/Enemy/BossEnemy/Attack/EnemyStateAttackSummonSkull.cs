@@ -36,7 +36,7 @@ namespace Enemy.statemachine.States
             retreatTimeCount = retreatTime;
             if(bossEnemy.GetDistanceToPLayerIgnoreY() < retreatDistance)
             {
-                bossEnemy.InnitDash(bossEnemy.GetDirectionIgnoreY(bossEnemy.transform.position, bossEnemy.playerRef.transform.position), 20, 0.23f);
+                bossEnemy.InnitDash(bossEnemy.GetDirectionIgnoreY(bossEnemy.transform.position, bossEnemy.playerRef.transform.position), 25, 1f);
             }
         }
        
@@ -69,6 +69,7 @@ namespace Enemy.statemachine.States
                 doAttack = true;
             };
 
+            
             if (finishAttack)
             {
                 int randNum = Random.Range(1, 3);
@@ -93,6 +94,7 @@ namespace Enemy.statemachine.States
         {           
             for (int i = 0; i < skullSpawnLocations.Count; i++)
             {
+                //Vector3 dirToPlayer = bossEnemy.GetDirectionIgnoreY(bossEnemy.transform.position, bossEnemy.playerRef.transform.position);
                 GameObject projectile = Instantiate(summonObj, skullSpawnLocations[i].position, Quaternion.Euler(bossEnemy.GetDirectionToPlayer()));
                 if (projectile.TryGetComponent<ProjectileFollow>(out ProjectileFollow enemyProjectile))
                 {

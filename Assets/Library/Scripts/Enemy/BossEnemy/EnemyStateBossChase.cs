@@ -4,13 +4,19 @@ using UnityEngine;
 
 namespace Enemy.statemachine.States
 {
-    public class EnemyStateBossChase : EnemyAttackState
+    public class EnemyStateBossChase : EnemyChaseState
     {
         private BossEnemyBase bossEnemy;
 
         public EnemyStateBossChase(BossEnemyBase enemy, EnemyStateMachine enemyStateMachine) : base(enemy, enemyStateMachine)
         {          
             bossEnemy = enemy;
+        }
+
+        public override void SetUpState(EnemyBase enemy, EnemyStateMachine enemyStateMachine)
+        {
+            bossEnemy = (BossEnemyBase)enemy;
+            base.SetUpState(enemy, enemyStateMachine);
         }
 
         public override void EnterState()

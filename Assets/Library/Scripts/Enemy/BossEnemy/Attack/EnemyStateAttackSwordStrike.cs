@@ -61,14 +61,17 @@ namespace Enemy.statemachine.States
 
             if (finishAttack)
             {
-                int randNum = Random.Range(1, 3);
+                int randNum = Random.Range(1, 4);
                 switch (randNum)
                 {
                     case 1:
                         _ownerStateMachine.SwitchState(bossEnemy.enemyAttackSummon1);
                         break;
                     case 2:
-                        _ownerStateMachine.SwitchState(bossEnemy.enemyAttackSummon1);
+                        _ownerStateMachine.SwitchState(bossEnemy.enemyAttackSummon2);
+                        break;
+                    case 3:
+                        _ownerStateMachine.SwitchState(bossEnemy.enemyAttackAOE1);
                         break;
                 }
             }

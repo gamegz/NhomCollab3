@@ -17,6 +17,8 @@ public class EnemyProjectile : MonoBehaviour
     [SerializeField] protected int _reflectedDamage;
     [SerializeField] protected float _lifeTime;
 
+    public float LifeTime => _lifeTime;
+
     public ProjectileDeflectMethod projectileDeflectMethod;
 
     public virtual void Update()

@@ -40,15 +40,18 @@ public class SummonHandProjectile : ProjectileFollow
 
     protected override void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !_deflected)
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             other.gameObject.GetComponent<IDamageable>().TakeDamage(_damage);
-            Destroy(gameObject);
         }
-        else if (other.gameObject.layer == LayerMask.NameToLayer("Enemy") && _deflected)
+
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            other.gameObject.GetComponent<IDamageable>().TakeDamage(_reflectedDamage);
-            Destroy(gameObject);
+            other.gameObject.GetComponent<IDamageable>().TakeDamage(_damage);
         }
     }
 }

@@ -14,6 +14,11 @@ public class BossEnemyBase : EnemyBase ///This is getting messy af
     public EnemyAttackState enemyAttackSummon2;
     public EnemyAttackState enemyAttackRanged1;
     public EnemyAttackState enemyAttackUltimate1;
+    [Space]
+    public EnemyRoamState bossRoam;
+    public EnemyChaseState bossChase;
+    public EnemyRetreatState bossRetreat;
+    public EnemyFollowState bossFollow;
 
     public override void Awake()
     {
@@ -24,8 +29,23 @@ public class BossEnemyBase : EnemyBase ///This is getting messy af
     {
         //if (Input.GetKeyDown(KeyCode.P))
         //{
-        //    InnitDash(GetDirectionToPlayer(), 30, 1f);
+        //    //InnitDash(GetDirectionToPlayer(), 30, 1f);
+        //    float distanceToPlayer = GetDistanceToPLayerIgnoreY() * 3;
+        //    Vector3 directionToPlayer = GetDirectionIgnoreY(transform.position, playerRef.transform.position);
+        //    float dashTimeToPlayer = (distanceToPlayer / 10) * 0.15f;
+        //    InnitDash(directionToPlayer.normalized, distanceToPlayer, dashTimeToPlayer);
         //}
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            Vector3 telePos = GetNavMeshLocationAroundAPoint(playerRef.transform.position, 15);
+            enemyNavAgent.Warp(telePos);
+
+            //Vector3 dirToTarget = GetDirectionIgnoreY(transform.position, playerRef.transform.position);
+            //Quaternion rotation = Quaternion.LookRotation(dirToTarget, Vector3.up);
+            //transform.rotation = rotation;
+        }
+            
         base.UpdateLogic();
     }
 
@@ -42,21 +62,20 @@ public class BossEnemyBase : EnemyBase ///This is getting messy af
     public override void SetUpStateMachine()
     {
         base.SetUpStateMachine();
-        enemyRoamState = new EnemyStateRoam(this, _stateMachine);
-        enemyChaseState = new EnemyStateChase(this, _stateMachine);
-        enemyAttackState = new EnemyStateAttackBoss(this, _stateMachine);
+        //bossRoam.SetUpState(this, _stateMachine);
+        //bossChase.SetUpState(this, _stateMachine);
+        //bossRetreat.SetUpState(this, _stateMachine);
+        //bossFollow.SetUpState(this, _stateMachine);
 
         enemyAttackMelee1.SetUpState(this, _stateMachine);
         enemyAttackMelee2.SetUpState(this, _stateMachine);
-        //enemyAttackAOE1;
+        enemyAttackAOE1.SetUpState(this, _stateMachine);
         enemyAttackSummon1.SetUpState(this, _stateMachine);
-        //enemyAttackSummon2;
-        //enemyAttackRanged1;
-        //enemyAttackUltimate1;
+        enemyAttackSummon2.SetUpState(this, _stateMachine);
+        enemyAttackRanged1.SetUpState(this, _stateMachine);
+        //enemyAttackUltimate1.SetUpState(this, _stateMachine);
 
-        enemyRetreatState = new EnemyStateRetreat(this, _stateMachine);
-        enemyFollowState = new EnemyStateFollow(this, _stateMachine);
-        _stateMachine.SetStartState(enemyAttackSummon1);
+        _stateMachine.SetStartState(enemyAttackMelee1);
     }
 
     public override void Start()
