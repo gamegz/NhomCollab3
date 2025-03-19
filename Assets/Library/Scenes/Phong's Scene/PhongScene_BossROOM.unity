@@ -4143,11 +4143,6 @@ PrefabInstance:
       propertyPath: teleportLocation
       value: 
       objectReference: {fileID: 2016707289}
-    - target: {fileID: 5439277196119106396, guid: b6bfdf53b69907f41a6aea326282d473,
-        type: 3}
-      propertyPath: restTimePerMove
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 5825761476983729661, guid: b6bfdf53b69907f41a6aea326282d473,
         type: 3}
       propertyPath: m_RootOrder
