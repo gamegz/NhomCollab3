@@ -55,7 +55,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1078383842555543702}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -2.29, z: 0}
+  m_LocalPosition: {x: 0, y: -2.73, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -113,6 +113,8 @@ GameObject:
   - component: {fileID: 3219533520370896641}
   - component: {fileID: 4250791426807900134}
   - component: {fileID: 4571463391670170831}
+  - component: {fileID: 5439277196119106396}
+  - component: {fileID: 8333432220423561777}
   m_Layer: 8
   m_Name: BOSS
   m_TagString: Untagged
@@ -189,7 +191,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 0
   m_IsKinematic: 1
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 84
   m_CollisionDetection: 0
 --- !u!195 &2146534756496294979
@@ -229,7 +231,7 @@ MonoBehaviour:
   playerRef: {fileID: 0}
   layerData: {fileID: 11400000, guid: 32d18213bd5db754c9ad8e424b172143, type: 2}
   colliderCapsule: {fileID: 4884875833029962566}
-  maxHealth: 1000
+  maxHealth: 9999
   currentHealth: 0
   _shootPoint: {fileID: 0}
   _shootProjectile: {fileID: 0}
@@ -289,10 +291,10 @@ MonoBehaviour:
   enemyAttackSummon2: {fileID: 3219533520370896641}
   enemyAttackRanged1: {fileID: 4250791426807900134}
   enemyAttackUltimate1: {fileID: 4571463391670170831}
-  bossRoam: {fileID: 0}
-  bossChase: {fileID: 0}
-  bossRetreat: {fileID: 0}
-  bossFollow: {fileID: 0}
+  bossAttackDefault: {fileID: 5439277196119106396}
+  attackMoveNum: 3
+  bossRoamState: {fileID: 8333432220423561777}
+  roamTime: 2.8
 --- !u!114 &1370772820169405365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -305,13 +307,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d5fac044edf652478d0ab300ed9ae5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackRange: 5
+  attackRange: 8
   strikeTimes: 3
-  innitTime: 1.5
-  timeBetweenStrike: 0.8
-  attackDashDistance: 25
-  attackTime: 0.4
-  attackChaseSpeed: 200
+  innitTime: 1.2
+  timeBetweenStrike: 0.75
+  attackDashDistance: 8
+  attackTime: 0.27
+  attackChaseSpeed: 160
+  attackWalkSpeed: 80
+  attackChaseTime: 6
 --- !u!114 &5963506765807903378
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -326,10 +330,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   retreatDistance: 12
   strikeTimes: 3
-  innitTime: 2
+  innitTime: 1.5
   timeBetweenStrike: 1
-  teleportRange: 20
-  dashTimePerUnit: 0.11
+  teleportRange: 15
+  dashTimePerUnit: 0.2
   dashUnitDistance: 10
   attackChaseSpeed: 200
 --- !u!114 &1778364801030937285
@@ -389,6 +393,7 @@ MonoBehaviour:
   summonObj: {fileID: 2816034941831847955, guid: ca6785894ffd56b4d9c4d65f3f578b9e,
     type: 3}
   retreatDistance: 10
+  retreatSpeed: 20
   innitTime: 1
   spawnLocation: {fileID: 555819008032952975}
 --- !u!114 &4250791426807900134
@@ -427,11 +432,40 @@ MonoBehaviour:
     type: 3}
   innitTime: 2
   attackDelay: 4
-  spawnNum: 50
-  spawnDelay: 0.1
+  spawnNum: 10
+  projectilePerSpawnNum: 20
+  spawnDelay: 0.5
   exitStateDelay: 2
   shootLocation: {fileID: 8636833326243772507}
   teleportLocation: {fileID: 0}
+--- !u!114 &5439277196119106396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2352698667018029962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0a854e01e2806e448858d2029d802f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  summonAttackRange: 17
+  meleeAttackRange: 8
+  restTimePerMove: 2
+--- !u!114 &8333432220423561777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2352698667018029962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c47bf3ec8164da42a73a8c223fc85c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  roamSpeed: 25
 --- !u!1 &2378704449289924926
 GameObject:
   m_ObjectHideFlags: 0
@@ -601,6 +635,151 @@ Transform:
   m_Father: {fileID: 5825761476983729661}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3285066568886131368
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5123330067480821811}
+  - component: {fileID: 6448192622513945051}
+  m_Layer: 0
+  m_Name: Trail
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5123330067480821811
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3285066568886131368}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -3.63, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6868368982059707168}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!96 &6448192622513945051
+TrailRenderer:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3285066568886131368}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Time: 0.75
+  m_PreviewTimeScale: 1
+  m_Parameters:
+    serializedVersion: 3
+    widthMultiplier: 1
+    widthCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0.27702707
+        inSlope: -0.33439338
+        outSlope: -0.33439338
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.16164818
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    colorGradient:
+      serializedVersion: 2
+      key0: {r: 0.38679248, g: 0, b: 0, a: 1}
+      key1: {r: 0.38679248, g: 0, b: 0, a: 0}
+      key2: {r: 0, g: 0, b: 0, a: 0}
+      key3: {r: 0, g: 0, b: 0, a: 0}
+      key4: {r: 0, g: 0, b: 0, a: 0}
+      key5: {r: 0, g: 0, b: 0, a: 0}
+      key6: {r: 0, g: 0, b: 0, a: 0}
+      key7: {r: 0, g: 0, b: 0, a: 0}
+      ctime0: 0
+      ctime1: 65535
+      ctime2: 0
+      ctime3: 0
+      ctime4: 0
+      ctime5: 0
+      ctime6: 0
+      ctime7: 0
+      atime0: 10794
+      atime1: 65535
+      atime2: 0
+      atime3: 0
+      atime4: 0
+      atime5: 0
+      atime6: 0
+      atime7: 0
+      m_Mode: 0
+      m_ColorSpace: 0
+      m_NumColorKeys: 2
+      m_NumAlphaKeys: 2
+    numCornerVertices: 11
+    numCapVertices: 11
+    alignment: 0
+    textureMode: 0
+    textureScale: {x: 1, y: 1}
+    shadowBias: 0.5
+    generateLightingData: 0
+  m_MinVertexDistance: 0.1
+  m_MaskInteraction: 0
+  m_Autodestruct: 0
+  m_Emitting: 1
+  m_ApplyActiveColorSpace: 1
 --- !u!1 &4266690634744452779
 GameObject:
   m_ObjectHideFlags: 0
@@ -946,6 +1125,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7133519424570011076}
+  - {fileID: 5123330067480821811}
   m_Father: {fileID: 5825761476983729661}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2189,7 +2369,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 6253
+  m_VersionIndex: 6265
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []

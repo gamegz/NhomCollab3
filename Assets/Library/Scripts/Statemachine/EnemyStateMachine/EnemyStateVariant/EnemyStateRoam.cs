@@ -134,7 +134,7 @@ namespace Enemy.statemachine.States
             _currentRoamDelayCountDown = _enemy.roamCountDown;
         }
 
-        public void RoamRandomStandAndMove() //W-what the hell man :(( - why?
+        public void RoamRandomStandAndMove() //W-what the hell man :(( - why? //Yeah I know right? :)))
         {
             Random.InitState(System.DateTime.Now.Millisecond);
             int ranNum = Random.Range(0, 2);

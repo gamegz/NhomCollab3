@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Enemy;
 using Enemy.statemachine.States;
 
@@ -14,15 +15,37 @@ public class BossEnemyBase : EnemyBase ///This is getting messy af
     public EnemyAttackState enemyAttackSummon2;
     public EnemyAttackState enemyAttackRanged1;
     public EnemyAttackState enemyAttackUltimate1;
+    public EnemyAttackState bossAttackDefault;
+    [HideInInspector] public int attackMoveNum = 3;
     [Space]
-    public EnemyRoamState bossRoam;
-    public EnemyChaseState bossChase;
-    public EnemyRetreatState bossRetreat;
-    public EnemyFollowState bossFollow;
+    public EnemyRoamState bossRoamState;
+    [HideInInspector] public float roamTime = 2.8f;
+    
+    //public EnemyChaseState bossChase;
+    //public EnemyRetreatState bossRetreat;
+    //public EnemyFollowState bossFollow;
+
+
+
+    private PlayerInput playerInput;
+    private int evadeChance = 18;
 
     public override void Awake()
     {
         base.Awake();
+        playerInput = new PlayerInput();
+    }
+
+    protected void OnEnable()
+    {
+        playerInput.Enable();
+        playerInput.Player.Attack.performed += OnPlayerTryAttack;
+    }
+
+    protected void OnDisable()
+    {
+        playerInput.Disable();
+        playerInput.Player.Attack.performed -= OnPlayerTryAttack;
     }
 
     public override void UpdateLogic()
@@ -62,10 +85,12 @@ public class BossEnemyBase : EnemyBase ///This is getting messy af
     public override void SetUpStateMachine()
     {
         base.SetUpStateMachine();
-        //bossRoam.SetUpState(this, _stateMachine);
+        bossRoamState.SetUpState(this, _stateMachine);
         //bossChase.SetUpState(this, _stateMachine);
         //bossRetreat.SetUpState(this, _stateMachine);
         //bossFollow.SetUpState(this, _stateMachine);
+
+        bossAttackDefault.SetUpState(this, _stateMachine);
 
         enemyAttackMelee1.SetUpState(this, _stateMachine);
         enemyAttackMelee2.SetUpState(this, _stateMachine);
@@ -75,7 +100,7 @@ public class BossEnemyBase : EnemyBase ///This is getting messy af
         enemyAttackRanged1.SetUpState(this, _stateMachine);
         enemyAttackUltimate1.SetUpState(this, _stateMachine);
 
-        _stateMachine.SetStartState(enemyAttackUltimate1);
+        _stateMachine.SetStartState(bossRoamState);
     }
 
     public override void Start()
@@ -86,5 +111,22 @@ public class BossEnemyBase : EnemyBase ///This is getting messy af
     public override void TakeDamage(int damage)
     {
         base.TakeDamage(damage);
+
+        if (currentHealth < ((maxHealth / 100) * 40))
+        {
+            evadeChance = 10;
+        }
+    }
+
+    private void OnPlayerTryAttack(InputAction.CallbackContext context)
+    {        
+        int ranNum = Random.Range(0, evadeChance);
+        if(ranNum == 1)
+        {
+            if(GetDistanceToPLayerIgnoreY() <= 4.3)
+            {
+                InnitDash(GetDirectionIgnoreY(playerRef.transform.position, transform.position), 13, 0.1f);
+            }
+        }
     }
 }

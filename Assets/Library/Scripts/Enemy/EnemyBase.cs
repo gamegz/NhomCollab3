@@ -37,7 +37,7 @@ namespace Enemy
 
         //Combat
         [Header("COMBAT")]
-        [SerializeField] private int maxHealth;
+        [SerializeField] protected int maxHealth; public int MaxHealth => maxHealth;
         [HideInInspector] public int currentHealth;
         [SerializeField] private Transform _shootPoint;
         [SerializeField] private GameObject _shootProjectile;
@@ -223,7 +223,7 @@ namespace Enemy
         public void UpdateLogicByPlayerDistance()
         {
             //if(this == null) { return; }
-            distanceToPlayer = Vector3.Distance(transform.position, playerRef.transform.position);
+            distanceToPlayer = GetDistanceToPLayerIgnoreY();
             isTargetInAttackRange = (distanceToPlayer <= attackRange) ? true : false;
         }
 
@@ -538,7 +538,8 @@ namespace Enemy
         public Vector3 GetRandomNavmeshLocationAroundSelf(float range)
         {
             //Get a random point in a circle around target
-            Vector3 randomDirection = transform.position + Random.insideUnitSphere * range;
+            Vector3 randDir = new Vector3(Random.insideUnitCircle.x, 0, Random.insideUnitCircle.y).normalized;
+            Vector3 randomDirection = transform.position + randDir * range;
             NavMeshHit hitData;
             Vector3 finalPosition = Vector3.zero;
             if (NavMesh.SamplePosition(randomDirection, out hitData, range, 1))

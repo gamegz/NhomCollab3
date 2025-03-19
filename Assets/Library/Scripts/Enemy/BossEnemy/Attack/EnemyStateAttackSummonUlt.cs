@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.FilePathAttribute;
 using UnityEngine.AI;
 
 namespace Enemy.statemachine.States
@@ -11,7 +10,8 @@ namespace Enemy.statemachine.States
         [SerializeField] private GameObject summonObj;
         [SerializeField] private float innitTime = 2;
         [SerializeField] private float attackDelay = 3;
-        [SerializeField] private float spawnNum = 30;
+        [SerializeField] private int spawnNum = 30;
+        [SerializeField] private int projectilePerSpawnNum = 2;
         [SerializeField] private float spawnDelay = 0.1f;
         [SerializeField] private float exitStateDelay = 2f;
         [SerializeField] private Transform shootLocation;
@@ -52,20 +52,7 @@ namespace Enemy.statemachine.States
 
             if (finishAttack)
             {
-                //Change to MainAttackForReevaluation
-                int randNum = Random.Range(1, 4);
-                switch (randNum)
-                {
-                    case 1:
-                        _ownerStateMachine.SwitchState(bossEnemy.enemyAttackMelee1);
-                        break;
-                    case 2:
-                        _ownerStateMachine.SwitchState(bossEnemy.enemyAttackMelee2);
-                        break;
-                    case 3:
-                        _ownerStateMachine.SwitchState(bossEnemy.enemyAttackRanged1);
-                        break;
-                }
+                _ownerStateMachine.SwitchState(bossEnemy.bossRoamState);
             }
 
             //if (innitTimeCount > 0)
@@ -103,12 +90,19 @@ namespace Enemy.statemachine.States
             //Shoot a bunch of projectile
             for (int i = 0; i < spawnNum; i++)
             {
-                Vector3 shootDir = Random.onUnitSphere;
-                GameObject projectile = Instantiate(summonObj, shootLocation.position, Quaternion.Euler(shootDir));
-                if (projectile.TryGetComponent<EnemyProjectile>(out EnemyProjectile enemyProjectile))
+                int clusterCount = projectilePerSpawnNum;
+                while (clusterCount > 0)
                 {
-                    enemyProjectile.SetUp(shootDir, bossEnemy.gameObject);
+                    Vector3 shootDir = new Vector3(Random.insideUnitCircle.x, 0, Random.insideUnitCircle.y).normalized;
+                    GameObject projectile = Instantiate(summonObj, shootLocation.position, Quaternion.Euler(shootDir));
+                    if (projectile.TryGetComponent<EnemyProjectile>(out EnemyProjectile enemyProjectile))
+                    {
+                        enemyProjectile.SetUp(shootDir, bossEnemy.gameObject);
+                    }
+                    clusterCount--;
                 }
+                
+
                 yield return new WaitForSeconds(spawnDelay);
             }
             //Finishshooting - wait a bit

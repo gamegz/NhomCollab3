@@ -72,19 +72,32 @@ namespace Enemy.statemachine.States
 
             if (finishAttack)
             {
-                //StopCoroutine(InnitAttack());
-                int randNum = Random.Range(1, 4);
-                switch (randNum)
+                bossEnemy.attackMoveNum--;
+                if (bossEnemy.attackMoveNum <= 0)
                 {
-                    case 1:
-                        _ownerStateMachine.SwitchState(bossEnemy.enemyAttackRanged1);
-                        break;
-                    case 2:
-                        _ownerStateMachine.SwitchState(bossEnemy.enemyAttackMelee1);
-                        break;
-                    case 3:
-                        _ownerStateMachine.SwitchState(bossEnemy.enemyAttackAOE1);
-                        break;
+                    _ownerStateMachine.SwitchState(bossEnemy.bossRoamState);
+                    return;
+                }
+
+                //StopCoroutine(InnitAttack());
+                float chanceNum = Random.value;
+                int ranNum = Random.Range(1, 3);
+                if (chanceNum <= 0.3f)
+                {
+                    switch (ranNum)
+                    {
+                        case 1:
+                            _ownerStateMachine.SwitchState(bossEnemy.enemyAttackSummon1);
+                            break;
+                        case 2:
+                            _ownerStateMachine.SwitchState(bossEnemy.enemyAttackRanged1);
+                            break;
+                    }
+
+                }
+                else
+                {
+                    _ownerStateMachine.SwitchState(bossEnemy.enemyAttackAOE1);
                 }
             }
 
@@ -129,11 +142,11 @@ namespace Enemy.statemachine.States
                 yield return new WaitForSeconds(timeBetweenStrike);
 
                 bossEnemy.canTurn = false;
-                distanceToPlayer = bossEnemy.GetDistanceToPLayerIgnoreY() * 4f;
+                distanceToPlayer = bossEnemy.GetDistanceToPLayerIgnoreY() + 10;
                 dashTimeToPlayer = (distanceToPlayer / dashUnitDistance) * dashTimePerUnit;
                 StartCoroutine(bossEnemy.Dash(bossEnemy.transform.forward, distanceToPlayer, dashTimeToPlayer));
                 bossEnemy.InnitAttackCollider(dashTimeToPlayer);
-                yield return new WaitForSeconds(dashTimeToPlayer);
+                yield return new WaitForSeconds(dashTimeToPlayer + 1);
             }
 
             finishAttack = true;

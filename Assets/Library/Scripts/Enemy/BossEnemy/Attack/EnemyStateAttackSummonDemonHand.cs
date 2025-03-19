@@ -8,6 +8,7 @@ namespace Enemy.statemachine.States
     {
         [SerializeField] private GameObject summonObj;
         [SerializeField] private float retreatDistance = 8;
+        [SerializeField] private float retreatSpeed = 8;
         [SerializeField] private float innitTime = 1;
         [SerializeField] private Transform spawnLocation;
         private BossEnemyBase bossEnemy;
@@ -34,7 +35,8 @@ namespace Enemy.statemachine.States
             doAttack = false;
             finishAttack = false;
             innitTimeCount = innitTime;
-            if(bossEnemy.GetDistanceToPLayerIgnoreY() < retreatDistance)
+            bossEnemy.currentSpeed = retreatSpeed;
+            if (bossEnemy.GetDistanceToPLayerIgnoreY() < retreatDistance)
             {
                 bossEnemy.InnitDash(bossEnemy.GetDirectionIgnoreY(bossEnemy.transform.position, bossEnemy.playerRef.transform.position), 25, 1f);
             }
@@ -51,18 +53,23 @@ namespace Enemy.statemachine.States
 
             if (finishAttack)
             {
-                int randNum = Random.Range(1, 4);
-                switch (randNum)
+                bossEnemy.attackMoveNum--;
+                if (bossEnemy.attackMoveNum <= 0)
                 {
-                    case 1:
-                        _ownerStateMachine.SwitchState(bossEnemy.enemyAttackMelee1);
-                        break;
-                    case 2:
-                        _ownerStateMachine.SwitchState(bossEnemy.enemyAttackMelee2);
-                        break;
-                    case 3:
-                        _ownerStateMachine.SwitchState(bossEnemy.enemyAttackRanged1);
-                        break;
+                    _ownerStateMachine.SwitchState(bossEnemy.bossRoamState);
+                    return;
+                }
+
+                //StopCoroutine(InnitAttack());
+                float chanceNum = Random.value;
+                //int ranNum = Random.Range(1, 3);
+                if (chanceNum <= 0.3f)
+                {
+                    _ownerStateMachine.SwitchState(bossEnemy.enemyAttackMelee2);
+                }
+                else
+                {
+                    _ownerStateMachine.SwitchState(bossEnemy.enemyAttackMelee1);
                 }
             }
 
