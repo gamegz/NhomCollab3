@@ -90,15 +90,15 @@ namespace Enemy.statemachine.States
                 return;
             }
 
-            if (bossEnemy.GetDistanceToPLayerIgnoreY() < retreatDistance)
-            {
-                bossEnemy.UpdateLogicByPlayerDistance();
-                Vector3 retreatPos = _enemy.GetNavLocationByDirection(_enemy.transform.position,
-                                                                      _enemy.transform.position - _enemy.playerRef.transform.position,
-                                                                      4, 1);
-                bossEnemy.enemyNavAgent.SetDestination(retreatPos);
+            //if (bossEnemy.GetDistanceToPLayerIgnoreY() < retreatDistance)
+            //{
+            //    bossEnemy.UpdateLogicByPlayerDistance();
+            //    Vector3 retreatPos = _enemy.GetNavLocationByDirection(_enemy.transform.position,
+            //                                                          _enemy.transform.position - _enemy.playerRef.transform.position,
+            //                                                          4, 1);
+            //    bossEnemy.enemyNavAgent.SetDestination(retreatPos);
 
-            }
+            //}
 
             if (!doAttack)
             {

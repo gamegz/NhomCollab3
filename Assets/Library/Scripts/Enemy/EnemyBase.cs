@@ -150,12 +150,12 @@ namespace Enemy
             SetUpStateMachine();
         }
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             WeaponManager.OnPerformChargedATK += HitByChargedATK;
         }
 
-        private void OnDisable()
+        protected virtual void OnDisable()
         {
             WeaponManager.OnPerformChargedATK -= HitByChargedATK;
         }

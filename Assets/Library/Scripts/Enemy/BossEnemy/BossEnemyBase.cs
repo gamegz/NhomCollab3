@@ -36,20 +36,23 @@ public class BossEnemyBase : EnemyBase ///This is getting messy af
         playerInput = new PlayerInput();
     }
 
-    protected void OnEnable()
+    protected override void OnEnable()
     {
         playerInput.Enable();
         playerInput.Player.Attack.performed += OnPlayerTryAttack;
+        base.OnEnable();
     }
 
-    protected void OnDisable()
+    protected override void OnDisable()
     {
         playerInput.Disable();
         playerInput.Player.Attack.performed -= OnPlayerTryAttack;
+        base.OnDisable();
     }
 
     public override void UpdateLogic()
     {
+        if(this == null) {  return; }
         //if (Input.GetKeyDown(KeyCode.P))
         //{
         //    //InnitDash(GetDirectionToPlayer(), 30, 1f);

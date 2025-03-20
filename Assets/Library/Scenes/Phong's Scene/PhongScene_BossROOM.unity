@@ -4118,11 +4118,31 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 158341549736915200, guid: b6bfdf53b69907f41a6aea326282d473,
+        type: 3}
+      propertyPath: skullSpawnDelay
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 440009634707048635, guid: b6bfdf53b69907f41a6aea326282d473,
+        type: 3}
+      propertyPath: maxHealth
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 440009634707048635, guid: b6bfdf53b69907f41a6aea326282d473,
         type: 3}
       propertyPath: playerRef
       value: 
       objectReference: {fileID: 1163938828}
+    - target: {fileID: 1370772820169405365, guid: b6bfdf53b69907f41a6aea326282d473,
+        type: 3}
+      propertyPath: timeBetweenStrike
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1778364801030937285, guid: b6bfdf53b69907f41a6aea326282d473,
+        type: 3}
+      propertyPath: innitTime
+      value: 1.4
+      objectReference: {fileID: 0}
     - target: {fileID: 1887789170995696894, guid: b6bfdf53b69907f41a6aea326282d473,
         type: 3}
       propertyPath: m_Mesh
@@ -4133,16 +4153,31 @@ PrefabInstance:
       propertyPath: m_Name
       value: BOSS
       objectReference: {fileID: 0}
+    - target: {fileID: 2352698667018029962, guid: b6bfdf53b69907f41a6aea326282d473,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3224617435226362276, guid: b6bfdf53b69907f41a6aea326282d473,
         type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1317925357}
+    - target: {fileID: 4250791426807900134, guid: b6bfdf53b69907f41a6aea326282d473,
+        type: 3}
+      propertyPath: innitTime
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 4571463391670170831, guid: b6bfdf53b69907f41a6aea326282d473,
         type: 3}
       propertyPath: teleportLocation
       value: 
       objectReference: {fileID: 2016707289}
+    - target: {fileID: 5439277196119106396, guid: b6bfdf53b69907f41a6aea326282d473,
+        type: 3}
+      propertyPath: restTimePerMove
+      value: 1.8
+      objectReference: {fileID: 0}
     - target: {fileID: 5825761476983729661, guid: b6bfdf53b69907f41a6aea326282d473,
         type: 3}
       propertyPath: m_RootOrder
@@ -4197,6 +4232,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5963506765807903378, guid: b6bfdf53b69907f41a6aea326282d473,
+        type: 3}
+      propertyPath: teleportRange
+      value: 13.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
