@@ -4,6 +4,7 @@ using UnityEngine;
 using Enemy.statemachine;
 using Enemy.statemachine.States;
 using UnityEngine.AI;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 using System;
 
@@ -32,8 +33,8 @@ namespace Enemy
         public ActorLayerData layerData;
         public CapsuleCollider colliderCapsule;
         [Space]
-        
-        
+
+
 
         //Combat
         [Header("COMBAT")]
@@ -66,7 +67,7 @@ namespace Enemy
         public float staggerThreshold;
         public float staggerTime;
         private float staggerTimeCounter;
-        private float staggerThresholdCounter;        
+        private float staggerThresholdCounter;
         public float knockbackForce = 0.0f;
         [HideInInspector] public bool isStagger = false;
         [HideInInspector] public bool isTargetInAttackRange;
@@ -92,8 +93,8 @@ namespace Enemy
         public float turnSpeed;
         [SerializeField] private float _dashDistance;
         [SerializeField] private float _dashDuration;
-        public float DashDuration { get { return _dashDuration; }}
-        public float DashDistance { get { return _dashDistance; }}
+        public float DashDuration { get { return _dashDuration; } }
+        public float DashDistance { get { return _dashDistance; } }
 
         [HideInInspector] public float currentSpeed;
         [HideInInspector] public bool isDashing;
@@ -106,9 +107,9 @@ namespace Enemy
         public float roamCountDown;
         [Tooltip("Time to roam until check for transition")]
         public float roamDuration;
-        
 
-        
+
+
         [Header("STATEMACHINE")]
         protected EnemyStateMachine _stateMachine;
         [HideInInspector] public EnemyRoamState enemyRoamState;
@@ -122,7 +123,8 @@ namespace Enemy
         [SerializeField] private int _dropValue;
         public DeathMethod deathMethod;
 
-        public enum EnemyState { 
+        public enum EnemyState
+        {
             Roam,
             Chase,
             Follow,
@@ -141,12 +143,23 @@ namespace Enemy
         #endregion
 
         #region DUC ANH'S VARIABLE
+        [Header("Values")]
+        [SerializeField] private float timeLimitUI; // To calculate when enemy's health will fade away in the scene
         private bool isChargedATK = false;
+
+
+        [Header("References")]
+        [SerializeField] private Image healthBackgroundUI = null; // To provide background for the enemy's health
+        [SerializeField] private Image enemyHealthUI = null; // To display enemy's health
+
+
+        [Header("Coroutines")]
+        private Coroutine uiAppearCoroutine = null;
         #endregion 
 
 
         public virtual void Awake()
-        {                     
+        {
             SetUpStateMachine();
         }
 
@@ -159,7 +172,6 @@ namespace Enemy
         {
             WeaponManager.OnPerformChargedATK -= HitByChargedATK;
         }
-
 
         public virtual void SetUpStateMachine()
         {
@@ -188,19 +200,22 @@ namespace Enemy
             attackCoolDownCount = attackCooldown;
             staggerTimeCounter = staggerTime;
 
-            if(!isTokenUser) { isTokenOwner = true; }
+            if (!isTokenUser) { isTokenOwner = true; }
             attackCollider.gameObject.GetComponent<EnemyAttackCollider>()._damage = attackDamage;
+
+
+            healthBackgroundUI.gameObject.SetActive(false);
         }
 
         public virtual void UpdateLogic()
         {
-            if(isStagger) { return; }
-            if(isStunned) { return; }
+            if (isStagger) { return; }
+            if (isStunned) { return; }
             distanceToPlayer = Vector3.Distance(transform.position, playerRef.transform.position);
             UpdateAttackCoolDown();
             _stateMachine.UpdateState();
             enemyNavAgent.isStopped = !canMove;
-            enemyNavAgent.speed = currentSpeed/10;
+            enemyNavAgent.speed = currentSpeed / 10;
             if (canTurn)
             {
                 LookAtTarget(transform, playerRef.transform, turnSpeed);
@@ -227,20 +242,23 @@ namespace Enemy
             isTargetInAttackRange = (distanceToPlayer <= attackRange) ? true : false;
         }
 
-        private void UpdateAttackCoolDown() {
-        
+        private void UpdateAttackCoolDown()
+        {
+
             //note: call OnDonwAttack when finish attack
-            if (!canAttack) {
+            if (!canAttack)
+            {
                 attackCoolDownCount -= Time.deltaTime;
                 canAttack = (attackCoolDownCount <= 0) ? true : false;
             }
         }  //Allow attack again after a delay
 
-        public void OnDoneAttack() {   
+        public void OnDoneAttack()
+        {
             attackCoolDownCount = attackCooldown;
             canAttack = false;
             isAttacking = false;
-            if(!isTokenUser) { return; }
+            if (!isTokenUser) { return; }
             isTokenOwner = false;
         } //Call when finish attack
 
@@ -310,7 +328,7 @@ namespace Enemy
             //    dashPoint = hit.position;
             //    dashDistance = Vector2.Distance(enemyPos, new Vector2(hit.position.x, hit.position.z)) - colliderCapsule.radius * 2;
             //}
-            
+
 
             //Recaculate dash duration when distance is changed
             //DashTime *= (DashDistance / dashDistance);
@@ -318,7 +336,7 @@ namespace Enemy
             //Dashing
             float dashSpeed = dashDistance / DashTime;
             float dashDurationCount = DashTime;
-            
+
 
             while (dashDurationCount > 0)
             {
@@ -395,7 +413,7 @@ namespace Enemy
             {
                 enemyProjectile.SetUp(direction, this.gameObject);
             }
-            
+
         }
 
         public void ShootRayAttack(Vector3 direction)
@@ -404,7 +422,7 @@ namespace Enemy
 
             RaycastHit hit;
 
-            if(Physics.Raycast(transform.position, direction, out hit, Mathf.Infinity, layerData.hostileTargetLayer))
+            if (Physics.Raycast(transform.position, direction, out hit, Mathf.Infinity, layerData.hostileTargetLayer))
             {
                 if (hit.transform.gameObject.CompareTag("Player"))
                 {
@@ -418,6 +436,20 @@ namespace Enemy
         private void HitByChargedATK(bool hit)
         {
             isChargedATK = hit;
+        }
+
+
+        public float GetCurrentEnemyHealthProgress()
+        {
+            return Mathf.InverseLerp(0f, maxHealth, currentHealth);
+        }
+
+
+        private void UpdateEnemyHealth(float value)
+        {
+            float curVelocity = 0f;
+            float tempValue = Mathf.SmoothDamp(enemyHealthUI.fillAmount, value, ref curVelocity, 0.0075f);
+            enemyHealthUI.fillAmount = tempValue;
         }
 
 
@@ -444,9 +476,35 @@ namespace Enemy
                 StartCoroutine(Stun());
             }
 
+            if (uiAppearCoroutine != null)
+            {
+                StopCoroutine(uiAppearCoroutine);
+                uiAppearCoroutine = null;
+            }
+
+            if (uiAppearCoroutine == null)
+                uiAppearCoroutine = StartCoroutine(UIAppear(timeLimitUI));
         }
 
 
+        private IEnumerator UIAppear(float timeLimit)
+        {
+            float tempTime = timeLimit;
+            healthBackgroundUI.gameObject.SetActive(true);
+
+            while (tempTime > 0)
+            {
+                tempTime -= Time.deltaTime;
+                //healthBackgroundUI.transform.rotation = Quaternion.Euler(0f, Camera.main.transform.rotation.eulerAngles.y, 0f);
+                healthBackgroundUI.transform.rotation = Camera.main.transform.rotation;
+
+                UpdateEnemyHealth(GetCurrentEnemyHealthProgress());
+                yield return null;
+            }
+
+            healthBackgroundUI.gameObject.SetActive(false);
+            uiAppearCoroutine = null;
+        }
 
         public void DamagedByWeapon(WeaponData _weaponData)
         {
@@ -495,7 +553,7 @@ namespace Enemy
 
         private IEnumerator Stun()
         {
-            if(hasBeenStunned) { yield return null; }
+            if (hasBeenStunned) { yield return null; }
             isStunned = true;
             hasBeenStunned = true;
             canMove = false;
@@ -578,7 +636,7 @@ namespace Enemy
         public Vector3 GetOffSetDirection(Vector3 direction, float offSetDegrees)
         {
             return direction = Quaternion.Euler(0, Random.Range(-offSetDegrees, offSetDegrees), 0) * direction;
-            
+
         }
 
         public Vector3 GetPerpendicularDirectionToPLayerTarget(bool toRight = true)
