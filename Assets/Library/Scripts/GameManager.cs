@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -22,6 +23,25 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    [SerializeField] private GameObject pausePanel;
+
+    private void Update()
+    {
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            TogglePause();
+            if (Time.timeScale == 0f && pausePanel != null) 
+            {
+                pausePanel.SetActive(true);
+            }
+            else if (Time.timeScale == 1f && pausePanel != null)
+            {
+                pausePanel.SetActive(false);
+
+            }
+        }
+    }
+
     public void UpdateGameState(GameState newState)
     {
         state = newState;
@@ -34,28 +54,37 @@ public class GameManager : MonoBehaviour
             case GameState.HOMELOBBY:
                 SceneManager.LoadScene("HomeRoomScene");
                 TogglePause();
-                break;      
+                break;
         }
     }
 
     private void TogglePause()
     {
-        if(Time.timeScale > 0)
+        if (Time.timeScale > 0)
         {
             previousTimeScale = Time.timeScale;
             Time.timeScale = 0;
             isPaused = true;
         }
-        else if(Time.timeScale == 0)
+        else if (Time.timeScale == 0)
         {
             Time.timeScale = previousTimeScale;
             isPaused = false;
         }
     }
 
+    public void PublicTogglePause()
+    {
+        TogglePause();
+        if (Time.timeScale == 1f && pausePanel != null)
+        {
+            pausePanel.SetActive(false);
+        }
+    }
+
     public Transform GetSpawnPoint()
     {
-        Transform spawnPoint = GameObject.FindWithTag("SpawnPoint").transform;;
+        Transform spawnPoint = GameObject.FindWithTag("SpawnPoint").transform;
         if (spawnPoint != null)
         {
             return spawnPoint;
@@ -66,9 +95,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void ChangeScene(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
+        Time.timeScale = 1f;
+    }
+
+
     private void OnApplicationQuit()
     {
         PlayerDatas.Instance.SaveGame();
+    }
+
+    public void PublicOnApplicationQuit()
+    {
+        OnApplicationQuit();
+        Application.Quit();
     }
 
 }
