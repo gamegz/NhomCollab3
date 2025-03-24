@@ -112,7 +112,7 @@ namespace Enemy.statemachine.States
                                           _enemy.distanceToPlayer * 1.6f, 1);
                     _enemy.enemyNavAgent.SetDestination(attackChargePos);
                     _attackDir = _enemy.GetDirectionToPlayer();
-                    _enemy.LookAtTarget(_enemy.transform.position, _enemy.playerRef.transform.position);
+                    _enemy.LookAtTarget(_enemy.playerRef.transform.position);
                     _enemy.PresetDashAttack(_attackDir);
 
                     _dashTimes--;

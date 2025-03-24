@@ -7,6 +7,7 @@ using UnityEngine;
 public class PlayerStatsData 
 {
     public CharacterStatsData currentCharacterStats;
+    public Dictionary<UpgradeType, int> upgradeLevels = new Dictionary<UpgradeType, int>();
 
     public void Init(CharacterBaseStatsData baseStats)
     {
@@ -16,6 +17,16 @@ public class PlayerStatsData
     public CharacterStatsData GetCharacterStats
     {
         get { return currentCharacterStats; }
+    }
+
+    public void SetUpgradeLevel(UpgradeType upgradeType, int level)
+    {
+        upgradeLevels[upgradeType] = level;
+    }
+
+    public int GetUpgradeLevel(UpgradeType upgradeType)
+    {
+        return upgradeLevels.ContainsKey(upgradeType) ? upgradeLevels[upgradeType] : 0;
     }
 
     public void SetBaseStats(CharacterBaseStatsData characterStats)

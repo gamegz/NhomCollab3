@@ -28,6 +28,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void OnEnable()
     {
+        OnResetEnemyWhenEnterRoom();
         OnStartSpawning();
         EnemyBase.OnEnemyDeathsEvent += OnEnemyDeath;
     }
@@ -44,23 +45,21 @@ public class EnemySpawner : MonoBehaviour
 
     private void OnStartSpawning()
     {
+        
         int spawnIndex = 0;
         
         if (_currentWaveCount < setAmountOfWave)
         {
             _currentWaveCount++;
-            Debug.Log(_currentWaveCount);
             while (_currentEnemyCount < amountOfEnemyPerWave)
             {
                 EnemyBase choosenEnemy = CalculateEnemyPerncentage();
                 EnemyManager.onSpawnRequestEvent?.Invoke(choosenEnemy, spawnPos[spawnIndex].position, spawnPos[spawnIndex].rotation);
                 _currentEnemyCount++;
                 spawnedEnemies = _currentEnemyCount;
-                spawnIndex = (spawnIndex + 1) % spawnPos.Count;
-            }
-            
+                spawnIndex = (spawnIndex + 1) % spawnPos.Count;   
+            }  
         }
-
     }
 
     private void OnEnemyDeath(EnemyBase enemy)
@@ -88,10 +87,22 @@ public class EnemySpawner : MonoBehaviour
         OnStartSpawning();
     }
 
-    private void OnFinishCurrentRoom()
+    public void OnFinishCurrentRoom()
     {
-        this.gameObject.SetActive(false);
+        ExpOrb[] expOrbs = FindObjectsOfType<ExpOrb>();
+        foreach (ExpOrb expOrb in expOrbs)
+        {
+            expOrb.AllowToMoveTowardPlayer();
+        }
         roomLock.SetActive(false);
+        this.gameObject.SetActive(false);
+    }
+
+    private void OnResetEnemyWhenEnterRoom()
+    {
+        _currentWaveCount = 0;
+        _currentEnemyCount = 0;
+        spawnedEnemies = 0;
     }
 
     private EnemyBase CalculateEnemyPerncentage()

@@ -15,18 +15,18 @@ public class BuffBase : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            if (buffData.type == BuffType.Damage)
-            {
-                PlayerDatas.Instance.GetStats.OnTriggerDamageBuff(buffData.type, (int)buffData.buffValue);
-            }
-            else
-            {
-                PlayerDatas.Instance.GetStats.OnTriggerBuff(buffData.type, buffData.buffValue);
-            }
+        //if (other.CompareTag("Player"))
+        //{
+        //    if (buffData.type == BuffType.Damage)
+        //    {
+        //        PlayerDatas.Instance.GetStats.OnTriggerDamageBuff(buffData.type, (int)buffData.buffValue);
+        //    }
+        //    else
+        //    {
+        //        PlayerDatas.Instance.GetStats.OnTriggerBuff(buffData.type, buffData.buffValue);
+        //    }
 
-        }
+        //}
 
     }
 }

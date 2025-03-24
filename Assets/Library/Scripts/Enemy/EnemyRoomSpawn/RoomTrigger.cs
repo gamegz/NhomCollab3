@@ -20,9 +20,10 @@ public class RoomTrigger : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            enemySpawner.SetActive(true);
             boxCollider.enabled = false;
             RoomEntranceDoor.SetActive(true);
+            if(enemySpawner == null) { return; }
+            enemySpawner.SetActive(true);
         }
     }
 }

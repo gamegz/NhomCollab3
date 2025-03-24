@@ -67,6 +67,8 @@ public class WeaponManager : MonoBehaviour
     //------------------------
 
     //Since each weapon have different delay time, need to overwrite the SO_WeaponData each time _currentWeapon value changes
+    [Header("Animation")]
+    [SerializeField] private PlayerAnimation playerAnimation;
 
     private void Awake()
     {
@@ -76,7 +78,6 @@ public class WeaponManager : MonoBehaviour
         PlayerMovement.dashCancel += DashingToCancelAction;
         if (_currentWeapon != null)
         {
-            weaponList.Add(_currentWeapon);
             if (weaponList.Count > 0)
             {
                 Innit(weaponList[0]);
@@ -179,11 +180,11 @@ public class WeaponManager : MonoBehaviour
     {
         //Set current weapon
         //Enable Current weapon
-        if (_currentWeapon != null)
-        {
-            _currentWeapon = StartingWeapon;
-            _currentWeapon.GetComponent<BoxCollider>().enabled = false;
-        }
+        //if (_currentWeapon != null)
+        //{
+        //    _currentWeapon = StartingWeapon;
+        //    _currentWeapon.GetComponent<BoxCollider>().enabled = false;
+        //}
     }
 
     private void DashingToCancelAction()
@@ -250,6 +251,7 @@ public class WeaponManager : MonoBehaviour
                 }
 
                 _currentWeapon.OnInnitNormalAttack();
+                
 
 
                 if (comboCounter >= maxComboCount)
@@ -270,6 +272,7 @@ public class WeaponManager : MonoBehaviour
 
                 cooldownTimer = comboAttackSpeed;
                 comboCounter++;
+                playerAnimation.Attack(comboCounter);
                 AttackHandle?.Invoke(comboCounter);
                 OnPerformChargedATK?.Invoke(false);
                 isAttack = true;
@@ -368,7 +371,7 @@ public class WeaponManager : MonoBehaviour
                 }
                 else if (weaponList.Count < _maxWeaponNum || _currentWeapon == null)
                 {
-                    weaponList.Add(weaponToAdd);
+                    //weaponList.Add(weaponToAdd);
                     if (_currentWeapon != null)
                     {
                         _currentWeapon.weaponModel.SetActive(false);

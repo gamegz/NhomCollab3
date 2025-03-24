@@ -37,16 +37,8 @@ public class CamFollowMouse : MonoBehaviour
         mouseV2 = Input.mousePosition;
 
         // 2. Calculate the difference between player position and mouse position
-        direction = (RemapToScreenCenter(mouseV2) - RemapToScreenCenter(playerV2));
+        direction = (Commons.instance.RemapToScreenCenter(mouseV2) - Commons.instance.RemapToScreenCenter(playerV2));
 
         _camera.transform.localPosition = new Vector3(direction.x * _armMultiplier, 0, direction.y * _armMultiplier);
-    }
-
-    public Vector2 RemapToScreenCenter(Vector2 pixelPosition)
-    {
-        float xNormalized = Mathf.Clamp((pixelPosition.x - Screen.width / 2) / (Screen.width / 2), -1, 1);
-        float yNormalized = Mathf.Clamp((pixelPosition.y - Screen.height / 2) / (Screen.height / 2), -1, 1);
-
-        return new Vector2(xNormalized, yNormalized);
     }
 }

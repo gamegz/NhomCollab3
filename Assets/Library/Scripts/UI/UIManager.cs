@@ -61,6 +61,7 @@ public class UIManager : MonoBehaviour
 
     public void OnEnableLosePanel()
     {
+        if(LosePanel == null) { return; }
         LosePanel.SetActive(true);
     }
 

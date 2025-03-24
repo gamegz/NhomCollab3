@@ -8,7 +8,6 @@ namespace Enemy.statemachine.States
 {
     public class EnemyRetreatState : BaseEnemyState
     {
-
         public EnemyRetreatState(EnemyBase enemy, EnemyStateMachine enemyStateMachine) : base(enemy, enemyStateMachine)
         {
 

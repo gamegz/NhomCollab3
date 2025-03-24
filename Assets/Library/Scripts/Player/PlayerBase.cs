@@ -61,9 +61,9 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     #endregion
 
     #region Health Stuff
-    [Tooltip("Health Update Level <=> Amount of health added to player's highest current health")]
+    //[Tooltip("Health Update Level <=> Amount of health added to player's highest current health")]
     //[SerializeField] private float healthUpgradeAmount = 1f; // Will be used when the upgrade system is established
-    [SerializeField] private float maxHealth = 3;
+    //[SerializeField] private float maxHealth;
     [Tooltip("The amount of time player became immune to damage after being hit")]
     [SerializeField] private float invulTimeAfterDamaged = 0.5f;
     private float invulTimeAfterDamagedCount;
@@ -108,9 +108,9 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
 
     private void Start()
     {
-        PlayerDatas.Instance.GetStats.currentPlayerHealth = maxHealth;
+        PlayerDatas.Instance.GetStats.currentPlayerHealth = PlayerDatas.Instance.GetStats.healthStat;
         invulTimeAfterDamagedCount = invulTimeAfterDamaged;
-        HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, maxHealth, SetHealthState(HealthStates.INCREASED));
+        HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, PlayerDatas.Instance.GetStats.healthStat, SetHealthState(HealthStates.INCREASED));
     }
 
     private void OnEnable()
@@ -198,10 +198,9 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
 
     public void OnUpgradeCharacter()
     {
-        PlayerDatas.Instance.OnStatsUpgrade(UpgradeType.MovementSpeed, 1);
-        PlayerDatas.Instance.OnStatsUpgrade(UpgradeType.Health, 1);
-        PlayerDatas.Instance.OnStatsUpgrade(UpgradeType.Recovery, 1);
-
+        //PlayerDatas.Instance.OnStatsUpgrade(UpgradeType.MovementSpeed, 1);
+        //PlayerDatas.Instance.OnStatsUpgrade(UpgradeType.Health, 1);
+        //PlayerDatas.Instance.OnStatsUpgrade(UpgradeType.Recovery, 1);
     }
 
 
@@ -236,7 +235,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         }
         else if (!isOverHealing)
         {
-            if (currentHBProgress == maxHBRequirement && PlayerDatas.Instance.GetStats.currentPlayerHealth >= maxHealth - 1)
+            if (currentHBProgress == maxHBRequirement && PlayerDatas.Instance.GetStats.currentPlayerHealth >= PlayerDatas.Instance.GetStats.healthStat - 1)
             {
                 if (switchReadyTextCoroutine != null)
                 {
@@ -255,7 +254,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
             
             PlayerDatas.Instance.OnPlayerHealthChange(modifiedHealth);
 
-            HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, maxHealth, SetHealthState(HealthStates.DECREASED));
+            HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, PlayerDatas.Instance.GetStats.healthStat, SetHealthState(HealthStates.DECREASED));
         }
 
         if (PlayerDatas.Instance.GetStats.currentPlayerHealth <= 0)
@@ -276,7 +275,6 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     }
     private IEnumerator CanDamageStatusCountDown(float invulTime)
     {
-        Debug.Log("Can not be damage");
         canBeDamage = false;
         invulTimeAfterDamagedCount = invulTime;
         //yield return new WaitForSeconds(invulTime);
@@ -285,7 +283,6 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
             invulTimeAfterDamagedCount -= Time.deltaTime;
             yield return null;
         }
-        Debug.Log("can be damage now");
         canBeDamage = true;
     }
 
@@ -305,25 +302,25 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
 
         if (clampedHBValue == maxHBRequirement)
         {
-            if (PlayerDatas.Instance.GetStats.currentPlayerHealth == maxHealth && !overHealReady)
+            if (PlayerDatas.Instance.GetStats.currentPlayerHealth == PlayerDatas.Instance.GetStats.healthStat && !overHealReady)
             {
                 overHealReady = true;
                 HealReady?.Invoke(true, "[  Attack To Enter Over Heal  ]"); 
             }
-            else if (PlayerDatas.Instance.GetStats.currentPlayerHealth < maxHealth)
+            else if (PlayerDatas.Instance.GetStats.currentPlayerHealth < PlayerDatas.Instance.GetStats.healthStat)
             {
                 HealReady?.Invoke(true, "[  Charged Attack To Heal  ]");
             }
 
-            if (PlayerDatas.Instance.GetStats.currentPlayerHealth < maxHealth && byChargedAttack)
+            if (PlayerDatas.Instance.GetStats.currentPlayerHealth < PlayerDatas.Instance.GetStats.healthStat && byChargedAttack)
             {
                 currentHBProgress = 0;
                 PlayerDatas.Instance.GetStats.currentPlayerHealth++;
 
                 HealActivated?.Invoke();
-                HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, maxHealth, SetHealthState(HealthStates.INCREASED));
+                HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, PlayerDatas.Instance.GetStats.healthStat, SetHealthState(HealthStates.INCREASED));
             }
-            else if (currentHBProgress > maxHBRequirement && PlayerDatas.Instance.GetStats.currentPlayerHealth == maxHealth && overHealCoroutine == null)
+            else if (currentHBProgress > maxHBRequirement && PlayerDatas.Instance.GetStats.currentPlayerHealth == PlayerDatas.Instance.GetStats.healthStat && overHealCoroutine == null)
             { 
                 isOverHealing = true;
                 overHealCoroutine = StartCoroutine(OverHealing());

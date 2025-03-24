@@ -4,26 +4,27 @@ using System.Collections.Generic;
 using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
 using DG.Tweening;
 
 public class PlayerMovement : MonoBehaviour
 {
     public static event Action dashCancel;
+    public static event Action dashIndicate;
+    public static event Action OnDashUsed;
+    public static event Action OnMaxChargeChanged;
+    public static event Action OnDashRecoverTimeChanged;
 
     [Header("References")]
     private PlayerBase m_PlayerBase;
     protected Rigidbody _rb;
     private PlayerInput _playerInput;
     private Camera _camera;
-    private CapsuleCollider _capsuleCollider;
 
     [Header("Movement")]
     //private float playerSpeed;
     [SerializeField] private float rotationSpeed;
     [SerializeField] private float standStillTimeAfterAttackRecover;
     private Vector3 moveDirection;
-    private bool isTryMove;
     private Vector2 _mousePosition;
     private Vector2 _movement;
     private bool _isOnSlope = false;
@@ -44,7 +45,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Parry Manager")]
     [SerializeField] private Transform parryBoxRefPoint; // A transform point that will spawn the parry box
     [SerializeField] private Vector3 parryBoxSize = new Vector3(1, 1, 1);
-    [SerializeField] private LayerMask bulletLayerMask; 
+    [SerializeField] private LayerMask bulletLayerMask;
     [SerializeField] private float invulnerableTimerOrg = 0.6f;
     [SerializeField] private float standStillTimerOrg = 1f;
     public static event Action OnParryStart;
@@ -53,17 +54,26 @@ public class PlayerMovement : MonoBehaviour
     private bool isParrying = false;
     private Coroutine parryCoroutine;
     private Coroutine immobileCoroutine;
-    
-   
+
+    [Header("Animation")]
+    [SerializeField] private PlayerAnimation playerAnimation;
+
+
+    [Header("Coroutines")]
     private Coroutine dashCoroutine;
     private Coroutine stopMovementCoroutine;
-    Quaternion _initialRotation;
-    
-    
-    private bool isAttacking = false;
+    private Coroutine dashChargeUpdateCoroutine = null;
+
+
+    [Header("Values")]
     [SerializeField] private float moveDistance = 2f;
     [SerializeField] private float moveDuration = 0.2f;
+    private bool isAttacking = false;
     public bool isRecovering = false;
+    private float tempCharge = 0f;
+    Quaternion _initialRotation;
+
+
 
 
     private void Awake()
@@ -73,7 +83,6 @@ public class PlayerMovement : MonoBehaviour
         currentCharge = maxCharge;
         m_PlayerBase = GetComponent<PlayerBase>();
         _rb = GetComponent<Rigidbody>();
-        _capsuleCollider = GetComponent<CapsuleCollider>();
     }
 
     private void OnEnable()
@@ -107,12 +116,25 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
-        
+        //if (dashChargeUpdateCoroutine != null)
+        //{
+        //    StopCoroutine(dashChargeUpdateCoroutine);
+        //    dashChargeUpdateCoroutine = null;
+        //}
+
+        //if (dashChargeUpdateCoroutine == null)
+        //dashChargeUpdateCoroutine = StartCoroutine(DashChargeModify(true, maxCharge));
     }
 
     private void Update()
     {
         RechargeDash();
+
+
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            Test();
+        }
     }
 
     private void FixedUpdate()
@@ -135,19 +157,17 @@ public class PlayerMovement : MonoBehaviour
     public void Move(InputAction.CallbackContext context)
     {
         _movement = context.ReadValue<Vector2>();
-        isTryMove = true;
     }
 
     public void OnMoveCancel(InputAction.CallbackContext context)
     {
         _movement = context.ReadValue<Vector2>();
-        isTryMove = false;
         //_rb.velocity = new Vector3(0, _rb.velocity.y, 0); 
     }
 
     public void Dash(InputAction.CallbackContext context)
     {
-        if(currentCharge <= 0 ) { return; }
+        if (currentCharge <= 0) { return; }
         if (dashCoroutine == null && canDash)
         {
             dashCoroutine = StartCoroutine(Dash());
@@ -168,7 +188,7 @@ public class PlayerMovement : MonoBehaviour
     #region MOVEMENT
     private void MoveCharacter()
     {
-        
+
         if (isRecovering || isAttacking)
         {
             _rb.velocity = new Vector3(0, _rb.velocity.y, 0);
@@ -179,6 +199,8 @@ public class PlayerMovement : MonoBehaviour
         var playerMovement = moveDirection * PlayerDatas.Instance.GetStats.MoveSpeed;
         playerMovement.y = _rb.velocity.y;
         _rb.velocity = playerMovement;
+        playerAnimation.Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+
     }
 
     private void StopMovementDuringRecoveryState()
@@ -250,13 +272,15 @@ public class PlayerMovement : MonoBehaviour
         CancelParry();
         _rb.velocity = Vector3.zero;
         canDash = false;
-              
+
         Vector3 dashDirection = (_playerInput.Player.Move.IsPressed()) ? moveDirection : transform.forward;
-        
-        
-        yield return new WaitForFixedUpdate();       
+
+
+        yield return new WaitForFixedUpdate();
         float elapsedDashTime = 0f;
-        isDashing = true;       
+        isDashing = true;
+
+
         while (elapsedDashTime < dashDuration)
         {
             _rb.AddForce(dashDirection * (dashForce / dashDuration) * Time.fixedDeltaTime, ForceMode.VelocityChange);
@@ -268,21 +292,122 @@ public class PlayerMovement : MonoBehaviour
         dashCoroutine = null;
         isDashing = false;
         currentCharge--;
+        OnDashUsed?.Invoke();
+
+        //if (dashChargeUpdateCoroutine != null)
+        //{
+        //    StopCoroutine(dashChargeUpdateCoroutine);
+        //    dashChargeUpdateCoroutine = null;
+        //}
+
+        //if (dashChargeUpdateCoroutine == null)
+        //dashChargeUpdateCoroutine = StartCoroutine(DashChargeModify(false, 1));
 
         yield return new WaitForSeconds(dashInputCooldown);
-        canDash = true;      
+        canDash = true;
     }
 
     private void RechargeDash()
     {
         if (currentCharge >= maxCharge) { return; }
+
         dashRecoverTimePerChargeCount += Time.deltaTime * dashRegenMultiplier;
+        OnDashRecoverTimeChanged?.Invoke();
+
         if (dashRecoverTimePerChargeCount > dashRecoverTimePerCharge)
         {
             currentCharge++;
+            dashIndicate?.Invoke();
             dashRecoverTimePerChargeCount = 0;
+
+            //if (dashChargeUpdateCoroutine != null)
+            //{
+            //    StopCoroutine(dashChargeUpdateCoroutine);
+            //    dashChargeUpdateCoroutine = null;
+            //}
+
+            //if (dashChargeUpdateCoroutine == null)
+            //    dashChargeUpdateCoroutine = StartCoroutine(DashChargeModify(true, 1));
         }
     }
+
+    private IEnumerator DashChargeModify(bool increase, int amount)
+    {
+        float tempTarget = increase ? currentCharge + amount : currentCharge - amount; // Correctly assigns target without modifying currentCharge prematurely
+
+        float smoothTime = increase ? dashRecoverTimePerCharge / 10f : 0.0075f; // Correctly assigns target without modifying currentCharge prematurely
+
+        tempCharge = currentCharge;
+
+        float placeHolderVal = 0f;
+
+        float currentVel = 0f;
+
+        while (true)
+        {
+            // Smoothly transition tempCharge towards tempTarget
+            placeHolderVal = Mathf.SmoothDamp(tempCharge, tempTarget, ref currentVel, smoothTime);
+
+            tempCharge = placeHolderVal;
+
+            Debug.Log(tempCharge);
+
+            // Only update currentCharge when it's close enough to the target
+            if (Mathf.Abs(tempCharge - tempTarget) < 0.0025f)
+            {
+                tempCharge = tempTarget; // Snap to target
+
+                currentCharge = increase ? (int)tempCharge : (int)Mathf.Floor(tempCharge); // Update integer charge level once transition completes
+
+                break;
+            }
+
+            //Debug.Log("Temp Charge: " + tempCharge);
+            //Debug.Log("Current Charge: " + currentCharge);
+
+            yield return null;
+        }
+
+        if (increase) dashIndicate?.Invoke();
+
+        dashChargeUpdateCoroutine = null;
+    }
+
+
+    private void Test()
+    {
+        maxCharge++;
+        OnMaxChargeChanged?.Invoke();
+    }
+
+
+    public int GetMaxCharge()
+    {
+        return maxCharge;
+    }
+
+
+    public float GetDashChargeProgress() // For displaying dash charge UI
+    {
+        return Mathf.InverseLerp(0f, maxCharge, tempCharge);
+    }   
+
+ 
+
+    public float GetDashRecoverTimePerCharge()
+    {
+        return dashRecoverTimePerCharge;
+    }
+
+    public float GetDashRecoverTimePerChargeCount()
+    {
+        return dashRecoverTimePerChargeCount;
+    }
+
+
+
+
+
 
     #endregion
 
@@ -300,6 +425,7 @@ public class PlayerMovement : MonoBehaviour
         m_PlayerBase.StartImmunityCoroutine(invulnerableTimerOrg);
 
         Debug.Log("Parrying");
+        playerAnimation.Parry();
 
         while (elapsedInvulnerableTime >= 0)
         {
@@ -311,7 +437,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 for (int i = 0; i < colliders.Length; i++)
                 {
-                    GameObject actualBullet = colliders[i].transform.gameObject; 
+                    GameObject actualBullet = colliders[i].transform.gameObject;
 
                     EnemyProjectile bulletScript = actualBullet.GetComponent<EnemyProjectile>();
 
@@ -334,7 +460,7 @@ public class PlayerMovement : MonoBehaviour
     {
         StopCoroutine(StandStill());
         OnParryStop?.Invoke();
-        canParry = true;       
+        canParry = true;
         parryCoroutine = null;
         immobileCoroutine = null;
     }
@@ -350,7 +476,7 @@ public class PlayerMovement : MonoBehaviour
         canParry = true;
 
         // Gotta make sure the coroutine is null to match the condition above! And also, cleans up each coroutine after each use
-        parryCoroutine = null; 
+        parryCoroutine = null;
         immobileCoroutine = null;
     }
 
@@ -363,7 +489,7 @@ public class PlayerMovement : MonoBehaviour
         Vector3 dir = _mousePos - CharacterPos;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, -angle + 90, 0);
-
+        //playerAnimation.RotateUpperBody(playerUpperSpine, dir);
     }
 
 

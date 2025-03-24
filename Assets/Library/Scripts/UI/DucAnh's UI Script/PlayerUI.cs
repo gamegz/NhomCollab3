@@ -24,6 +24,7 @@ public class PlayerUI : MonoBehaviour
     private TextMeshProUGUI healText;
     //[SerializeField] private TextMeshProUGUI levelText; // May or may not use in the future 
     private PlayerBase playerBase;
+    private PlayerMovement playerMovement;
     private Color orgICABcolor; // Original Inner Charge Attack Bar Color  [UI Purpose]
     private Color orgOCABcolor; // Original Outer Charge Attack Bar Color  [UI Purpose] [THIS IS THE PARENT OF "innerChargeATKBarUI"]
     private Color orgHBColor; // Original Heal Bar Color 
@@ -33,6 +34,7 @@ public class PlayerUI : MonoBehaviour
 
     [Header("Values")]
     [SerializeField] private float xOffsetHeartPercent = 0.05f;
+    [SerializeField] private float dashIndicationTimer = 1f;
     private float xOffsetHeartValue = 0f;
     private Vector3 orgHeartScale = new Vector3(0.85f, 0.85f, 0.85f);
     private Vector3 orgCABarScale = new Vector3(1.25f, 4f, 1f); // Original Charged Attack Bar Scale [For any one who couldn't read]
@@ -46,6 +48,29 @@ public class PlayerUI : MonoBehaviour
     private Coroutine heartCoroutine = null;
     private Coroutine overHealingCoroutine = null;
     private Coroutine chargeATKCoroutine = null;
+    private Coroutine dashIndicationCoroutine = null;
+
+
+    [Header("Dash Charge Indicator")]
+    [SerializeField] private Image dashChargeIndicator = null;
+
+
+    [Header("Dash Charge Bar")]
+    [SerializeField] private Image dashChargeBar;
+    [SerializeField] private Image dashChargeBarMain;
+    [SerializeField] private Image dashChargeBarMainYellow;
+    [SerializeField] private GameObject blackBarPrefab;
+    [SerializeField] private Transform blackBarContainer;
+
+    private float currentDashBarOwnedLength = 0;
+    private float totalLength = 0;
+
+    private float dashChargeBarMainWidth;
+    private float dashChargeBarWidth;
+    private float dashChargeFill = 100f;
+    private float blackBarWidth;
+
+
 
     private void Awake()
     {
@@ -56,7 +81,7 @@ public class PlayerUI : MonoBehaviour
         else
         {
             healText = healTextAnimator.GetComponent<TextMeshProUGUI>();
-            
+
             if (healText == null)
             {
                 Debug.Log("Heal text wasn't assigned");
@@ -69,10 +94,16 @@ public class PlayerUI : MonoBehaviour
 
         //playerHearts[playerHearts.Length - 1].transform.localScale = Vector3.zero;
 
+        playerMovement = GetComponent<PlayerMovement>();
         playerBase = GetComponent<PlayerBase>();
         if (playerBase == null)
         {
             Debug.Log("No player base");
+        }
+
+        if (playerMovement == null)
+        {
+            Debug.Log("No player movement");
         }
 
         if (weaponManager == null)
@@ -91,14 +122,41 @@ public class PlayerUI : MonoBehaviour
         }
     }
 
+
+    private void Start()
+    {
+        dashChargeIndicator.gameObject.SetActive(false);
+
+        dashChargeBarWidth = dashChargeBar.GetComponent<RectTransform>().rect.width;
+        dashChargeBarMainWidth = dashChargeBarMain.GetComponent<RectTransform>().rect.width;
+        blackBarWidth = blackBarPrefab.GetComponent<RectTransform>().rect.width;
+
+        currentDashBarOwnedLength = playerMovement.GetDashRecoverTimePerCharge() * playerMovement.GetMaxCharge();
+        totalLength = currentDashBarOwnedLength;
+    }
+
     private void OnEnable()
     {
         PlayerBase.HealthModified += UpdateHealth;
         PlayerBase.HBOverheal += OverHealingEffect;
         PlayerBase.HealReady += ReadyTextAnimation;
         PlayerBase.HealActivated += ActivatedTextAnimation;
+        PlayerMovement.dashIndicate += DashIndicated;
+
+        PlayerMovement.dashIndicate += AddDashChargeTime;
+        PlayerMovement.OnDashUsed += ReduceDashChargeTime;
+
+        PlayerMovement.dashIndicate += UpdateYellowDashBar;
+        PlayerMovement.OnDashUsed += UpdateYellowDashBar;
+
+        PlayerMovement.OnMaxChargeChanged += UpdateTotalDashBarLength;
+        PlayerMovement.OnMaxChargeChanged += UpdateBlackBarContainer;
+        PlayerMovement.OnDashRecoverTimeChanged += UpdateDashBar;
 
         WeaponManager.OnHoldChargeATK += UpdateChargeATK;
+
+
+
     }
 
     private void OnDisable()
@@ -107,6 +165,17 @@ public class PlayerUI : MonoBehaviour
         PlayerBase.HBOverheal -= OverHealingEffect;
         PlayerBase.HealReady -= ReadyTextAnimation;
         PlayerBase.HealActivated -= ActivatedTextAnimation;
+        PlayerMovement.dashIndicate -= DashIndicated;
+
+        PlayerMovement.dashIndicate -= AddDashChargeTime;
+        PlayerMovement.OnDashUsed -= ReduceDashChargeTime;
+
+        PlayerMovement.dashIndicate -= UpdateYellowDashBar;
+        PlayerMovement.OnDashUsed -= UpdateYellowDashBar;
+
+        PlayerMovement.OnMaxChargeChanged -= UpdateTotalDashBarLength;
+        PlayerMovement.OnMaxChargeChanged -= UpdateBlackBarContainer;
+        PlayerMovement.OnDashRecoverTimeChanged -= UpdateDashBar;
 
         WeaponManager.OnHoldChargeATK -= UpdateChargeATK;
     }
@@ -134,6 +203,8 @@ public class PlayerUI : MonoBehaviour
 
         //Debug.Log(expCurrent + " / " + expRequirement + " [Level: " + level + "] ");
     }
+
+
     private void Update()
     {
         //levelText.text = "LVL: " + level;
@@ -149,6 +220,13 @@ public class PlayerUI : MonoBehaviour
         {
             UpdateCAProgressFill(caProgress.Value);
         }
+
+
+        //float? dashChargeProgress = playerMovement?.GetDashChargeProgress();
+        //if (dashChargeProgress != null)
+        //{
+        //    UpdateDashChargeProgressFill(dashChargeProgress.Value);
+        //}
 
         xOffsetHeartValue = Screen.width * xOffsetHeartPercent;
 
@@ -175,7 +253,7 @@ public class PlayerUI : MonoBehaviour
         {
 
             float xRandomOffset = UnityEngine.Random.Range(Screen.width * (-0.01f), Screen.height * (0.01f)); // Bruh... I really had to put in UnityEngine before it.
-            float yRandomOffset = UnityEngine.Random.Range(Screen.height * (-0.005f), Screen.height * (0.005f)); 
+            float yRandomOffset = UnityEngine.Random.Range(Screen.height * (-0.005f), Screen.height * (0.005f));
 
             // Scale Y offset based on screen size
             float yOffset = Screen.height * 0.075f; // 7.5% of screen height
@@ -186,9 +264,17 @@ public class PlayerUI : MonoBehaviour
         {
             // Scale Y offset based on screen size
             float yOffset = Screen.height * 0.075f; // 7.5% of screen height
-            outerChargeATKBarUI.transform.position = new Vector2(targetPosition.x, targetPosition.y + yOffset);            
+            outerChargeATKBarUI.transform.position = new Vector2(targetPosition.x, targetPosition.y + yOffset);
         }
 
+    }
+
+
+    private void UpdateDashChargeProgressFill(float value)
+    {
+        float curVelocity = 0f;
+        float tempValue = Mathf.SmoothDamp(dashChargeBarMain.fillAmount, value, ref curVelocity, 0.0075f);
+        dashChargeBarMain.fillAmount = tempValue;
     }
 
 
@@ -206,7 +292,7 @@ public class PlayerUI : MonoBehaviour
 
     private IEnumerator OverHealingCoroutine(bool isOverHealing)
     {
-        Vector3 currentVel = Vector3.zero; 
+        Vector3 currentVel = Vector3.zero;
 
         if (isOverHealing == true)
         {
@@ -227,9 +313,9 @@ public class PlayerUI : MonoBehaviour
         }
 
         else if (isOverHealing == false)
-        { 
+        {
             healBarUI.color = orgHBColor;
-                
+
             //Debug.Log("Stop Over Healing.");
 
             //Debug.Log(tempOverHealHeart.transform.localScale);
@@ -241,7 +327,7 @@ public class PlayerUI : MonoBehaviour
 
                 yield return null;
             }
-            
+
             tempOverHealHeart = null; // Not affiliated with heart list for safety purpose
         }
 
@@ -363,16 +449,119 @@ public class PlayerUI : MonoBehaviour
 
     }
 
+    #region Dash Indicator
+    private void DashIndicated()
+    {
+        if (dashIndicationCoroutine != null)
+        {
+            StopCoroutine(dashIndicationCoroutine);
+            dashIndicationCoroutine = null;
+        }
+
+        if (dashIndicationCoroutine == null)
+            dashIndicationCoroutine = StartCoroutine(DashIndicating(dashIndicationTimer));
+    }
+
+
+    private IEnumerator DashIndicating(float timer)
+    {
+        dashChargeIndicator.gameObject.SetActive(true);
+        float tempTimer = timer;
+
+        // Play Dash Indicator Animation Here
+
+        while (tempTimer > 0)
+        {
+            tempTimer -= Time.deltaTime;
+
+            dashChargeIndicator.transform.rotation = Camera.main.transform.rotation;
+
+            yield return null;
+        }
+
+        dashChargeIndicator.gameObject.SetActive(false);
+    }
+    #endregion
+
+    #region Dash Bar
+
+
+
+    private void UpdateDashBar()
+    {
+        dashChargeBarMain.fillAmount = Mathf.InverseLerp(0f, totalLength, currentDashBarOwnedLength + playerMovement.GetDashRecoverTimePerChargeCount());
+    }
+
+    private void UpdateYellowDashBar()
+    {
+        dashChargeBarMainYellow.fillAmount = Mathf.InverseLerp(0f, totalLength, currentDashBarOwnedLength);
+    }
+
+
+    private void AddDashChargeTime()
+    {
+        currentDashBarOwnedLength += playerMovement.GetDashRecoverTimePerCharge();
+    }
+
+    private void ReduceDashChargeTime()
+    {
+        currentDashBarOwnedLength -= playerMovement.GetDashRecoverTimePerCharge();
+    }
+
+    private void UpdateTotalDashBarLength()
+    {
+        totalLength = playerMovement.GetDashRecoverTimePerCharge() * playerMovement.GetMaxCharge();
+        dashChargeBarMainYellow.fillAmount = Mathf.InverseLerp(0f, totalLength, currentDashBarOwnedLength);
+    }
+
+
+
+
+
+
+
+
+    private void UpdateBlackBarContainer()
+    {
+        HorizontalLayoutGroup blackBarGroup = blackBarContainer.GetComponent<HorizontalLayoutGroup>();
+
+        foreach (Transform child in blackBarContainer)
+        {
+            Destroy(child.gameObject);
+        }
+
+        int maxDashCharge = playerMovement.GetMaxCharge();
+        blackBarGroup.spacing = (dashChargeBarWidth / maxDashCharge) - blackBarWidth;
+
+        for (int i = 0; i < maxDashCharge - 1; i++)
+        {
+            Instantiate(blackBarPrefab, blackBarContainer, false);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    #endregion
+
     #endregion
 
     #region UI Animation 
-    private void ReadyTextAnimation(bool isReady, string displayText) 
+    private void ReadyTextAnimation(bool isReady, string displayText)
     {
         healText.text = displayText;
 
         if (isReady)
             healTextAnimator.Play("Ready Text Animation", 0); // Animator.Play(string Animation Name, Animation Layer (Base Layer = 0, ...))
-                    
+
         else
             healTextAnimator.Play("Not Ready Text Animation", 0);
     }

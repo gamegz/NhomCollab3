@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System;
+using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Enemy.EnemyManager
 {
@@ -26,20 +27,24 @@ namespace Enemy.EnemyManager
 			public Quaternion spawnRotation;
 		}
 
-		private static int _maxActiveEnemy = 9;
-
-		private static int _maxAttackToken = 3;
+		[SerializeField] private int _maxActiveEnemy = 9;
+		[SerializeField] private int _maxAttackToken = 3;
 		private int _currentAttackToken;
 
 		private List<EnemyBase> activeEnemies = new List<EnemyBase>();
 		private List<EnemySpawnData> enemiesSpawnOnHold = new List<EnemySpawnData>();
 		private float _enemySpawnOnHoldDelay = 2;
 		private GameObject _player;
+		StatsUpgrade _playerStatsUpgrade;
+
+		[Header("ExpPrefab")]
+		[SerializeField] private GameObject _expPrefab;
 
         private void Awake()
         {
 			activeEnemies = FindObjectsOfType<EnemyBase>().ToList();
 			_player = GameObject.FindGameObjectWithTag("Player");
+			_playerStatsUpgrade = FindObjectOfType<StatsUpgrade>();
 			foreach(EnemyBase enemy in activeEnemies)
             {
 				enemy.playerRef = _player;
@@ -94,10 +99,12 @@ namespace Enemy.EnemyManager
 			List<EnemyBase> enemiesInst = activeEnemies.OrderBy(x => x.distanceToPlayer).ToList();
 			for (int i = 0; i < enemiesInst.Count; i++)
 			{
+				//enemiesInst[i].isTokenOwner = false;
 				if (_currentAttackToken <= 0) { break; }
-				if (enemiesInst[i].isAttacking) { continue; }
-				enemiesInst[i].isTokenOwner = true;
-                _currentAttackToken--;
+				if (!enemiesInst[i].isAttacking) {
+					enemiesInst[i].isTokenOwner = true;
+					_currentAttackToken--;					
+				}
             }
         }
 
@@ -111,8 +118,10 @@ namespace Enemy.EnemyManager
 			EnemySpawnData firstEnemyData = enemiesSpawnOnHold[0];
 			enemiesSpawnOnHold.RemoveAt(0);
 			EnemyBase spawnedEnemy = Instantiate(firstEnemyData.enemyToSpawn, firstEnemyData.spawnLocation, firstEnemyData.spawnRotation);
-            spawnedEnemy.playerRef = _player;           
-			activeEnemies.Add(spawnedEnemy);
+            spawnedEnemy.playerRef = _player;
+            spawnedEnemy.expPrefab = _expPrefab;
+            spawnedEnemy.playerStatsRef = _playerStatsUpgrade;
+            activeEnemies.Add(spawnedEnemy);
 			spawnedEnemy.OnEnemyDeaths += OnEnemyDeath;
 			Debug.Log(enemiesSpawnOnHold);
 
@@ -135,6 +144,8 @@ namespace Enemy.EnemyManager
 			EnemyBase spawnedEnemy = Instantiate(SpawnEnemy, SpawnLocation, SpawnRotation);
             spawnedEnemy.OnEnemyDeaths += OnEnemyDeath;	
             spawnedEnemy.playerRef = _player;
+			spawnedEnemy.expPrefab = _expPrefab;
+            spawnedEnemy.playerStatsRef = _playerStatsUpgrade;
             activeEnemies.Add(spawnedEnemy);
 		}
 

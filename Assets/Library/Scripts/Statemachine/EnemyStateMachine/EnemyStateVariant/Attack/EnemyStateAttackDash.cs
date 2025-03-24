@@ -76,17 +76,7 @@ namespace Enemy.statemachine.States
                         _ownerStateMachine.SwitchState(_enemy.enemyRetreatState);
                         break;
                 }
-
-                //if (_enemy.isTargetInAttackRange) //Attack again
-                //{
-                //    _attackInnitTimeCount = _enemy.attackInnitTime;
-                //    _enemy.canTurn = true;
-                //}
-                //else //Chase
-                //{
-                //    _ownerStateMachine.SwitchState(_enemy.enemyChaseState);
-                //}
-                               
+          
             }
 
         }
