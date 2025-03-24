@@ -277,7 +277,7 @@ MonoBehaviour:
   retreatDistance: 4.2
   maxRetreatDistance: 7
   followDistance: 11
-  staggerThreshold: 10
+  staggerThreshold: 1
   staggerTime: 1
   knockbackForce: 0
   isStagger: 0
@@ -314,8 +314,10 @@ MonoBehaviour:
   _dropValue: 10
   deathMethod: 0
   timeLimitUI: 3
+  isBoss: 0
   healthBackgroundUI: {fileID: 6995914123639326842}
   enemyHealthUI: {fileID: 7814766307039632498}
+  enemyDamageReceivedUI: {fileID: 6801576623966219420}
 --- !u!1 &4714149280797202837
 GameObject:
   m_ObjectHideFlags: 0
@@ -584,12 +586,7 @@ PrefabInstance:
     - target: {fileID: 3827156095013428850, guid: 845885b5d6611534faefc15a28022627,
         type: 3}
       propertyPath: m_Name
-      value: Canvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 7688908293553322036, guid: 845885b5d6611534faefc15a28022627,
-        type: 3}
-      propertyPath: m_PresetInfoIsWorld
-      value: 1
+      value: Health Bar
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -602,6 +599,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 4855012270262330990}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6801576623966219420 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2090930305765296882, guid: 845885b5d6611534faefc15a28022627,
+    type: 3}
+  m_PrefabInstance: {fileID: 4855012270262330990}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6995914123639326842 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2483186794004164116, guid: 845885b5d6611534faefc15a28022627,

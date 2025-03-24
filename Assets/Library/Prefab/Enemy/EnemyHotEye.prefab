@@ -315,8 +315,10 @@ MonoBehaviour:
   _dropValue: 10
   deathMethod: 0
   timeLimitUI: 3
+  isBoss: 0
   healthBackgroundUI: {fileID: 5172153946943385719}
   enemyHealthUI: {fileID: 5378130034467873919}
+  enemyDamageReceivedUI: {fileID: 8697956867407844497}
 --- !u!1 &3189481593008189653
 GameObject:
   m_ObjectHideFlags: 0
@@ -616,7 +618,7 @@ PrefabInstance:
     - target: {fileID: 3827156095013428850, guid: 845885b5d6611534faefc15a28022627,
         type: 3}
       propertyPath: m_Name
-      value: Canvas
+      value: Health Bar
       objectReference: {fileID: 0}
     - target: {fileID: 7688908293553322036, guid: 845885b5d6611534faefc15a28022627,
         type: 3}
@@ -658,3 +660,15 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 7327677268954635875}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8697956867407844497 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2090930305765296882, guid: 845885b5d6611534faefc15a28022627,
+    type: 3}
+  m_PrefabInstance: {fileID: 7327677268954635875}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

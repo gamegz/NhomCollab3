@@ -145,12 +145,18 @@ namespace Enemy
         #region DUC ANH'S VARIABLE
         [Header("Values")]
         [SerializeField] private float timeLimitUI; // To calculate when enemy's health will fade away in the scene
+        [SerializeField] private bool isBoss = false;
+        [SerializeField] private float damageSmoothTime = 0.5f;
+        private float damageTakenVelocity = 0f;
+
         private bool isChargedATK = false;
+
 
 
         [Header("References")]
         [SerializeField] private Image healthBackgroundUI = null; // To provide background for the enemy's health
         [SerializeField] private Image enemyHealthUI = null; // To display enemy's health
+        [SerializeField] private Image enemyDamageReceivedUI = null;
 
 
         [Header("Coroutines")]
@@ -204,11 +210,13 @@ namespace Enemy
             attackCollider.gameObject.GetComponent<EnemyAttackCollider>()._damage = attackDamage;
 
 
-            healthBackgroundUI.gameObject.SetActive(false);
+            if (!isBoss) healthBackgroundUI.gameObject.SetActive(false);
         }
 
         public virtual void UpdateLogic()
         {
+            if (isBoss) UpdateEnemyHealthBar(GetCurrentEnemyHealthProgress());
+
             if (isStagger) { return; }
             if (isStunned) { return; }
             distanceToPlayer = Vector3.Distance(transform.position, playerRef.transform.position);
@@ -444,14 +452,11 @@ namespace Enemy
             return Mathf.InverseLerp(0f, maxHealth, currentHealth);
         }
 
-
-        private void UpdateEnemyHealth(float value)
+        private void UpdateEnemyHealthBar(float value)
         {
-            float curVelocity = 0f;
-            float tempValue = Mathf.SmoothDamp(enemyHealthUI.fillAmount, value, ref curVelocity, 0.0075f);
-            enemyHealthUI.fillAmount = tempValue;
+            enemyHealthUI.fillAmount = value;
+            enemyDamageReceivedUI.fillAmount = Mathf.SmoothDamp(enemyDamageReceivedUI.fillAmount, value, ref damageTakenVelocity, damageSmoothTime);
         }
-
 
         public virtual void TakeDamage(int damage)
         {
@@ -476,6 +481,8 @@ namespace Enemy
                 StartCoroutine(Stun());
             }
 
+            if (isBoss) return;
+
             if (uiAppearCoroutine != null)
             {
                 StopCoroutine(uiAppearCoroutine);
@@ -495,16 +502,34 @@ namespace Enemy
             while (tempTime > 0)
             {
                 tempTime -= Time.deltaTime;
-                //healthBackgroundUI.transform.rotation = Quaternion.Euler(0f, Camera.main.transform.rotation.eulerAngles.y, 0f);
                 healthBackgroundUI.transform.rotation = Camera.main.transform.rotation;
 
-                UpdateEnemyHealth(GetCurrentEnemyHealthProgress());
+                UpdateEnemyHealthBar(GetCurrentEnemyHealthProgress());
                 yield return null;
             }
 
+            enemyDamageReceivedUI.fillAmount = GetCurrentEnemyHealthProgress();
             healthBackgroundUI.gameObject.SetActive(false);
             uiAppearCoroutine = null;
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         public void DamagedByWeapon(WeaponData _weaponData)
         {
