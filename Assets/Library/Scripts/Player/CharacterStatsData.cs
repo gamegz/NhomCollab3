@@ -22,6 +22,10 @@ public class CharacterStatsData
     public int DashChargeCurrentLevel;
     public int DashRecoveryCurrentLevel;
 
+    public float currentExperienceAmount;
+    public float maxExperienceAmount;
+    public int GemCount;
+
     public Dictionary<UpgradeType, int> upgradeLevels = new Dictionary<UpgradeType, int>();
 
     private CharacterBaseStatsData baseStats;
