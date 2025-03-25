@@ -12,19 +12,6 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     
     public static PlayerBase Instance { get ; private set; }
 
-    // public PlayerBattleData data;
-    private int moveSpeedLevel;
-    private int healthLevel;
-    private int fConversionRateLevel;
-    private int damageLevel;
-    private const float SPEED_INCREASE_PER_LEVEL = 0.02f;
-    private const float HEALTH_INCREASE_PER_LEVEL = 1f;
-    private const float FCONVERSION_RATE_INCREASE_PER_LEVEL = 1f;
-    private const int DAMAGE_INCREASE_PER_LEVEL = 1;
-    private float buffSpeed = 1f;
-    private float buffHealth = 1f;
-    private float buffFConversionRate = 1f;
-    private int buffDamage = 1;
     PlayerInput _playerInput;
     [SerializeField] private LayerMask interactLayerMask;
     private Transform _playerTransform;
@@ -73,7 +60,15 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
 
     #endregion
 
+    #region Interaction and InteractionUI
+    private IInteractable currentInteractable;
 
+    private bool isHolding;
+    [SerializeField] private float holdTime;
+    [SerializeField] private float holdCounter = 0f;
+    //ref
+    private PlayerUI playerUI;
+    #endregion
     private void Awake()
     {
         _playerInput = new PlayerInput();
@@ -108,6 +103,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
 
     private void Start()
     {
+        playerUI = GetComponent<PlayerUI>();
         PlayerDatas.Instance.GetStats.currentPlayerHealth = PlayerDatas.Instance.GetStats.healthStat;
         invulTimeAfterDamagedCount = invulTimeAfterDamaged;
         HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, PlayerDatas.Instance.GetStats.healthStat, SetHealthState(HealthStates.INCREASED));
@@ -135,63 +131,47 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         EnemyBase.OnEnemyDamaged -= IncreaseHealBar;
     }
 
-    private void OnTriggerSpeedBuff()
-    {
-        buffSpeed = 0.2f;
-    }
-
-    private void EndBuffDuration()
-    {
-        buffSpeed = 1f;
-    }
-
-    //public float MoveSpeed
+    //private void OnTriggerSpeedBuff()
     //{
-    //    get
-    //    {
-    //        float modifier = buffSpeed + (SPEED_INCREASE_PER_LEVEL * moveSpeedLevel);
-    //        return data.MoveSpeed(modifier);
-    //    }
+    //    buffSpeed = 0.2f;
     //}
 
-    //public float Health
+    //private void EndBuffDuration()
     //{
-    //    get
-    //    {
-    //        float modifier = buffHealth + (HEALTH_INCREASE_PER_LEVEL * healthLevel);
-    //        return data.Health(modifier);
-    //    }
+    //    buffSpeed = 1f;
     //}
-
-    //public float FConversionRate
-    //{
-    //    get
-    //    {
-    //        float modifier = buffFConversionRate + (FCONVERSION_RATE_INCREASE_PER_LEVEL * fConversionRateLevel);
-    //        return data.FConversionRate(modifier);
-    //    }
-    //}
-
-    //public int Damage
-    //{
-    //    get
-    //    {
-    //        int modifier = buffDamage + (DAMAGE_INCREASE_PER_LEVEL * damageLevel);
-    //        return data.Damage(modifier);
-    //    }
-    //}
-
 
     private void OnInteractWithObject(InputAction.CallbackContext context)
     {
-        if(context.performed)
+        //if(context.performed)
+        //{
+        //    Collider[] colliders = Physics.OverlapSphere(_playerTransform.position, 0.5f, interactLayerMask);
+        //    foreach (Collider collide in colliders)
+        //    {
+        //        IInteractable interactable = collide.GetComponent<IInteractable>();
+        //        interactable?.OnInteract();
+        //    }
+        //}
+        Debug.Log($"Interact pressed. Current Interactable: {currentInteractable}");
+
+        if (currentInteractable == null)
         {
-            Collider[] colliders = Physics.OverlapSphere(_playerTransform.position, 0.5f, interactLayerMask);
-            foreach (Collider collide in colliders)
-            {
-                IInteractable interactable = collide.GetComponent<IInteractable>();
-                interactable?.OnInteract();
-            }
+            Debug.LogWarning("No interactable object found!");
+            return;
+        }
+
+        if (context.performed)
+        {
+            Debug.Log("asdasdasd");
+            isHolding = true;
+            holdCounter = 0f;
+            StartCoroutine(HoldToClaim());
+        }
+
+        if(context.canceled)
+        {
+            isHolding = false;
+            holdCounter = 0f;
         }
         
     }
@@ -221,6 +201,22 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     private void Update()
     {
         //Debug.Log("Player Health: " + PlayerDatas.Instance.GetStats.currentPlayerHealth);
+    }
+
+    private IEnumerator HoldToClaim()
+    {
+        while(isHolding && holdCounter < holdTime)
+        {
+            holdCounter += Time.deltaTime;
+            yield return null;
+        }
+
+        if(holdCounter >= holdTime)
+        {
+            currentInteractable.OnInteract();
+        }
+        playerUI.ToggleInstructionText(false);
+        isHolding = false;
     }
 
     public void TakeDamage(int modifiedHealth) // ACTIVATED WHEN TAKING DAMAGE
@@ -407,6 +403,29 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         else
         {
             //Debug.Log("haha");
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+
+        if(other.TryGetComponent<IInteractable>(out var interactable))
+        {
+            currentInteractable = interactable;
+            if (GameManager.Instance.isRespawnPointClaimed(other.gameObject))
+            {
+                return;
+            }
+            playerUI.ToggleInstructionText(true);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.GetComponent<IInteractable>() == currentInteractable)
+        {
+            playerUI.ToggleInstructionText(false);
+            currentInteractable = null;
         }
     }
 }

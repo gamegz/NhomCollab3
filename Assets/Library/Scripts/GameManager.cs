@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     float previousTimeScale = 1f;
     bool isPaused;
     public Transform SpawnPoint;
+    public List <GameObject> RespawnPoint = new List <GameObject>();
     [HideInInspector] public GameState state;
     public static GameManager Instance { get; private set; }
     private void Awake()
@@ -101,6 +102,18 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
     }
 
+    public bool isRespawnPointClaimed(GameObject respawnPoint)
+    {
+        return RespawnPoint.Contains(respawnPoint);
+    }
+
+    public void ClaimRespawnPoimt(GameObject respawnPoimt)
+    {
+        if (!RespawnPoint.Contains(respawnPoimt))
+        {
+            RespawnPoint.Add(respawnPoimt);
+        }
+    }
 
     private void OnApplicationQuit()
     {
