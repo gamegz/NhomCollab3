@@ -24,6 +24,7 @@ public class CharacterBaseStatsData
 
     public float CurrentExperienceAmount;
     public float maxExperienceAmount;
+    public float overflowExperienceAmount;
 
     //Buff - NOTE: WILL NOT BE USE
     public float HealthBuff;

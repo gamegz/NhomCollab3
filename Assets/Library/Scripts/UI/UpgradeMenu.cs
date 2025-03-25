@@ -34,16 +34,13 @@ namespace UI
         void Start()
         {
             SetUpUI();
-            foreach(UpdateUI upgradeUI in upgradeUIDictionary.Values)
-            {
-                Debug.Log("upgrade Count: " + upgradeUI.upgradeCount);
-            }
         }
 
         public void UpdateExpBar(float currentExpAmount, float maxExpAmount)
         {
             if(expSlider != null)
             {
+                sacrificialGemCountText.text = "Sacrificial Gem:" + statsUpgradeCS.GemCount.ToString();
                 targetValue = currentExpAmount / maxExpAmount;
                 StartCoroutine(UpdateExpGauge());
             }
@@ -59,11 +56,13 @@ namespace UI
             float maxTimer = 0.2f;
             while(timer < maxTimer)
             {
-                expSlider.value = Mathf.Lerp(expSlider.value, targetValue, maxTimer);
                 timer += Time.deltaTime;
-
+                float t = timer / maxTimer;
+                expSlider.value = Mathf.Lerp(expSlider.value, targetValue, t);
+                
                 yield return null;
             }
+            expSlider.value = targetValue;
         }
 
         private void SetUpUI()

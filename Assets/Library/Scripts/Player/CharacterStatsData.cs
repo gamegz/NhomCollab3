@@ -24,6 +24,7 @@ public class CharacterStatsData
 
     public float currentExperienceAmount;
     public float maxExperienceAmount;
+    public float overflowExperience;
     public int GemCount;
 
     public Dictionary<UpgradeType, int> upgradeLevels = new Dictionary<UpgradeType, int>();
@@ -45,6 +46,7 @@ public class CharacterStatsData
         currentExperienceAmount = baseStats.CurrentExperienceAmount;
         maxExperienceAmount = baseStats.maxExperienceAmount;
         GemCount = baseStats.PlayerGemCount;
+        overflowExperience = baseStats.overflowExperienceAmount;
 
         currentPlayerHealth = healthStat;  
     }

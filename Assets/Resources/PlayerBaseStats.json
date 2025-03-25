@@ -6,6 +6,8 @@
   "PlayerRecovery": 1,
   "PlayerDashCharge": 1,
   "PlayerDashRecovery": 1,
+  "PlayerGemCount" : 0,
+  "CurrentExperienceAmount" : 0,
 
   "healthStat": 5,
   "damageStat": 1,
@@ -14,6 +16,8 @@
   "recoveryStat": 1,
   "dashChargeStat": 1,
   "dashRecoveryStat ": 5,
+  "maxExperienceAmount" : 10.0,
+  "overflowExperienceAmount" : 0,
 
   "HealthBuff": 1.0,
   "SpeedBuff": 1.0,
