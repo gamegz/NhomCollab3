@@ -31,6 +31,7 @@ public class StatsUpgrade : MonoBehaviour
     {
         SetUpUpgradeGroup();
         LoadLevelFromData(PlayerDatas.Instance.GetStats);
+        //LoadExperienceAndGemFromData(PlayerDatas.Instance.GetStats);
     }
 
     public void AddExp(float expAmount)
@@ -45,6 +46,7 @@ public class StatsUpgrade : MonoBehaviour
             currentExp = expOverflow;
         }
         if(upgradeMenu == null) { Debug.LogWarning("Missing upgradeMenu Reference, please assign it in StatsUpgrade"); return; }
+        PlayerDatas.Instance.OnExperienceAndGemChange(currentExp, maxExpPerLevel, gemCount, this);
         upgradeMenu.UpdateExpBar(currentExp, maxExpPerLevel);
     }
 
@@ -123,6 +125,13 @@ public class StatsUpgrade : MonoBehaviour
                 upgradeGroupDic[pair.Key] = group;
             }
         }
+    }
+
+    public void LoadExperienceAndGemFromData(CharacterStatsData stats)
+    {
+        this.gemCount = stats.GemCount;
+        this.currentExp = stats.currentExperienceAmount;
+        this.maxExpPerLevel = stats.maxExperienceAmount;
     }
 }
 

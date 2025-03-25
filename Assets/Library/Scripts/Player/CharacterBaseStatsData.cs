@@ -22,6 +22,9 @@ public class CharacterBaseStatsData
     public int PlayerMaxLevel;
     public int PlayerCurrentLevel;
 
+    public float CurrentExperienceAmount;
+    public float maxExperienceAmount;
+
     //Buff - NOTE: WILL NOT BE USE
     public float HealthBuff;
     public float SpeedBuff;

@@ -85,6 +85,12 @@ public class PlayerDatas
         statsUpgrade?.LoadLevelFromData(playerStatsData.GetCharacterStats);
     }
 
+    public void OnExperienceAndGemChange(float currentExperienceAmount, float maxExperienceAmount, int GemCount, StatsUpgrade statsUpgrade)
+    {
+        playerStatsData.GetCharacterStats.OnGemAndExperienceUpgrade(currentExperienceAmount, maxExperienceAmount, GemCount);
+        SaveGame();
+    }
+
     public void OnPlayerHealthChange(int Health)
     {
         playerStatsData.GetCharacterStats.OnPlayerHealthChange(Health);
