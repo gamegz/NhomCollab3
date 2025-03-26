@@ -9,9 +9,15 @@ public class GameManager : MonoBehaviour
     //this class to do bunch of stuff but the important part for stats is in Awake method
     float previousTimeScale = 1f;
     bool isPaused;
+    private bool isMapOpen;
     public Transform SpawnPoint;
+    public Transform nextSpawnPoint;
     public List <GameObject> RespawnPoint = new List <GameObject>();
     [HideInInspector] public GameState state;
+    [SerializeField] private Camera playerCamera;
+    //[SerializeField] private Camera overviewCamera;
+    private bool inOverviewMode = false;
+    private GameObject currentRespawnPoint;
     public static GameManager Instance { get; private set; }
     private void Awake()
     {
@@ -59,7 +65,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void TogglePause()
+    public void TogglePause()
     {
         if (Time.timeScale > 0)
         {
@@ -85,15 +91,21 @@ public class GameManager : MonoBehaviour
 
     public Transform GetSpawnPoint()
     {
-        Transform spawnPoint = GameObject.FindWithTag("SpawnPoint").transform;
-        if (spawnPoint != null)
+        //Transform spawnPoint = GameObject.FindWithTag("SpawnPoint").transform;
+        //if (SpawnPoint != null)
+        //{
+        //    return SpawnPoint;
+        //}
+        //else
+        //{
+        //    return null;
+        //}
+
+        if (RespawnPoint.Count > 0)
         {
-            return spawnPoint;
+            return RespawnPoint[RespawnPoint.Count - 1].transform; // Last claimed respawn point
         }
-        else
-        {
-            return null;
-        }
+        return SpawnPoint;
     }
 
     public void ChangeScene(string sceneName)
@@ -113,6 +125,52 @@ public class GameManager : MonoBehaviour
         {
             RespawnPoint.Add(respawnPoimt);
         }
+    }
+
+    public List<GameObject> GetClaimedRespawnPoints()
+    {
+        
+        Debug.Log("Claimed Respawn Points: " + RespawnPoint.Count);
+        foreach (var point in RespawnPoint)
+        {
+            Debug.Log("Respawn Point: " + point.name);
+        }
+        return RespawnPoint;
+    }
+
+    public void SetCurrentRespawnPoint(GameObject respawnPoint)
+    {
+        currentRespawnPoint = respawnPoint;
+        Debug.Log(currentRespawnPoint.name);
+    }
+
+    public GameObject GetCurrentRespawnPoint()
+    {
+        return currentRespawnPoint;
+    }
+
+    public void EnterOverviewMode()
+    {
+        if(inOverviewMode) return;
+        Debug.LogWarning("asdasdasdfsdfgdfgfggnfhjfffhff");
+        inOverviewMode = true;
+        UIManager.Instance.ShowRespawnSelectionUI();
+    }
+
+    public void ExitOverviewMode()
+    {
+        inOverviewMode = false;
+    }
+
+    public void TeleportPlayerToRespawnPoint(GameObject targetPoint)
+    {
+        if(targetPoint == currentRespawnPoint) return;
+
+        Vector3 teleportPosition = targetPoint.transform.position + new Vector3(0, 1f, 0);
+        PlayerBase.Instance.transform.position = teleportPosition;
+
+        SetCurrentRespawnPoint(targetPoint);
+        ExitOverviewMode();
     }
 
     private void OnApplicationQuit()

@@ -152,16 +152,24 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         //        interactable?.OnInteract();
         //    }
         //}
-        Debug.Log($"Interact pressed. Current Interactable: {currentInteractable}");
+        Debug.LogWarning($"Interact pressed. Current Interactable: {currentInteractable}");
 
         if (currentInteractable == null)
         {
             Debug.LogWarning("No interactable object found!");
-            return;
+            //return;
         }
 
+        GameObject interactableObject = (currentInteractable as MonoBehaviour)?.gameObject;
         if (context.performed)
         {
+            if (interactableObject != null && GameManager.Instance.isRespawnPointClaimed(interactableObject))
+            {
+                Debug.Log("Opening Respawn Selection UI...");
+                GameManager.Instance.EnterOverviewMode();
+                //return;
+            }
+
             Debug.Log("asdasdasd");
             isHolding = true;
             holdCounter = 0f;
@@ -216,6 +224,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
             currentInteractable.OnInteract();
         }
         playerUI.ToggleInstructionText(false);
+        playerUI.ToggleInstructionText2(true);
         isHolding = false;
     }
 
@@ -408,15 +417,19 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
 
     private void OnTriggerEnter(Collider other)
     {
-
         if(other.TryGetComponent<IInteractable>(out var interactable))
         {
             currentInteractable = interactable;
+            GameManager.Instance.SetCurrentRespawnPoint(other.gameObject);
+            Debug.Log($"Interactable object detected: {other.gameObject.name}");
             if (GameManager.Instance.isRespawnPointClaimed(other.gameObject))
             {
+                playerUI.ToggleInstructionText2(true);
+                
                 return;
             }
             playerUI.ToggleInstructionText(true);
+            
         }
     }
 
@@ -425,6 +438,8 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         if(other.GetComponent<IInteractable>() == currentInteractable)
         {
             playerUI.ToggleInstructionText(false);
+            playerUI.ToggleInstructionText2(false);
+            UIManager.Instance.CloseRespawnSelectionUI();
             currentInteractable = null;
         }
     }
