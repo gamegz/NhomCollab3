@@ -228,6 +228,11 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         isHolding = false;
     }
 
+    public void UpdatePlayerHealth()
+    {
+        HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, PlayerDatas.Instance.GetStats.healthStat, SetHealthState(HealthStates.INCREASED));
+    }
+
     public void TakeDamage(int modifiedHealth) // ACTIVATED WHEN TAKING DAMAGE
     {
         if(!canBeDamage) { return; }

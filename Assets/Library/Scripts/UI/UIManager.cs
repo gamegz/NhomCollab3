@@ -11,7 +11,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button CloseUpgradePanelButton;
     [SerializeField] private Button CloseMerchantPanelButton;
     [SerializeField] private Button UpgradeButton;
-    [SerializeField] private Button BackToHomeLobbyButton;
+    [SerializeField] private Button BackToMenuButton;
+    [SerializeField] private Button retryButton;
     [SerializeField] private GameObject UpgradePanel;
     [SerializeField] private GameObject MerchantPanel;
     [SerializeField] private TextMeshProUGUI HPText;
@@ -39,8 +40,9 @@ public class UIManager : MonoBehaviour
         CloseUpgradePanelButton?.onClick.AddListener(() => OnEnableUpgradePanel(false));
         CloseMerchantPanelButton?.onClick.AddListener(() => OnEnableMerchantPanel(false));
         UpgradeButton?.onClick.AddListener(OnUpgradeCharacter);
-        BackToHomeLobbyButton?.onClick.AddListener(() => BackToHomeLobby());
+        BackToMenuButton?.onClick.AddListener(() => BackToMenu());
         closeButtonForRespawnPanle?.onClick.AddListener(CloseRespawnSelectionUI);
+        retryButton?.onClick.AddListener(ChooseRespawnLocation);
     }
 
 
@@ -78,6 +80,25 @@ public class UIManager : MonoBehaviour
         GameManager.Instance.UpdateGameState(GameState.HOMELOBBY);
     }
 
+    private void BackToMenu()
+    {
+        GameManager.Instance.UpdateGameState(GameState.MENU);
+    }
+
+    private void ChooseRespawnLocation()
+    {
+        GameManager.Instance.EnterOverviewMode();
+        LosePanel.SetActive(false);
+        PlayerDatas.Instance.LoadGame();
+        StartCoroutine(WaitToUpdatePlayerHealthAfterRetry());
+    }
+
+    private IEnumerator WaitToUpdatePlayerHealthAfterRetry()
+    {
+        yield return new WaitForSeconds(0.2f);
+        PlayerBase.Instance.UpdatePlayerHealth();
+    }
+
     public void ShowRespawnSelectionUI()
     {
         List<GameObject> claimedPoints = GameManager.Instance.GetClaimedRespawnPoints();
@@ -106,7 +127,7 @@ public class UIManager : MonoBehaviour
         }
 
         respawnSelectionUI.SetActive(true);  // Show the UI
-        GameManager.Instance.TogglePause();
+        if(!GameManager.Instance.isPlayerDead) { GameManager.Instance.TogglePause(); } 
     }
 
     private void SelectRespawnPoint(GameObject respawnPoint)

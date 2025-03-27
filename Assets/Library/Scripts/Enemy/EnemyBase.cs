@@ -157,11 +157,13 @@ namespace Enemy
         private void OnEnable()
         {
             WeaponManager.OnPerformChargedATK += HitByChargedATK;
+            GameManager.OnPlayerDeathEvent += OnDeath;
         }
 
         private void OnDisable()
         {
             WeaponManager.OnPerformChargedATK -= HitByChargedATK;
+            GameManager.OnPlayerDeathEvent -= OnDeath;
         }
 
 

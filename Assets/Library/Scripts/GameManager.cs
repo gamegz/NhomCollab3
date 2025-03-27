@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -6,10 +7,11 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    public static event Action OnPlayerDeathEvent;
     //this class to do bunch of stuff but the important part for stats is in Awake method
     float previousTimeScale = 1f;
     bool isPaused;
-    private bool isMapOpen;
+    public bool isPlayerDead = false;
     public Transform SpawnPoint;
     public Transform nextSpawnPoint;
     public List <GameObject> RespawnPoint = new List <GameObject>();
@@ -55,12 +57,17 @@ public class GameManager : MonoBehaviour
         switch (newState)
         {
             case GameState.LOSE:
+                OnPlayerDeathEvent?.Invoke();
+                isPlayerDead = true;
                 TogglePause();
                 UIManager.Instance.OnEnableLosePanel();
                 break;
             case GameState.HOMELOBBY:
                 SceneManager.LoadScene("HomeRoomScene");
                 TogglePause();
+                break;
+            case GameState.MENU:
+                SceneManager.LoadScene("MainMenu");
                 break;
         }
     }
@@ -171,6 +178,8 @@ public class GameManager : MonoBehaviour
 
         SetCurrentRespawnPoint(targetPoint);
         ExitOverviewMode();
+        GameManager.Instance.isPlayerDead = false;
+        
     }
 
     private void OnApplicationQuit()
@@ -189,5 +198,6 @@ public class GameManager : MonoBehaviour
 public enum GameState
 {
     HOMELOBBY,
-    LOSE
+    LOSE,
+    MENU
 }
