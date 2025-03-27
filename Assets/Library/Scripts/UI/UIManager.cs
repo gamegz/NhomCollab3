@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
@@ -52,6 +53,7 @@ public class UIManager : MonoBehaviour
         HPText.text = "HP: " + PlayerDatas.Instance.GetStats.Health.ToString();
         MovementSpeedText.text = "Move Speed: " + PlayerDatas.Instance.GetStats.MoveSpeed.ToString();
         //FConversionRateText.text = "FConversion Rate: " + PlayerDatas.Instance.GetStats.FConversionRate.ToString();
+        
     }
 
     public void OnEnableUpgradePanel(bool isEnable)
@@ -117,7 +119,7 @@ public class UIManager : MonoBehaviour
         foreach (GameObject point in claimedPoints)
         {
             Debug.Log($"Checking Point: {point.name}, Current: {currentPoint?.name ?? "None"}");
-            if (point == currentPoint) continue;  // Skip current point
+            if (!GameManager.Instance.isPlayerDead && point == currentPoint) continue;  // Skip current point
 
             Button newButton = Instantiate(respawnButtonPrefab, buttonContainer);
             TextMeshProUGUI buttonText = newButton.GetComponentInChildren<TextMeshProUGUI>();
@@ -134,7 +136,7 @@ public class UIManager : MonoBehaviour
     {
         // Teleport the player and close UI
         GameManager.Instance.TeleportPlayerToRespawnPoint(respawnPoint);
-        GameManager.Instance.TogglePause();
+        
         CloseRespawnSelectionUI();
     }
 
@@ -142,5 +144,6 @@ public class UIManager : MonoBehaviour
     {
         respawnSelectionUI.SetActive(false);
         GameManager.Instance.ExitOverviewMode();
+        GameManager.Instance.TogglePause();
     }
 }

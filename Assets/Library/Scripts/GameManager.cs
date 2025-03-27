@@ -172,14 +172,20 @@ public class GameManager : MonoBehaviour
     public void TeleportPlayerToRespawnPoint(GameObject targetPoint)
     {
         if(targetPoint == currentRespawnPoint) return;
-
+        Debug.Log("qwyeyuiqeyuiqwq: " + targetPoint.name);
         Vector3 teleportPosition = targetPoint.transform.position + new Vector3(0, 1f, 0);
-        PlayerBase.Instance.transform.position = teleportPosition;
+        StartCoroutine(waitToTeleport(teleportPosition));
 
-        SetCurrentRespawnPoint(targetPoint);
+        //SetCurrentRespawnPoint(targetPoint);
         ExitOverviewMode();
         GameManager.Instance.isPlayerDead = false;
         
+    }
+
+    private IEnumerator waitToTeleport(Vector3 teleportPosition)
+    {
+        yield return new WaitForSeconds(0.2f);
+        PlayerBase.Instance.transform.position = teleportPosition;
     }
 
     private void OnApplicationQuit()

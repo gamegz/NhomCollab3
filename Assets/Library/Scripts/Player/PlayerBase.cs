@@ -444,7 +444,8 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         {
             playerUI.ToggleInstructionText(false);
             playerUI.ToggleInstructionText2(false);
-            UIManager.Instance.CloseRespawnSelectionUI();
+            //UIManager.Instance.CloseRespawnSelectionUI();
+            //GameManager.Instance.SetCurrentRespawnPoint(null);
             currentInteractable = null;
         }
     }
