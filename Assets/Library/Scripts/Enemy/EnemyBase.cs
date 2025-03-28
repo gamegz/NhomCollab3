@@ -4,6 +4,7 @@ using UnityEngine;
 using Enemy.statemachine;
 using Enemy.statemachine.States;
 using UnityEngine.AI;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 using System;
 
@@ -34,12 +35,12 @@ namespace Enemy
         public CapsuleCollider colliderCapsule;
         public GameObject expPrefab;
         [Space]
-        
-        
+
+
 
         //Combat
         [Header("COMBAT")]
-        [SerializeField] private int maxHealth;
+        [SerializeField] protected int maxHealth; public int MaxHealth => maxHealth;
         [HideInInspector] public int currentHealth;
         [SerializeField] private Transform _shootPoint;
         [SerializeField] private GameObject _shootProjectile;
@@ -68,7 +69,7 @@ namespace Enemy
         public float staggerThreshold;
         public float staggerTime;
         private float staggerTimeCounter;
-        private float staggerThresholdCounter;        
+        private float staggerThresholdCounter;
         public float knockbackForce = 0.0f;
         [HideInInspector] public bool isStagger = false;
         [HideInInspector] public bool isTargetInAttackRange;
@@ -94,8 +95,8 @@ namespace Enemy
         public float turnSpeed;
         [SerializeField] private float _dashDistance;
         [SerializeField] private float _dashDuration;
-        public float DashDuration { get { return _dashDuration; }}
-        public float DashDistance { get { return _dashDistance; }}
+        public float DashDuration { get { return _dashDuration; } }
+        public float DashDistance { get { return _dashDistance; } }
 
         [HideInInspector] public float currentSpeed;
         [HideInInspector] public bool isDashing;
@@ -108,9 +109,9 @@ namespace Enemy
         public float roamCountDown;
         [Tooltip("Time to roam until check for transition")]
         public float roamDuration;
-        
 
-        
+
+
         [Header("STATEMACHINE")]
         protected EnemyStateMachine _stateMachine;
         [HideInInspector] public EnemyRoamState enemyRoamState;
@@ -125,7 +126,8 @@ namespace Enemy
         public DeathMethod deathMethod;
         
 
-        public enum EnemyState { 
+        public enum EnemyState
+        {
             Roam,
             Chase,
             Follow,
@@ -144,26 +146,42 @@ namespace Enemy
         #endregion
 
         #region DUC ANH'S VARIABLE
+        [Header("Values")]
+        [SerializeField] private float timeLimitUI; // To calculate when enemy's health will fade away in the scene
+        [SerializeField] private bool isBoss = false;
+        [SerializeField] private float damageSmoothTime = 0.5f;
+        private float damageTakenVelocity = 0f;
+
         private bool isChargedATK = false;
+
+
+
+        [Header("References")]
+        [SerializeField] private Image healthBackgroundUI = null; // To provide background for the enemy's health
+        [SerializeField] private Image enemyHealthUI = null; // To display enemy's health
+        [SerializeField] private Image enemyDamageReceivedUI = null;
+
+
+        [Header("Coroutines")]
+        private Coroutine uiAppearCoroutine = null;
         #endregion 
 
 
         public virtual void Awake()
-        {                     
+        {
             SetUpStateMachine();
 
         }
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             WeaponManager.OnPerformChargedATK += HitByChargedATK;
         }
 
-        private void OnDisable()
+        protected virtual void OnDisable()
         {
             WeaponManager.OnPerformChargedATK -= HitByChargedATK;
         }
-
 
         public virtual void SetUpStateMachine()
         {
@@ -192,19 +210,24 @@ namespace Enemy
             attackCoolDownCount = attackCooldown;
             staggerTimeCounter = staggerTime;
 
-            if(!isTokenUser) { isTokenOwner = true; }
+            if (!isTokenUser) { isTokenOwner = true; }
             attackCollider.gameObject.GetComponent<EnemyAttackCollider>()._damage = attackDamage;
+
+
+            if (!isBoss) healthBackgroundUI.gameObject.SetActive(false);
         }
 
         public virtual void UpdateLogic()
         {
-            if(isStagger) { return; }
-            if(isStunned) { return; }
+            if (isBoss) UpdateEnemyHealthBar(GetCurrentEnemyHealthProgress());
+
+            if (isStagger) { return; }
+            if (isStunned) { return; }
             distanceToPlayer = Vector3.Distance(transform.position, playerRef.transform.position);
             UpdateAttackCoolDown();
             _stateMachine.UpdateState();
             enemyNavAgent.isStopped = !canMove;
-            enemyNavAgent.speed = currentSpeed/10;
+            enemyNavAgent.speed = currentSpeed / 10;
             if (canTurn)
             {
                 LookAtTarget(transform, playerRef.transform, turnSpeed);
@@ -227,24 +250,27 @@ namespace Enemy
         public void UpdateLogicByPlayerDistance()
         {
             //if(this == null) { return; }
-            distanceToPlayer = Vector3.Distance(transform.position, playerRef.transform.position);
+            distanceToPlayer = GetDistanceToPLayerIgnoreY();
             isTargetInAttackRange = (distanceToPlayer <= attackRange) ? true : false;
         }
 
-        private void UpdateAttackCoolDown() {
-        
+        private void UpdateAttackCoolDown()
+        {
+
             //note: call OnDonwAttack when finish attack
-            if (!canAttack) {
+            if (!canAttack)
+            {
                 attackCoolDownCount -= Time.deltaTime;
                 canAttack = (attackCoolDownCount <= 0) ? true : false;
             }
         }  //Allow attack again after a delay
 
-        public void OnDoneAttack() {   
+        public void OnDoneAttack()
+        {
             attackCoolDownCount = attackCooldown;
             canAttack = false;
             isAttacking = false;
-            if(!isTokenUser) { return; }
+            if (!isTokenUser) { return; }
             isTokenOwner = false;
         } //Call when finish attack
 
@@ -314,7 +340,7 @@ namespace Enemy
             //    dashPoint = hit.position;
             //    dashDistance = Vector2.Distance(enemyPos, new Vector2(hit.position.x, hit.position.z)) - colliderCapsule.radius * 2;
             //}
-            
+
 
             //Recaculate dash duration when distance is changed
             //DashTime *= (DashDistance / dashDistance);
@@ -322,7 +348,7 @@ namespace Enemy
             //Dashing
             float dashSpeed = dashDistance / DashTime;
             float dashDurationCount = DashTime;
-            
+
 
             while (dashDurationCount > 0)
             {
@@ -399,7 +425,7 @@ namespace Enemy
             {
                 enemyProjectile.SetUp(direction, this.gameObject);
             }
-            
+
         }
 
         public void ShootRayAttack(Vector3 direction)
@@ -408,7 +434,7 @@ namespace Enemy
 
             RaycastHit hit;
 
-            if(Physics.Raycast(transform.position, direction, out hit, Mathf.Infinity, layerData.hostileTargetLayer))
+            if (Physics.Raycast(transform.position, direction, out hit, Mathf.Infinity, layerData.hostileTargetLayer))
             {
                 if (hit.transform.gameObject.CompareTag("Player"))
                 {
@@ -424,6 +450,17 @@ namespace Enemy
             isChargedATK = hit;
         }
 
+
+        public float GetCurrentEnemyHealthProgress()
+        {
+            return Mathf.InverseLerp(0f, maxHealth, currentHealth);
+        }
+
+        private void UpdateEnemyHealthBar(float value)
+        {
+            enemyHealthUI.fillAmount = value;
+            enemyDamageReceivedUI.fillAmount = Mathf.SmoothDamp(enemyDamageReceivedUI.fillAmount, value, ref damageTakenVelocity, damageSmoothTime);
+        }
 
         public virtual void TakeDamage(int damage)
         {
@@ -448,7 +485,53 @@ namespace Enemy
                 StartCoroutine(Stun());
             }
 
+            if (isBoss) return;
+
+            if (uiAppearCoroutine != null)
+            {
+                StopCoroutine(uiAppearCoroutine);
+                uiAppearCoroutine = null;
+            }
+
+            if (uiAppearCoroutine == null)
+                uiAppearCoroutine = StartCoroutine(UIAppear(timeLimitUI));
         }
+
+
+        private IEnumerator UIAppear(float timeLimit)
+        {
+            float tempTime = timeLimit;
+            healthBackgroundUI.gameObject.SetActive(true);
+
+            while (tempTime > 0)
+            {
+                tempTime -= Time.deltaTime;
+                healthBackgroundUI.transform.rotation = Camera.main.transform.rotation;
+
+                UpdateEnemyHealthBar(GetCurrentEnemyHealthProgress());
+                yield return null;
+            }
+
+            enemyDamageReceivedUI.fillAmount = GetCurrentEnemyHealthProgress();
+            healthBackgroundUI.gameObject.SetActive(false);
+            uiAppearCoroutine = null;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -499,7 +582,7 @@ namespace Enemy
 
         private IEnumerator Stun()
         {
-            if(hasBeenStunned) { yield return null; }
+            if (hasBeenStunned) { yield return null; }
             isStunned = true;
             hasBeenStunned = true;
             canMove = false;
@@ -544,7 +627,8 @@ namespace Enemy
         public Vector3 GetRandomNavmeshLocationAroundSelf(float range)
         {
             //Get a random point in a circle around target
-            Vector3 randomDirection = transform.position + Random.insideUnitSphere * range;
+            Vector3 randDir = new Vector3(Random.insideUnitCircle.x, 0, Random.insideUnitCircle.y).normalized;
+            Vector3 randomDirection = transform.position + randDir * range;
             NavMeshHit hitData;
             Vector3 finalPosition = Vector3.zero;
             if (NavMesh.SamplePosition(randomDirection, out hitData, range, 1))
@@ -583,7 +667,7 @@ namespace Enemy
         public Vector3 GetOffSetDirection(Vector3 direction, float offSetDegrees)
         {
             return direction = Quaternion.Euler(0, Random.Range(-offSetDegrees, offSetDegrees), 0) * direction;
-            
+
         }
 
         public Vector3 GetPerpendicularDirectionToPLayerTarget(bool toRight = true)

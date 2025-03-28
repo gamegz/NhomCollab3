@@ -40,7 +40,7 @@ namespace Enemy.statemachine.States
             innitTimeCount = innitTime;
             if(bossEnemy.GetDistanceToPLayerIgnoreY() < retreatDistance)
             {
-                bossEnemy.InnitDash(bossEnemy.GetDirectionIgnoreY(bossEnemy.transform.position, bossEnemy.playerRef.transform.position), 25, 1f);
+                bossEnemy.InnitDash(-bossEnemy.GetDirectionIgnoreY(bossEnemy.transform.position, bossEnemy.playerRef.transform.position), 10, 0.5f);
             }
         }
        
@@ -55,21 +55,32 @@ namespace Enemy.statemachine.States
 
             if (finishAttack)
             {
-                int randNum = Random.Range(1, 5);
-                switch (randNum)
+                bossEnemy.attackMoveNum--;
+                if (bossEnemy.attackMoveNum <= 0)
                 {
-                    case 1:
-                        _ownerStateMachine.SwitchState(bossEnemy.enemyAttackMelee1);
-                        break;
-                    case 2:
-                        _ownerStateMachine.SwitchState(bossEnemy.enemyAttackMelee2);
-                        break;
-                    case 3:
-                        _ownerStateMachine.SwitchState(bossEnemy.enemyAttackSummon1);
-                        break;
-                    case 4:
-                        _ownerStateMachine.SwitchState(bossEnemy.enemyAttackSummon2);
-                        break;
+                    _ownerStateMachine.SwitchState(bossEnemy.bossRoamState);
+                    return;
+                }
+
+                //Transition
+                float chanceNum = Random.value;
+                int ranNum = Random.Range(1, 3);
+                if (chanceNum <= 0.35f)
+                {
+                    _ownerStateMachine.SwitchState(bossEnemy.enemyAttackMelee1);
+
+                }
+                else
+                {
+                    switch (ranNum)
+                    {
+                        case 1:
+                            _ownerStateMachine.SwitchState(bossEnemy.enemyAttackSummon1);
+                            break;
+                        case 2:
+                            _ownerStateMachine.SwitchState(bossEnemy.enemyAttackSummon2);
+                            break;
+                    }
                 }
             }
 
@@ -79,15 +90,15 @@ namespace Enemy.statemachine.States
                 return;
             }
 
-            if (bossEnemy.GetDistanceToPLayerIgnoreY() < retreatDistance)
-            {
-                bossEnemy.UpdateLogicByPlayerDistance();
-                Vector3 retreatPos = _enemy.GetNavLocationByDirection(_enemy.transform.position,
-                                                                      _enemy.transform.position - _enemy.playerRef.transform.position,
-                                                                      4, 1);
-                bossEnemy.enemyNavAgent.SetDestination(retreatPos);
+            //if (bossEnemy.GetDistanceToPLayerIgnoreY() < retreatDistance)
+            //{
+            //    bossEnemy.UpdateLogicByPlayerDistance();
+            //    Vector3 retreatPos = _enemy.GetNavLocationByDirection(_enemy.transform.position,
+            //                                                          _enemy.transform.position - _enemy.playerRef.transform.position,
+            //                                                          4, 1);
+            //    bossEnemy.enemyNavAgent.SetDestination(retreatPos);
 
-            }
+            //}
 
             if (!doAttack)
             {

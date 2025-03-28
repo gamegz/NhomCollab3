@@ -58,18 +58,31 @@ namespace Enemy.statemachine.States
                 exitStateTimeCount -= Time.deltaTime;
                 if (exitStateTimeCount > 0) { return; }
 
-                int randNum = Random.Range(1, 4);
-                switch (randNum)
+                bossEnemy.attackMoveNum--;
+                if (bossEnemy.attackMoveNum <= 0)
                 {
-                    case 1:
-                        _ownerStateMachine.SwitchState(bossEnemy.enemyAttackMelee1);
-                        break;
-                    case 2:
-                        _ownerStateMachine.SwitchState(bossEnemy.enemyAttackMelee2);
-                        break;
-                    case 3:
-                        _ownerStateMachine.SwitchState(bossEnemy.enemyAttackSummon1);
-                        break;
+                    _ownerStateMachine.SwitchState(bossEnemy.bossRoamState);
+                    return;
+                }
+
+                float chanceNum = Random.value;
+                int ranNum = Random.Range(1, 3);
+                if (chanceNum <= 0.2f)
+                {
+                    switch (ranNum)
+                    {
+                        case 1:
+                            _ownerStateMachine.SwitchState(bossEnemy.enemyAttackSummon1);
+                            break;
+                        case 2:
+                            _ownerStateMachine.SwitchState(bossEnemy.enemyAttackRanged1);
+                            break;
+                    }
+
+                }
+                else
+                {
+                    _ownerStateMachine.SwitchState(bossEnemy.enemyAttackMelee1);
                 }
             }
 

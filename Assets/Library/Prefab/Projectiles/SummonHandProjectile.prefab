@@ -134,11 +134,11 @@ MonoBehaviour:
   _bulletSpeed: 5
   _damage: 1
   _reflectedDamage: 10
-  _lifeTime: 7.5
+  _lifeTime: 6
   projectileDeflectMethod: 0
   target: {fileID: 0}
   turnSpeed: 10
-  steerCorectionSpeed: 0.5
+  steerCorectionSpeed: 0.4
   followDelayTime: 2
 --- !u!54 &2655259534588053548
 Rigidbody:

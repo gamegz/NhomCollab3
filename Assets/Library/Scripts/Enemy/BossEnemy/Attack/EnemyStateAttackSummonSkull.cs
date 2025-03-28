@@ -72,15 +72,24 @@ namespace Enemy.statemachine.States
             
             if (finishAttack)
             {
-                int randNum = Random.Range(1, 3);
-                switch (randNum)
+                bossEnemy.attackMoveNum--;
+                if (bossEnemy.attackMoveNum <= 0)
                 {
-                    case 1:
-                        _ownerStateMachine.SwitchState(bossEnemy.enemyAttackMelee2);
-                        break;
-                    case 2:
-                        _ownerStateMachine.SwitchState(bossEnemy.enemyAttackMelee2);
-                        break;
+                    _ownerStateMachine.SwitchState(bossEnemy.bossRoamState);
+                    return;
+                }
+
+                //Transition
+                float chanceNum = Random.value;
+                //int ranNum = Random.Range(1, 3);
+                if (chanceNum <= 0.35f)
+                {
+                    _ownerStateMachine.SwitchState(bossEnemy.enemyAttackMelee1);
+
+                }
+                else
+                {
+                    _ownerStateMachine.SwitchState(bossEnemy.enemyAttackMelee2);
                 }
             }
         }
