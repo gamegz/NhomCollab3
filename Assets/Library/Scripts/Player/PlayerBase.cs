@@ -2,6 +2,7 @@ using Enemy;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -15,7 +16,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     PlayerInput _playerInput;
     [SerializeField] private LayerMask interactLayerMask;
     private Transform _playerTransform;
-
+    private Rigidbody rb;
     // System Action Stuff
     public delegate void OnHealthModified(float modifiedHealth, float maxHealth, bool? increased);
     public static event OnHealthModified HealthModified;    
@@ -73,6 +74,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     {
         _playerInput = new PlayerInput();
         _playerTransform = GetComponent<Transform>();
+        rb = GetComponent<Rigidbody>();
 
         for(int i = 0; i < Object.FindObjectsOfType<PlayerBase>().Length; i++)
         {
@@ -392,6 +394,8 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
 
     private void OnPlayerDeath()
     {
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
         GameManager.Instance.UpdateGameState(GameState.LOSE);
     }
 
@@ -417,6 +421,26 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         else
         {
             //Debug.Log("haha");
+        }
+    }
+
+    public void Teleport(Vector3 position, Quaternion targetRotation)
+    {
+        if(rb != null)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            Debug.Log("bruhhhh: " + rb.isKinematic);
+        }
+
+        //transform.SetPositionAndRotation(position, targetRotation);
+        rb.position = position;
+        //transform.position = position;
+        if (rb != null)
+        {
+            Debug.Log("hahhhh???: " + rb.isKinematic);
+            rb.detectCollisions = true;
+            rb.velocity = Vector3.zero;
         }
     }
 

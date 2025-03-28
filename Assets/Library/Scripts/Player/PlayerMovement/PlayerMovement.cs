@@ -188,7 +188,10 @@ public class PlayerMovement : MonoBehaviour
     #region MOVEMENT
     private void MoveCharacter()
     {
-
+        if (GameManager.Instance.isPlayerDead || GameManager.Instance.inOverviewMode)
+        {
+            return;
+        }
         if (isRecovering || isAttacking)
         {
             _rb.velocity = new Vector3(0, _rb.velocity.y, 0);
@@ -484,6 +487,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void LookAtMousePosition() //Look at player mouse position
     {
+        if (GameManager.Instance.isPlayerDead || GameManager.Instance.inOverviewMode)
+        {
+            return; // Stop rotation while teleport menu or death screen is open
+        }
         Vector3 _mousePos = Input.mousePosition;
         Vector3 CharacterPos = _camera.WorldToScreenPoint(transform.position);
         Vector3 dir = _mousePos - CharacterPos;

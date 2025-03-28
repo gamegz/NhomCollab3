@@ -136,7 +136,6 @@ public class UIManager : MonoBehaviour
     {
         // Teleport the player and close UI
         GameManager.Instance.TeleportPlayerToRespawnPoint(respawnPoint);
-        
         CloseRespawnSelectionUI();
     }
 

@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public GameState state;
     [SerializeField] private Camera playerCamera;
     //[SerializeField] private Camera overviewCamera;
-    private bool inOverviewMode = false;
+    [HideInInspector] public bool inOverviewMode = false;
     private GameObject currentRespawnPoint;
     public static GameManager Instance { get; private set; }
     private void Awake()
@@ -159,7 +159,6 @@ public class GameManager : MonoBehaviour
     public void EnterOverviewMode()
     {
         if(inOverviewMode) return;
-        Debug.LogWarning("asdasdasdfsdfgdfgfggnfhjfffhff");
         inOverviewMode = true;
         UIManager.Instance.ShowRespawnSelectionUI();
     }
@@ -171,21 +170,13 @@ public class GameManager : MonoBehaviour
 
     public void TeleportPlayerToRespawnPoint(GameObject targetPoint)
     {
-        if(targetPoint == currentRespawnPoint) return;
-        Debug.Log("qwyeyuiqeyuiqwq: " + targetPoint.name);
-        Vector3 teleportPosition = targetPoint.transform.position + new Vector3(0, 1f, 0);
-        StartCoroutine(waitToTeleport(teleportPosition));
-
-        //SetCurrentRespawnPoint(targetPoint);
+        if (targetPoint == currentRespawnPoint) return;
+        
+        Vector3 teleportPosition = targetPoint.transform.position + new Vector3(0, 1f, 0); 
+        PlayerBase.Instance.Teleport(teleportPosition, targetPoint.transform.rotation);
         ExitOverviewMode();
         GameManager.Instance.isPlayerDead = false;
         
-    }
-
-    private IEnumerator waitToTeleport(Vector3 teleportPosition)
-    {
-        yield return new WaitForSeconds(0.2f);
-        PlayerBase.Instance.transform.position = teleportPosition;
     }
 
     private void OnApplicationQuit()
