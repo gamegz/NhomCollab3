@@ -215,7 +215,6 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         {
             currentInteractable.OnInteract();
         }
-        playerUI.ToggleInstructionText(false);
         isHolding = false;
     }
 
@@ -416,7 +415,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
             {
                 return;
             }
-            playerUI.ToggleInstructionText(true);
+            //playerUI.ToggleInstructionText(true);
         }
     }
 
@@ -424,7 +423,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     {
         if(other.GetComponent<IInteractable>() == currentInteractable)
         {
-            playerUI.ToggleInstructionText(false);
+            //playerUI.ToggleInstructionText(false);
             currentInteractable = null;
         }
     }

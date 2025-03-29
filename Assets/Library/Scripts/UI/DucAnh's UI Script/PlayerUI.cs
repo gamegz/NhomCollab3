@@ -51,10 +51,8 @@ public class PlayerUI : MonoBehaviour
     private Coroutine chargeATKCoroutine = null;
     private Coroutine dashIndicationCoroutine = null;
 
-
-    [Header("Dash Charge Indicator")]
-    [SerializeField] private Image dashChargeIndicator = null;
-
+    [Header("Dash Charge Restored Effect")]
+    [SerializeField] private ParticleSystem dashChargeRestoreEffect;
 
     [Header("Dash Charge Bar")]
     [SerializeField] private Image dashChargeBar;
@@ -126,8 +124,6 @@ public class PlayerUI : MonoBehaviour
 
     private void Start()
     {
-        dashChargeIndicator.gameObject.SetActive(false);
-        instructionText.SetActive(false);
         dashChargeBarWidth = dashChargeBar.GetComponent<RectTransform>().rect.width;
         dashChargeBarMainWidth = dashChargeBarMain.GetComponent<RectTransform>().rect.width;
         blackBarWidth = blackBarPrefab.GetComponent<RectTransform>().rect.width;
@@ -221,13 +217,6 @@ public class PlayerUI : MonoBehaviour
         {
             UpdateCAProgressFill(caProgress.Value);
         }
-
-
-        //float? dashChargeProgress = playerMovement?.GetDashChargeProgress();
-        //if (dashChargeProgress != null)
-        //{
-        //    UpdateDashChargeProgressFill(dashChargeProgress.Value);
-        //}
 
         xOffsetHeartValue = Screen.width * xOffsetHeartPercent;
 
@@ -450,39 +439,10 @@ public class PlayerUI : MonoBehaviour
 
     }
 
-    #region Dash Indicator
     private void DashIndicated()
     {
-        if (dashIndicationCoroutine != null)
-        {
-            StopCoroutine(dashIndicationCoroutine);
-            dashIndicationCoroutine = null;
-        }
-
-        if (dashIndicationCoroutine == null)
-            dashIndicationCoroutine = StartCoroutine(DashIndicating(dashIndicationTimer));
+        dashChargeRestoreEffect.Play();
     }
-
-
-    private IEnumerator DashIndicating(float timer)
-    {
-        dashChargeIndicator.gameObject.SetActive(true);
-        float tempTimer = timer;
-
-        // Play Dash Indicator Animation Here
-
-        while (tempTimer > 0)
-        {
-            tempTimer -= Time.deltaTime;
-
-            dashChargeIndicator.transform.rotation = Camera.main.transform.rotation;
-
-            yield return null;
-        }
-
-        dashChargeIndicator.gameObject.SetActive(false);
-    }
-    #endregion
 
     #region Dash Bar
 
@@ -553,13 +513,6 @@ public class PlayerUI : MonoBehaviour
 
     #endregion
 
-    #region InstructionText
-
-    public void ToggleInstructionText(bool onOrOff)
-    {
-        instructionText.SetActive(onOrOff);
-    }
-    #endregion
     #endregion
 
     #region UI Animation 

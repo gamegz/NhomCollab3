@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour
         {
             case GameState.LOSE:
                 TogglePause();
-                UIManager.Instance.OnEnableLosePanel();
+                //UIManager.Instance.OnEnableLosePanel();
                 break;
             case GameState.HOMELOBBY:
                 SceneManager.LoadScene("HomeRoomScene");
