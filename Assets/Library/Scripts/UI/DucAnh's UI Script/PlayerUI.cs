@@ -19,6 +19,7 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private GameObject heartContainer; // Heart's parent (to make things less messy when spawning in hearts)
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Image healBarUI;
+    [SerializeField] private GameObject instructionText;
     private List<Image> heartList = new List<Image>();
     private Image tempOverHealHeart = null;
     private TextMeshProUGUI healText;
@@ -126,7 +127,7 @@ public class PlayerUI : MonoBehaviour
     private void Start()
     {
         dashChargeIndicator.gameObject.SetActive(false);
-
+        instructionText.SetActive(false);
         dashChargeBarWidth = dashChargeBar.GetComponent<RectTransform>().rect.width;
         dashChargeBarMainWidth = dashChargeBarMain.GetComponent<RectTransform>().rect.width;
         blackBarWidth = blackBarPrefab.GetComponent<RectTransform>().rect.width;
@@ -552,6 +553,13 @@ public class PlayerUI : MonoBehaviour
 
     #endregion
 
+    #region InstructionText
+
+    public void ToggleInstructionText(bool onOrOff)
+    {
+        instructionText.SetActive(onOrOff);
+    }
+    #endregion
     #endregion
 
     #region UI Animation 

@@ -14,6 +14,7 @@ public class OneWayDoorBreakable : MonoBehaviour, IDamageable
 
     [Header("Value")]
     [SerializeField] private float health = 50f; // really niggas?
+    [SerializeField] private bool breakableOneWay = false;
     private bool hitByChargedATK = false;
 
 
@@ -26,11 +27,8 @@ public class OneWayDoorBreakable : MonoBehaviour, IDamageable
     {
         if (_breakableDoorRef == null)
             Debug.Log("BreakableDoorRef isn't assigned");
-        else _breakableDoorRef.SetActive(true);
+        else _breakableDoorRef.SetActive(true); // Use this as a method to respawn the door in the scene when the players restart an area
 
-        //if (_animatedDoorRef == null)
-        //    Debug.Log("AnimatedDoorRef isn't assigned");
-        //else _animatedDoorRef.SetActive(false);
     }
 
     private void Start()
@@ -46,18 +44,34 @@ public class OneWayDoorBreakable : MonoBehaviour, IDamageable
 
     public void TakeDamage(int damageAmount) // No need to use damageAmount for now
     {
-        if(!TargetInFront(_player.transform.position)) { return; }
-
-        _breakableDoorRef.SetActive(false);
-
-        if (destroyDoorCoroutine != null)
+        if (breakableOneWay)
         {
-            StopCoroutine(destroyDoorCoroutine);
-            destroyDoorCoroutine = null;
-        }
+            if(!TargetInFront(_player.transform.position)) { return; }
 
-        if (destroyDoorCoroutine == null)
-            destroyDoorCoroutine = StartCoroutine(DestroyDoor());
+            _breakableDoorRef.SetActive(false);
+
+            if (destroyDoorCoroutine != null)
+            {
+                StopCoroutine(destroyDoorCoroutine);
+                destroyDoorCoroutine = null;
+            }
+
+            if (destroyDoorCoroutine == null)
+                destroyDoorCoroutine = StartCoroutine(DestroyDoor());
+        }
+        else
+        {
+            _breakableDoorRef.SetActive(false);
+
+            if (destroyDoorCoroutine != null)
+            {
+                StopCoroutine(destroyDoorCoroutine);
+                destroyDoorCoroutine = null;
+            }
+
+            if (destroyDoorCoroutine == null)
+                destroyDoorCoroutine = StartCoroutine(DestroyDoor());
+        }
     }
 
     private bool TargetInFront(Vector3 target)

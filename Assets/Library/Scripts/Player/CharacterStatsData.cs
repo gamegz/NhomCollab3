@@ -22,6 +22,11 @@ public class CharacterStatsData
     public int DashChargeCurrentLevel;
     public int DashRecoveryCurrentLevel;
 
+    public float currentExperienceAmount;
+    public float maxExperienceAmount;
+    public float overflowExperience;
+    public int GemCount;
+
     public Dictionary<UpgradeType, int> upgradeLevels = new Dictionary<UpgradeType, int>();
 
     private CharacterBaseStatsData baseStats;
@@ -37,6 +42,11 @@ public class CharacterStatsData
         recoveryStat = baseStats.PlayerRecovery;
         dashChargeStat = baseStats.PlayerDashCharge;
         dashRecoveryStat = baseStats.PlayerDashRecovery;
+
+        currentExperienceAmount = baseStats.CurrentExperienceAmount;
+        maxExperienceAmount = baseStats.maxExperienceAmount;
+        GemCount = baseStats.PlayerGemCount;
+        overflowExperience = baseStats.overflowExperienceAmount;
 
         currentPlayerHealth = healthStat;  
     }
@@ -74,6 +84,13 @@ public class CharacterStatsData
                 Debug.LogWarning("Unknown UpgradeType: " + upgradeType);
                 break;
         }
+    }
+
+    public void OnGemAndExperienceUpgrade(float currentExperienceAmount, float maximumExperienceAmount, int GemCount)
+    {
+        this.currentExperienceAmount = currentExperienceAmount;
+        this.maxExperienceAmount = maximumExperienceAmount;
+        this.GemCount = GemCount;
     }
 
     public void ReassignBaseStats(CharacterBaseStatsData baseStats)

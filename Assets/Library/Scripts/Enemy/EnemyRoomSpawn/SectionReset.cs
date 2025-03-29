@@ -10,7 +10,7 @@ public class Room
     public GameObject ExitDoor;
 }
 
-public class SectionReset : MonoBehaviour
+public class SectionReset : MonoBehaviour, IInteractable
 {
     public List<Room> RoomList;
     // Start is called before the first frame update
@@ -25,31 +25,41 @@ public class SectionReset : MonoBehaviour
         
     }
 
-    private void OnTriggerEnter(Collider other)
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if(other.gameObject.tag == "Player")
+    //    {
+    //        foreach(Room room in RoomList)
+    //        {
+    //            if(room.RoomTrigger != null) 
+    //            { 
+    //                BoxCollider boxCollider = room.RoomTrigger.GetComponent<BoxCollider>();
+    //                if(boxCollider != null)
+    //                {
+    //                    boxCollider.enabled = true;
+    //                }
+    //            }
+
+    //            if(room.EntranceDoor != null)
+    //            {
+    //                room.EntranceDoor.SetActive(false);
+    //            }
+
+    //            if (room.ExitDoor != null)
+    //            {
+    //                room.ExitDoor.SetActive(true);
+    //            }
+    //        }
+    //    }
+    //}
+
+    public void OnInteract()
     {
-        if(other.gameObject.tag == "Player")
+        if (GameManager.Instance.isRespawnPointClaimed(this.gameObject))
         {
-            foreach(Room room in RoomList)
-            {
-                if(room.RoomTrigger != null) 
-                { 
-                    BoxCollider boxCollider = room.RoomTrigger.GetComponent<BoxCollider>();
-                    if(boxCollider != null)
-                    {
-                        boxCollider.enabled = true;
-                    }
-                }
-
-                if(room.EntranceDoor != null)
-                {
-                    room.EntranceDoor.SetActive(false);
-                }
-
-                if (room.ExitDoor != null)
-                {
-                    room.ExitDoor.SetActive(true);
-                }
-            }
+            return;
         }
+
+        GameManager.Instance.ClaimRespawnPoimt(this.gameObject);
     }
 }

@@ -31,6 +31,7 @@ public class StatsUpgrade : MonoBehaviour
     {
         SetUpUpgradeGroup();
         LoadLevelFromData(PlayerDatas.Instance.GetStats);
+        LoadExperienceAndGem(PlayerDatas.Instance.GetStats);
     }
 
     public void AddExp(float expAmount)
@@ -45,6 +46,7 @@ public class StatsUpgrade : MonoBehaviour
             currentExp = expOverflow;
         }
         if(upgradeMenu == null) { Debug.LogWarning("Missing upgradeMenu Reference, please assign it in StatsUpgrade"); return; }
+        PlayerDatas.Instance.OnExperienceAndGemChange(currentExp, maxExpPerLevel, gemCount, this);
         upgradeMenu.UpdateExpBar(currentExp, maxExpPerLevel);
     }
 
@@ -57,6 +59,10 @@ public class StatsUpgrade : MonoBehaviour
         recoveryUpgradeGroup.baseStat = PlayerDatas.Instance.GetStats.BaseRecovery;
         dashChargeUpgradeGroup.baseStat = PlayerDatas.Instance.GetStats.BaseMaxDashCharge;
         dashRecoveryUpgradeGroup.baseStat = PlayerDatas.Instance.GetStats.BaseDashRecovery;
+        maxExpPerLevel = PlayerDatas.Instance.GetStats.maxExperienceAmount;
+        currentExp = PlayerDatas.Instance.GetStats.currentExperienceAmount;
+        GemCount = PlayerDatas.Instance.GetStats.GemCount;
+        expOverflow = PlayerDatas.Instance.GetStats.overflowExperience;
         Debug.Log(speedUpgradeGroup.baseStat);
         //Create dic
         upgradeGroupDic = new Dictionary<UpgradeType, UpgradeGroup>
@@ -123,6 +129,18 @@ public class StatsUpgrade : MonoBehaviour
                 upgradeGroupDic[pair.Key] = group;
             }
         }
+    }
+
+    public void LoadExperienceAndGem(CharacterStatsData stats)
+    {
+        if(stats != null)
+        {
+            maxExpPerLevel = stats.maxExperienceAmount;
+            GemCount = stats.GemCount;
+            currentExp = stats.currentExperienceAmount;
+        }
+        Debug.Log("GemCountInStats: " + GemCount);
+        upgradeMenu.UpdateExpBar(currentExp, maxExpPerLevel);
     }
 }
 
