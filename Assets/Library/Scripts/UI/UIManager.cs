@@ -74,7 +74,17 @@ public class UIManager : MonoBehaviour
     public void OnEnableLosePanel()
     {
         if(LosePanel == null) { return; }
+        List<GameObject> claimedPoints = GameManager.Instance.GetClaimedRespawnPoints();
         LosePanel.SetActive(true);
+        
+        if (claimedPoints.Count > 0)
+        {
+            retryButton.gameObject.SetActive(true);
+        }
+        else
+        {
+            retryButton.gameObject.SetActive(false);
+        }
     }
 
     public void BackToHomeLobby()
@@ -99,6 +109,7 @@ public class UIManager : MonoBehaviour
     {
         yield return new WaitForSeconds(0.2f);
         PlayerBase.Instance.UpdatePlayerHealth();
+        Debug.Log(PlayerDatas.Instance.GetStats.currentPlayerHealth);
     }
 
     public void ShowRespawnSelectionUI()
@@ -127,7 +138,6 @@ public class UIManager : MonoBehaviour
             newButton.onClick.AddListener(() => SelectRespawnPoint(point));
             respawnButtons[point] = newButton;
         }
-
         respawnSelectionUI.SetActive(true);  // Show the UI
         if(!GameManager.Instance.isPlayerDead) { GameManager.Instance.TogglePause(); } 
     }

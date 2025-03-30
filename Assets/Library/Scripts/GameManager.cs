@@ -57,8 +57,8 @@ public class GameManager : MonoBehaviour
         switch (newState)
         {
             case GameState.LOSE:
-                OnPlayerDeathEvent?.Invoke();
                 isPlayerDead = true;
+                OnPlayerDeathEvent?.Invoke();
                 TogglePause();
                 UIManager.Instance.OnEnableLosePanel();
                 break;
@@ -148,7 +148,7 @@ public class GameManager : MonoBehaviour
     public void SetCurrentRespawnPoint(GameObject respawnPoint)
     {
         currentRespawnPoint = respawnPoint;
-        Debug.Log(currentRespawnPoint.name);
+        //Debug.Log(currentRespawnPoint.name);
     }
 
     public GameObject GetCurrentRespawnPoint()

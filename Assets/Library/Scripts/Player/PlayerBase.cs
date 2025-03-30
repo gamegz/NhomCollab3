@@ -105,14 +105,15 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
 
     private void Start()
     {
+        HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, PlayerDatas.Instance.GetStats.healthStat, SetHealthState(HealthStates.INCREASED));
         playerUI = GetComponent<PlayerUI>();
         PlayerDatas.Instance.GetStats.currentPlayerHealth = PlayerDatas.Instance.GetStats.healthStat;
         invulTimeAfterDamagedCount = invulTimeAfterDamaged;
-        HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, PlayerDatas.Instance.GetStats.healthStat, SetHealthState(HealthStates.INCREASED));
+        
     }
 
     private void OnEnable()
-    {
+    { 
         SceneManager.sceneLoaded += OnSceneLoaded;
 
         _playerInput.Player.OnInteract.performed += OnInteractWithObject;
@@ -145,15 +146,6 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
 
     private void OnInteractWithObject(InputAction.CallbackContext context)
     {
-        //if(context.performed)
-        //{
-        //    Collider[] colliders = Physics.OverlapSphere(_playerTransform.position, 0.5f, interactLayerMask);
-        //    foreach (Collider collide in colliders)
-        //    {
-        //        IInteractable interactable = collide.GetComponent<IInteractable>();
-        //        interactable?.OnInteract();
-        //    }
-        //}
         Debug.LogWarning($"Interact pressed. Current Interactable: {currentInteractable}");
 
         if (currentInteractable == null)
@@ -416,12 +408,13 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         Transform spawnPoint = GameManager.Instance.GetSpawnPoint();
         if (spawnPoint != null)
         {
-            transform.position = spawnPoint.position;
+            rb.position = spawnPoint.position;
         }
         else
         {
             //Debug.Log("haha");
         }
+        
     }
 
     public void Teleport(Vector3 position, Quaternion targetRotation)
@@ -430,7 +423,6 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         {
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
-            Debug.Log("bruhhhh: " + rb.isKinematic);
         }
 
         //transform.SetPositionAndRotation(position, targetRotation);
@@ -438,7 +430,6 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         //transform.position = position;
         if (rb != null)
         {
-            Debug.Log("hahhhh???: " + rb.isKinematic);
             rb.detectCollisions = true;
             rb.velocity = Vector3.zero;
         }
@@ -468,6 +459,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         {
             playerUI.ToggleInstructionText(false);
             playerUI.ToggleInstructionText2(false);
+            GameManager.Instance.SetCurrentRespawnPoint(null);
             //UIManager.Instance.CloseRespawnSelectionUI();
             //GameManager.Instance.SetCurrentRespawnPoint(null);
             currentInteractable = null;

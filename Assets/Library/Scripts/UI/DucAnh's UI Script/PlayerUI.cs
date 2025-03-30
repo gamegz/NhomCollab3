@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UnityEngine.SceneManagement;
 
 
 public class PlayerUI : MonoBehaviour
@@ -235,7 +236,6 @@ public class PlayerUI : MonoBehaviour
 
     }
 
-
     #region UI Functions
     private void UpdateHBProgressFill(float value)
     {
@@ -367,7 +367,6 @@ public class PlayerUI : MonoBehaviour
 
                     Image tempHeart = Instantiate(playerHeart, spawnPos, Quaternion.identity, heartContainer.transform);
                     heartList.Add(tempHeart);
-
                     while (tempHeart.transform.localScale != orgHeartScale)
                     {
                         tempHeart.transform.localScale = Vector3.SmoothDamp(tempHeart.transform.localScale, orgHeartScale, ref currentVel, 0.0125f);

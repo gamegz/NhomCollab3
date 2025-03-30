@@ -534,6 +534,11 @@ namespace Enemy
             ExpOrb expOrb = expObj.GetComponent<ExpOrb>();
             if(expOrb == null || playerRef == null || playerStatsRef == null || expObj == null) { Debug.LogWarning("missing Reference");  return; } 
             expOrb.SetExp(_dropValue, playerStatsRef, playerRef);
+            if (GameManager.Instance.isPlayerDead) 
+            {
+                Debug.Log("PlayerDie");
+                Destroy(expObj); 
+            }
             OnEnemyDeaths?.Invoke(this);
             OnEnemyDeathsEvent?.Invoke(this);
             Destroy(gameObject);

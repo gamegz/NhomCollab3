@@ -2927,14 +2927,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyTypes:
-  - enemyPrefab: {fileID: 440009634707048635, guid: b6bfdf53b69907f41a6aea326282d473,
+  - enemyPrefab: {fileID: 658246089199424761, guid: b16bf4a18fef4004f90a263a09cc453d,
       type: 3}
     spawnPercent: 100
   spawnPos:
   - {fileID: 1268438721}
   - {fileID: 261592172}
   setAmountOfWave: 1
-  amountOfEnemyPerWave: 1
+  amountOfEnemyPerWave: 2
   roomLock: {fileID: 2034802758}
 --- !u!1 &336483315
 GameObject:
