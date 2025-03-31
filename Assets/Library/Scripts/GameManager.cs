@@ -24,8 +24,6 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         PlayerDatas.Instance.LoadGame();
-        PlayerDatas.Instance.GetStats.currentPlayerHealth = PlayerDatas.Instance.GetStats.Health;
-        //Rigidbody rb = PlayerBase.Instance.GetComponent<Rigidbody>();
         if (Instance == null)
         {
             Instance = this;

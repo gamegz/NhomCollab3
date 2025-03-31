@@ -17,6 +17,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     [SerializeField] private LayerMask interactLayerMask;
     private Transform _playerTransform;
     private Rigidbody rb;
+    [HideInInspector] public float currentPlayerHealth;
     // System Action Stuff
     public delegate void OnHealthModified(float modifiedHealth, float maxHealth, bool? increased);
     public static event OnHealthModified HealthModified;    
@@ -105,11 +106,10 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
 
     private void Start()
     {
+        //PlayerDatas.Instance.GetStats.currentPlayerHealth = PlayerDatas.Instance.GetStats.healthStat;
         HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, PlayerDatas.Instance.GetStats.healthStat, SetHealthState(HealthStates.INCREASED));
         playerUI = GetComponent<PlayerUI>();
-        PlayerDatas.Instance.GetStats.currentPlayerHealth = PlayerDatas.Instance.GetStats.healthStat;
         invulTimeAfterDamagedCount = invulTimeAfterDamaged;
-        
     }
 
     private void OnEnable()
@@ -256,7 +256,8 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
                 overHealReady = false;
             }
             
-            PlayerDatas.Instance.OnPlayerHealthChange(modifiedHealth);
+            //PlayerDatas.Instance.OnPlayerHealthChange(modifiedHealth);
+            PlayerDatas.Instance.GetStats.currentPlayerHealth -= modifiedHealth;
 
             HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, PlayerDatas.Instance.GetStats.healthStat, SetHealthState(HealthStates.DECREASED));
         }
@@ -409,6 +410,8 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         if (spawnPoint != null)
         {
             rb.position = spawnPoint.position;
+            PlayerDatas.Instance.LoadGame();
+            UpdatePlayerHealth();
         }
         else
         {

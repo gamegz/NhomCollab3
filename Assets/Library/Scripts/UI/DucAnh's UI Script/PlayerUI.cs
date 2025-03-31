@@ -367,11 +367,12 @@ public class PlayerUI : MonoBehaviour
 
                     Image tempHeart = Instantiate(playerHeart, spawnPos, Quaternion.identity, heartContainer.transform);
                     heartList.Add(tempHeart);
-                    while (tempHeart.transform.localScale != orgHeartScale)
-                    {
-                        tempHeart.transform.localScale = Vector3.SmoothDamp(tempHeart.transform.localScale, orgHeartScale, ref currentVel, 0.0125f);
-                        yield return null;
-                    }
+                    //while (tempHeart.transform.localScale != orgHeartScale)
+                    //{
+                    //    tempHeart.transform.localScale = Vector3.SmoothDamp(tempHeart.transform.localScale, orgHeartScale, ref currentVel, 0.0125f);
+                    //    yield return null;
+                    //}
+                    tempHeart.transform.localScale = orgHeartScale;
                 }
             }
         }
