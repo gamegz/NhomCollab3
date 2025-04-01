@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2453536066126411609}
   - component: {fileID: 3294406002721219510}
   - component: {fileID: 5944576346371721226}
-  - component: {fileID: 4527936132518307152}
+  - component: {fileID: 7068042736143467304}
   m_Layer: 0
   m_Name: Cube (1)
   m_TagString: Untagged
@@ -323,7 +323,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 7186
+  m_VersionIndex: 7189
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -427,7 +427,7 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
---- !u!114 &4527936132518307152
+--- !u!114 &7068042736143467304
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -436,7 +436,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 13945230077043152}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4eb4b507ff52e40f58f68c2065e32636, type: 3}
+  m_Script: {fileID: 11500000, guid: 57444c075000242ea99e263cee940de2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   manageVisibility: 1
@@ -620,7 +620,7 @@ GameObject:
   - component: {fileID: 1769503995497330891}
   - component: {fileID: 6093156154313083034}
   - component: {fileID: 2406521712436569994}
-  - component: {fileID: 4252583364038393981}
+  - component: {fileID: 3890217489469791345}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -929,7 +929,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 7186
+  m_VersionIndex: 7189
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -1033,7 +1033,7 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
---- !u!114 &4252583364038393981
+--- !u!114 &3890217489469791345
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1042,7 +1042,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2542744079815075533}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4eb4b507ff52e40f58f68c2065e32636, type: 3}
+  m_Script: {fileID: 11500000, guid: 57444c075000242ea99e263cee940de2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   manageVisibility: 1
