@@ -167,9 +167,13 @@ public class GameManager : MonoBehaviour
         
         Vector3 teleportPosition = targetPoint.transform.position + new Vector3(0, 1f, 0); 
         PlayerBase.Instance.Teleport(teleportPosition, targetPoint.transform.rotation);
+        SectionReset sectionReset = targetPoint.GetComponent<SectionReset>();
+        if (sectionReset != null)
+        {
+            sectionReset.ResetRoomAfterTeleport();
+        }
         ExitOverviewMode();
         GameManager.Instance.isPlayerDead = false;
-        
     }
 
     private void OnApplicationQuit()

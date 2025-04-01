@@ -43,7 +43,7 @@ public class UIManager : MonoBehaviour
         UpgradeButton?.onClick.AddListener(OnUpgradeCharacter);
         BackToMenuButton?.onClick.AddListener(() => BackToMenu());
         closeButtonForRespawnPanle?.onClick.AddListener(CloseRespawnSelectionUI);
-        retryButton?.onClick.AddListener(ChooseRespawnLocation);
+        retryButton?.onClick.AddListener(Retry);
     }
 
 
@@ -97,19 +97,27 @@ public class UIManager : MonoBehaviour
         GameManager.Instance.UpdateGameState(GameState.MENU);
     }
 
-    private void ChooseRespawnLocation()
+    private void Retry()
     {
-        GameManager.Instance.EnterOverviewMode();
+        //GameManager.Instance.EnterOverviewMode();
         LosePanel.SetActive(false);
         PlayerDatas.Instance.LoadGame();
+        PlayerDatas.Instance.GetStats.currentPlayerHealth = PlayerDatas.Instance.GetStats.Health;
+        PlayerDatas.Instance.SaveGame();
+        List<GameObject> claimedPoints = GameManager.Instance.GetClaimedRespawnPoints();
+        if (claimedPoints.Count > 0)
+        {
+            GameObject latestRespawnPoint = claimedPoints[claimedPoints.Count - 1]; 
+            GameManager.Instance.TeleportPlayerToRespawnPoint(latestRespawnPoint);
+        }
         StartCoroutine(WaitToUpdatePlayerHealthAfterRetry());
+        GameManager.Instance.TogglePause();
     }
 
     private IEnumerator WaitToUpdatePlayerHealthAfterRetry()
     {
         yield return new WaitForSeconds(0.2f);
         PlayerBase.Instance.UpdatePlayerHealth();
-        Debug.Log(PlayerDatas.Instance.GetStats.currentPlayerHealth);
     }
 
     public void ShowRespawnSelectionUI()

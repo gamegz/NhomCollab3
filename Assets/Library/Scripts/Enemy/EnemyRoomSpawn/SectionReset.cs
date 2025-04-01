@@ -53,6 +53,31 @@ public class SectionReset : MonoBehaviour, IInteractable
     //    }
     //}
 
+    public void ResetRoomAfterTeleport()
+    {
+        foreach (Room room in RoomList)
+        {
+            if (room.RoomTrigger != null)
+            {
+                BoxCollider boxCollider = room.RoomTrigger.GetComponent<BoxCollider>();
+                if (boxCollider != null)
+                {
+                    boxCollider.enabled = true;
+                }
+            }
+
+            if (room.EntranceDoor != null)
+            {
+                room.EntranceDoor.SetActive(false);
+            }
+
+            if (room.ExitDoor != null)
+            {
+                room.ExitDoor.SetActive(true);
+            }
+        }
+    }
+
     public void OnInteract()
     {
         if (GameManager.Instance.isRespawnPointClaimed(this.gameObject))
