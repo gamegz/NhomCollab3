@@ -101,16 +101,6 @@ public class GameManager : MonoBehaviour
 
     public Transform GetSpawnPoint()
     {
-        //Transform spawnPoint = GameObject.FindWithTag("SpawnPoint").transform;
-        //if (SpawnPoint != null)
-        //{
-        //    return SpawnPoint;
-        //}
-        //else
-        //{
-        //    return null;
-        //}
-
         if (RespawnPoint.Count > 0)
         {
             return RespawnPoint[RespawnPoint.Count - 1].transform; // Last claimed respawn point
