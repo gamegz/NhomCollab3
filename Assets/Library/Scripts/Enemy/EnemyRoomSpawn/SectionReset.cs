@@ -27,20 +27,20 @@ public class SectionReset : MonoBehaviour, IInteractable
 
     //private void OnTriggerEnter(Collider other)
     //{
-    //    if(other.gameObject.tag == "Player")
+    //    if (other.gameObject.tag == "Player")
     //    {
-    //        foreach(Room room in RoomList)
+    //        foreach (Room room in RoomList)
     //        {
-    //            if(room.RoomTrigger != null) 
-    //            { 
+    //            if (room.RoomTrigger != null)
+    //            {
     //                BoxCollider boxCollider = room.RoomTrigger.GetComponent<BoxCollider>();
-    //                if(boxCollider != null)
+    //                if (boxCollider != null)
     //                {
     //                    boxCollider.enabled = true;
     //                }
     //            }
 
-    //            if(room.EntranceDoor != null)
+    //            if (room.EntranceDoor != null)
     //            {
     //                room.EntranceDoor.SetActive(false);
     //            }

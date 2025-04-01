@@ -24,6 +24,11 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         PlayerDatas.Instance.LoadGame();
+        if(PlayerDatas.Instance.GetStats.currentPlayerHealth <= 0)
+        {
+            PlayerDatas.Instance.GetStats.currentPlayerHealth = PlayerDatas.Instance.GetStats.Health;
+            PlayerDatas.Instance.SaveGame();
+        }
         if (Instance == null)
         {
             Instance = this;

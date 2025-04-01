@@ -23,6 +23,11 @@ public class ExpOrb : MonoBehaviour
         
     }
 
+    private void OnDestroy()
+    {
+        transform.DOKill();
+    }
+
     private void StartFloatingAnimation()
     {
         transform.DOMoveY(transform.position.y + 0.3f, 1f)

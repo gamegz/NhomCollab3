@@ -428,9 +428,8 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
             rb.angularVelocity = Vector3.zero;
         }
 
-        //transform.SetPositionAndRotation(position, targetRotation);
         rb.position = position;
-        //transform.position = position;
+
         if (rb != null)
         {
             rb.detectCollisions = true;
@@ -463,8 +462,6 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
             playerUI.ToggleInstructionText(false);
             playerUI.ToggleInstructionText2(false);
             GameManager.Instance.SetCurrentRespawnPoint(null);
-            //UIManager.Instance.CloseRespawnSelectionUI();
-            //GameManager.Instance.SetCurrentRespawnPoint(null);
             currentInteractable = null;
         }
     }
