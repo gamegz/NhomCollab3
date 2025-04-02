@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 3378682781908025875}
   - component: {fileID: 7164694740209637840}
   - component: {fileID: 7994516506276456401}
-  - component: {fileID: 3691248902749732932}
   m_Layer: 0
   m_Name: EA03_Environment_Road_Cobble_01a_LOD2
   m_TagString: Untagged
@@ -84,27 +83,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &3691248902749732932
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 170103324090270950}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 5.236187, y: 1.758348, z: 0.56202304}
-  m_Center: {x: -0.054582357, y: -0.1300304, z: -0.11157322}
 --- !u!1 &457722527346041091
 GameObject:
   m_ObjectHideFlags: 0
@@ -131,14 +109,14 @@ Transform:
   m_GameObject: {fileID: 457722527346041091}
   m_LocalRotation: {x: 0.0011208946, y: 0.36571315, z: -0.0004404363, w: 0.9307268}
   m_LocalPosition: {x: -28.58, y: 4, z: -42.12}
-  m_LocalScale: {x: 1.1, y: 1.1, z: 1.1}
+  m_LocalScale: {x: 1.1, y: 1.1000001, z: 1.1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6465625893272334099}
   - {fileID: 6331968757979635510}
   - {fileID: 3378682781908025875}
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0.138, y: 42.903, z: 0}
 --- !u!205 &835756156296346126
 LODGroup:
