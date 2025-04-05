@@ -33,7 +33,7 @@ Transform:
   - {fileID: 6885785620478325803}
   - {fileID: 1985425306957347940}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!205 &4409522204759848366
 LODGroup:
