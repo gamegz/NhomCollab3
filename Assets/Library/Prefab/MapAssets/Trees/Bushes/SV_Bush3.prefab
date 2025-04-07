@@ -93,6 +93,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8864239604486127039}
   - component: {fileID: 8514938380632266928}
+  - component: {fileID: 6437487513463173110}
   m_Layer: 0
   m_Name: SV_Bush3
   m_TagString: Untagged
@@ -117,7 +118,7 @@ Transform:
   - {fileID: 2289686586574304809}
   - {fileID: 1898159003411334389}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!205 &8514938380632266928
 LODGroup:
@@ -150,6 +151,27 @@ LODGroup:
     renderers:
     - renderer: {fileID: 7872795186597598751}
   m_Enabled: 1
+--- !u!65 &6437487513463173110
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3382224521264207830}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2, y: 5.35, z: 2}
+  m_Center: {x: 0, y: 2.5, z: 0}
 --- !u!1 &4576275118480474548
 GameObject:
   m_ObjectHideFlags: 0
@@ -161,7 +183,6 @@ GameObject:
   - component: {fileID: 1898159003411334389}
   - component: {fileID: 4770859945160505011}
   - component: {fileID: 7872795186597598751}
-  - component: {fileID: 7150670550437465905}
   m_Layer: 0
   m_Name: EA03_Nature_Bush_01c_LOD3
   m_TagString: Untagged
@@ -234,27 +255,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &7150670550437465905
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4576275118480474548}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2.6268034, y: 3.9595325, z: 2.4712362}
-  m_Center: {x: -0.013519168, y: 1.9551166, z: -0.009513378}
 --- !u!1 &4910394890535312125
 GameObject:
   m_ObjectHideFlags: 0

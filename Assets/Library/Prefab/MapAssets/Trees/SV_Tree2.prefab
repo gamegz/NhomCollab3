@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 167964577443929548}
   - component: {fileID: 4330713726874141825}
   - component: {fileID: 6284543062693610983}
-  - component: {fileID: 8486996657041562293}
   m_Layer: 0
   m_Name: EA03_Nature_Tree_02b_LOD0
   m_TagString: Untagged
@@ -84,29 +83,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &8486996657041562293
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1381647150850852626}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.17
-  m_Height: 11.541714
-  m_Direction: 1
-  m_Center: {x: -0.05271103, y: 5.767373, z: 0.1}
 --- !u!1 &4074008584509098727
 GameObject:
   m_ObjectHideFlags: 0
@@ -200,6 +176,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2307227094794641147}
   - component: {fileID: 2579261068120960819}
+  - component: {fileID: 7292082852108860172}
   m_Layer: 0
   m_Name: SV_Tree2
   m_TagString: Untagged
@@ -224,7 +201,7 @@ Transform:
   - {fileID: 776716233503756651}
   - {fileID: 9188553997646556261}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!205 &2579261068120960819
 LODGroup:
@@ -257,6 +234,27 @@ LODGroup:
     renderers:
     - renderer: {fileID: 1991398994458295783}
   m_Enabled: 1
+--- !u!65 &7292082852108860172
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4993201162658663509}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 11, z: 1}
+  m_Center: {x: 0, y: 5.64, z: 0.11}
 --- !u!1 &7385472038948935638
 GameObject:
   m_ObjectHideFlags: 0

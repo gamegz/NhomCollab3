@@ -93,6 +93,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8846021926315769101}
   - component: {fileID: 1460964414651214944}
+  - component: {fileID: 6710979039634967782}
   m_Layer: 0
   m_Name: SV_Tree3
   m_TagString: Untagged
@@ -116,7 +117,7 @@ Transform:
   - {fileID: 6772792982521432614}
   - {fileID: 4770411068304516080}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!205 &1460964414651214944
 LODGroup:
@@ -145,6 +146,27 @@ LODGroup:
     renderers:
     - renderer: {fileID: 3888074441723537528}
   m_Enabled: 1
+--- !u!65 &6710979039634967782
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4859208668044903488}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.25, y: 10, z: 1.25}
+  m_Center: {x: 0.15, y: 4.57, z: -0.12}
 --- !u!1 &6703693106143123525
 GameObject:
   m_ObjectHideFlags: 0
