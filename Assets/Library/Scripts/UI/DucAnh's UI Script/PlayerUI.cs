@@ -126,7 +126,7 @@ public class PlayerUI : MonoBehaviour
 
     private void Start()
     {
-        dashChargeIndicator.gameObject.SetActive(false);
+        //dashChargeIndicator.gameObject.SetActive(false);
         instructionText.SetActive(false);
         instructionText2.SetActive(false);
         dashChargeBarWidth = dashChargeBar.GetComponent<RectTransform>().rect.width;
