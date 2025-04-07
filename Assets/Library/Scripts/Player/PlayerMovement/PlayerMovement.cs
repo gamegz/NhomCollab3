@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using DG.Tweening;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -73,8 +72,9 @@ public class PlayerMovement : MonoBehaviour
     private float tempCharge = 0f;
     Quaternion _initialRotation;
 
-
-
+    [Header("CharacterRotation")]
+    [SerializeField] private bool allow8DirectionWalk;
+    [SerializeField] private float rotateSpeed;
 
     private void Awake()
     {
@@ -142,7 +142,10 @@ public class PlayerMovement : MonoBehaviour
         if (isParrying) return;
         if (isDashing) return;
         if (isAttacking) return;
-        LookAtMousePosition();
+        if (!allow8DirectionWalk)
+        {
+            LookAtMousePosition();
+        }
         MoveCharacter();
     }
 
@@ -188,7 +191,10 @@ public class PlayerMovement : MonoBehaviour
     #region MOVEMENT
     private void MoveCharacter()
     {
-
+        if (GameManager.Instance.isPlayerDead || GameManager.Instance.inOverviewMode)
+        {
+            return;
+        }
         if (isRecovering || isAttacking)
         {
             _rb.velocity = new Vector3(0, _rb.velocity.y, 0);
@@ -199,6 +205,11 @@ public class PlayerMovement : MonoBehaviour
         var playerMovement = moveDirection * PlayerDatas.Instance.GetStats.MoveSpeed;
         playerMovement.y = _rb.velocity.y;
         _rb.velocity = playerMovement;
+        if (allow8DirectionWalk && moveDirection.sqrMagnitude > 0.001f)
+        {
+            Quaternion lookRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, lookRotation, rotateSpeed * Time.deltaTime);
+        }
         playerAnimation.Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
     }
@@ -484,6 +495,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void LookAtMousePosition() //Look at player mouse position
     {
+        if (GameManager.Instance.isPlayerDead || GameManager.Instance.inOverviewMode)
+        {
+            return; // Stop rotation while teleport menu or death screen is open
+        }
         Vector3 _mousePos = Input.mousePosition;
         Vector3 CharacterPos = _camera.WorldToScreenPoint(transform.position);
         Vector3 dir = _mousePos - CharacterPos;

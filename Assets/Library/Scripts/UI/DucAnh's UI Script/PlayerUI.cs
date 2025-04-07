@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UnityEngine.SceneManagement;
 
 
 public class PlayerUI : MonoBehaviour
@@ -20,6 +21,7 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Image healBarUI;
     [SerializeField] private GameObject instructionText;
+    [SerializeField] private GameObject instructionText2;
     private List<Image> heartList = new List<Image>();
     private Image tempOverHealHeart = null;
     private TextMeshProUGUI healText;
@@ -124,6 +126,9 @@ public class PlayerUI : MonoBehaviour
 
     private void Start()
     {
+        dashChargeIndicator.gameObject.SetActive(false);
+        instructionText.SetActive(false);
+        instructionText2.SetActive(false);
         dashChargeBarWidth = dashChargeBar.GetComponent<RectTransform>().rect.width;
         dashChargeBarMainWidth = dashChargeBarMain.GetComponent<RectTransform>().rect.width;
         blackBarWidth = blackBarPrefab.GetComponent<RectTransform>().rect.width;
@@ -221,7 +226,6 @@ public class PlayerUI : MonoBehaviour
         xOffsetHeartValue = Screen.width * xOffsetHeartPercent;
 
     }
-
 
     #region UI Functions
     private void UpdateHBProgressFill(float value)
@@ -354,12 +358,12 @@ public class PlayerUI : MonoBehaviour
 
                     Image tempHeart = Instantiate(playerHeart, spawnPos, Quaternion.identity, heartContainer.transform);
                     heartList.Add(tempHeart);
-
-                    while (tempHeart.transform.localScale != orgHeartScale)
-                    {
-                        tempHeart.transform.localScale = Vector3.SmoothDamp(tempHeart.transform.localScale, orgHeartScale, ref currentVel, 0.0125f);
-                        yield return null;
-                    }
+                    //while (tempHeart.transform.localScale != orgHeartScale)
+                    //{
+                    //    tempHeart.transform.localScale = Vector3.SmoothDamp(tempHeart.transform.localScale, orgHeartScale, ref currentVel, 0.0125f);
+                    //    yield return null;
+                    //}
+                    tempHeart.transform.localScale = orgHeartScale;
                 }
             }
         }
@@ -513,6 +517,18 @@ public class PlayerUI : MonoBehaviour
 
     #endregion
 
+    #region InstructionText
+
+    public void ToggleInstructionText(bool onOrOff)
+    {
+        instructionText.SetActive(onOrOff);
+    }
+
+    public void ToggleInstructionText2(bool onOrOff)
+    {
+        instructionText2.SetActive(onOrOff);
+    }
+    #endregion
     #endregion
 
     #region UI Animation 

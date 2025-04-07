@@ -51,6 +51,11 @@ public class CharacterStatsData
         currentPlayerHealth = healthStat;  
     }
 
+    public void ReassignHealth()
+    {
+        currentPlayerHealth = healthStat;
+    }
+
     //Change the value directly - called by StatsUpgrade script
     public void OnStatsUpgrade(UpgradeType upgradeType, float value, int level)
     {

@@ -16,7 +16,7 @@ public class MerchantUI : MonoBehaviour, IInteractable
 
     public void OnInteract()
     {
-        Debug.Log("OpenMerchant");
-        UIManager.Instance.OnEnableMerchantPanel(true);
+        //Debug.Log("OpenMerchant");
+        //UIManager.Instance.OnEnableMerchantPanel(true);
     }
 }

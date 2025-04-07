@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class WeaponManager : MonoBehaviour
@@ -78,6 +79,7 @@ public class WeaponManager : MonoBehaviour
         PlayerMovement.dashCancel += DashingToCancelAction;
         if (_currentWeapon != null)
         {
+            _currentWeapon.GetComponent<BoxCollider>().enabled = false;
             if (weaponList.Count > 0)
             {
                 Innit(weaponList[0]);
@@ -135,7 +137,7 @@ public class WeaponManager : MonoBehaviour
                 isRecovering = false;
             }
         }
-
+        
 
     }
 
@@ -198,14 +200,14 @@ public class WeaponManager : MonoBehaviour
 
     private void OnAttackInputPerform(InputAction.CallbackContext context)
     {
+        
         if (_currentWeapon == null || isRecovering)
         {
             //Debug.Log("there is currently no weapon");
             return;
         }
 
-        
-        if (!isAttack)
+        if (!isAttack && !EventSystem.current.IsPointerOverGameObject())
         {
             _startHold = true;
         }
@@ -215,8 +217,13 @@ public class WeaponManager : MonoBehaviour
 
     private void OnAttackInputEnd(InputAction.CallbackContext context) // this is Unity new input event for when the player release the mouse button
     {
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return; // Prevents player actions when clicking UI
+        }
         if (_currentWeapon != null)
         {
+            
             if (isDashingToCancelAction)
             {
                 isDashingToCancelAction = false;

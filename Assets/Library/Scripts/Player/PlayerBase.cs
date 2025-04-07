@@ -2,6 +2,7 @@ using Enemy;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -15,7 +16,8 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     PlayerInput _playerInput;
     [SerializeField] private LayerMask interactLayerMask;
     private Transform _playerTransform;
-
+    private Rigidbody rb;
+    [HideInInspector] public float currentPlayerHealth;
     // System Action Stuff
     public delegate void OnHealthModified(float modifiedHealth, float maxHealth, bool? increased);
     public static event OnHealthModified HealthModified;    
@@ -73,6 +75,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     {
         _playerInput = new PlayerInput();
         _playerTransform = GetComponent<Transform>();
+        rb = GetComponent<Rigidbody>();
 
         for(int i = 0; i < Object.FindObjectsOfType<PlayerBase>().Length; i++)
         {
@@ -103,14 +106,14 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
 
     private void Start()
     {
-        playerUI = GetComponent<PlayerUI>();
-        PlayerDatas.Instance.GetStats.currentPlayerHealth = PlayerDatas.Instance.GetStats.healthStat;
-        invulTimeAfterDamagedCount = invulTimeAfterDamaged;
+        //PlayerDatas.Instance.GetStats.currentPlayerHealth = PlayerDatas.Instance.GetStats.healthStat;
         HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, PlayerDatas.Instance.GetStats.healthStat, SetHealthState(HealthStates.INCREASED));
+        playerUI = GetComponent<PlayerUI>();
+        invulTimeAfterDamagedCount = invulTimeAfterDamaged;
     }
 
     private void OnEnable()
-    {
+    { 
         SceneManager.sceneLoaded += OnSceneLoaded;
 
         _playerInput.Player.OnInteract.performed += OnInteractWithObject;
@@ -143,25 +146,24 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
 
     private void OnInteractWithObject(InputAction.CallbackContext context)
     {
-        //if(context.performed)
-        //{
-        //    Collider[] colliders = Physics.OverlapSphere(_playerTransform.position, 0.5f, interactLayerMask);
-        //    foreach (Collider collide in colliders)
-        //    {
-        //        IInteractable interactable = collide.GetComponent<IInteractable>();
-        //        interactable?.OnInteract();
-        //    }
-        //}
-        Debug.Log($"Interact pressed. Current Interactable: {currentInteractable}");
+        Debug.LogWarning($"Interact pressed. Current Interactable: {currentInteractable}");
 
         if (currentInteractable == null)
         {
             Debug.LogWarning("No interactable object found!");
-            return;
+            //return;
         }
 
+        GameObject interactableObject = (currentInteractable as MonoBehaviour)?.gameObject;
         if (context.performed)
         {
+            if (interactableObject != null && GameManager.Instance.isRespawnPointClaimed(interactableObject))
+            {
+                Debug.Log("Opening Respawn Selection UI...");
+                GameManager.Instance.EnterOverviewMode();
+                //return;
+            }
+
             Debug.Log("asdasdasd");
             isHolding = true;
             holdCounter = 0f;
@@ -215,7 +217,14 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         {
             currentInteractable.OnInteract();
         }
+        playerUI.ToggleInstructionText(false);
+        playerUI.ToggleInstructionText2(true);
         isHolding = false;
+    }
+
+    public void UpdatePlayerHealth()
+    {
+        HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, PlayerDatas.Instance.GetStats.healthStat, SetHealthState(HealthStates.INCREASED));
     }
 
     public void TakeDamage(int modifiedHealth) // ACTIVATED WHEN TAKING DAMAGE
@@ -247,7 +256,8 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
                 overHealReady = false;
             }
             
-            PlayerDatas.Instance.OnPlayerHealthChange(modifiedHealth);
+            //PlayerDatas.Instance.OnPlayerHealthChange(modifiedHealth);
+            PlayerDatas.Instance.GetStats.currentPlayerHealth -= modifiedHealth;
 
             HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, PlayerDatas.Instance.GetStats.healthStat, SetHealthState(HealthStates.DECREASED));
         }
@@ -377,6 +387,8 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
 
     private void OnPlayerDeath()
     {
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
         GameManager.Instance.UpdateGameState(GameState.LOSE);
     }
 
@@ -397,25 +409,49 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         Transform spawnPoint = GameManager.Instance.GetSpawnPoint();
         if (spawnPoint != null)
         {
-            transform.position = spawnPoint.position;
+            rb.position = spawnPoint.position;
+            PlayerDatas.Instance.LoadGame();
+            UpdatePlayerHealth();
         }
         else
         {
             //Debug.Log("haha");
         }
+        
+    }
+
+    public void Teleport(Vector3 position, Quaternion targetRotation)
+    {
+        if(rb != null)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+
+        rb.position = position;
+
+        if (rb != null)
+        {
+            rb.detectCollisions = true;
+            rb.velocity = Vector3.zero;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-
         if(other.TryGetComponent<IInteractable>(out var interactable))
         {
             currentInteractable = interactable;
+            GameManager.Instance.SetCurrentRespawnPoint(other.gameObject);
+            Debug.Log($"Interactable object detected: {other.gameObject.name}");
             if (GameManager.Instance.isRespawnPointClaimed(other.gameObject))
             {
+                playerUI.ToggleInstructionText2(true);
+                
                 return;
             }
-            //playerUI.ToggleInstructionText(true);
+            playerUI.ToggleInstructionText(true);
+            
         }
     }
 
@@ -423,7 +459,9 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     {
         if(other.GetComponent<IInteractable>() == currentInteractable)
         {
-            //playerUI.ToggleInstructionText(false);
+            playerUI.ToggleInstructionText(false);
+            playerUI.ToggleInstructionText2(false);
+            GameManager.Instance.SetCurrentRespawnPoint(null);
             currentInteractable = null;
         }
     }

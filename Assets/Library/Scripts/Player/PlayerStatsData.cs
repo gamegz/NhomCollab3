@@ -38,4 +38,9 @@ public class PlayerStatsData
         }
         currentCharacterStats.SetBaseStat(characterStats);
     }
+
+    public void ReassignHealth()
+    {
+        currentCharacterStats.ReassignHealth();
+    }
 }

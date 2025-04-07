@@ -43,6 +43,11 @@ public class PlayerDatas
         Debug.LogWarning("Game Save: " + json);
     }
 
+    public void ReassignHealth()
+    {
+        playerStatsData.ReassignHealth();
+    }
+
     private void LoadBaseStats()
     {
         TextAsset baseStatsTextAssets = Resources.Load<TextAsset>("PlayerBaseStats");
@@ -73,6 +78,7 @@ public class PlayerDatas
             SaveGame();
         }
     }
+
 
     public CharacterStatsData GetStats => playerStatsData?.GetCharacterStats;
 
