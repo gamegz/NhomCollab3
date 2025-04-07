@@ -93,6 +93,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4447461794357828021}
   - component: {fileID: 4412123530717429244}
+  - component: {fileID: 4184423141504705890}
   m_Layer: 0
   m_Name: SV_Rocks2
   m_TagString: Untagged
@@ -116,7 +117,7 @@ Transform:
   - {fileID: 8194058887044223012}
   - {fileID: 9073363481645353450}
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!205 &4412123530717429244
 LODGroup:
@@ -145,6 +146,27 @@ LODGroup:
     renderers:
     - renderer: {fileID: 2335638595255220928}
   m_Enabled: 1
+--- !u!65 &4184423141504705890
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 823718162079741154}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 7, y: 3, z: 7}
+  m_Center: {x: 0, y: 0, z: -0.62}
 --- !u!1 &3574549458709620303
 GameObject:
   m_ObjectHideFlags: 0

@@ -176,6 +176,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3130233132288381241}
   - component: {fileID: 2945124571258720301}
+  - component: {fileID: 293900662066033841}
   m_Layer: 0
   m_Name: SV_Rock5 1
   m_TagString: Untagged
@@ -199,7 +200,7 @@ Transform:
   - {fileID: 121461962356785385}
   - {fileID: 6789323951408314166}
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!205 &2945124571258720301
 LODGroup:
@@ -228,6 +229,29 @@ LODGroup:
     renderers:
     - renderer: {fileID: 5332701735298593398}
   m_Enabled: 1
+--- !u!136 &293900662066033841
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6043621534443755435}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.32
+  m_Height: 0.7
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6746497204694678735
 GameObject:
   m_ObjectHideFlags: 0
