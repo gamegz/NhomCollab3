@@ -205,7 +205,7 @@ public class PlayerMovement : MonoBehaviour
         var playerMovement = moveDirection * PlayerDatas.Instance.GetStats.MoveSpeed;
         playerMovement.y = _rb.velocity.y;
         _rb.velocity = playerMovement;
-        if (allow8DirectionWalk)
+        if (allow8DirectionWalk && moveDirection.sqrMagnitude > 0.001f)
         {
             Quaternion lookRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, lookRotation, rotateSpeed * Time.deltaTime);

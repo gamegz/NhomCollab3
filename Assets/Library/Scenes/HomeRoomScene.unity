@@ -11589,12 +11589,12 @@ PrefabInstance:
     - target: {fileID: 8223221366024730654, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
         type: 3}
       propertyPath: rotateSpeed
-      value: 720
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 8223221366024730654, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
         type: 3}
       propertyPath: allow8DirectionWalk
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8319276657298368420, guid: 7c46ca2341b6b884e8beb0a1e95ca2e4,
         type: 3}
