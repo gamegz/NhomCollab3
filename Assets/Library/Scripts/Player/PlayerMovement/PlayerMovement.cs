@@ -28,7 +28,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 _movement;
     private bool _isOnSlope = false;
 
-    [Header("Dash Manager")]
+    [Header("Dash")]
     [SerializeField] int maxCharge = 3;
     [SerializeField] int currentCharge;
     [SerializeField] private float dashRecoverTimePerCharge = 1f;
@@ -41,18 +41,19 @@ public class PlayerMovement : MonoBehaviour
     private bool isDashing;
     private float dashRecoverTimePerChargeCount;
 
-    [Header("Parry Manager")]
-    [SerializeField] private Transform parryBoxRefPoint; // A transform point that will spawn the parry box
-    [SerializeField] private Vector3 parryBoxSize = new Vector3(1, 1, 1);
+    [Header("Parry")]
+    [Range(0, 360)]
+    [SerializeField] private int blockingAngle = 180;
+    [SerializeField] private float blockingRange = 1.5f;
     [SerializeField] private LayerMask bulletLayerMask;
-    [SerializeField] private float invulnerableTimerOrg = 0.6f;
-    [SerializeField] private float standStillTimerOrg = 1f;
+    [SerializeField] private float blockingTime = 0.6f;
+    [SerializeField] private float escapeParryTime = 0.4f;
     public static event Action OnParryStart;
     public static event Action OnParryStop;
     private bool canParry = true;
     private bool isParrying = false;
+    private bool canCancelParry;
     private Coroutine parryCoroutine;
-    private Coroutine immobileCoroutine;
 
     [Header("Animation")]
     [SerializeField] private PlayerAnimation playerAnimation;
@@ -426,69 +427,58 @@ public class PlayerMovement : MonoBehaviour
 
     private IEnumerator Parry()
     {
+        _rb.velocity = Vector3.zero;
         canParry = false;
+        canCancelParry = false;
 
         OnParryStart?.Invoke();
 
-        float elapsedInvulnerableTime = invulnerableTimerOrg;
-        float elapsedStandStillTime = standStillTimerOrg;
+        float elapsedParryTime = blockingTime;
 
-        m_PlayerBase.StartImmunityCoroutine(invulnerableTimerOrg);
+        m_PlayerBase.StartImmunityCoroutine(blockingTime);
 
         Debug.Log("Parrying");
         playerAnimation.Parry();
 
-        while (elapsedInvulnerableTime >= 0)
+        while (elapsedParryTime >= 0)
         {
-            elapsedInvulnerableTime -= Time.deltaTime;
+            elapsedParryTime -= Time.deltaTime;
 
-            Collider[] colliders = Physics.OverlapBox(parryBoxRefPoint.position, parryBoxSize / 2, transform.rotation, bulletLayerMask);
+            Collider[] targetsInRange = Physics.OverlapSphere(transform.position, blockingRange, bulletLayerMask);
 
-            if (colliders.Length > 0)
+            for (int i = 0; i < targetsInRange.Length; i++)
             {
-                for (int i = 0; i < colliders.Length; i++)
-                {
-                    GameObject actualBullet = colliders[i].transform.gameObject;
+                GameObject target = targetsInRange[i].gameObject;
+                Vector3 dirToTarget = (target.transform.position - transform.position).normalized;
 
-                    EnemyProjectile bulletScript = actualBullet.GetComponent<EnemyProjectile>();
-
-                    if (bulletScript != null)
-                    {
-                        bulletScript.ReflectBulletReverse();
-                    }
+                //Check if target in view
+                if (Vector3.Angle(transform.forward, dirToTarget) < blockingAngle / 2)
+                {                  
+                    target.GetComponent<EnemyProjectile>()?.ReflectBulletReverse();
                 }
             }
-
-            if (immobileCoroutine == null)
-                immobileCoroutine = StartCoroutine(StandStill());
 
             yield return null;
         }
 
+        canCancelParry = true;
+        _rb.velocity = Vector3.zero;
+        yield return new WaitForSeconds(escapeParryTime);
+        OnParryStop?.Invoke();
+        canParry = true;
+        parryCoroutine = null;
     }
 
     private void CancelParry()
     {
-        StopCoroutine(StandStill());
+        if(!canCancelParry) { return; }
+        if(parryCoroutine != null)
+        {
+            StopCoroutine(parryCoroutine);
+            parryCoroutine = null;
+        }
         OnParryStop?.Invoke();
-        canParry = true;
-        parryCoroutine = null;
-        immobileCoroutine = null;
-    }
-
-    private IEnumerator StandStill()
-    {
-        _rb.velocity = Vector3.zero;
-
-        yield return new WaitForSeconds(standStillTimerOrg);
-
-        OnParryStop?.Invoke();
-
-        canParry = true;
-
-        // Gotta make sure the coroutine is null to match the condition above! And also, cleans up each coroutine after each use
-        parryCoroutine = null;
-        immobileCoroutine = null;
+        canParry = true;      
     }
 
     #endregion
@@ -510,12 +500,13 @@ public class PlayerMovement : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        if (parryBoxRefPoint != null)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.matrix = Matrix4x4.TRS(parryBoxRefPoint.position, transform.rotation, Vector3.one);
-            Gizmos.DrawWireCube(Vector3.zero, parryBoxSize);
-        }
+        Gizmos.DrawWireSphere(transform.position, blockingRange);
+        //if (parryBoxRefPoint != null)
+        //{
+        //    Gizmos.color = Color.red;
+        //    Gizmos.matrix = Matrix4x4.TRS(parryBoxRefPoint.position, transform.rotation, Vector3.one);
+        //    Gizmos.DrawWireCube(Vector3.zero, parryBoxSize);
+        //}
     }
 
 }
