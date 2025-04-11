@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,16 +13,10 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private Animator healTextAnimator;
     [SerializeField] private Image innerChargeATKBarUI;
     [SerializeField] private Image outerChargeATKBarUI;
-    [SerializeField] private Transform heartSpawnPos;
-    [SerializeField] private Image overHealHeart; // Prefab reference
-    [SerializeField] private Image playerHeart; // Prefab reference
-    [SerializeField] private GameObject heartContainer; // Heart's parent (to make things less messy when spawning in hearts)
     [SerializeField] private Camera mainCamera;
-    [SerializeField] private Image healBarUI;
     [SerializeField] private GameObject instructionText;
     [SerializeField] private GameObject instructionText2;
-    private List<Image> heartList = new List<Image>();
-    private Image tempOverHealHeart = null;
+
     private TextMeshProUGUI healText;
     //[SerializeField] private TextMeshProUGUI levelText; // May or may not use in the future 
     private PlayerBase playerBase;
@@ -31,52 +24,17 @@ public class PlayerUI : MonoBehaviour
     private Color orgICABcolor; // Original Inner Charge Attack Bar Color  [UI Purpose]
     private Color orgOCABcolor; // Original Outer Charge Attack Bar Color  [UI Purpose] [THIS IS THE PARENT OF "innerChargeATKBarUI"]
     private Color orgHBColor; // Original Heal Bar Color 
-    private Color minColor = Color.red;
-    private Color maxColor = Color.green;
 
 
     [Header("Values")]
-    [SerializeField] private float xOffsetHeartPercent = 0.05f;
-    [SerializeField] private float dashIndicationTimer = 1f;
-    private float xOffsetHeartValue = 0f;
-    private Vector3 orgHeartScale = new Vector3(0.85f, 0.85f, 0.85f);
     private Vector3 orgCABarScale = new Vector3(1.25f, 4f, 1f); // Original Charged Attack Bar Scale [For any one who couldn't read]
-    //private int level = 1;
-    //private int expRequirement = 5;
-    //private int expCurrent = 0;
-    //private bool increaseReq = true;
 
-
-    [Header("Coroutine Stuff")]
-    private Coroutine heartCoroutine = null;
-    private Coroutine overHealingCoroutine = null;
+    
     private Coroutine chargeATKCoroutine = null;
-    private Coroutine dashIndicationCoroutine = null;
-
-    [Header("Dash Charge Restored Effect")]
-    [SerializeField] private ParticleSystem dashChargeRestoreEffect;
-
-    [Header("Dash Charge Bar")]
-    [SerializeField] private Image dashChargeBar;
-    [SerializeField] private Image dashChargeBarMain;
-    [SerializeField] private Image dashChargeBarMainYellow;
-    [SerializeField] private GameObject blackBarPrefab;
-    [SerializeField] private Transform blackBarContainer;
-
-    private float currentDashBarOwnedLength = 0;
-    private float totalLength = 0;
-
-    private float dashChargeBarMainWidth;
-    private float dashChargeBarWidth;
-    private float dashChargeFill = 100f;
-    private float blackBarWidth;
-
 
 
     private void Awake()
     {
-        xOffsetHeartValue = Screen.width * xOffsetHeartPercent;
-
         if (healTextAnimator == null)
             Debug.Log("There isn't any Over Heal animator");
         else
@@ -91,7 +49,6 @@ public class PlayerUI : MonoBehaviour
 
         orgICABcolor = new Color(innerChargeATKBarUI.color.r, innerChargeATKBarUI.color.g, innerChargeATKBarUI.color.b, 0f);
         orgOCABcolor = new Color(outerChargeATKBarUI.color.r, outerChargeATKBarUI.color.g, outerChargeATKBarUI.color.b, 0.5f);
-        orgHBColor = healBarUI.color;
 
         //playerHearts[playerHearts.Length - 1].transform.localScale = Vector3.zero;
 
@@ -116,11 +73,6 @@ public class PlayerUI : MonoBehaviour
         {
             Debug.Log("No main camera");
         }
-
-        if (heartSpawnPos == null)
-        {
-            Debug.Log("No heart spawn position");
-        }
     }
 
 
@@ -129,60 +81,22 @@ public class PlayerUI : MonoBehaviour
         //dashChargeIndicator.gameObject.SetActive(false);
         instructionText.SetActive(false);
         instructionText2.SetActive(false);
-        dashChargeBarWidth = dashChargeBar.GetComponent<RectTransform>().rect.width;
-        dashChargeBarMainWidth = dashChargeBarMain.GetComponent<RectTransform>().rect.width;
-        blackBarWidth = blackBarPrefab.GetComponent<RectTransform>().rect.width;
-
-        currentDashBarOwnedLength = playerMovement.GetDashRecoverTimePerCharge() * playerMovement.GetMaxCharge();
-        totalLength = currentDashBarOwnedLength;
     }
 
     private void OnEnable()
     {
-        PlayerBase.HealthModified += UpdateHealth;
-        PlayerBase.HBOverheal += OverHealingEffect;
         PlayerBase.HealReady += ReadyTextAnimation;
         PlayerBase.HealActivated += ActivatedTextAnimation;
-        PlayerMovement.dashIndicate += DashIndicated;
-
-        PlayerMovement.dashIndicate += AddDashChargeTime;
-        PlayerMovement.OnDashUsed += ReduceDashChargeTime;
-
-        PlayerMovement.dashIndicate += UpdateYellowDashBar;
-        PlayerMovement.OnDashUsed += UpdateYellowDashBar;
-
-        PlayerMovement.OnMaxChargeChanged += UpdateTotalDashBarLength;
-        PlayerMovement.OnMaxChargeChanged += UpdateBlackBarContainer;
-        PlayerMovement.OnDashRecoverTimeChanged += UpdateDashBar;
-
         WeaponManager.OnHoldChargeATK += UpdateChargeATK;
-
-
-
     }
 
     private void OnDisable()
     {
-        PlayerBase.HealthModified -= UpdateHealth;
-        PlayerBase.HBOverheal -= OverHealingEffect;
         PlayerBase.HealReady -= ReadyTextAnimation;
         PlayerBase.HealActivated -= ActivatedTextAnimation;
-        PlayerMovement.dashIndicate -= DashIndicated;
-
-        PlayerMovement.dashIndicate -= AddDashChargeTime;
-        PlayerMovement.OnDashUsed -= ReduceDashChargeTime;
-
-        PlayerMovement.dashIndicate -= UpdateYellowDashBar;
-        PlayerMovement.OnDashUsed -= UpdateYellowDashBar;
-
-        PlayerMovement.OnMaxChargeChanged -= UpdateTotalDashBarLength;
-        PlayerMovement.OnMaxChargeChanged -= UpdateBlackBarContainer;
-        PlayerMovement.OnDashRecoverTimeChanged -= UpdateDashBar;
-
         WeaponManager.OnHoldChargeATK -= UpdateChargeATK;
     }
-
-
+    
     public void AddEXP()
     {
         //expCurrent++;
@@ -205,195 +119,9 @@ public class PlayerUI : MonoBehaviour
 
         //Debug.Log(expCurrent + " / " + expRequirement + " [Level: " + level + "] ");
     }
-
-
-    private void Update()
-    {
-        //levelText.text = "LVL: " + level;
-
-        float? hbProgress = playerBase?.GetHealBarProgress();
-        if (hbProgress != null)
-        {
-            UpdateHBProgressFill(hbProgress.Value);
-        }
-
-        float? caProgress = weaponManager ? weaponManager.GetChargeATKProgress() : null;
-        if (caProgress != null)
-        {
-            UpdateCAProgressFill(caProgress.Value);
-        }
-
-        xOffsetHeartValue = Screen.width * xOffsetHeartPercent;
-
-    }
-
+    
     #region UI Functions
-    private void UpdateHBProgressFill(float value)
-    {
-        float curVelocity = 0f;
-        float tempValue = Mathf.SmoothDamp(healBarUI.fillAmount, value, ref curVelocity, 0.0075f);
-        healBarUI.fillAmount = tempValue;
-    }
-
-    private void UpdateCAProgressFill(float value)
-    {
-        Vector2 targetPosition = mainCamera.WorldToScreenPoint(this.transform.position);
-
-        float curVelocity = 0f;
-        float tempValue = Mathf.SmoothDamp(innerChargeATKBarUI.fillAmount, value, ref curVelocity, 0.0075f);
-        innerChargeATKBarUI.fillAmount = tempValue;
-
-        if (innerChargeATKBarUI.fillAmount >= 0.975f) // 1: Bar is filled 
-        {
-
-            float xRandomOffset = UnityEngine.Random.Range(Screen.width * (-0.01f), Screen.height * (0.01f)); // Bruh... I really had to put in UnityEngine before it.
-            float yRandomOffset = UnityEngine.Random.Range(Screen.height * (-0.005f), Screen.height * (0.005f));
-
-            // Scale Y offset based on screen size
-            float yOffset = Screen.height * 0.075f; // 7.5% of screen height
-            outerChargeATKBarUI.transform.position = new Vector2(targetPosition.x + xRandomOffset, (targetPosition.y + yOffset) + yRandomOffset);
-
-        }
-        else
-        {
-            // Scale Y offset based on screen size
-            float yOffset = Screen.height * 0.075f; // 7.5% of screen height
-            outerChargeATKBarUI.transform.position = new Vector2(targetPosition.x, targetPosition.y + yOffset);
-        }
-
-    }
-
-
-    private void UpdateDashChargeProgressFill(float value)
-    {
-        float curVelocity = 0f;
-        float tempValue = Mathf.SmoothDamp(dashChargeBarMain.fillAmount, value, ref curVelocity, 0.0075f);
-        dashChargeBarMain.fillAmount = tempValue;
-    }
-
-
-    private void OverHealingEffect(bool isOverHealing)
-    {
-        if (overHealingCoroutine != null)
-        {
-            StopCoroutine(overHealingCoroutine);
-            overHealingCoroutine = null;
-        }
-
-        if (overHealingCoroutine == null)
-            overHealingCoroutine = StartCoroutine(OverHealingCoroutine(isOverHealing));
-    }
-
-    private IEnumerator OverHealingCoroutine(bool isOverHealing)
-    {
-        Vector3 currentVel = Vector3.zero;
-
-        if (isOverHealing == true)
-        {
-            Vector3 spawnPos = heartList[heartList.Count - 1].transform.position + new Vector3(xOffsetHeartValue, 0f, 0f);
-
-            tempOverHealHeart = Instantiate(overHealHeart, spawnPos, Quaternion.identity, heartContainer.transform);
-
-            while (healBarUI.color != minColor)
-            {
-                healBarUI.color = Color.Lerp(minColor, maxColor, playerBase.GetHealBarProgress());
-
-                Vector3 tempScale = Vector3.SmoothDamp(tempOverHealHeart.transform.localScale, orgHeartScale, ref currentVel, 0.0125f);
-                tempOverHealHeart.transform.localScale = tempScale;
-
-                yield return null;
-            }
-
-        }
-
-        else if (isOverHealing == false)
-        {
-            healBarUI.color = orgHBColor;
-
-            //Debug.Log("Stop Over Healing.");
-
-            //Debug.Log(tempOverHealHeart.transform.localScale);
-
-            while (tempOverHealHeart.transform.localScale != Vector3.zero)
-            {
-                Vector3 tempScale = Vector3.SmoothDamp(tempOverHealHeart.transform.localScale, Vector3.zero, ref currentVel, 0.0125f);
-                tempOverHealHeart.transform.localScale = tempScale;
-
-                yield return null;
-            }
-
-            tempOverHealHeart = null; // Not affiliated with heart list for safety purpose
-        }
-
-        overHealingCoroutine = null;
-    }
-
-
-    private void UpdateHealth(float modifiedHealth, float maxHealth, bool? increased)
-    {
-        if (heartCoroutine != null)
-        {
-            StopCoroutine(heartCoroutine);
-            heartCoroutine = null;
-        }
-
-        heartCoroutine = StartCoroutine(ModifyHearts(modifiedHealth, maxHealth, increased));
-    }
-
-    private IEnumerator ModifyHearts(float modifiedHealth, float maxHealth, bool? increased)
-    {
-        Vector3 currentVel = Vector3.zero;
-
-        if (increased == true)
-        {
-            if (modifiedHealth <= maxHealth)
-            {
-                int heartsToSpawn = (int)modifiedHealth - heartList.Count;
-
-                for (int i = 0; i < heartsToSpawn; i++)
-                {
-                    Vector3 spawnPos = heartList.Count == 0
-                        ? heartSpawnPos.position // First heart at spawn position
-                        : heartList[heartList.Count - 1].transform.position + new Vector3(xOffsetHeartValue, 0, 0); // Next hearts beside the last one
-
-                    Image tempHeart = Instantiate(playerHeart, spawnPos, Quaternion.identity, heartContainer.transform);
-                    heartList.Add(tempHeart);
-                    //while (tempHeart.transform.localScale != orgHeartScale)
-                    //{
-                    //    tempHeart.transform.localScale = Vector3.SmoothDamp(tempHeart.transform.localScale, orgHeartScale, ref currentVel, 0.0125f);
-                    //    yield return null;
-                    //}
-                    tempHeart.transform.localScale = orgHeartScale;
-                }
-            }
-        }
-        else if (increased == false)
-        {
-            if (modifiedHealth >= 0 && heartList.Count > 0)
-            {
-                int heartsToRemove = heartList.Count - (int)modifiedHealth;
-
-                for (int i = 0; i < heartsToRemove; i++)
-                {
-                    Image lastHeart = heartList[heartList.Count - 1];
-
-                    while (lastHeart.transform.localScale != Vector3.zero)
-                    {
-                        lastHeart.transform.localScale = Vector3.SmoothDamp(lastHeart.transform.localScale, Vector3.zero, ref currentVel, 0.0125f);
-                        yield return null;
-                    }
-
-                    Destroy(heartList[heartList.Count - 1].gameObject);
-                    heartList.RemoveAt(heartList.Count - 1);
-                }
-            }
-        }
-
-        heartCoroutine = null;
-    }
-
-
-
+    
     private void UpdateChargeATK(bool isHolding)
     {
         if (chargeATKCoroutine != null)
@@ -442,80 +170,6 @@ public class PlayerUI : MonoBehaviour
         chargeATKCoroutine = null;
 
     }
-
-    private void DashIndicated()
-    {
-        dashChargeRestoreEffect.Play();
-    }
-
-    #region Dash Bar
-
-
-
-    private void UpdateDashBar()
-    {
-        dashChargeBarMain.fillAmount = Mathf.InverseLerp(0f, totalLength, currentDashBarOwnedLength + playerMovement.GetDashRecoverTimePerChargeCount());
-    }
-
-    private void UpdateYellowDashBar()
-    {
-        dashChargeBarMainYellow.fillAmount = Mathf.InverseLerp(0f, totalLength, currentDashBarOwnedLength);
-    }
-
-
-    private void AddDashChargeTime()
-    {
-        currentDashBarOwnedLength += playerMovement.GetDashRecoverTimePerCharge();
-    }
-
-    private void ReduceDashChargeTime()
-    {
-        currentDashBarOwnedLength -= playerMovement.GetDashRecoverTimePerCharge();
-    }
-
-    private void UpdateTotalDashBarLength()
-    {
-        totalLength = playerMovement.GetDashRecoverTimePerCharge() * playerMovement.GetMaxCharge();
-        dashChargeBarMainYellow.fillAmount = Mathf.InverseLerp(0f, totalLength, currentDashBarOwnedLength);
-    }
-
-
-
-
-
-
-
-
-    private void UpdateBlackBarContainer()
-    {
-        HorizontalLayoutGroup blackBarGroup = blackBarContainer.GetComponent<HorizontalLayoutGroup>();
-
-        foreach (Transform child in blackBarContainer)
-        {
-            Destroy(child.gameObject);
-        }
-
-        int maxDashCharge = playerMovement.GetMaxCharge();
-        blackBarGroup.spacing = (dashChargeBarWidth / maxDashCharge) - blackBarWidth;
-
-        for (int i = 0; i < maxDashCharge - 1; i++)
-        {
-            Instantiate(blackBarPrefab, blackBarContainer, false);
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-    #endregion
 
     #region InstructionText
 
