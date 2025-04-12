@@ -188,18 +188,18 @@ public class PlayerUI : MonoBehaviour
     #region UI Animation 
     private void ReadyTextAnimation(bool isReady, string displayText)
     {
-        healText.text = displayText;
+        //healText.text = displayText;
 
-        if (isReady)
-            healTextAnimator.Play("Ready Text Animation", 0); // Animator.Play(string Animation Name, Animation Layer (Base Layer = 0, ...))
-
-        else
-            healTextAnimator.Play("Not Ready Text Animation", 0);
+        // if (isReady)
+        //     healTextAnimator.Play("Ready Text Animation", 0); // Animator.Play(string Animation Name, Animation Layer (Base Layer = 0, ...))
+        //
+        // else
+        //     healTextAnimator.Play("Not Ready Text Animation", 0);
     }
 
     private void ActivatedTextAnimation()
     {
-        healTextAnimator.Play("Activated Text Animation", 0);
+        // healTextAnimator.Play("Activated Text Animation", 0);
     }
 
     #endregion

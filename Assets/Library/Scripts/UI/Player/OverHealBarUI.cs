@@ -24,6 +24,7 @@ namespace Library.Scripts.UI.Player
         private void Awake()
         {
             PlayerBase.OnOverHealValueChange += HandleOverHeal;
+            
             _originalColor = overHealFill.color;
         }
 

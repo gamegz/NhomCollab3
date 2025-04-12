@@ -104,6 +104,7 @@ GameObject:
   - component: {fileID: 4304120238582311636}
   - component: {fileID: 4790005862164640198}
   - component: {fileID: 781434266793232558}
+  - component: {fileID: 8452777465202932841}
   m_Layer: 0
   m_Name: HealthCounter
   m_TagString: Untagged
@@ -197,3 +198,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ShowMaskGraphic: 1
+--- !u!114 &8452777465202932841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4378218759659098382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89d5ed70cfc04b64b252d030b27aff99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthBarImage: {fileID: 4304120238582311636}
+  stateInvokeTest: 0
+  heartBeatScaleExpand: 1.05
+  heartBeatScaleDuration: 0.15
+  heartBeatScaleDelayPerBeat: 0.25

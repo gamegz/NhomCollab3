@@ -343,7 +343,8 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
             }
         }
         
-        OnOverHealValueChange?.Invoke(clampedHBValue, maxHBRequirement, true);
+        var value = Mathf.Clamp(currentHBProgress, 0, maxHBRequirement);
+        OnOverHealValueChange?.Invoke(value, maxHBRequirement, true);
     }
 
     private IEnumerator OverHealing()

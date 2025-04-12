@@ -104,6 +104,7 @@ GameObject:
   - component: {fileID: 24406857646150269}
   - component: {fileID: 8941033113643994228}
   - component: {fileID: 9143071950938615529}
+  - component: {fileID: 4106033676347079892}
   m_Layer: 0
   m_Name: HealthCounterOverhealed
   m_TagString: Untagged
@@ -197,3 +198,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ShowMaskGraphic: 1
+--- !u!114 &4106033676347079892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8619860139979453777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89d5ed70cfc04b64b252d030b27aff99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthBarImage: {fileID: 24406857646150269}
+  stateInvokeTest: 0
+  heartBeatScaleExpand: 1.05
+  heartBeatScaleDuration: 0.15
+  heartBeatScaleDelayPerBeat: 0.25
+  heartBeatDisableExpand: 1.1
+  heartBeatDisableExpandDuration: 0.2
+  heartBeatDisableShrinkDuration: 0.2
+  heartBeatEnableDuration: 0.2
