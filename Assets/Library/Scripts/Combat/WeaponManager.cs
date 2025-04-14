@@ -11,8 +11,14 @@ public class WeaponManager : MonoBehaviour
 
     public delegate void CurrentWeaponHandler();
     public static event CurrentWeaponHandler CurrentWeapon;
-    public static event Action<bool> OnHoldChargeATK; // Duc Anh: THIS IS FOR UI.
+
+    public delegate void OnWeaponChargingAttack(bool isHolding, float currentChargeTime, float maxChargeTime);
+    public static event OnWeaponChargingAttack OnHoldChargeATK; // Duc Anh: THIS IS FOR UI.
     public static event Action<bool> OnPerformChargedATK;
+
+    public delegate void OnWeaponCooldown(bool isCoolingDown, float currentRecoverTime, float maxRecoverTime);
+
+    public static event OnWeaponCooldown OnCoolDownState;
 
     public delegate void OnHandlingAttack(int ComboCounter);
     public static event OnHandlingAttack AttackHandle;
@@ -116,7 +122,7 @@ public class WeaponManager : MonoBehaviour
 
             if (_holdTime >= 0.2f)
             {
-                OnHoldChargeATK?.Invoke(true);
+                OnHoldChargeATK?.Invoke(true, _holdTime, _currentWeapon._weaponData.holdThreshold);
             }
         }
         
@@ -131,11 +137,16 @@ public class WeaponManager : MonoBehaviour
         
         if (isRecovering)
         {
-            recoverTimer -= Time.deltaTime;
+            OnCoolDownState?.Invoke(true, recoverTimer, recoverDuration);
+            
             if (recoverTimer <= 0f)
             {
                 isRecovering = false;
+                OnCoolDownState?.Invoke(false, recoverTimer, recoverDuration);
+                return;
             }
+            
+            recoverTimer -= Time.deltaTime;
         }
     }
 
@@ -215,7 +226,7 @@ public class WeaponManager : MonoBehaviour
 
     private void OnAttackInputEnd(InputAction.CallbackContext context) // this is Unity new input event for when the player release the mouse button
     {
-        if (EventSystem.current.IsPointerOverGameObject())
+        if (EventSystem.current.IsPointerOverGameObject() && isRecovering)
         {
             return; // Prevents player actions when clicking UI
         }
@@ -253,7 +264,6 @@ public class WeaponManager : MonoBehaviour
                 {
                     _holdTime = 0f;
                     _isAttackInputting = false;
-                    return;
                 }
         
                 _currentWeapon.OnInnitNormalAttack();
@@ -265,12 +275,9 @@ public class WeaponManager : MonoBehaviour
                     }
                     
                     comboCoroutine = StartCoroutine(ResetCombo());
-                    return;
                 }
         
                 cooldownTimer = _currentWeapon._weaponData.attackSpeed;
-                
-                
                 cooldownTimer = comboAttackSpeed;
                 comboCounter++;
                 playerAnimation.Attack(comboCounter);
@@ -290,7 +297,7 @@ public class WeaponManager : MonoBehaviour
         _holdTime = 0f;
         _isAttackInputting = false;
         _isHoldAttack = false;
-        OnHoldChargeATK?.Invoke(false);
+        OnHoldChargeATK?.Invoke(false, 0, 0);
     }
 
     private IEnumerator ResetCombo()

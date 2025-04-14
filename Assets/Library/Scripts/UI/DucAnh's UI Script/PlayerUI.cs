@@ -1,18 +1,11 @@
-using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
-using System;
-using UnityEngine.SceneManagement;
-
 
 public class PlayerUI : MonoBehaviour
 {
     [Header("Reference")]
     [SerializeField] private WeaponManager weaponManager;
     [SerializeField] private Animator healTextAnimator;
-    [SerializeField] private Image innerChargeATKBarUI;
-    [SerializeField] private Image outerChargeATKBarUI;
     [SerializeField] private Camera mainCamera;
     [SerializeField] private GameObject instructionText;
     [SerializeField] private GameObject instructionText2;
@@ -46,9 +39,6 @@ public class PlayerUI : MonoBehaviour
                 Debug.Log("Heal text wasn't assigned");
             }
         }
-
-        orgICABcolor = new Color(innerChargeATKBarUI.color.r, innerChargeATKBarUI.color.g, innerChargeATKBarUI.color.b, 0f);
-        orgOCABcolor = new Color(outerChargeATKBarUI.color.r, outerChargeATKBarUI.color.g, outerChargeATKBarUI.color.b, 0.5f);
 
         //playerHearts[playerHearts.Length - 1].transform.localScale = Vector3.zero;
 
@@ -87,14 +77,12 @@ public class PlayerUI : MonoBehaviour
     {
         PlayerBase.HealReady += ReadyTextAnimation;
         PlayerBase.HealActivated += ActivatedTextAnimation;
-        WeaponManager.OnHoldChargeATK += UpdateChargeATK;
     }
 
     private void OnDisable()
     {
         PlayerBase.HealReady -= ReadyTextAnimation;
         PlayerBase.HealActivated -= ActivatedTextAnimation;
-        WeaponManager.OnHoldChargeATK -= UpdateChargeATK;
     }
     
     public void AddEXP()
@@ -120,57 +108,6 @@ public class PlayerUI : MonoBehaviour
         //Debug.Log(expCurrent + " / " + expRequirement + " [Level: " + level + "] ");
     }
     
-    #region UI Functions
-    
-    private void UpdateChargeATK(bool isHolding)
-    {
-        if (chargeATKCoroutine != null)
-        {
-            StopCoroutine(chargeATKCoroutine);
-            chargeATKCoroutine = null;
-        }
-
-        if (chargeATKCoroutine == null)
-            chargeATKCoroutine = StartCoroutine(ChargeAttack(isHolding));
-    }
-
-    private IEnumerator ChargeAttack(bool isHolding)
-    {
-        float lerpSpeed = 2.5f;
-        Vector3 curVelocity = Vector3.zero;
-
-        while (isHolding && weaponManager.GetWeaponBaseRef() != null)
-        {
-            Color tempInnerColor = Color.Lerp(orgICABcolor, Color.red, weaponManager.GetChargeATKProgress());
-            innerChargeATKBarUI.color = tempInnerColor;
-
-            Color tempOuterColor = Color.Lerp(orgOCABcolor, Color.black, weaponManager.GetChargeATKProgress());
-            outerChargeATKBarUI.color = tempOuterColor;
-
-            Vector3 tempScale = Vector3.SmoothDamp(outerChargeATKBarUI.transform.localScale, orgCABarScale, ref curVelocity, 0.025f);
-            outerChargeATKBarUI.transform.localScale = tempScale;
-
-            yield return null;
-        }
-
-        while (!isHolding && weaponManager.GetWeaponBaseRef() != null)
-        {
-            Color tempInnerColor = Color.Lerp(innerChargeATKBarUI.color, orgICABcolor, lerpSpeed * Time.deltaTime);
-            innerChargeATKBarUI.color = tempInnerColor;
-
-            Color tempOuterColor = Color.Lerp(outerChargeATKBarUI.color, orgOCABcolor, lerpSpeed * Time.deltaTime);
-            outerChargeATKBarUI.color = tempOuterColor;
-
-            Vector3 tempScale = Vector3.SmoothDamp(outerChargeATKBarUI.transform.localScale, Vector3.zero, ref curVelocity, 0.025f);
-            outerChargeATKBarUI.transform.localScale = tempScale;
-
-            yield return null;
-        }
-
-        chargeATKCoroutine = null;
-
-    }
-
     #region InstructionText
 
     public void ToggleInstructionText(bool onOrOff)
@@ -182,7 +119,6 @@ public class PlayerUI : MonoBehaviour
     {
         instructionText2.SetActive(onOrOff);
     }
-    #endregion
     #endregion
 
     #region UI Animation 
