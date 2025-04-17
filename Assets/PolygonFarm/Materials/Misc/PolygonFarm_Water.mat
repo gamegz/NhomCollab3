@@ -32,10 +32,10 @@ Material:
     m_Ints: []
     m_Floats:
     - _DstBlend: 10
-    - _Glossiness: 0.665
-    - _Metallic: 0.13
+    - _Glossiness: 0
+    - _Metallic: 0
     - _Mode: 3
     - _ZWrite: 0
     m_Colors:
-    - _Color: {r: 0.568, g: 0.55891204, b: 0, a: 0.497}
+    - _Color: {r: 0, g: 0.92941177, b: 0.8862745, a: 0.80784315}
   m_BuildTextureStacks: []
