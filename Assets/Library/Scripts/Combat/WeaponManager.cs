@@ -61,6 +61,7 @@ public class WeaponManager : MonoBehaviour
     [SerializeField] private float recoverDuration = 2f;
     float recoverTimer = 0f;
     public bool isRecovering = false;
+    private bool _isAttacking;
 
     [Header("WeaponCollectRange")]
     [SerializeField] private float collectRange;
@@ -76,9 +77,12 @@ public class WeaponManager : MonoBehaviour
     [Header("Animation")]
     [SerializeField] private PlayerAnimation playerAnimation;
 
+    private Camera _camera; 
+
     private void Awake()
     {
         _playerInput = new PlayerInput();
+        _camera = Camera.main;
         playerTransform = transform.parent ?? transform;
         _currentWeapon = GetComponentInChildren<WeaponBase>();
         PlayerMovement.dashCancel += DashingToCancelAction;
@@ -104,7 +108,7 @@ public class WeaponManager : MonoBehaviour
 
     private void Update()
     {
-        if (_isAttackInputting && !isRecovering) // hold timer for charge attack
+        if (_isAttackInputting && !isRecovering && !_isAttacking) // hold timer for charge attack
         {
             _holdTime += Time.deltaTime;
             if (_holdTime >= _currentWeapon._weaponData.holdThreshold) 
@@ -209,6 +213,8 @@ public class WeaponManager : MonoBehaviour
 
     private void OnAttackInputPerform(InputAction.CallbackContext context)
     {
+        if (_isAttacking) return;
+        
         if (_currentWeapon == null || isRecovering)
         {
             //Debug.Log("there is currently no weapon");
@@ -226,9 +232,82 @@ public class WeaponManager : MonoBehaviour
 
     private void OnAttackInputEnd(InputAction.CallbackContext context) // this is Unity new input event for when the player release the mouse button
     {
+        StartCoroutine(AttackRoutine());
+
+        // if (EventSystem.current.IsPointerOverGameObject() && isRecovering)
+        // {
+        //     return; // Prevents player actions when clicking UI
+        // }
+        //
+        // if (_currentWeapon != null)
+        // {
+        //     if (isDashingToCancelAction)
+        //     {
+        //         isDashingToCancelAction = false;
+        //         return;
+        //     }
+        //
+        //     if (_isHoldAttack)
+        //     {
+        //         Debug.Log("ChargeAttack");
+        //         _currentWeapon.OnInnitSecondaryAttack();
+        //         AttackHandle?.Invoke(comboCounter);
+        //         cooldownTimer = _currentWeapon._weaponData.chargeAttackSpeed;
+        //
+        //         isAllowToCancelAction = false;
+        //
+        //         recoverTimer = recoverDuration;
+        //         isRecovering = true;
+        //         HandleMovementWhenRecover?.Invoke();
+        //         OnPerformChargedATK?.Invoke(true);
+        //
+        //         _isAttackInputting = false;
+        //         comboCounter = 0;
+        //     }
+        //     
+        //     else if (!hasAttacked && !isRecovering) //if going for combo just focus on this statement
+        //     {
+        //         if (isRecovering) { return; }
+        //         if (_holdTime >= 0.5f)
+        //         {
+        //             _holdTime = 0f;
+        //             _isAttackInputting = false;
+        //         }
+        //
+        //         _currentWeapon.OnInnitNormalAttack();
+        //         if (comboCounter >= maxComboCount)
+        //         {
+        //             if (comboCoroutine != null)
+        //             {
+        //                 StopCoroutine(comboCoroutine);
+        //             }
+        //             
+        //             comboCoroutine = StartCoroutine(ResetCombo());
+        //         }
+        //
+        //         cooldownTimer = _currentWeapon._weaponData.attackSpeed;
+        //         cooldownTimer = comboAttackSpeed;
+        //         comboCounter++;
+        //         playerAnimation.Attack(comboCounter);
+        //         AttackHandle?.Invoke(comboCounter);
+        //         OnPerformChargedATK?.Invoke(false);
+        //         hasAttacked = true;
+        //     }
+        //
+        //     //isAttack = true; // set the isAttack = true again so that it will start cooldown, avoid attack with no cooldown
+        //     ResetAttackState();
+        // }
+        // //_isHoldAttack = true then charge attack and set the cooldown to weapon normal/charge attack speed and then start cooldown   
+    }
+
+    private IEnumerator AttackRoutine()
+    {
+        _isAttacking = true;
+        
         if (EventSystem.current.IsPointerOverGameObject() && isRecovering)
         {
-            return; // Prevents player actions when clicking UI
+            _isAttacking = false;
+            yield break; // Prevents player actions when clicking UI
         }
         
         if (_currentWeapon != null)
@@ -236,9 +315,31 @@ public class WeaponManager : MonoBehaviour
             if (isDashingToCancelAction)
             {
                 isDashingToCancelAction = false;
-                return;
+                _isAttacking = false;
+                yield break;
             }
-        
+            
+            if (_camera)
+            {
+                var currentPos = playerTransform.position;
+                var mousePos = Input.mousePosition;
+                
+                mousePos.z = (_camera.transform.position - currentPos).magnitude;
+                var worldPos = _camera.ScreenToWorldPoint(mousePos);
+                worldPos.y = currentPos.y;
+                
+                var targetDir = (worldPos - currentPos).normalized;
+
+                var dot = Vector3.Dot(targetDir, transform.forward);
+                while (dot < 0.98f)
+                {
+                    playerTransform.rotation = 
+                        Quaternion.RotateTowards(playerTransform.rotation, Quaternion.LookRotation(targetDir, Vector3.up), 30);
+                    yield return new WaitForFixedUpdate();
+                    dot = Vector3.Dot(targetDir, transform.forward);
+                }
+            }
+
             if (_isHoldAttack)
             {
                 Debug.Log("ChargeAttack");
@@ -259,7 +360,11 @@ public class WeaponManager : MonoBehaviour
             
             else if (!hasAttacked && !isRecovering) //if going for combo just focus on this statement
             {
-                if (isRecovering) { return; }
+                if (isRecovering)
+                {
+                    _isAttacking = false;
+                    yield break;
+                }
                 if (_holdTime >= 0.5f)
                 {
                     _holdTime = 0f;
@@ -288,6 +393,7 @@ public class WeaponManager : MonoBehaviour
         
             //isAttack = true; // set the isAttack = true again so that it will start cooldown, avoid attack with no cooldown
             ResetAttackState();
+            _isAttacking = false;
         }
         //_isHoldAttack = true then charge attack and set the cooldown to weapon normal/charge attack speed and then start cooldown   
     }
