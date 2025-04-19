@@ -76,6 +76,12 @@ public class PlayerMovement : MonoBehaviour
     [Header("CharacterRotation")]
     [SerializeField] private bool allow8DirectionWalk;
     [SerializeField] private float rotateSpeed;
+    
+    // for UI 
+    public float totalDashTime { get; private set; }
+    public float CurrentCharge => currentCharge;
+    public float DashRecoverTimePerChargeCount => dashRecoverTimePerChargeCount;
+    public float DashRecoverTimePerCharge => dashRecoverTimePerCharge;
 
     private void Awake()
     {
@@ -84,6 +90,7 @@ public class PlayerMovement : MonoBehaviour
         currentCharge = maxCharge;
         m_PlayerBase = GetComponent<PlayerBase>();
         _rb = GetComponent<Rigidbody>();
+        totalDashTime = dashRecoverTimePerCharge * maxCharge;
     }
 
     private void OnEnable()

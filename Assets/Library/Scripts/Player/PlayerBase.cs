@@ -1,3 +1,4 @@
+using System;
 using Enemy;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using Object = UnityEngine.Object;
 
 public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE THE PLAYER'S RELATIONSHIP WITH OTHER SCRIPT TO PREVENT CREATING UNNECESSARY SCRIPTS [DUC ANH]
 {
@@ -31,6 +33,11 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     public static event OnHealActivated HealActivated;
     private Coroutine switchReadyTextCoroutine = null;
     #endregion
+    
+    // for UI
+    // clamped value, should update bar via tween
+    public delegate void OnOverHealChange(float currentClampedValue, float maxValue, bool shouldUpdateViaTween);
+    public static event OnOverHealChange OnOverHealValueChange; 
 
     #region Heal Bar & Over Heal Stuff
     public enum HealthStates
@@ -110,6 +117,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, PlayerDatas.Instance.GetStats.healthStat, SetHealthState(HealthStates.INCREASED));
         playerUI = GetComponent<PlayerUI>();
         invulTimeAfterDamagedCount = invulTimeAfterDamaged;
+        OnOverHealValueChange?.Invoke(clampedHBValue, maxHBRequirement, false);
     }
 
     private void OnEnable()
@@ -266,7 +274,8 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         {
             OnPlayerDeath();
         }
-
+        
+        OnOverHealValueChange?.Invoke(clampedHBValue, maxHBRequirement, true);
         damageImmuneCoroutine = StartCoroutine(CanDamageStatusCountDown(invulTimeAfterDamaged));
     }
 
@@ -333,7 +342,9 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
                 HBOverheal?.Invoke(true);
             }
         }
-
+        
+        var value = Mathf.Clamp(currentHBProgress, 0, maxHBRequirement);
+        OnOverHealValueChange?.Invoke(value, maxHBRequirement, true);
     }
 
     private IEnumerator OverHealing()
@@ -342,14 +353,12 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         {
             overHealTimer += Time.deltaTime;
 
-            if (HBIncreaseAmount < 3)
-                HBIncreaseAmount += overHealTimer / 25000;
-            
-            else
-                HBIncreaseAmount = 3;
+            if (HBIncreaseAmount < 3) HBIncreaseAmount += overHealTimer / 25000;
+            else HBIncreaseAmount = 3;
 
             clampedHBValue -= overHealTimer / 1250f;
             currentHBProgress = clampedHBValue;
+            OnOverHealValueChange?.Invoke(clampedHBValue, maxHBRequirement,false);
             yield return null;            
         }
 
