@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System;
+using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Enemy.EnemyManager
 {
@@ -14,7 +15,7 @@ namespace Enemy.EnemyManager
 	//Handle updating all enemy logic
 	public class EnemyManager : MonoBehaviour
 	{
-		public delegate void OnSpawnRequestEvent(EnemyBase enemy, Vector3 location, Quaternion rotation, Action<EnemyBase> onDeathCallBack = null);
+		public delegate void OnSpawnRequestEvent(EnemyBase enemy, Vector3 location, Quaternion rotation/*, Action<EnemyBase> onDeathCallBack = null*/);
 		public static OnSpawnRequestEvent onSpawnRequestEvent;
 
 		//public delegate void OnEnemyDeathEvent(EnemyBase enemy);
@@ -26,21 +27,28 @@ namespace Enemy.EnemyManager
 			public Quaternion spawnRotation;
 		}
 
-		private static int _maxActiveEnemy = 9;
-		private int _currentAtiveEnemy;
-
-		private static int _maxAttackToken = 3;
+		[SerializeField] private int _maxActiveEnemy = 9;
+		[SerializeField] private int _maxAttackToken = 3;
 		private int _currentAttackToken;
 
-		private List<EnemyBase> enemies;
-		private List<EnemySpawnData> enemiesSpawnOnHold;
+		private List<EnemyBase> activeEnemies = new List<EnemyBase>();
+		private List<EnemySpawnData> enemiesSpawnOnHold = new List<EnemySpawnData>();
 		private float _enemySpawnOnHoldDelay = 2;
-		private GameObject PlayerChildObject;
+		private GameObject _player;
+		StatsUpgrade _playerStatsUpgrade;
+
+		[Header("ExpPrefab")]
+		[SerializeField] private GameObject _expPrefab;
 
         private void Awake()
         {
-			enemies = FindObjectsOfType<EnemyBase>().ToList();
-			PlayerChildObject = GameObject.FindGameObjectWithTag("Player");
+			activeEnemies = FindObjectsOfType<EnemyBase>().ToList();
+			_player = GameObject.FindGameObjectWithTag("Player");
+			_playerStatsUpgrade = FindObjectOfType<StatsUpgrade>();
+			foreach(EnemyBase enemy in activeEnemies)
+            {
+				enemy.playerRef = _player;
+            }
         }
 
         private void Start()
@@ -63,10 +71,10 @@ namespace Enemy.EnemyManager
 
         private void Update()
 		{
-			if (enemies == null) { return; }
+			if (activeEnemies == null) { return; }
 
 			UpdateTokenOwner();
-			foreach (EnemyBase enemy in enemies)
+			foreach (EnemyBase enemy in activeEnemies)
 			{
 				enemy.UpdateLogic();
 				enemy.FixedUpdateLogic();
@@ -79,80 +87,76 @@ namespace Enemy.EnemyManager
 		private void UpdateTokenOwner()
         {
 			_currentAttackToken = _maxAttackToken;
-			if(enemies.Count <= _maxAttackToken)
+			if(activeEnemies.Count <= _maxAttackToken)
 			{
-				foreach (EnemyBase enemy in enemies)
+				foreach (EnemyBase enemy in activeEnemies)
 				{
 					enemy.isTokenOwner = true;
 				}
 				return; 
 			}
 
-			List<EnemyBase> enemiesInst = enemies.OrderBy(x => x.distanceToPlayer).ToList();
+			List<EnemyBase> enemiesInst = activeEnemies.OrderBy(x => x.distanceToPlayer).ToList();
 			for (int i = 0; i < enemiesInst.Count; i++)
 			{
+				//enemiesInst[i].isTokenOwner = false;
 				if (_currentAttackToken <= 0) { break; }
-				if (enemiesInst[i].isAttacking) { continue; }
-				enemiesInst[i].isTokenOwner = true;
-                _currentAttackToken--;
+				if (!enemiesInst[i].isAttacking) {
+					enemiesInst[i].isTokenOwner = true;
+					_currentAttackToken--;					
+				}
             }
         }
 
 		private void TrySpawnOnHolders()
 		{
 			//Cancel if no enemy to spawn or might exceed max active enemy
-			if (enemiesSpawnOnHold == null) { return; }
-			if (enemies.Count + 1 > _maxActiveEnemy) { return; } 
+			if (enemiesSpawnOnHold.Count <= 0) { return; }
+			if (activeEnemies.Count >= _maxActiveEnemy) { return; } 
 
 			//Spawn and remove used data in the list
 			EnemySpawnData firstEnemyData = enemiesSpawnOnHold[0];
+			enemiesSpawnOnHold.RemoveAt(0);
 			EnemyBase spawnedEnemy = Instantiate(firstEnemyData.enemyToSpawn, firstEnemyData.spawnLocation, firstEnemyData.spawnRotation);
-            AssignPlayerChildObject(spawnedEnemy);
-            enemiesSpawnOnHold.RemoveAt(0);
-			enemies.Add(spawnedEnemy);
-			_currentAtiveEnemy++;
+            spawnedEnemy.playerRef = _player;
+            spawnedEnemy.expPrefab = _expPrefab;
+            spawnedEnemy.playerStatsRef = _playerStatsUpgrade;
+            activeEnemies.Add(spawnedEnemy);
+			spawnedEnemy.OnEnemyDeaths += OnEnemyDeath;
+			Debug.Log(enemiesSpawnOnHold);
 
 		}
 
-		public void OnSpawnRequest(EnemyBase SpawnEnemy, Vector3 SpawnLocation, Quaternion SpawnRotation, Action<EnemyBase> onDeathCallBack = null)
+		public void OnSpawnRequest(EnemyBase SpawnEnemy, Vector3 SpawnLocation, Quaternion SpawnRotation)
 		{
-			if (enemiesSpawnOnHold != null) { return; } //Request denied
 			//Might exceed max active enemy, move to on hold
-			if (enemies.Count + 1 > _maxActiveEnemy)
+			if (activeEnemies.Count >= _maxActiveEnemy)
 			{
 				EnemySpawnData enemySpawnData;
 				enemySpawnData.enemyToSpawn = SpawnEnemy;
 				enemySpawnData.spawnLocation = SpawnLocation;
 				enemySpawnData.spawnRotation = SpawnRotation;
-
 				enemiesSpawnOnHold.Add(enemySpawnData);
-				return;
+                Debug.Log("Enemies spawn on hold: " + enemiesSpawnOnHold);
+                return;
 			} //Not exceed max enemies, can spawn.
 
 			EnemyBase spawnedEnemy = Instantiate(SpawnEnemy, SpawnLocation, SpawnRotation);
-            spawnedEnemy.OnEnemyDeaths += OnEnemyDeath;
-			if(onDeathCallBack != null)
-			{
-				spawnedEnemy.OnEnemyDeaths += onDeathCallBack;
-			}
-            AssignPlayerChildObject(spawnedEnemy);
-            AddActiveEnemy(spawnedEnemy);
+            spawnedEnemy.OnEnemyDeaths += OnEnemyDeath;	
+            spawnedEnemy.playerRef = _player;
+			spawnedEnemy.expPrefab = _expPrefab;
+            spawnedEnemy.playerStatsRef = _playerStatsUpgrade;
+            activeEnemies.Add(spawnedEnemy);
 		}
 
-		private void AssignPlayerChildObject(EnemyBase enemy)
-		{
-			if(PlayerChildObject != null)
-			{
-				enemy.SetPlayerChildObject(PlayerChildObject);
-			}
-		}
 
 		private void OnEnemyDeath(EnemyBase enemyref)
 		{
-			RemoveActiveEnemy(enemyref);
+			activeEnemies.Remove(enemyref);
 			enemyref.OnEnemyDeaths -= OnEnemyDeath;
             if (enemyref.isTokenOwner)
             {
+				enemyref.isTokenOwner = false;
                 _currentAttackToken++;
             }
         }
@@ -166,18 +170,6 @@ namespace Enemy.EnemyManager
                 _currentAttackToken--;
 
             }           
-        }
-
-		private void AddActiveEnemy(EnemyBase enemy)
-        {
-			enemies.Add(enemy);
-			_currentAtiveEnemy++;
-
-        }
-		private void RemoveActiveEnemy(EnemyBase enemy)
-        {
-			enemies.Remove(enemy);
-			_currentAtiveEnemy--;
         }
 
 	}

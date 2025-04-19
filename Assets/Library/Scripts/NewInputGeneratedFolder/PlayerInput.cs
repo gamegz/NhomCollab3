@@ -98,6 +98,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Parry"",
+                    ""type"": ""Button"",
+                    ""id"": ""bd72a539-a105-41fd-8ad6-02ba135de83a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -373,6 +382,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""OnInteract"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4fec9761-20da-4bfc-a7d8-d208c65fad83"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Parry"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -968,6 +988,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Player_OnPickUpWeapon = m_Player.FindAction("OnPickUpWeapon", throwIfNotFound: true);
         m_Player_OnSwitchWeapon = m_Player.FindAction("OnSwitchWeapon", throwIfNotFound: true);
         m_Player_OnInteract = m_Player.FindAction("OnInteract", throwIfNotFound: true);
+        m_Player_Parry = m_Player.FindAction("Parry", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1049,6 +1070,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_OnPickUpWeapon;
     private readonly InputAction m_Player_OnSwitchWeapon;
     private readonly InputAction m_Player_OnInteract;
+    private readonly InputAction m_Player_Parry;
     public struct PlayerActions
     {
         private @PlayerInput m_Wrapper;
@@ -1061,6 +1083,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @OnPickUpWeapon => m_Wrapper.m_Player_OnPickUpWeapon;
         public InputAction @OnSwitchWeapon => m_Wrapper.m_Player_OnSwitchWeapon;
         public InputAction @OnInteract => m_Wrapper.m_Player_OnInteract;
+        public InputAction @Parry => m_Wrapper.m_Player_Parry;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1094,6 +1117,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @OnInteract.started += instance.OnOnInteract;
             @OnInteract.performed += instance.OnOnInteract;
             @OnInteract.canceled += instance.OnOnInteract;
+            @Parry.started += instance.OnParry;
+            @Parry.performed += instance.OnParry;
+            @Parry.canceled += instance.OnParry;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -1122,6 +1148,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @OnInteract.started -= instance.OnOnInteract;
             @OnInteract.performed -= instance.OnOnInteract;
             @OnInteract.canceled -= instance.OnOnInteract;
+            @Parry.started -= instance.OnParry;
+            @Parry.performed -= instance.OnParry;
+            @Parry.canceled -= instance.OnParry;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -1312,6 +1341,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnOnPickUpWeapon(InputAction.CallbackContext context);
         void OnOnSwitchWeapon(InputAction.CallbackContext context);
         void OnOnInteract(InputAction.CallbackContext context);
+        void OnParry(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

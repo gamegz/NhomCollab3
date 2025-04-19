@@ -29,6 +29,7 @@ public class Dagger : WeaponBase
 
     private void OnTriggerEnter(Collider other)
     {
+
         #region On Damage Enemy
         // Temp solution - Please update this in feature code by creating new Interfaces
         EnemyBase enemy = other.GetComponent<EnemyBase>();
@@ -41,9 +42,9 @@ public class Dagger : WeaponBase
 
         IDamageable damagable = other.GetComponent<IDamageable>();
 
-        if (damagable != null)
+        if (damagable != null && !other.CompareTag("Player"))
         {
-            damagable.TakeDamage(_weaponData.baseWeaponDamage * PlayerDatas.Instance.GetStats.DamageModifier);
+            damagable.TakeDamage(_weaponData.baseWeaponDamage);
         }
     }
 }

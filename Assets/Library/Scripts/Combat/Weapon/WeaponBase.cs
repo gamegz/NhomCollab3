@@ -13,7 +13,6 @@ public abstract class WeaponBase : MonoBehaviour
 
     [Header("WEAPON CONFIG")] 
     public GameObject weaponModel;
-    public PlayerBase playerBase;
     [SerializeField] protected LayerMask _layerData;
     public WeaponData _weaponData; //Make an SO with all it's atributes in it (See NOTION)
     /// <summary>

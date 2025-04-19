@@ -14,14 +14,6 @@ public class EnemyAttackCollider : MonoBehaviour
         
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag(_playerTagName))
-        {
-            collision.gameObject.GetComponent<IDamageable>().TakeDamage(_damage);
-        }
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag(_playerTagName))
