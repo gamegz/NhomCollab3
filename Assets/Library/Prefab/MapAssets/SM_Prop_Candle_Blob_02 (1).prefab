@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 7483368156538934806}
   - component: {fileID: 2047100500742442356}
   - component: {fileID: 5260246085850547765}
-  - component: {fileID: 1180921249269935567}
   m_Layer: 0
   m_Name: SM_Prop_Candle_Blob_02 (1)
   m_TagString: Untagged
@@ -26,9 +25,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 298074480141050443}
-  m_LocalRotation: {x: -0, y: 0.17729016, z: -0, w: 0.98415864}
+  m_LocalRotation: {x: 0, y: 0.17729087, z: 0, w: 0.9841585}
   m_LocalPosition: {x: -92.293076, y: -28.098034, z: 80.28623}
-  m_LocalScale: {x: 23.923988, y: 3.2094133, z: 23.923988}
+  m_LocalScale: {x: 30.629883, y: 3.2094133, z: 27.029325}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -62,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e9e43f7f18e02bb40a6993e7f1cf4a53, type: 2}
+  - {fileID: 2100000, guid: 472527642e708b7428e4fd81d706d082, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -84,25 +83,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &1180921249269935567
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 298074480141050443}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 5771585886491680532, guid: 070b0f2fa90476847a358e47620bb33d, type: 2}

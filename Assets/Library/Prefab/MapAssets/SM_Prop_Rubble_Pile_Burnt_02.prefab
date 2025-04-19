@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 7330499783953557186}
   - component: {fileID: 4652860125328086097}
   - component: {fileID: 1873990874878605682}
-  - component: {fileID: 7457249096577965143}
   m_Layer: 0
   m_Name: SM_Prop_Rubble_Pile_Burnt_02
   m_TagString: Untagged
@@ -26,9 +25,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2302152171398499640}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -95.153076, y: -27.968035, z: 78.116234}
-  m_LocalScale: {x: 1.8397, y: 5.935056, z: 1.8397}
+  m_LocalScale: {x: 2.8966076, y: 3.6327453, z: 2.8966076}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -84,25 +83,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &7457249096577965143
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2302152171398499640}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 8861080314018420006, guid: d20d51b9ff45a8741a35bd1f481d94ca, type: 2}
