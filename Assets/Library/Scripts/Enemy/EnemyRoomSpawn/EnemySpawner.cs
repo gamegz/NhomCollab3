@@ -16,7 +16,14 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private List<Transform> spawnPos;
     [SerializeField] private int setAmountOfWave;
     [SerializeField] private int amountOfEnemyPerWave;
-    [SerializeField] private GameObject roomLock;
+    [SerializeField] private GameObject Door1;
+    [SerializeField] private GameObject Door2;
+    [SerializeField] private GameObject Door3;
+    [SerializeField] private GameObject Door4;
+    [SerializeField] private GameObject RoomTrigger1;
+    [SerializeField] private GameObject RoomTrigger2;
+    [SerializeField] private GameObject RoomTrigger3;
+    [SerializeField] private GameObject RoomTrigger4;
     private int _currentEnemyCount = 0;
     private int spawnedEnemies = 0;
     private int _currentWaveCount = 0;
@@ -30,6 +37,25 @@ public class EnemySpawner : MonoBehaviour
     {
         OnResetEnemyWhenEnterRoom();
         OnStartSpawning();
+        if (RoomTrigger1 != null)
+        {
+            RoomTrigger1.GetComponent<BoxCollider>().enabled = false;
+        }
+
+        if (RoomTrigger2 != null)
+        {
+            RoomTrigger2.GetComponent<BoxCollider>().enabled = false;
+        }
+        
+        if (RoomTrigger3 != null)
+        {
+            RoomTrigger3.GetComponent<BoxCollider>().enabled = false;
+        }
+
+        if (RoomTrigger4 != null)
+        {
+            RoomTrigger4.GetComponent<BoxCollider>().enabled = false;
+        }
         EnemyBase.OnEnemyDeathsEvent += OnEnemyDeath;
     }
 
@@ -94,7 +120,26 @@ public class EnemySpawner : MonoBehaviour
         {
             expOrb.AllowToMoveTowardPlayer();
         }
-        roomLock.SetActive(false);
+
+        if (Door1 != null)
+        {
+            Door1.SetActive(false);
+        }
+
+        if (Door2 != null)
+        {
+            Door2.SetActive(false);
+        }
+
+        if (Door3 != null)
+        {
+            Door3.SetActive(false);
+        }
+
+        if (Door4 != null)
+        {
+            Door4.SetActive(false);
+        }
         this.gameObject.SetActive(false);
     }
 

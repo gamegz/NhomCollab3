@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7665884219101660144}
   - component: {fileID: 5479588178001681293}
+  - component: {fileID: 4425757318308940214}
   m_Layer: 0
   m_Name: SV_EnvironmentRockBigHead1
   m_TagString: Untagged
@@ -26,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 2427934450602746255}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -70.81, y: 2.51, z: 17.06}
-  m_LocalScale: {x: 5.54916, y: 5.54916, z: 5.54916}
+  m_LocalScale: {x: 6.575698, y: 6.5756974, z: 6.575699}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2305984224905366364}
@@ -62,6 +63,27 @@ LODGroup:
     renderers:
     - renderer: {fileID: 2832277241121823324}
   m_Enabled: 1
+--- !u!65 &4425757318308940214
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2427934450602746255}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.6006178, y: 0.82, z: 0.57977045}
+  m_Center: {x: -0.017895957, y: 0, z: -0.03011503}
 --- !u!1 &3873076825246530770
 GameObject:
   m_ObjectHideFlags: 0
