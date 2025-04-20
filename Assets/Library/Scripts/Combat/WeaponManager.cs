@@ -56,12 +56,17 @@ public class WeaponManager : MonoBehaviour
     [Header("ComboSystemAndAttack")]
     [SerializeField] int comboCounter = 0;
     int maxComboCount = 3;
+    [SerializeField] private float timeTillComboResetPerAttack = 0.5f;
     [Tooltip("Listen wait time for combo input")]
     [SerializeField] private float comboResetTime = 0.6f;
     [SerializeField] private float recoverDuration = 2f;
     float recoverTimer = 0f;
     public bool isRecovering = false;
     private bool _isAttacking;
+    private bool _isComboCooldown;
+
+    private bool _isTimeSinceAttackPressedSet;
+    private float _timeSinceAttackPressed;
 
     [Header("WeaponCollectRange")]
     [SerializeField] private float collectRange;
@@ -108,7 +113,7 @@ public class WeaponManager : MonoBehaviour
 
     private void Update()
     {
-        if (_isAttackInputting && !isRecovering && !_isAttacking) // hold timer for charge attack
+        if (_isAttackInputting && !isRecovering && !_isAttacking && !_isComboCooldown) // hold timer for charge attack
         {
             _holdTime += Time.deltaTime;
             if (_holdTime >= _currentWeapon._weaponData.holdThreshold) 
@@ -214,6 +219,7 @@ public class WeaponManager : MonoBehaviour
     private void OnAttackInputPerform(InputAction.CallbackContext context)
     {
         if (_isAttacking) return;
+        if (_isComboCooldown) return;
         
         if (_currentWeapon == null || isRecovering)
         {
@@ -303,6 +309,13 @@ public class WeaponManager : MonoBehaviour
     private IEnumerator AttackRoutine()
     {
         _isAttacking = true;
+        var currentTime = Time.time;
+
+        if (_isComboCooldown)
+        {
+            _isAttacking = false;
+            yield break;
+        }
         
         if (EventSystem.current.IsPointerOverGameObject() && isRecovering)
         {
@@ -372,6 +385,42 @@ public class WeaponManager : MonoBehaviour
                 }
         
                 _currentWeapon.OnInnitNormalAttack();
+        
+                cooldownTimer = _currentWeapon._weaponData.attackSpeed;
+                cooldownTimer = comboAttackSpeed;
+
+                if (comboCounter > 1)
+                {
+                    if (_isTimeSinceAttackPressedSet)
+                    {
+                        if (currentTime - _timeSinceAttackPressed >= timeTillComboResetPerAttack)
+                        {
+                            comboCounter = 1;
+                        }
+
+                        else
+                        {
+                            comboCounter++;
+                        }
+                    }
+                }
+                else
+                {
+                    comboCounter++;
+                }
+                
+                _isTimeSinceAttackPressedSet = false;
+                if (!_isTimeSinceAttackPressedSet)
+                {
+                    _isTimeSinceAttackPressedSet = true;
+                    _timeSinceAttackPressed = Time.time;
+                }
+
+                playerAnimation.Attack(comboCounter);
+                AttackHandle?.Invoke(comboCounter);
+                OnPerformChargedATK?.Invoke(false);
+                hasAttacked = true;
+                
                 if (comboCounter >= maxComboCount)
                 {
                     if (comboCoroutine != null)
@@ -380,15 +429,9 @@ public class WeaponManager : MonoBehaviour
                     }
                     
                     comboCoroutine = StartCoroutine(ResetCombo());
+                    _isAttacking = false;
+                    yield break;
                 }
-        
-                cooldownTimer = _currentWeapon._weaponData.attackSpeed;
-                cooldownTimer = comboAttackSpeed;
-                comboCounter++;
-                playerAnimation.Attack(comboCounter);
-                AttackHandle?.Invoke(comboCounter);
-                OnPerformChargedATK?.Invoke(false);
-                hasAttacked = true;
             }
         
             //isAttack = true; // set the isAttack = true again so that it will start cooldown, avoid attack with no cooldown
@@ -408,6 +451,8 @@ public class WeaponManager : MonoBehaviour
 
     private IEnumerator ResetCombo()
     {
+        _isComboCooldown = true;
+        
         yield return new WaitForSeconds(comboResetTime);
 
         isDashingToCancelAction = false;
@@ -422,6 +467,8 @@ public class WeaponManager : MonoBehaviour
 
         _isAttackInputting = false;
         _holdTime = 0f;
+
+        _isComboCooldown = false;
     }
 
     private IEnumerator ResetFullCombo()
