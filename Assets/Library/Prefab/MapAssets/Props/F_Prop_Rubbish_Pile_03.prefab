@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2234156598804233824}
   - component: {fileID: 961054409334531922}
   - component: {fileID: 5270743389781990642}
-  - component: {fileID: 3290987313596586065}
   m_Layer: 0
   m_Name: F_Prop_Rubbish_Pile_03
   m_TagString: Untagged
@@ -30,7 +29,8 @@ Transform:
   m_LocalPosition: {x: -141.69, y: 0.4800005, z: -139.26}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 771143966691707302}
   m_Father: {fileID: 0}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -84,13 +84,45 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &3290987313596586065
+--- !u!1 &5609656284088304945
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 771143966691707302}
+  - component: {fileID: 8406766771245347969}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &771143966691707302
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5609656284088304945}
+  m_LocalRotation: {x: -0, y: 0.29559427, z: -0, w: 0.95531356}
+  m_LocalPosition: {x: -0.094, y: 0, z: -0.12}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2234156598804233824}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 34.386, z: 0}
+--- !u!65 &8406766771245347969
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4243770919860857385}
+  m_GameObject: {fileID: 5609656284088304945}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -103,5 +135,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.1612499, y: 1.6236047, z: 2.3240662}
-  m_Center: {x: 0, y: 0.76214534, z: 0}
+  m_Size: {x: 2.037331, y: 1, z: 0.7769245}
+  m_Center: {x: 0.09569466, y: 0, z: 0.11153768}

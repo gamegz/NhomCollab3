@@ -260,7 +260,6 @@ GameObject:
   - component: {fileID: 2046258428629980218}
   - component: {fileID: 5748206570785273321}
   - component: {fileID: 4755832632758449373}
-  - component: {fileID: 3835354293360072963}
   m_Layer: 0
   m_Name: EA03_Nature_Bush_01d_LOD0
   m_TagString: Untagged
@@ -333,27 +332,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &3835354293360072963
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6498092325877652203}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2.3216248, y: 3.6136544, z: 1.4282227}
-  m_Center: {x: 0.000015258789, y: 1.8068267, z: 0}
 --- !u!1 &8484137830581950966
 GameObject:
   m_ObjectHideFlags: 0

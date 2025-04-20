@@ -239,7 +239,6 @@ GameObject:
   - component: {fileID: 452334430693492343}
   - component: {fileID: 8350223629492149618}
   - component: {fileID: 1866189909780897789}
-  - component: {fileID: 5574765848523816325}
   m_Layer: 0
   m_Name: EA03_Environment_Road_Cobble_01b_LOD2
   m_TagString: Untagged
@@ -312,24 +311,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &5574765848523816325
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7986723898928019875}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.8012657, y: 1.6663876, z: 0.5794727}
-  m_Center: {x: 0.043644905, y: -0.116864204, z: -0.07897356}
