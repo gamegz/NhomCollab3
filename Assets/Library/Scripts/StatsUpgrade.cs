@@ -19,7 +19,7 @@ public class StatsUpgrade : MonoBehaviour
     public UpgradeGroup dashRecoveryUpgradeGroup;
     [Space]
 
-    private int gemCount = 0;
+    private int gemCount = 1000;
     public float currentExp;
     public float maxExpPerLevel;
     [SerializeField] private float expMultiplier;
