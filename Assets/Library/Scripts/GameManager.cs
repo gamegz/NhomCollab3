@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     bool isPaused;
     public bool isPlayerDead = false;
     public Transform SpawnPoint;
-    public Transform nextSpawnPoint;
+    //public Transform nextSpawnPoint;
     public List <GameObject> RespawnPoint = new List <GameObject>();
     [HideInInspector] public GameState state;
     [SerializeField] private Camera playerCamera;

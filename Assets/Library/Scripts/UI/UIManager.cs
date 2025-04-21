@@ -9,17 +9,17 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] private Button CloseUpgradePanelButton;
-    [SerializeField] private Button CloseMerchantPanelButton;
-    [SerializeField] private Button UpgradeButton;
+    //[SerializeField] private Button CloseUpgradePanelButton;
+    //[SerializeField] private Button CloseMerchantPanelButton;
+    //[SerializeField] private Button UpgradeButton;
     [SerializeField] private Button BackToMenuButton;
     [SerializeField] private Button retryButton;
-    [SerializeField] private GameObject UpgradePanel;
-    [SerializeField] private GameObject MerchantPanel;
-    [SerializeField] private TextMeshProUGUI HPText;
-    [SerializeField] private TextMeshProUGUI MovementSpeedText;
-    [SerializeField] private TextMeshProUGUI FConversionRateText;
-    [SerializeField] private PlayerBase _playerBase;
+    //[SerializeField] private GameObject UpgradePanel;
+    //[SerializeField] private GameObject MerchantPanel;
+    //[SerializeField] private TextMeshProUGUI HPText;
+    //[SerializeField] private TextMeshProUGUI MovementSpeedText;
+    //[SerializeField] private TextMeshProUGUI FConversionRateText;
+    //[SerializeField] private PlayerBase _playerBase;
     [SerializeField] private GameObject LosePanel;
     public static UIManager Instance { get; private set; }
 
@@ -38,9 +38,9 @@ public class UIManager : MonoBehaviour
     }
     void Start()
     {
-        CloseUpgradePanelButton?.onClick.AddListener(() => OnEnableUpgradePanel(false));
-        CloseMerchantPanelButton?.onClick.AddListener(() => OnEnableMerchantPanel(false));
-        UpgradeButton?.onClick.AddListener(OnUpgradeCharacter);
+        //CloseUpgradePanelButton?.onClick.AddListener(() => OnEnableUpgradePanel(false));
+        //CloseMerchantPanelButton?.onClick.AddListener(() => OnEnableMerchantPanel(false));
+        //UpgradeButton?.onClick.AddListener(OnUpgradeCharacter);
         BackToMenuButton?.onClick.AddListener(() => BackToMenu());
         closeButtonForRespawnPanle?.onClick.AddListener(CloseRespawnSelectionUI);
         retryButton?.onClick.AddListener(Retry);
@@ -49,21 +49,21 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
-        if(HPText == null && MovementSpeedText == null && FConversionRateText == null) { return; }
-        HPText.text = "HP: " + PlayerDatas.Instance.GetStats.Health.ToString();
-        MovementSpeedText.text = "Move Speed: " + PlayerDatas.Instance.GetStats.MoveSpeed.ToString();
+        //if(HPText == null && MovementSpeedText == null && FConversionRateText == null) { return; }
+        //HPText.text = "HP: " + PlayerDatas.Instance.GetStats.Health.ToString();
+        //MovementSpeedText.text = "Move Speed: " + PlayerDatas.Instance.GetStats.MoveSpeed.ToString();
         //FConversionRateText.text = "FConversion Rate: " + PlayerDatas.Instance.GetStats.FConversionRate.ToString();
         
     }
 
     public void OnEnableUpgradePanel(bool isEnable)
     {
-        UpgradePanel.SetActive(isEnable);
+        //UpgradePanel.SetActive(isEnable);
     }
 
     public void OnEnableMerchantPanel(bool isEnable)
     {
-        MerchantPanel.SetActive(isEnable);  
+        //MerchantPanel.SetActive(isEnable);  
     }
 
     public void OnUpgradeCharacter()
