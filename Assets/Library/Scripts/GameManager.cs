@@ -41,19 +41,19 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Escape))
-        {
-            TogglePause();
-            if (Time.timeScale == 0f && pausePanel != null) 
-            {
-                pausePanel.SetActive(true);
-            }
-            else if (Time.timeScale == 1f && pausePanel != null)
-            {
-                pausePanel.SetActive(false);
+        //if (Input.GetKeyUp(KeyCode.Escape))
+        //{
+        //    TogglePause();
+        //    if (Time.timeScale == 0f && pausePanel != null)
+        //    {
+        //        pausePanel.SetActive(true);
+        //    }
+        //    else if (Time.timeScale == 1f && pausePanel != null)
+        //    {
+        //        pausePanel.SetActive(false);
 
-            }
-        }
+        //    }
+        //}
     }
 
     public void UpdateGameState(GameState newState)
