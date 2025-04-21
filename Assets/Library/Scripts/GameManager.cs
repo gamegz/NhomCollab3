@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
     private void Awake()
     {
+        Debug.Log(Time.timeScale);
+
         PlayerDatas.Instance.LoadGame();
         if(PlayerDatas.Instance.GetStats.currentPlayerHealth <= 0)
         {
@@ -110,6 +112,7 @@ public class GameManager : MonoBehaviour
 
     public void ChangeScene(string sceneName)
     {
+        Debug.Log(sceneName);
         SceneManager.LoadScene(sceneName);
         Time.timeScale = 1f;
     }
