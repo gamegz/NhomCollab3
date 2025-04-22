@@ -16,7 +16,6 @@ public class PauseMenu : MonoBehaviour
     //[SerializeField] private string mainMenuName = "MainMenu";
 
     private Sequence menuTween;
-    private GameManager gameManager;
     private PlayerInput input;
     private bool gamePaused;
     private TMP_Text continueText;
@@ -30,7 +29,7 @@ public class PauseMenu : MonoBehaviour
         quitText = quitButton.GetComponentInChildren<TMP_Text>();
 
         input = new PlayerInput();
-        gameManager = GameObject.FindObjectOfType<GameManager>();
+
         continueButton?.onClick.AddListener(() => {
             gamePaused = false;
             Time.timeScale = 1.0f;
@@ -45,7 +44,7 @@ public class PauseMenu : MonoBehaviour
             GameManager.Instance.UpdateGameState(GameState.SELECTGAME);
         });
 
-        quitButton?.onClick.AddListener(() => gameManager.PublicOnApplicationQuit());
+        quitButton?.onClick.AddListener(() => GameManager.Instance.PublicOnApplicationQuit());
         PauseMenuHolder.SetActive(false);       
     }
 
@@ -63,6 +62,7 @@ public class PauseMenu : MonoBehaviour
 
     private void OnRequestPauseMenu(InputAction.CallbackContext context)
     {
+        Debug.Log("sadsads");
         if (gamePaused) { return; }       
         if (GameManager.Instance.state != GameState.PLAYING) { return; }
 

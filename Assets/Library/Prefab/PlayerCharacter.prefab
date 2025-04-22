@@ -641,10 +641,10 @@ MonoBehaviour:
   offset: {x: 0, y: 0}
   maskMethod: 0
   masks: 00000000
-  _TilingOffset: 537
-  _MaskBase: 538
-  _MaskLayers: 539
-  instanceID: -1520556
+  _TilingOffset: 575
+  _MaskBase: 576
+  _MaskLayers: 577
+  instanceID: -1614
 --- !u!1 &2758309433295606730
 GameObject:
   m_ObjectHideFlags: 0
@@ -1804,10 +1804,10 @@ MonoBehaviour:
   offset: {x: 0, y: 0}
   maskMethod: 0
   masks: 00000000
-  _TilingOffset: 537
-  _MaskBase: 538
-  _MaskLayers: 539
-  instanceID: -1520576
+  _TilingOffset: 575
+  _MaskBase: 576
+  _MaskLayers: 577
+  instanceID: -1634
 --- !u!1 &7728795428013802694
 GameObject:
   m_ObjectHideFlags: 0
@@ -3076,7 +3076,7 @@ PrefabInstance:
     - target: {fileID: 1709123000419433071, guid: 99143bfe628a5b64ea906d2706d654a3,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -40.73
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1762354087198047685, guid: 99143bfe628a5b64ea906d2706d654a3,
         type: 3}
@@ -3426,7 +3426,7 @@ PrefabInstance:
     - target: {fileID: 7146436418150071698, guid: 99143bfe628a5b64ea906d2706d654a3,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 57
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7171065487026815166, guid: 99143bfe628a5b64ea906d2706d654a3,
         type: 3}
@@ -3536,7 +3536,7 @@ PrefabInstance:
     - target: {fileID: 7715376376590746708, guid: 99143bfe628a5b64ea906d2706d654a3,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -38.3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8175614929119337788, guid: 99143bfe628a5b64ea906d2706d654a3,
         type: 3}

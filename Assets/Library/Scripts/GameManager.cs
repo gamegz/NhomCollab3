@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public List <GameObject> RespawnPoint = new List <GameObject>();
 
     [SerializeField] private string mainMenuName = "MainMenu";
+    [SerializeField] private string playRoomName = "AssetFillMain";
     [HideInInspector] public GameState state;
     [HideInInspector] public bool inOverviewMode = false;
     private GameObject currentRespawnPoint;
@@ -51,7 +52,7 @@ public class GameManager : MonoBehaviour
         #endregion
 
         //Testing
-        UpdateGameState(GameState.PLAYING);
+        state = GameState.SELECTGAME;
     }
 
     [SerializeField] private GameObject pausePanel;
@@ -63,7 +64,8 @@ public class GameManager : MonoBehaviour
         {
             
             case GameState.SELECTGAME:
-                SceneManager.LoadScene("MainMenu");
+                Time.timeScale = 1;
+                SceneManager.LoadScene(mainMenuName);
                 //Save Game
                 break;
             case GameState.OPENMENU:
@@ -73,6 +75,7 @@ public class GameManager : MonoBehaviour
                 break;
             case GameState.PLAYING:
                 //Cursor.visible = false;
+                SceneManager.LoadScene(playRoomName);
                 Time.timeScale = 1;
                 break;
             case GameState.WIN:
