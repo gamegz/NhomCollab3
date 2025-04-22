@@ -13,10 +13,11 @@ public class PlayerAnimation : MonoBehaviour
     float deltaAngle;
     [SerializeField] private Animator animator;
 
-    //public void Dash(bool isForward)
-    //{
-    //    animator.SetBool("IsDashForward", isForward);
-    //}
+    public void Dash(bool isForward)
+    {
+        animator.SetBool("IsDashForward", isForward);
+        animator.SetTrigger("Dash");
+    }
 
     public void Parry()
     {

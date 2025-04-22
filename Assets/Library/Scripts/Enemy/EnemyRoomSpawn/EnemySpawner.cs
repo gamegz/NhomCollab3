@@ -25,6 +25,9 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private GameObject RoomTrigger3;
     [SerializeField] private GameObject RoomTrigger4;
     [SerializeField] private ExtraRoom linkedExtraRoom;
+    
+    [SerializeField] private List<SectionReset> sectionResetRef;
+    [SerializeField] private List<int> extraRoomIndex;
     private int _currentEnemyCount = 0;
     private int spawnedEnemies = 0;
     private int _currentWaveCount = 0;
@@ -120,6 +123,18 @@ public class EnemySpawner : MonoBehaviour
         foreach (ExpOrb expOrb in expOrbs)
         {
             expOrb.AllowToMoveTowardPlayer();
+        }
+
+        for (int i = 0; i < sectionResetRef.Count; i++)
+        {
+            var sectionReset = sectionResetRef[i];
+            int index = extraRoomIndex[i];
+            
+            if (sectionResetRef != null && index >= 0 && index < sectionReset.ExtraRoomList.Count)
+            {
+                Debug.Log(index);
+                sectionReset.ExtraRoomList[index].MarkAsCleared();
+            }
         }
 
         if (Door1 != null)

@@ -2,6 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
+[System.Serializable]
+public class SharedSectionResetLink
+{
+    public SectionReset sectionResetRef;
+    public int extraRoomIndex;
+}
+
 [System.Serializable]
 public class RoomMain
 {
@@ -11,6 +20,9 @@ public class RoomMain
     public GameObject RoomTrigger4;
     // public GameObject Door1;
     // public GameObject Door2;
+    // public SectionReset sharedSectionResetRef;
+    // public int sharedExtraRoomIndex;
+    public List<SharedSectionResetLink> sharedSectionResetLinks;
 }
 
 [System.Serializable]
@@ -54,6 +66,7 @@ public class ExtraRoom
     {
         foreach (GameObject roomTrigger in RoomTrigger)
         {
+            Debug.Log("work ?");
             UnResetRoomTriggerAndMarkClear(roomTrigger);
         }
         WasResetSinceCleared = false;
@@ -66,6 +79,7 @@ public class ExtraRoom
             BoxCollider boxCollider = roomTrigger.GetComponent<BoxCollider>();
             if (boxCollider != null)
             {
+                Debug.Log("Work or not?");
                 boxCollider.enabled = false;
             }
         }
@@ -156,6 +170,32 @@ public class SectionReset : MonoBehaviour, IInteractable
             ResetMainRoom(room.RoomTrigger2);
             ResetMainRoom(room.RoomTrigger3);
             ResetMainRoom(room.RoomTrigger4);
+            
+            // if (room.sharedSectionResetRef != null)
+            // {
+            //     var extraRoom = room.sharedSectionResetRef.ExtraRoomList[room.sharedExtraRoomIndex];
+            //     if (extraRoom.WasCleared)
+            //     {
+            //         extraRoom.WasResetSinceCleared = true;
+            //         Debug.Log("Synced WasResetSinceCleared to shared ExtraRoom");
+            //     }
+            // }
+            foreach (var link in room.sharedSectionResetLinks)
+            {
+                if (link.sectionResetRef != null)
+                {
+                    var extraRooms = link.sectionResetRef.ExtraRoomList;
+                    if (link.extraRoomIndex >= 0 && link.extraRoomIndex < extraRooms.Count)
+                    {
+                        var extraRoom = extraRooms[link.extraRoomIndex];
+                        if (extraRoom.WasCleared)
+                        {
+                            extraRoom.WasResetSinceCleared = true;
+                            Debug.Log("Synced WasResetSinceCleared to shared ExtraRoom");
+                        }
+                    }
+                }
+            }
 
             // if (room.Door1 != null)
             // {
@@ -170,8 +210,12 @@ public class SectionReset : MonoBehaviour, IInteractable
 
         foreach (ExtraRoom extraRoom in ExtraRoomList)
         {
+            Debug.Log(extraRoom);
+            Debug.Log(extraRoom.WasCleared);
+            Debug.Log(extraRoom.WasResetSinceCleared);
             if (extraRoom.WasCleared && extraRoom.WasResetSinceCleared)
             {
+                Debug.Log("ever work here ?");
                 extraRoom.UnResetToCleared();
             }
             else if (!extraRoom.WasCleared)

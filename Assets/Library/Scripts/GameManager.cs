@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
                 isPlayerDead = true;
                 OnPlayerDeathEvent?.Invoke();
                 TogglePause();
-                //UIManager.Instance.OnEnableLosePanel();
+                UIManager.Instance.OnEnableLosePanel();
                 break;
             case GameState.HOMELOBBY:
                 SceneManager.LoadScene("HomeRoomScene");

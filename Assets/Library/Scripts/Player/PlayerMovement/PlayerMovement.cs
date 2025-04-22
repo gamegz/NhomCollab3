@@ -299,7 +299,7 @@ public class PlayerMovement : MonoBehaviour
         float elapsedDashTime = 0f;
         isDashing = true;
 
-
+        playerAnimation.Dash(true);
         while (elapsedDashTime < dashDuration)
         {
             _rb.AddForce(dashDirection * (dashForce / dashDuration) * Time.fixedDeltaTime, ForceMode.VelocityChange);

@@ -344,7 +344,7 @@ public class WeaponManager : MonoBehaviour
                 var targetDir = (worldPos - currentPos).normalized;
 
                 var dot = Vector3.Dot(targetDir, transform.forward);
-                while (dot < 0.98f)
+                while (dot < 0.98f && Time.timeScale > 0f)
                 {
                     playerTransform.rotation = 
                         Quaternion.RotateTowards(playerTransform.rotation, Quaternion.LookRotation(targetDir, Vector3.up), 30);
