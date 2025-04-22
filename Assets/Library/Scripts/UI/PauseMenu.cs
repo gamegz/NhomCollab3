@@ -32,6 +32,7 @@ public class PauseMenu : MonoBehaviour
 
     private void OnEnable()
     {
+        input.Enable();
         input.Player.Escape.performed += OnRequestPauseMenu;
     }
 
