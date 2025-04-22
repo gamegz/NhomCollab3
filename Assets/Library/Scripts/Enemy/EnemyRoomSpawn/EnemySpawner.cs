@@ -24,6 +24,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private GameObject RoomTrigger2;
     [SerializeField] private GameObject RoomTrigger3;
     [SerializeField] private GameObject RoomTrigger4;
+    [SerializeField] private ExtraRoom linkedExtraRoom;
     private int _currentEnemyCount = 0;
     private int spawnedEnemies = 0;
     private int _currentWaveCount = 0;
