@@ -2,11 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using Core.Events;
-using UnityEngine.SceneManagement;
-using Unity.VisualScripting;
 using UnityEngine.InputSystem;
+using DG.Tweening;
+using TMPro;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -14,45 +12,84 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private Button continueButton;
     [SerializeField] private Button mainMenuButton;
     [SerializeField] private Button quitButton;
-    [SerializeField] private string mainMenuName = "MainMenu";
+    [SerializeField] private RectTransform mainPanel;
+    //[SerializeField] private string mainMenuName = "MainMenu";
 
+    private Sequence menuTween;
     private GameManager gameManager;
-
     private PlayerInput input;
+    private bool gamePaused;
+    private TMP_Text continueText;
+    private TMP_Text mainMenuText;
+    private TMP_Text quitText;
 
     private void Awake()
     {
+        continueText = continueButton.GetComponentInChildren<TMP_Text>();
+        mainMenuText = mainMenuButton.GetComponentInChildren<TMP_Text>();
+        quitText = quitButton.GetComponentInChildren<TMP_Text>();
+
         input = new PlayerInput();
         gameManager = GameObject.FindObjectOfType<GameManager>();
-        continueButton?.onClick.AddListener(OnContinue);
-        mainMenuButton?.onClick.AddListener(OnMainMenu);
+        continueButton?.onClick.AddListener(() => {
+            gamePaused = false;
+            Time.timeScale = 1.0f;
+            PauseMenuHolder.SetActive(false);
+            GameManager.Instance.UpdateGameState(GameState.PLAYING);
+        });
+
+        mainMenuButton?.onClick.AddListener(() => {
+            Time.timeScale = 1.0f;
+            gamePaused = false;
+            PauseMenuHolder.SetActive(false);
+            GameManager.Instance.UpdateGameState(GameState.SELECTGAME);
+        });
+
         quitButton?.onClick.AddListener(() => gameManager.PublicOnApplicationQuit());
-        PauseMenuHolder.SetActive(false);
+        PauseMenuHolder.SetActive(false);       
     }
 
     private void OnEnable()
     {
         input.Enable();
-        input.Player.Escape.performed += OnRequestPauseMenu;
+        input.UI.Escape.performed += OnRequestPauseMenu;
+    }
+
+    private void OnDisable()
+    {
+        input.UI.Escape.performed -= OnRequestPauseMenu;
+        input.Disable();
     }
 
     private void OnRequestPauseMenu(InputAction.CallbackContext context)
     {
+        if (gamePaused) { return; }       
+        if (GameManager.Instance.state != GameState.PLAYING) { return; }
+
+        mainPanel.anchoredPosition = new Vector3(-mainPanel.rect.width, 0, 0);
+        ChangeTextAlphaToZero(continueText);
+        ChangeTextAlphaToZero(mainMenuText);
+        ChangeTextAlphaToZero(quitText);
         
         PauseMenuHolder.SetActive(true);
-        Time.timeScale = 0f;
+        gamePaused = true;
+        GameManager.Instance.UpdateGameState(GameState.OPENMENU);
+
+        menuTween.SetUpdate(true);
+        menuTween.Kill();
+        menuTween = DOTween.Sequence();
+        menuTween
+            .Append(mainPanel.DOAnchorPos(new Vector2(0, 0), 0.3f, false).SetEase(Ease.OutSine).SetUpdate(true))
+            .Append(continueText.DOFade(1, 0.2f)).SetUpdate(true)
+            .Append(mainMenuText.DOFade(1, 0.2f)).SetUpdate(true)
+            .Append(quitText.DOFade(1, 0.2f)).SetUpdate(true);
+
     }
 
-    private void OnMainMenu()
+    private void ChangeTextAlphaToZero(TMP_Text text)
     {
-        Time.timeScale = 1.0f;
-        PauseMenuHolder.SetActive(false);
-        SceneManager.LoadScene(mainMenuName);
-    }
-
-    private void OnContinue()
-    {
-        Time.timeScale = 1.0f;
-        PauseMenuHolder.SetActive(false);
+        Color color = text.color;
+        color.a = 0;
+        text.color = color;
     }
 }

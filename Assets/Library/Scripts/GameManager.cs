@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using UnityEngine.Events;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -15,15 +15,17 @@ public class GameManager : MonoBehaviour
     public Transform SpawnPoint;
     public Transform nextSpawnPoint;
     public List <GameObject> RespawnPoint = new List <GameObject>();
+
+    [SerializeField] private string mainMenuName = "MainMenu";
     [HideInInspector] public GameState state;
-    [SerializeField] private Camera playerCamera;
-    //[SerializeField] private Camera overviewCamera;
     [HideInInspector] public bool inOverviewMode = false;
     private GameObject currentRespawnPoint;
     public static GameManager Instance { get; private set; }
+
+    public static event Action<GameState> OnGameStateChange;
     private void Awake()
     {
-        Debug.Log(Time.timeScale);
+        Cursor.visible = true;
 
         PlayerDatas.Instance.LoadGame();
         if(PlayerDatas.Instance.GetStats.currentPlayerHealth <= 0)
@@ -31,50 +33,60 @@ public class GameManager : MonoBehaviour
             PlayerDatas.Instance.GetStats.currentPlayerHealth = PlayerDatas.Instance.GetStats.Health;
             PlayerDatas.Instance.SaveGame();
         }
-        if (Instance == null)
+        //if (Instance == null)
+        //{
+        //    Instance = this;
+        //}
+
+        DontDestroyOnLoad(this.gameObject);
+        #region Singleton
+        if (!Instance)
         {
             Instance = this;
         }
+        else
+        {
+            Destroy(this);
+        }
+        #endregion
+
+        //Testing
+        UpdateGameState(GameState.PLAYING);
     }
 
     [SerializeField] private GameObject pausePanel;
-
-    private void Update()
-    {
-        //if (Input.GetKeyUp(KeyCode.Escape))
-        //{
-        //    TogglePause();
-        //    if (Time.timeScale == 0f && pausePanel != null)
-        //    {
-        //        pausePanel.SetActive(true);
-        //    }
-        //    else if (Time.timeScale == 1f && pausePanel != null)
-        //    {
-        //        pausePanel.SetActive(false);
-
-        //    }
-        //}
-    }
 
     public void UpdateGameState(GameState newState)
     {
         state = newState;
         switch (newState)
         {
+            
+            case GameState.SELECTGAME:
+                SceneManager.LoadScene("MainMenu");
+                //Save Game
+                break;
+            case GameState.OPENMENU:
+                //Cursor.visible = true;
+                Time.timeScale = 0;
+                //Pause Game
+                break;
+            case GameState.PLAYING:
+                //Cursor.visible = false;
+                Time.timeScale = 1;
+                break;
+            case GameState.WIN:
+                //Cursor.visible = true;
+                break;
             case GameState.LOSE:
+                //Cursor.visible = true;
                 isPlayerDead = true;
                 OnPlayerDeathEvent?.Invoke();
                 TogglePause();
-                //UIManager.Instance.OnEnableLosePanel();
-                break;
-            case GameState.HOMELOBBY:
-                SceneManager.LoadScene("HomeRoomScene");
-                TogglePause();
-                break;
-            case GameState.MENU:
-                SceneManager.LoadScene("MainMenu");
                 break;
         }
+
+        OnGameStateChange?.Invoke(newState);
     }
 
     public void TogglePause()
@@ -194,7 +206,12 @@ public class GameManager : MonoBehaviour
 
 public enum GameState
 {
-    HOMELOBBY,
+    SELECTGAME,
+    OPENMENU,
+    PLAYING, 
     LOSE,
+    WIN,
+    
+    HOMELOBBY,    
     MENU
 }
