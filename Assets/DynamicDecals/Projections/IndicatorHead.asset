@@ -24,11 +24,11 @@ MonoBehaviour:
   masks: 00000000
   projectionLimit: 10
   _Cutoff: 134
-  _TilingOffset: 688
-  _MaskBase: 686
-  _MaskLayers: 687
+  _TilingOffset: 516
+  _MaskBase: 514
+  _MaskLayers: 515
   albedo:
     texture: {fileID: 2800000, guid: 3b39f5ef3bd82e94d8dc8c6684fe50ac, type: 3}
-    color: {r: 1, g: 1, b: 1, a: 1}
+    color: {r: 0.3882353, g: 0, b: 0, a: 1}
     _MainTex: 15
     _Color: 79

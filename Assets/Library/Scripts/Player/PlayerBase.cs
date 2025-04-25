@@ -281,7 +281,6 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
 
     public void StartImmunityCoroutine(float immunityTime)
     {
-        invulTimeAfterDamagedCount = immunityTime;
         if(damageImmuneCoroutine == null)
         {
             damageImmuneCoroutine = StartCoroutine(CanDamageStatusCountDown(immunityTime));

@@ -86,6 +86,8 @@ namespace UI
         //Connect to all upgrade button
         public void OnUpgradeClick(string upgradeType)
         {
+            Debug.Log(upgradeType);
+
             var upgradeEnum = (UpgradeType)Enum.Parse(typeof(UpgradeType), upgradeType, true);           
 
             UpdateUI upgradeTarget = upgradeUIDictionary[upgradeEnum];

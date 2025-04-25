@@ -106,6 +106,23 @@ public class PlayerMovement : MonoBehaviour
 
         OnParryStart += () => isParrying = true;
         OnParryStop += () => isParrying = false;
+
+        GameManager.OnGameStateChange += OnGameStateChanged;
+    }
+
+    private void OnGameStateChanged(GameState state)
+    {
+        switch (state)
+        {
+            case GameState.OPENMENU:
+                _playerInput.Disable();
+                break;
+            case GameState.PLAYING:
+                _playerInput.Enable();
+                break;
+            default:
+                break;
+        }
     }
 
     private void OnDisable()

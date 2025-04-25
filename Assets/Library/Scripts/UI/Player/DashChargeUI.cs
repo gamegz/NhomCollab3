@@ -23,6 +23,11 @@ namespace Library.Scripts.UI.Player
         private Sequence _flashTween;
         private Color _originalIndicatorColor;
 
+        private void OnDestroy()
+        {
+            PlayerMovement.dashIndicate -= FlashIndicator;
+        }
+
         private IEnumerator Start()
         {
             if (playerMovement == null) yield break;
@@ -56,11 +61,6 @@ namespace Library.Scripts.UI.Player
                 inst.transform.localPosition = new Vector3(currenOffset, 0, 0);
                 currenOffset += localXPerBar;
             }
-        }
-
-        private void OnDestroy()
-        {
-            PlayerMovement.dashIndicate -= FlashIndicator;
         }
 
         private void FlashIndicator()

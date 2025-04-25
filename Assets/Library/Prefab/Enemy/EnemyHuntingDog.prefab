@@ -244,14 +244,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerRef: {fileID: 0}
+  playerStatsRef: {fileID: 0}
   layerData: {fileID: 11400000, guid: 32d18213bd5db754c9ad8e424b172143, type: 2}
   colliderCapsule: {fileID: 4942117508061993739}
+  expPrefab: {fileID: 0}
   maxHealth: 50
   currentHealth: 0
   _shootPoint: {fileID: 0}
   _shootProjectile: {fileID: 0}
   attackCollider: {fileID: 8963189367506775013}
-  attackDamage: 2
+  attackDamage: 1
   totalAttackDuration: 0
   attackInnitTime: 1
   attackCooldown: 2
@@ -301,6 +303,7 @@ MonoBehaviour:
   deathMethod: 0
   timeLimitUI: 3
   isBoss: 0
+  damageSmoothTime: 0.5
   healthBackgroundUI: {fileID: 4232743201034539038}
   enemyHealthUI: {fileID: 4024076059111441430}
   enemyDamageReceivedUI: {fileID: 418780547988288760}
