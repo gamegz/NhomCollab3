@@ -85,6 +85,7 @@ public class GameManager : MonoBehaviour
                 //Cursor.visible = true;
                 isPlayerDead = true;
                 OnPlayerDeathEvent?.Invoke();
+                UIManager.Instance.OnEnableLosePanel();
                 TogglePause();
                 break;
         }

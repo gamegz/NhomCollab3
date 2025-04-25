@@ -6,7 +6,7 @@
   "PlayerRecovery": 1,
   "PlayerDashCharge": 1,
   "PlayerDashRecovery": 1,
-  "PlayerGemCount" : 100,
+  "PlayerGemCount" : 0,
   "CurrentExperienceAmount" : 0,
 
   "healthStat": 5,
