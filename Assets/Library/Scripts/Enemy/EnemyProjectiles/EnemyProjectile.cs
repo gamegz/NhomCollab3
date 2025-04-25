@@ -16,6 +16,12 @@ public class EnemyProjectile : MonoBehaviour
     [SerializeField] protected int _damage;
     [SerializeField] protected int _reflectedDamage;
     [SerializeField] protected float _lifeTime;
+    
+    
+    //Effects
+    [Header("Effects")]
+    [SerializeField] private ParticleSystem parrySuccessfullyEffect;
+    [SerializeField] private ParticleSystem explodeEffect;
 
     public float LifeTime => _lifeTime;
 
@@ -54,9 +60,11 @@ public class EnemyProjectile : MonoBehaviour
                 break;
             case ProjectileDeflectMethod.OppositeDirection:
                 ChangeShootDir(-_shootDir); _deflected = true;
+                PlayParrySuccessfullyEffect();
                 break;
             case ProjectileDeflectMethod.BackToOwner:
                 ReflectBulletToOwner();_deflected = true;
+                PlayParrySuccessfullyEffect();
                 break;
         }
         
@@ -76,6 +84,13 @@ public class EnemyProjectile : MonoBehaviour
         _owner = owner;
     }
 
+    
+    
+
+
+    
+    
+    
     protected void ChangeShootDir(Vector3 shootDir)
     {
         shootDir = shootDir.normalized;
@@ -91,19 +106,41 @@ public class EnemyProjectile : MonoBehaviour
         {
             if(_deflected) { return; }
             other.gameObject.GetComponent<IDamageable>().TakeDamage(_damage);
+            PlayExplodeEffect();
             Destroy(gameObject);
         }
         else if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
             if (!_deflected) { return; }
             other.gameObject.GetComponent<IDamageable>().TakeDamage(_reflectedDamage);
+            PlayExplodeEffect();
             Destroy(gameObject);
         }
         else if (other.gameObject.layer == LayerMask.NameToLayer("WalkableGround") )
         {
+            PlayExplodeEffect();
             Destroy(gameObject);
         }
     }
+    
+    
+    
+    #region Effects
+    public void PlayParrySuccessfullyEffect()
+    {
+        parrySuccessfullyEffect.Play();
+    }
+
+    public void PlayExplodeEffect()
+    {
+        explodeEffect.Play();
+    }
+    
+
+    #endregion
+    
+    
+    
 
     public enum ProjectileDeflectMethod
     {

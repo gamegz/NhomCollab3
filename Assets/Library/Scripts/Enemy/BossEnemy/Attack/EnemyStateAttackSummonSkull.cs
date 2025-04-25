@@ -65,9 +65,19 @@ namespace Enemy.statemachine.States
 
             if (!doAttack)
             {
+                // Effecttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+                if (!_attackIndicatorPlayed)
+                {
+                    bossEnemy.PlayAttackIndicatorEffect();
+                    _attackIndicatorPlayed = true;
+                }
+
                 StartCoroutine(SpawnSkullWithDelay());
                 doAttack = true;
             };
+            
+            
+
 
             
             if (finishAttack)

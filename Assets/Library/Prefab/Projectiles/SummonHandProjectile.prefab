@@ -114,9 +114,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 769396996693081081}
   - {fileID: 6528933414913206279}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3011850992688858035
 MonoBehaviour:
@@ -135,6 +136,7 @@ MonoBehaviour:
   _damage: 1
   _reflectedDamage: 10
   _lifeTime: 6
+  parrySuccessfullyEffect: {fileID: 6401377668592795174}
   projectileDeflectMethod: 0
   target: {fileID: 0}
   turnSpeed: 10
@@ -190,3 +192,88 @@ CapsuleCollider:
   m_Height: 3.21
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1001 &5923358647467159875
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5961652428667380626}
+    m_Modifications:
+    - target: {fileID: 6385696574200089274, guid: c190417a13203d2449c41c7bd14d9ec9,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6385696574200089274, guid: c190417a13203d2449c41c7bd14d9ec9,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.62
+      objectReference: {fileID: 0}
+    - target: {fileID: 6385696574200089274, guid: c190417a13203d2449c41c7bd14d9ec9,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 6385696574200089274, guid: c190417a13203d2449c41c7bd14d9ec9,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.87
+      objectReference: {fileID: 0}
+    - target: {fileID: 6385696574200089274, guid: c190417a13203d2449c41c7bd14d9ec9,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6385696574200089274, guid: c190417a13203d2449c41c7bd14d9ec9,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6385696574200089274, guid: c190417a13203d2449c41c7bd14d9ec9,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6385696574200089274, guid: c190417a13203d2449c41c7bd14d9ec9,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6385696574200089274, guid: c190417a13203d2449c41c7bd14d9ec9,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6385696574200089274, guid: c190417a13203d2449c41c7bd14d9ec9,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6385696574200089274, guid: c190417a13203d2449c41c7bd14d9ec9,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8628505190700241072, guid: c190417a13203d2449c41c7bd14d9ec9,
+        type: 3}
+      propertyPath: m_Name
+      value: Better Parry attack successfully - Shockwave
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c190417a13203d2449c41c7bd14d9ec9, type: 3}
+--- !u!4 &769396996693081081 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6385696574200089274, guid: c190417a13203d2449c41c7bd14d9ec9,
+    type: 3}
+  m_PrefabInstance: {fileID: 5923358647467159875}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &6401377668592795174 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 785240816088239973, guid: c190417a13203d2449c41c7bd14d9ec9,
+    type: 3}
+  m_PrefabInstance: {fileID: 5923358647467159875}
+  m_PrefabAsset: {fileID: 0}

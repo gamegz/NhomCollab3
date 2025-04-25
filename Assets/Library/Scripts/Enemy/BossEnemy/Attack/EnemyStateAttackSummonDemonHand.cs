@@ -75,7 +75,15 @@ namespace Enemy.statemachine.States
 
             if (innitTimeCount > 0)
             {
-                innitTimeCount -= Time.deltaTime;               
+                innitTimeCount -= Time.deltaTime;         
+                
+                // Effectttttttttttttttttttttttttttttttttttttt
+                if (!_attackIndicatorPlayed)
+                {
+                    bossEnemy.PlayAttackIndicatorEffect();
+                    _attackIndicatorPlayed = true;
+                }
+                
                 return;
             }
 

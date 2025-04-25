@@ -26,6 +26,9 @@ namespace Enemy.statemachine.States
         private bool finishAttack;
         private bool doneAttack;
 
+        [Header("Black Hole")] 
+        [SerializeField] private ParticleSystem blackHoleEffect;
+
         public EnemyStateAttackDashStrike(BossEnemyBase enemy, EnemyStateMachine enemyStateMachine) : base(enemy, enemyStateMachine)
         {
             bossEnemy = enemy;
@@ -58,6 +61,14 @@ namespace Enemy.statemachine.States
             if (innitTimeCount > 0)
             {
                 innitTimeCount -= Time.deltaTime;
+                
+                // Effectttttttttttttttttttttttttttttttttttttt
+                if (!_attackIndicatorPlayed)
+                {
+                    bossEnemy.PlayAttackIndicatorEffect();
+                    _attackIndicatorPlayed = true;
+                }
+
                 if (bossEnemy.GetDistanceToPLayerIgnoreY() < retreatDistance)
                 {
                     bossEnemy.UpdateLogicByPlayerDistance();
@@ -136,7 +147,11 @@ namespace Enemy.statemachine.States
                 //    telePos = hit.transform.position;
                     
                 //}
+                
+                PlayBlackHoleEffect();
                 bossEnemy.enemyNavAgent.Warp(telePos);
+                PlayBlackHoleEffect();
+
                 directionToPlayer = bossEnemy.GetDirectionIgnoreY(bossEnemy.transform.position, playerPos);
                 //bossEnemy.LookAtTarget(bossEnemy.playerRef.transform.position);
                 yield return new WaitForSeconds(timeBetweenStrike);
@@ -151,6 +166,17 @@ namespace Enemy.statemachine.States
 
             finishAttack = true;
         }
+        
+        
+        
+        
+        #region Effects
+
+        private void PlayBlackHoleEffect()
+        {
+            blackHoleEffect.Play(); 
+        }
+        #endregion
     }
 }
 

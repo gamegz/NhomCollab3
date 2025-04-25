@@ -50,7 +50,7 @@ ParticleSystem:
   emitterVelocityMode: 0
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -4914,7 +4914,7 @@ Transform:
   - {fileID: 4811005399334202196}
   - {fileID: 7824698737842122073}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!198 &926839919192884402
 ParticleSystem:
@@ -4933,7 +4933,7 @@ ParticleSystem:
   emitterVelocityMode: 0
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -9819,7 +9819,7 @@ ParticleSystem:
   emitterVelocityMode: 0
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:

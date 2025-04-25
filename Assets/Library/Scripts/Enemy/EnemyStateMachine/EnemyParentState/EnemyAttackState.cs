@@ -11,9 +11,13 @@ namespace Enemy.statemachine.States
         {
 
         }
-
+        
+        // Effects
+        public bool _attackIndicatorPlayed { get; set; }
+        
         public override void EnterState()
         {
+            _attackIndicatorPlayed = false;
             _enemy.currentSpeed = _enemy.chaseSpeed;
             _enemy.currentState = EnemyBase.EnemyState.Attack;
         }

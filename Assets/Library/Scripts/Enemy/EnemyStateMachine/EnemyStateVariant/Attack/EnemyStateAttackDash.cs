@@ -45,6 +45,14 @@ namespace Enemy.statemachine.States
             {
                 _attackInnitTimeCount -= Time.deltaTime;
                 _enemy.canMove = false;
+                
+                // Effectttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+                if (!_attackIndicatorPlayed)
+                {
+                    _enemy.PlayAttackIndicatorEffect();
+                    _attackIndicatorPlayed = true;
+                }
+
                 if(_attackInnitTimeCount <= 0)
                 {
                     _enemy.PresetDashAttack(_attackDir);

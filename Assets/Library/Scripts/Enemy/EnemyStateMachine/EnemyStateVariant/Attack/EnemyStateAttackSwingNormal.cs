@@ -46,6 +46,13 @@ namespace Enemy.statemachine.States
             {
                 _attackInnitTimeCount -= Time.deltaTime;
                 
+                //Effectttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+                if (!_attackIndicatorPlayed)
+                {
+                    _enemy.PlayAttackIndicatorEffect();
+                    _attackIndicatorPlayed = true;
+                }
+
                 if(_attackInnitTimeCount <= 0)
                 {
                     _enemy.InnitAttackCollider(0.2f);

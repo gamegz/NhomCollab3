@@ -26,6 +26,8 @@ namespace Enemy.statemachine.States
         private bool finishAttack;
         private bool doAttack;
 
+        [Header("Sword Strike Effect")]
+        [SerializeField] private ParticleSystem swordStrikeEffect;
         //private Coroutine attackDashCoroutine;
 
         public EnemyStateAttackSwordStrike(BossEnemyBase enemy, EnemyStateMachine enemyStateMachine) : base(enemy, enemyStateMachine)
@@ -60,7 +62,18 @@ namespace Enemy.statemachine.States
         {            
             base.UpdateState();
             innitTimeCount -= Time.deltaTime;
-            if (innitTimeCount > 0) { return; }
+            
+            if (innitTimeCount > 0)
+            {
+                // Efectttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+                if (!_attackIndicatorPlayed)
+                {
+                    bossEnemy.PlayAttackIndicatorEffect();
+                    _attackIndicatorPlayed = true;
+                }
+                return;
+            }
+
 
 
             if (finishAttack)
@@ -161,6 +174,9 @@ namespace Enemy.statemachine.States
                 yield return new WaitForSeconds(timeBetweenStrike);                
                 bossEnemy.InnitDash(transform.forward, attackDashDistance, attackTime);
                 bossEnemy.canTurn = false;
+                //Effecttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+                PlaySwordStrikeEffect();
+                
                 bossEnemy.InnitAttackCollider(0.13f);              
                 yield return new WaitForSeconds(attackTime);
                 bossEnemy.canTurn = true;
@@ -168,6 +184,17 @@ namespace Enemy.statemachine.States
 
             finishAttack = true;
         }
+        
+        
+        
+        
+        #region Effects
+
+        private void PlaySwordStrikeEffect()
+        {
+            swordStrikeEffect.Play();
+        }
+        #endregion
     }
 }
 

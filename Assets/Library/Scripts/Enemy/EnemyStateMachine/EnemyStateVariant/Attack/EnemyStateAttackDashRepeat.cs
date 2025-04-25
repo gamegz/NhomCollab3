@@ -52,7 +52,16 @@ namespace Enemy.statemachine.States
             //_attackCoolDownCount -= Time.deltaTime;
 
             _attackInnitTimeCount -= Time.deltaTime;
-            if (_attackInnitTimeCount > 0) { return; }
+            if (_attackInnitTimeCount > 0)
+            {
+                // Effecttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+                if (!_attackIndicatorPlayed)
+                {
+                    _enemy.PlayAttackIndicatorEffect();
+                    _attackIndicatorPlayed = true;
+                }
+                return;
+            }
 
             _enemy.isAttacking = true;
             _attackDuration -= Time.deltaTime;

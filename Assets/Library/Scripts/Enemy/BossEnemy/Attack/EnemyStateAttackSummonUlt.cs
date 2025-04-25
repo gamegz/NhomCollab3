@@ -76,6 +76,13 @@ namespace Enemy.statemachine.States
 
         IEnumerator InnitUltAttack()
         {
+            // Effectttttttttttttttttttttttttttttttttttttt
+            if (!_attackIndicatorPlayed)
+            {
+                bossEnemy.PlayAttackIndicatorEffect();
+                _attackIndicatorPlayed = true;
+            }
+            
             yield return new WaitForSeconds(innitTime);
             //teleport
             Vector3 telepos = bossEnemy.transform.position;
