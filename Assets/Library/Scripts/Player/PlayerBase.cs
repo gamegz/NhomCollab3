@@ -78,11 +78,16 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     //ref
     private PlayerUI playerUI;
     #endregion
+    
+    private LosePanelUI losePanelUI;
+    private SelectionPanelScript spawnSelectionPanelUI;
     private void Awake()
     {
         _playerInput = new PlayerInput();
         _playerTransform = GetComponent<Transform>();
         rb = GetComponent<Rigidbody>();
+        losePanelUI = GetComponent<LosePanelUI>();
+        spawnSelectionPanelUI = GetComponent<SelectionPanelScript>();
 
         for(int i = 0; i < Object.FindObjectsOfType<PlayerBase>().Length; i++)
         {
@@ -169,6 +174,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
             {
                 Debug.Log("Opening Respawn Selection UI...");
                 GameManager.Instance.EnterOverviewMode();
+                spawnSelectionPanelUI.ShowRespawnSelectionUI();
                 //return;
             }
 
@@ -397,6 +403,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     {
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
+        losePanelUI.OnEnableLosePanel();
         GameManager.Instance.UpdateGameState(GameState.LOSE);
     }
 
@@ -408,7 +415,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     private IEnumerator WaitForSceneLoad()
     {
         yield return new WaitUntil(() => GameManager.Instance.GetSpawnPoint() != null);
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.1f);
         SetPlayerPosition();
     }
 

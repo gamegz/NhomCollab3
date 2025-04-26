@@ -41,9 +41,9 @@ public class UIManager : MonoBehaviour
         //CloseUpgradePanelButton?.onClick.AddListener(() => OnEnableUpgradePanel(false));
         //CloseMerchantPanelButton?.onClick.AddListener(() => OnEnableMerchantPanel(false));
         //UpgradeButton?.onClick.AddListener(OnUpgradeCharacter);
-        BackToMenuButton?.onClick.AddListener(() => BackToMenu());
-        closeButtonForRespawnPanle?.onClick.AddListener(CloseRespawnSelectionUI);
-        retryButton?.onClick.AddListener(Retry);
+        //BackToMenuButton?.onClick.AddListener(() => BackToMenu());
+        //closeButtonForRespawnPanle?.onClick.AddListener(CloseRespawnSelectionUI);
+        //retryButton?.onClick.AddListener(Retry);
     }
 
 
@@ -92,9 +92,9 @@ public class UIManager : MonoBehaviour
         GameManager.Instance.UpdateGameState(GameState.HOMELOBBY);
     }
 
-    private void BackToMenu()
+    /*private void BackToMenu()
     {
-        GameManager.Instance.UpdateGameState(GameState.MENU);
+        GameManager.Instance.UpdateGameState(GameState.SELECTGAME);
     }
 
     private void Retry()
@@ -113,6 +113,7 @@ public class UIManager : MonoBehaviour
         StartCoroutine(WaitToUpdatePlayerHealthAfterRetry());
         
         //GameManager.Instance.TogglePause();
+        
     }
 
     private IEnumerator WaitToUpdatePlayerHealthAfterRetry()
@@ -148,7 +149,7 @@ public class UIManager : MonoBehaviour
             respawnButtons[point] = newButton;
         }
         respawnSelectionUI.SetActive(true);  // Show the UI
-
+        
         //if(!GameManager.Instance.isPlayerDead) { GameManager.Instance.TogglePause(); } 
     }
 
@@ -165,5 +166,5 @@ public class UIManager : MonoBehaviour
         GameManager.Instance.ExitOverviewMode();
         
         //GameManager.Instance.TogglePause();
-    }
+    }*/
 }

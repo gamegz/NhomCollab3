@@ -44,7 +44,7 @@ namespace Enemy.EnemyManager
         {
 			activeEnemies = FindObjectsOfType<EnemyBase>().ToList();
 			_player = GameObject.FindGameObjectWithTag("Player");
-			_playerStatsUpgrade = FindObjectOfType<StatsUpgrade>();
+			_playerStatsUpgrade = _player.GetComponent<StatsUpgrade>();
 			foreach(EnemyBase enemy in activeEnemies)
             {
 				enemy.playerRef = _player;

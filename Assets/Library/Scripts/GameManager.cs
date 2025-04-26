@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Destroy(this);
+            Destroy(this.gameObject);
         }
         #endregion
 
@@ -63,6 +63,10 @@ public class GameManager : MonoBehaviour
             
             case GameState.SELECTGAME:
                 Time.timeScale = 1;
+                if (RespawnPoint.Count > 0)
+                {
+                    RespawnPoint.Clear();
+                }
                 SceneManager.LoadScene(mainMenuName);
                 //Save Game
                 break;
@@ -73,7 +77,8 @@ public class GameManager : MonoBehaviour
                 break;
             case GameState.PLAYING:
                 //Cursor.visible = false;
-                SceneManager.LoadScene(playRoomName);
+                //SceneManager.LoadScene(playRoomName);
+                Debug.Log("Playing Game");
                 Time.timeScale = 1;
                 break;
             case GameState.WIN:
@@ -85,6 +90,7 @@ public class GameManager : MonoBehaviour
                 OnPlayerDeathEvent?.Invoke();
                 //UIManager.Instance.OnEnableLosePanel();
                 //TogglePause();
+                Time.timeScale = 0;
                 break;
         }
 
@@ -117,9 +123,21 @@ public class GameManager : MonoBehaviour
 
     public Transform GetSpawnPoint()
     {
+        if (RespawnPoint == null)
+        {
+            if (SpawnPoint == null)
+            {
+                SpawnPoint = GameObject.Find("SpawnPoint").transform;
+            }
+        }
         if (RespawnPoint.Count > 0)
         {
             return RespawnPoint[RespawnPoint.Count - 1].transform; // Last claimed respawn point
+        }
+
+        if (SpawnPoint == null)
+        {
+            SpawnPoint = GameObject.Find("SpawnPoint").transform;
         }
         return SpawnPoint;
     }
@@ -170,7 +188,7 @@ public class GameManager : MonoBehaviour
     {
         if(inOverviewMode) return;
         inOverviewMode = true;
-        UIManager.Instance.ShowRespawnSelectionUI();
+        //UIManager.Instance.ShowRespawnSelectionUI();
     }
 
     public void ExitOverviewMode()

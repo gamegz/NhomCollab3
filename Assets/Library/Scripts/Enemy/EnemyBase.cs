@@ -615,7 +615,10 @@ namespace Enemy
             Vector3 spawnPosition = transform.position - new Vector3(0, 0.5f, 0);
             GameObject expObj = Instantiate(expPrefab, spawnPosition, Quaternion.identity);
             ExpOrb expOrb = expObj.GetComponent<ExpOrb>();
-            if(expOrb == null || playerRef == null || playerStatsRef == null || expObj == null) { Debug.LogWarning("missing Reference");  return; } 
+            if(expOrb == null) { Debug.LogWarning("missing script Reference");  return; } 
+            if(playerRef == null) { Debug.LogWarning("missing playerRef Reference");  return; } 
+            if(playerStatsRef == null) { Debug.LogWarning("missing playerRefStats Reference");  return; } 
+            if(expObj == null) { Debug.LogWarning("missing obj Reference");  return; } 
             expOrb.SetExp(_dropValue, playerStatsRef, playerRef);
             if (GameManager.Instance.isPlayerDead) 
             {
