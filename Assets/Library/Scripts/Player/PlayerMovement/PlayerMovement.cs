@@ -322,7 +322,9 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForFixedUpdate();
         float elapsedDashTime = 0f;
         isDashing = true;
-
+        
+        ActivateDashTrail();
+        
         playerAnimation.Dash(true);
         while (elapsedDashTime < dashDuration)
         {
@@ -550,7 +552,17 @@ public class PlayerMovement : MonoBehaviour
 
     public void DeactivateDashTrail()
     {
-        dashTrail.enabled = false; // Effectttttttttttttttttttttttttttttttttt
+        StartCoroutine(ClearTrailAfterDelay());
+    }
+
+    private IEnumerator ClearTrailAfterDelay()
+    {
+        if (dashTrail == null)
+            yield break;
+
+        yield return new WaitForSeconds(dashTrail.time); // Đợi cho trail tự hết
+        dashTrail.Clear(); // Clear các đoạn trail còn sót
+        dashTrail.enabled = false;
     }
 
     public void PlayParryIndicatorEffect()

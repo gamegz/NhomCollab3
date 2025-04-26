@@ -137,6 +137,8 @@ MonoBehaviour:
   _reflectedDamage: 10
   _lifeTime: 6
   parrySuccessfullyEffect: {fileID: 6401377668592795174}
+  explodeEffect: {fileID: 6152245315685751691, guid: e08b2afd26e6aff409d06893ceb34dc3,
+    type: 3}
   projectileDeflectMethod: 0
   target: {fileID: 0}
   turnSpeed: 10
@@ -208,17 +210,17 @@ PrefabInstance:
     - target: {fileID: 6385696574200089274, guid: c190417a13203d2449c41c7bd14d9ec9,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.62
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6385696574200089274, guid: c190417a13203d2449c41c7bd14d9ec9,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6385696574200089274, guid: c190417a13203d2449c41c7bd14d9ec9,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.87
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6385696574200089274, guid: c190417a13203d2449c41c7bd14d9ec9,
         type: 3}

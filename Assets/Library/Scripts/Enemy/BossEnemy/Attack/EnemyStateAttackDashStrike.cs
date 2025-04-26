@@ -27,7 +27,9 @@ namespace Enemy.statemachine.States
         private bool doneAttack;
 
         [Header("Black Hole")] 
-        [SerializeField] private ParticleSystem blackHoleEffect;
+        [SerializeField] private GameObject blackHoleEffect;
+        [SerializeField] private Transform spawnEffectLocation;
+
 
         public EnemyStateAttackDashStrike(BossEnemyBase enemy, EnemyStateMachine enemyStateMachine) : base(enemy, enemyStateMachine)
         {
@@ -148,9 +150,11 @@ namespace Enemy.statemachine.States
                     
                 //}
                 
-                PlayBlackHoleEffect();
+
+                SpawnBlackHoleEffect(spawnEffectLocation.position);
                 bossEnemy.enemyNavAgent.Warp(telePos);
-                PlayBlackHoleEffect();
+                Vector3 newSpawnPos = new Vector3 (telePos.x, telePos.y + 4, telePos.z);
+                SpawnBlackHoleEffect(newSpawnPos);
 
                 directionToPlayer = bossEnemy.GetDirectionIgnoreY(bossEnemy.transform.position, playerPos);
                 //bossEnemy.LookAtTarget(bossEnemy.playerRef.transform.position);
@@ -171,10 +175,10 @@ namespace Enemy.statemachine.States
         
         
         #region Effects
-
-        private void PlayBlackHoleEffect()
+        
+        private void SpawnBlackHoleEffect(Vector3 spawnPos)
         {
-            blackHoleEffect.Play(); 
+            Instantiate(blackHoleEffect, spawnPos, Quaternion.identity);
         }
         #endregion
     }

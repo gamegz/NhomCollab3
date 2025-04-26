@@ -21,7 +21,7 @@ public class EnemyProjectile : MonoBehaviour
     //Effects
     [Header("Effects")]
     [SerializeField] private ParticleSystem parrySuccessfullyEffect;
-    [SerializeField] private ParticleSystem explodeEffect;
+    [SerializeField] private GameObject explodeEffect;
 
     public float LifeTime => _lifeTime;
 
@@ -85,7 +85,6 @@ public class EnemyProjectile : MonoBehaviour
     }
 
     
-    
 
 
     
@@ -106,19 +105,19 @@ public class EnemyProjectile : MonoBehaviour
         {
             if(_deflected) { return; }
             other.gameObject.GetComponent<IDamageable>().TakeDamage(_damage);
-            PlayExplodeEffect();
+            SpawnExplodeEffect(transform.position);
             Destroy(gameObject);
         }
         else if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
             if (!_deflected) { return; }
             other.gameObject.GetComponent<IDamageable>().TakeDamage(_reflectedDamage);
-            PlayExplodeEffect();
+            SpawnExplodeEffect(transform.position);
             Destroy(gameObject);
         }
         else if (other.gameObject.layer == LayerMask.NameToLayer("WalkableGround") )
         {
-            PlayExplodeEffect();
+            SpawnExplodeEffect(transform.position);
             Destroy(gameObject);
         }
     }
@@ -131,11 +130,12 @@ public class EnemyProjectile : MonoBehaviour
         parrySuccessfullyEffect.Play();
     }
 
-    public void PlayExplodeEffect()
+
+    private void SpawnExplodeEffect(Vector3 spawnPos)
     {
-        explodeEffect.Play();
+        Debug.Log("bsdfbjkgsdfbjk");
+        Instantiate(explodeEffect, spawnPos, Quaternion.identity);
     }
-    
 
     #endregion
     

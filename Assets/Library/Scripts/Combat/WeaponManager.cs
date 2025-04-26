@@ -425,6 +425,20 @@ public class WeaponManager : MonoBehaviour
                 OnPerformChargedATK?.Invoke(false);
                 hasAttacked = true;
                 
+                if (slashEffects != null && slashEffects.Length > 0)
+                {
+                    int effectIndex = (comboCounter - 1) % slashEffects.Length;
+                    Debug.Log($"Playing effect at index: {effectIndex}");
+                    if (effectIndex < slashEffects.Length)
+                    {
+                        slashEffects[effectIndex].Play();
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Effect index out of bounds!");
+                    }
+                }
+
                 if (comboCounter >= maxComboCount)
                 {
                     if (comboCoroutine != null)
