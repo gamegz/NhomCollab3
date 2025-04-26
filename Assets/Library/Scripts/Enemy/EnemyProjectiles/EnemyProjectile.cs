@@ -16,6 +16,7 @@ public class EnemyProjectile : MonoBehaviour
     [SerializeField] protected int _damage;
     [SerializeField] protected int _reflectedDamage;
     [SerializeField] protected float _lifeTime;
+    [SerializeField] protected float _destroyDelay;
     
     
     //Effects
@@ -47,7 +48,7 @@ public class EnemyProjectile : MonoBehaviour
         _lifeTime -= Time.deltaTime;
         if (_lifeTime <= 0)
         {
-            Destroy(gameObject);
+            Destroy(gameObject, _destroyDelay);
         }
     }
 
