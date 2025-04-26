@@ -111,7 +111,8 @@ public class UIManager : MonoBehaviour
             GameManager.Instance.TeleportPlayerToRespawnPoint(latestRespawnPoint);
         }
         StartCoroutine(WaitToUpdatePlayerHealthAfterRetry());
-        GameManager.Instance.TogglePause();
+        
+        //GameManager.Instance.TogglePause();
     }
 
     private IEnumerator WaitToUpdatePlayerHealthAfterRetry()
@@ -147,7 +148,8 @@ public class UIManager : MonoBehaviour
             respawnButtons[point] = newButton;
         }
         respawnSelectionUI.SetActive(true);  // Show the UI
-        if(!GameManager.Instance.isPlayerDead) { GameManager.Instance.TogglePause(); } 
+
+        //if(!GameManager.Instance.isPlayerDead) { GameManager.Instance.TogglePause(); } 
     }
 
     private void SelectRespawnPoint(GameObject respawnPoint)
@@ -161,6 +163,7 @@ public class UIManager : MonoBehaviour
     {
         respawnSelectionUI.SetActive(false);
         GameManager.Instance.ExitOverviewMode();
-        GameManager.Instance.TogglePause();
+        
+        //GameManager.Instance.TogglePause();
     }
 }

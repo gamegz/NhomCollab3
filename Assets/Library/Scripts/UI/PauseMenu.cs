@@ -62,7 +62,6 @@ public class PauseMenu : MonoBehaviour
 
     private void OnRequestPauseMenu(InputAction.CallbackContext context)
     {
-        Debug.Log("sadsads");
         if (gamePaused) { return; }       
         if (GameManager.Instance.state != GameState.PLAYING) { return; }
 

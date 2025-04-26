@@ -7,23 +7,21 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public static event Action OnPlayerDeathEvent;
-    //this class to do bunch of stuff but the important part for stats is in Awake method
-    float previousTimeScale = 1f;
-    bool isPaused;
-    public bool isPlayerDead = false;
-    public Transform SpawnPoint;
-    //public Transform nextSpawnPoint;
     public List <GameObject> RespawnPoint = new List <GameObject>();
+    public Transform SpawnPoint;
+    public bool isPlayerDead = false;
 
+    [SerializeField] private GameState StartingGameState = GameState.SELECTGAME; //For testing
     [SerializeField] private string mainMenuName = "MainMenu";
     [SerializeField] private string playRoomName = "AssetFillMain";
     [HideInInspector] public GameState state;
-    [HideInInspector] public bool inOverviewMode = false;
+    [HideInInspector] public bool inOverviewMode = false;   
+    
     private GameObject currentRespawnPoint;
     public static GameManager Instance { get; private set; }
 
     public static event Action<GameState> OnGameStateChange;
+    public static event Action OnPlayerDeathEvent;
     private void Awake()
     {
         Cursor.visible = true;
@@ -51,8 +49,8 @@ public class GameManager : MonoBehaviour
         }
         #endregion
 
-        //Testing
-        state = GameState.SELECTGAME;
+        ////Testing
+        //state = GameState.SELECTGAME;
     }
 
     [SerializeField] private GameObject pausePanel;
@@ -85,37 +83,37 @@ public class GameManager : MonoBehaviour
                 //Cursor.visible = true;
                 isPlayerDead = true;
                 OnPlayerDeathEvent?.Invoke();
-                UIManager.Instance.OnEnableLosePanel();
-                TogglePause();
+                //UIManager.Instance.OnEnableLosePanel();
+                //TogglePause();
                 break;
         }
 
         OnGameStateChange?.Invoke(newState);
     }
 
-    public void TogglePause()
-    {
-        if (Time.timeScale > 0)
-        {
-            previousTimeScale = Time.timeScale;
-            Time.timeScale = 0;
-            isPaused = true;
-        }
-        else if (Time.timeScale == 0)
-        {
-            Time.timeScale = previousTimeScale;
-            isPaused = false;
-        }
-    }
+    //public void TogglePause()
+    //{
+    //    if (Time.timeScale > 0)
+    //    {
+    //        previousTimeScale = Time.timeScale;
+    //        Time.timeScale = 0;
+    //        isPaused = true;
+    //    }
+    //    else if (Time.timeScale == 0)
+    //    {
+    //        Time.timeScale = previousTimeScale;
+    //        isPaused = false;
+    //    }
+    //}
 
-    public void PublicTogglePause()
-    {
-        TogglePause();
-        if (Time.timeScale == 1f && pausePanel != null)
-        {
-            pausePanel.SetActive(false);
-        }
-    }
+    //public void PublicTogglePause()
+    //{
+    //    TogglePause();
+    //    if (Time.timeScale == 1f && pausePanel != null)
+    //    {
+    //        pausePanel.SetActive(false);
+    //    }
+    //}
 
     public Transform GetSpawnPoint()
     {
