@@ -165,6 +165,13 @@ namespace Enemy
         [Header("Coroutines")]
         private Coroutine uiAppearCoroutine = null;
         #endregion 
+        
+        
+        //Effect
+        [Header("Effects")]
+        [SerializeField] private ParticleSystem bloodSpatterEffect;
+        [SerializeField] private ParticleSystem slashSpatterEffect;
+        [SerializeField] private ParticleSystem attackIndicatorEffect;
 
 
         public virtual void Awake()
@@ -469,6 +476,9 @@ namespace Enemy
             //Debug.Log("Damage: " + damage);
             currentHealth -= damage;
             staggerThresholdCounter -= damage;
+            
+            PlayBloodEffect();
+            PlaySplashEffect();
 
             OnEnemyDamaged?.Invoke(isChargedATK);
 
@@ -745,6 +755,31 @@ namespace Enemy
 
         #endregion
 
+        
+        
+
+        #region Effects
+
+        public void PlayBloodEffect()
+        {
+            bloodSpatterEffect.Play();
+        }
+
+        public void PlaySplashEffect()
+        {
+            slashSpatterEffect.Play();
+        }
+
+        public void PlayAttackIndicatorEffect()
+        {
+            attackIndicatorEffect.Play();
+        }
+        #endregion
+        
+        
+        
+        
+        
 
         private void OnDrawGizmos()
         {

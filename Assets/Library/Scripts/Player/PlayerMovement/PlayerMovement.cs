@@ -77,6 +77,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private bool allow8DirectionWalk;
     [SerializeField] private float rotateSpeed;
     
+    //Effect
+    [Header("Effects")]
+    [SerializeField] private ParticleSystem dashIndicatorEffect ;
+    [SerializeField] private TrailRenderer dashTrail;
+    [SerializeField] private ParticleSystem parryIndicatorEffect;
+    
+    
     // for UI 
     public float totalDashTime { get; private set; }
     public float CurrentCharge => currentCharge;
@@ -330,6 +337,9 @@ public class PlayerMovement : MonoBehaviour
         currentCharge--;
         OnDashUsed?.Invoke();
 
+        DeactivateDashTrail();
+
+        
         //if (dashChargeUpdateCoroutine != null)
         //{
         //    StopCoroutine(dashChargeUpdateCoroutine);
@@ -355,6 +365,8 @@ public class PlayerMovement : MonoBehaviour
             currentCharge++;
             dashIndicate?.Invoke();
             dashRecoverTimePerChargeCount = 0;
+            
+            PlayDashIndicatorEffect();
 
             //if (dashChargeUpdateCoroutine != null)
             //{
@@ -463,7 +475,9 @@ public class PlayerMovement : MonoBehaviour
 
         Debug.Log("Parrying");
         playerAnimation.Parry();
-
+        
+        PlayParryIndicatorEffect();
+        
         while (elapsedParryTime >= 0)
         {
             elapsedParryTime -= Time.deltaTime;
@@ -520,6 +534,39 @@ public class PlayerMovement : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, -angle + 90, 0);
         //playerAnimation.RotateUpperBody(playerUpperSpine, dir);
     }
+    
+    
+    #region Effect Activators
+    
+    private void PlayDashIndicatorEffect()
+    {
+        dashIndicatorEffect.Play();
+    }
+
+    public void ActivateDashTrail()
+    {
+        dashTrail.enabled = true;
+    }
+
+    public void DeactivateDashTrail()
+    {
+        dashTrail.enabled = false; // Effectttttttttttttttttttttttttttttttttt
+    }
+
+    public void PlayParryIndicatorEffect()
+    {
+        parryIndicatorEffect.Play();
+    }
+    
+
+    
+    
+    #endregion
+    
+    
+    
+    
+    
 
 
     void OnDrawGizmos()

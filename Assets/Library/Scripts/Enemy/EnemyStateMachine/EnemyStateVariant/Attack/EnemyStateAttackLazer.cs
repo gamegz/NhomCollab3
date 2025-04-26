@@ -58,6 +58,14 @@ namespace Enemy.statemachine.States
             _attackInnitTimeCount -= Time.deltaTime;
             _attackDuration -= Time.deltaTime;
 
+            // Effecttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+            if (_attackInnitTimeCount > 0 && !_attackIndicatorPlayed)
+            {
+                _enemy.PlayAttackIndicatorEffect();
+                _attackIndicatorPlayed = true;
+            }
+
+            
             if (_attackInnitTimeCount <= 0)
             {         
                 _enemy.ShootRayAttack(_attackDir);

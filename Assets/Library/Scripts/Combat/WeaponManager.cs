@@ -83,6 +83,10 @@ public class WeaponManager : MonoBehaviour
     [SerializeField] private PlayerAnimation playerAnimation;
 
     private Camera _camera; 
+    
+    
+    [Header("Effects")]
+    [SerializeField] private ParticleSystem[] slashEffects;
 
     private void Awake()
     {

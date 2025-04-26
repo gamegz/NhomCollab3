@@ -44,6 +44,14 @@ namespace Enemy.statemachine.States
             if (_attackInnitTimeCount > 0)
             {
                 _attackInnitTimeCount -= Time.deltaTime;
+                
+                // Effectttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+                if (!_attackIndicatorPlayed)
+                {
+                    _enemy.PlayAttackIndicatorEffect();
+                    _attackIndicatorPlayed = true;
+                }
+
                 if(_attackInnitTimeCount <= 0)
                 {
                     _enemy.ShootProjectile(_enemy.GetDirectionToPlayer());
