@@ -78,6 +78,10 @@ public class WeaponManager : MonoBehaviour
     [SerializeField] private PlayerAnimation playerAnimation;
 
     private Camera _camera; 
+    
+    
+    [Header("Effects")]
+    [SerializeField] private ParticleSystem[] slashEffects;
 
     private void Awake()
     {
@@ -389,6 +393,14 @@ public class WeaponManager : MonoBehaviour
                 AttackHandle?.Invoke(comboCounter);
                 OnPerformChargedATK?.Invoke(false);
                 hasAttacked = true;
+                
+                //Effectttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+                if (slashEffects != null && slashEffects.Length > 0)
+                {
+                    int effectIndex = (comboCounter - 1) % slashEffects.Length;
+                    slashEffects[effectIndex].Play();
+                }
+
             }
         
             //isAttack = true; // set the isAttack = true again so that it will start cooldown, avoid attack with no cooldown
