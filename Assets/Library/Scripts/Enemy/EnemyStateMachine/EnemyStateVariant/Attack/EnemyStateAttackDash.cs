@@ -56,6 +56,7 @@ namespace Enemy.statemachine.States
                 if(_attackInnitTimeCount <= 0)
                 {
                     _enemy.PresetDashAttack(_attackDir);
+                    _enemy.enemyAnimators.SetTrigger("Attack");
                     _enemy.isAttacking = true; //Start attack
                 }
                 

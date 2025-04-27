@@ -7,6 +7,7 @@ using UnityEngine.AI;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 using System;
+using UnityEngine.Serialization;
 
 
 namespace Enemy
@@ -124,7 +125,11 @@ namespace Enemy
         [Header("DeathConfig")]
         [SerializeField] private int _dropValue;
         public DeathMethod deathMethod;
-        
+
+        [SerializeField] private Animator enemyAnimator;
+
+        public Animator enemyAnimators => enemyAnimator;
+
 
         public enum EnemyState
         {
@@ -262,6 +267,7 @@ namespace Enemy
             distanceToPlayer = GetDistanceToPLayerIgnoreY();
             isTargetInAttackRange = (distanceToPlayer <= attackRange) ? true : false;
         }
+        
 
         private void UpdateAttackCoolDown()
         {
@@ -282,6 +288,7 @@ namespace Enemy
             if (!isTokenUser) { return; }
             isTokenOwner = false;
         } //Call when finish attack
+        
 
         #region LOGIC IMPLEMENT
 
@@ -479,7 +486,7 @@ namespace Enemy
             
             PlayBloodEffect();
             PlaySplashEffect();
-
+            enemyAnimator.SetTrigger("Hurt");
             OnEnemyDamaged?.Invoke(isChargedATK);
 
             if (currentHealth <= 0)

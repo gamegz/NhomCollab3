@@ -361,6 +361,7 @@ public class WeaponManager : MonoBehaviour
             {
                 Debug.Log("ChargeAttack");
                 _currentWeapon.OnInnitSecondaryAttack();
+                playerAnimation.ChargeAttack();
                 AttackHandle?.Invoke(comboCounter);
                 cooldownTimer = _currentWeapon._weaponData.chargeAttackSpeed;
         

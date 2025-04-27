@@ -15,6 +15,8 @@ namespace Enemy.statemachine.States
         {
             _enemy.currentSpeed = _enemy.followSpeed;
             _enemy.currentState = EnemyBase.EnemyState.Follow;
+            if(_enemy.enemyAnimators != null)
+                _enemy.enemyAnimators.SetTrigger("Move");
         }
 
         public override void ExitState()

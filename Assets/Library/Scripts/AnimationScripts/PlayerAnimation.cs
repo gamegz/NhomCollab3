@@ -30,6 +30,11 @@ public class PlayerAnimation : MonoBehaviour
         animator.SetInteger("AttackType", attackType);
     }
 
+    public void ChargeAttack()
+    {
+        animator.SetTrigger("ChargAttack");
+    }
+
     public void Move(float x, float y)
     {
         moveVector2D = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;

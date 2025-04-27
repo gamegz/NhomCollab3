@@ -191,6 +191,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Move(InputAction.CallbackContext context)
     {
+        if(isParrying) return;
         _movement = context.ReadValue<Vector2>();
     }
 
@@ -242,7 +243,7 @@ public class PlayerMovement : MonoBehaviour
             Quaternion lookRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, lookRotation, rotateSpeed * Time.deltaTime);
         }
-        playerAnimation.Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        playerAnimation.Move(_movement.x, _movement.y);
 
     }
 
@@ -476,6 +477,8 @@ public class PlayerMovement : MonoBehaviour
         m_PlayerBase.StartImmunityCoroutine(blockingTime);
 
         Debug.Log("Parrying");
+        _movement.x = 0f;
+        _movement.y = 0f;
         playerAnimation.Parry();
         
         PlayParryIndicatorEffect();

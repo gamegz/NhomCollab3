@@ -20,6 +20,7 @@ namespace Enemy.statemachine.States
             _attackIndicatorPlayed = false;
             _enemy.currentSpeed = _enemy.chaseSpeed;
             _enemy.currentState = EnemyBase.EnemyState.Attack;
+            
         }
 
         public override void ExitState()

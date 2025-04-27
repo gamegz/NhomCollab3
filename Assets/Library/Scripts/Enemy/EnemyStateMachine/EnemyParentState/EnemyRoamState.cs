@@ -15,6 +15,7 @@ namespace Enemy.statemachine.States
         public override void EnterState()
         {
             _enemy.currentSpeed = _enemy.roamSpeed;
+            _enemy.enemyAnimators.SetTrigger("Move");
             _enemy.currentState = EnemyBase.EnemyState.Roam;
         }
         

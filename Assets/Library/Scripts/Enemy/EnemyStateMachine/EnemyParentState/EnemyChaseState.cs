@@ -18,7 +18,8 @@ namespace Enemy.statemachine.States
         {
             _enemy.currentSpeed = _enemy.chaseSpeed;
             _enemy.currentState = EnemyBase.EnemyState.Chase;
-
+            if(_enemy.enemyAnimators != null)
+                _enemy.enemyAnimators.SetTrigger("Move");
         }
 
         public override void FixedUpdateS()

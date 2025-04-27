@@ -56,6 +56,7 @@ namespace Enemy.statemachine.States
                 if(_attackInnitTimeCount <= 0)
                 {
                     _enemy.InnitAttackCollider(0.2f);
+                    _enemy.enemyAnimators.SetTrigger("Attack");
                     _enemy.isAttacking = true; 
                 }
                 
