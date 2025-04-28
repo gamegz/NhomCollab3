@@ -32,7 +32,7 @@ Transform:
   m_Children:
   - {fileID: 378829611624955955}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!114 &4578339405371609906
 MonoBehaviour:
@@ -83,6 +83,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: F_Prop_Fence_Wood_01
       objectReference: {fileID: 0}
+    - target: {fileID: 5528558570754860778, guid: 06203dd23eaf27a438caa32a5e0cfe5e,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9d01260f568aed047beb996334ca1701, type: 2}
     - target: {fileID: 5811139443417791942, guid: 06203dd23eaf27a438caa32a5e0cfe5e,
         type: 3}
       propertyPath: m_RootOrder

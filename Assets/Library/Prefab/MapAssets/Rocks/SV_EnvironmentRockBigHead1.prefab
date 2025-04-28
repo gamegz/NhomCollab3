@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7665884219101660144}
   - component: {fileID: 5479588178001681293}
-  - component: {fileID: 4425757318308940214}
+  - component: {fileID: 3582447685197069007}
   m_Layer: 0
   m_Name: SV_EnvironmentRockBigHead1
   m_TagString: Untagged
@@ -63,8 +63,8 @@ LODGroup:
     renderers:
     - renderer: {fileID: 2832277241121823324}
   m_Enabled: 1
---- !u!65 &4425757318308940214
-BoxCollider:
+--- !u!135 &3582447685197069007
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -82,8 +82,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.6006178, y: 0.82, z: 0.57977045}
-  m_Center: {x: -0.017895957, y: 0, z: -0.03011503}
+  m_Radius: 0.28
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3873076825246530770
 GameObject:
   m_ObjectHideFlags: 0
