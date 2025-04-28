@@ -134,7 +134,6 @@ public class EnemyProjectile : MonoBehaviour
 
     private void SpawnExplodeEffect(Vector3 spawnPos)
     {
-        Debug.Log("bsdfbjkgsdfbjk");
         Instantiate(explodeEffect, spawnPos, Quaternion.identity);
     }
 
