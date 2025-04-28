@@ -56,6 +56,7 @@ namespace Enemy.statemachine.States
                 {
                     _enemy.ShootProjectile(_enemy.GetDirectionToPlayer());
                     _enemy.isAttacking = true; //Start attack
+                    _enemy.enemyAnimators.SetTrigger("Attack");
                 }
                 
             }

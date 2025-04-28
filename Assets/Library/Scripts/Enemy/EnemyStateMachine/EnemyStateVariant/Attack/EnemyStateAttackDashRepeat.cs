@@ -64,6 +64,7 @@ namespace Enemy.statemachine.States
             }
 
             _enemy.isAttacking = true;
+            _enemy.enemyAnimators.SetTrigger("Attack");
             _attackDuration -= Time.deltaTime;
             if (_attackDuration <= 0) //Finish attack
             {

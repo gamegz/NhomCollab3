@@ -391,7 +391,7 @@ namespace Enemy
             {
                 return;
             }
-
+            
             Vector3 dirToTarget = target.position - center.position;
             Quaternion rotation = Quaternion.LookRotation(dirToTarget, Vector3.up);
             transform.rotation = Quaternion.Lerp(center.rotation, rotation, Time.deltaTime * speed);
@@ -406,6 +406,7 @@ namespace Enemy
 
         public void LookAtTarget(Vector3 target)
         {
+            enemyAnimator.SetTrigger("Idle");
             Vector3 dirToTarget = GetDirectionIgnoreY(transform.position, target);
             Quaternion rotation = Quaternion.LookRotation(dirToTarget, Vector3.up);
             transform.rotation = rotation;
@@ -606,7 +607,7 @@ namespace Enemy
             hasBeenStunned = true;
             canMove = false;
             Debug.Log("Stun");
-
+            enemyAnimator.SetTrigger("Idle");
             yield return new WaitForSeconds(stunDuration);
 
             isStunned = false;

@@ -2,6 +2,7 @@ using Core.Events;
 using DG.Tweening;
 using Library.Scripts.Player.Other;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using EventType = Core.Events.EventType;
 
@@ -53,6 +54,18 @@ namespace Library.Scripts.UI.Player
             this.RemoveListener(EventType.UISendPositionReference, HandleChargePosition);
             this.RemoveListener(EventType.UIOnAttackCooldown, HandleAttackCooldown);
             this.RemoveListener(EventType.UIOnAttackCharge, HandleAttackCharge);
+        }
+
+        private void OnEnable()
+        {
+            SceneManager.sceneUnloaded += OnSceneUnload;
+            SceneManager.sceneLoaded += OnSceneLoad;
+        }
+
+        private void OnDisable()
+        {
+            SceneManager.sceneUnloaded -= OnSceneUnload;
+            SceneManager.sceneLoaded -= OnSceneLoad;
         }
 
         private void HandleAttackCharge(object obj)
@@ -136,6 +149,26 @@ namespace Library.Scripts.UI.Player
                 out var anchoredPosition);
 
             container.anchoredPosition = anchoredPosition;
+        }
+
+        private void OnSceneLoad(Scene scene, LoadSceneMode mode)
+        {
+            this.AddListener(EventType.UISendPositionReference, HandleChargePosition);
+            this.AddListener(EventType.UIOnAttackCooldown, HandleAttackCooldown);
+            this.AddListener(EventType.UIOnAttackCharge, HandleAttackCharge);
+
+            attackChargeCanvasGroup.alpha = 0;
+            cooldownChargeCanvasGroup.alpha = 0;
+
+            _attackChargeImageFill = attackChargeSlider.fillRect.GetComponent<Image>();
+            _originalAttackChargeColor = _attackChargeImageFill.color;
+        }
+
+        private void OnSceneUnload(Scene scene)
+        {
+            this.RemoveListener(EventType.UISendPositionReference, HandleChargePosition);
+            this.RemoveListener(EventType.UIOnAttackCooldown, HandleAttackCooldown);
+            this.RemoveListener(EventType.UIOnAttackCharge, HandleAttackCharge);
         }
     }
 }

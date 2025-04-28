@@ -18,7 +18,12 @@ namespace Enemy.statemachine.States
             _enemy.currentState = EnemyBase.EnemyState.Retreat;
             _enemy.currentSpeed = _enemy.followSpeed;
             if(_enemy.enemyAnimators != null)
+            {
                 _enemy.enemyAnimators.SetTrigger("Move");
+                _enemy.enemyAnimators.SetTrigger("MoveBack");
+            }
+                
+            
         }
 
         public override void FixedUpdateS()
