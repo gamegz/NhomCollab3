@@ -6,21 +6,21 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Library/Scenes/SampleScene.unity
+    path: Assets/Library/Scenes/UNUSED/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
     path: Assets/Library/Scenes/Bao's Scene/Bao's Scene.unity
     guid: 86eafca324fc286449de64afdb6d0ba5
   - enabled: 1
-    path: Assets/Library/Scenes/PrototypeScene.unity
+    path: Assets/Library/Scenes/PrototypeScene/PrototypeScene.unity
     guid: 8e3cccb0a7b84864e8e52255bde8db40
   - enabled: 1
-    path: Assets/Library/Scenes/HomeRoomScene.unity
+    path: Assets/Library/Scenes/UNUSED/HomeRoomScene.unity
     guid: c07921cecc83adb438374f045a88b938
   - enabled: 1
-    path: Assets/Library/Scenes/Main/MainMenu.unity
+    path: Assets/Library/Scenes/MainMenu.unity
     guid: 1817c50ffc0d638478f931f1b769bf5b
   - enabled: 1
-    path: Assets/Library/Scenes/AssetFillMain.unity
+    path: Assets/Library/Scenes/AssetFillMain/AssetFillMain.unity
     guid: df42ac0f86586714987267fe25a0b871
   m_configObjects: {}
