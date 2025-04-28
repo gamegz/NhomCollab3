@@ -277,7 +277,7 @@ PrefabInstance:
     - target: {fileID: 564551517389946372, guid: 94f64d50719f1c3449da21402827ef51,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.186
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 564551517389946372, guid: 94f64d50719f1c3449da21402827ef51,
         type: 3}
@@ -409,6 +409,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -2843909369972686622, guid: 17d9723be50a0504daf186fdec301456,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c9ecca85a7ebce8448f6c26b21e0de67, type: 2}
     - target: {fileID: 919132149155446097, guid: 17d9723be50a0504daf186fdec301456,
         type: 3}
       propertyPath: m_Name
@@ -474,7 +479,7 @@ PrefabInstance:
     - target: {fileID: 1976777338327294505, guid: af8b15fc100516d439f9eae9ca5c0a72,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.054
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1976777338327294505, guid: af8b15fc100516d439f9eae9ca5c0a72,
         type: 3}
@@ -589,12 +594,12 @@ PrefabInstance:
     - target: {fileID: 382383312172889795, guid: 845885b5d6611534faefc15a28022627,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 2.0847
+      value: 0.95
       objectReference: {fileID: 0}
     - target: {fileID: 382383312172889795, guid: 845885b5d6611534faefc15a28022627,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0.2387
+      value: 0.14
       objectReference: {fileID: 0}
     - target: {fileID: 382383312172889795, guid: 845885b5d6611534faefc15a28022627,
         type: 3}
@@ -639,7 +644,7 @@ PrefabInstance:
     - target: {fileID: 382383312172889795, guid: 845885b5d6611534faefc15a28022627,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1.3930054
+      value: 1.06
       objectReference: {fileID: 0}
     - target: {fileID: 382383312172889795, guid: 845885b5d6611534faefc15a28022627,
         type: 3}
@@ -721,6 +726,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5020383974325327760}
     m_Modifications:
+    - target: {fileID: 350681989998181233, guid: 3ac75813af0147947a38e01f127b8a6f,
+        type: 3}
+      propertyPath: ClampVelocityModule.dampen
+      value: 0.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 350681989998181233, guid: 3ac75813af0147947a38e01f127b8a6f,
+        type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 0.23
+      objectReference: {fileID: 0}
+    - target: {fileID: 350681989998181233, guid: 3ac75813af0147947a38e01f127b8a6f,
+        type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 4.36
+      objectReference: {fileID: 0}
     - target: {fileID: 521441697229490654, guid: 3ac75813af0147947a38e01f127b8a6f,
         type: 3}
       propertyPath: m_RootOrder

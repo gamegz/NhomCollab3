@@ -320,6 +320,7 @@ MonoBehaviour:
   currentState: 0
   _dropValue: 10
   deathMethod: 0
+  enemyAnimator: {fileID: 0}
   timeLimitUI: 3
   isBoss: 0
   damageSmoothTime: 0.5
@@ -613,7 +614,7 @@ PrefabInstance:
     - target: {fileID: 1976777338327294505, guid: af8b15fc100516d439f9eae9ca5c0a72,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.718
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1976777338327294505, guid: af8b15fc100516d439f9eae9ca5c0a72,
         type: 3}
@@ -698,7 +699,7 @@ PrefabInstance:
     - target: {fileID: 564551517389946372, guid: 94f64d50719f1c3449da21402827ef51,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.914
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 564551517389946372, guid: 94f64d50719f1c3449da21402827ef51,
         type: 3}
