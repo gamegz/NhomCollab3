@@ -770,17 +770,17 @@ namespace Enemy
 
         public void PlayBloodEffect()
         {
-            bloodSpatterEffect.Play();
+            bloodSpatterEffect?.Play();
         }
 
         public void PlaySplashEffect()
         {
-            slashSpatterEffect.Play();
+            slashSpatterEffect?.Play();
         }
 
         public void PlayAttackIndicatorEffect()
         {
-            attackIndicatorEffect.Play();
+            attackIndicatorEffect?.Play();
         }
         #endregion
         
