@@ -649,7 +649,7 @@ MonoBehaviour:
   isStagger: 0
   isTargetInAttackRange: 0
   isTokenOwner: 0
-  isTokenUser: 1
+  isTokenUser: 0
   canBeStunned: 0
   stunPoint: 0
   stunDuration: 0

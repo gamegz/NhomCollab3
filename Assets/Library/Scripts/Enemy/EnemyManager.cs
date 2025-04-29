@@ -100,12 +100,20 @@ namespace Enemy.EnemyManager
 			for (int i = 0; i < enemiesInst.Count; i++)
 			{
 				//enemiesInst[i].isTokenOwner = false;
-				if (_currentAttackToken <= 0) { break; }
-				if (!enemiesInst[i].isAttacking) {
-					enemiesInst[i].isTokenOwner = true;
-					_currentAttackToken--;					
+				//if (_currentAttackToken <= 0) { return; }
+				if(enemiesInst[i].isAttacking) { continue; }
+				if(!enemiesInst[i].IsTokenUser) { continue; }
+				if(enemiesInst[i].isTokenOwner) {
+					_currentAttackToken--;
+					continue; 
 				}
-            }
+				enemiesInst[i].isTokenOwner = true;
+				_currentAttackToken--;
+				if (_currentAttackToken <= 0) {
+					enemiesInst[i].isTokenOwner = false;
+					enemiesInst[i].attackCoolDownCount = enemiesInst[i].attackCooldown;
+				}
+			}
         }
 
 		private void TrySpawnOnHolders()

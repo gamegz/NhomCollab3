@@ -75,7 +75,7 @@ namespace Enemy
         [HideInInspector] public bool isStagger = false;
         [HideInInspector] public bool isTargetInAttackRange;
         [HideInInspector] public bool isTokenOwner;
-        [SerializeField] private bool isTokenUser = true;
+        [SerializeField] protected bool isTokenUser = true;
 
         //Stun
         [Header("STUN")]
@@ -96,8 +96,7 @@ namespace Enemy
         public float turnSpeed;
         [SerializeField] private float _dashDistance;
         [SerializeField] private float _dashDuration;
-        public float DashDuration { get { return _dashDuration; } }
-        public float DashDistance { get { return _dashDistance; } }
+
 
         [HideInInspector] public float currentSpeed;
         [HideInInspector] public bool isDashing;
@@ -128,8 +127,10 @@ namespace Enemy
 
         [SerializeField] private Animator enemyAnimator;
 
+        public bool IsTokenUser => isTokenUser;
         public Animator enemyAnimators => enemyAnimator;
-
+        public float DashDuration { get { return _dashDuration; } }
+        public float DashDistance { get { return _dashDistance; } }
 
         public enum EnemyState
         {
