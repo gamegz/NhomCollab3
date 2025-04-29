@@ -24,6 +24,7 @@ public class StatsUpgrade : MonoBehaviour
     public float maxExpPerLevel;
     [SerializeField] private float expMultiplier;
     [SerializeField] private UpgradeMenu upgradeMenu;
+    [SerializeField] private float levelUpVolume;
     private float expOverflow = 0f;
     public int GemCount { get { return gemCount; } set { gemCount = value; } }
 
@@ -41,6 +42,7 @@ public class StatsUpgrade : MonoBehaviour
         {
             expOverflow = currentExp - maxExpPerLevel;
             gemCount++;
+            GameManager.Instance.PlaySound(Sound.levelUpSound, levelUpVolume);
             maxExpPerLevel *= expMultiplier;
             currentExp = 0;
             currentExp = expOverflow;

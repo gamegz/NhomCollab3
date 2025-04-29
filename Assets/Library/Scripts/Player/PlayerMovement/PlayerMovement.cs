@@ -37,6 +37,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float dashRegenMultiplier = 1.0f;
     [SerializeField] private float dashForce;
     [SerializeField] private float dashDuration;
+    [SerializeField] private float dashSoundVolume;
     public AnimationCurve animCurve;
     private bool canDash = true;
     private bool isDashing;
@@ -55,6 +56,9 @@ public class PlayerMovement : MonoBehaviour
     private bool isParrying = false;
     private bool canCancelParry;
     private Coroutine parryCoroutine;
+
+    [SerializeField] private float parryInnitVolume;
+    [SerializeField] private float parrySuccessVolume;
 
     [Header("Animation")]
     [SerializeField] private PlayerAnimation playerAnimation;
@@ -343,7 +347,7 @@ public class PlayerMovement : MonoBehaviour
         isDashing = true;
         
         ActivateDashTrail();
-        GameManager.Instance.PlaySound(Sound.dash);
+        GameManager.Instance.PlaySound(Sound.dash, dashSoundVolume);
         playerAnimation.Dash(true);
         while (elapsedDashTime < dashDuration)
         {
@@ -489,7 +493,9 @@ public class PlayerMovement : MonoBehaviour
         canCancelParry = false;
 
         OnParryStart?.Invoke();
-
+        
+        GameManager.Instance.PlaySound(Sound.parryInnit, parryInnitVolume);
+        
         float elapsedParryTime = blockingTime;
 
         m_PlayerBase.StartImmunityCoroutine(blockingTime);
@@ -511,8 +517,12 @@ public class PlayerMovement : MonoBehaviour
 
                 //Check if target in view
                 if (Vector3.Angle(transform.forward, dirToTarget) < blockingAngle / 2)
-                {                  
-                    target.GetComponent<EnemyProjectile>()?.ReflectBulletReverse();
+                {
+                    if (target.TryGetComponent<EnemyProjectile>(out EnemyProjectile enemyProjectile))
+                    {
+                        GameManager.Instance.PlaySound(Sound.parrySuccess, parrySuccessVolume);
+                        enemyProjectile.ReflectBulletReverse();
+                    }
                 }
             }
 

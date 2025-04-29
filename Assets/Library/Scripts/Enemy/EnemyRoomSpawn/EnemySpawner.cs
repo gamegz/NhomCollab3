@@ -1,8 +1,11 @@
+using System;
 using Enemy.EnemyManager;
 using Enemy;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -31,14 +34,20 @@ public class EnemySpawner : MonoBehaviour
     private int _currentEnemyCount = 0;
     private int spawnedEnemies = 0;
     private int _currentWaveCount = 0;
+    private AudioSource _audioSource;
 
-    void Start()
+
+    private void Awake()
     {
-
+        _audioSource = GetComponent<AudioSource>();
     }
+    
 
     private void OnEnable()
     {
+        if(_audioSource.clip != null)
+            GameManager.Instance.OnEnterRoom();
+        _audioSource?.Play();
         OnResetEnemyWhenEnterRoom();
         OnStartSpawning();
         if (RoomTrigger1 != null)
@@ -65,6 +74,9 @@ public class EnemySpawner : MonoBehaviour
 
     private void OnDisable()
     {
+        _audioSource?.Stop();
+        if(_audioSource.clip != null)
+            GameManager.Instance.OnExitRoom();
         EnemyBase.OnEnemyDeathsEvent -= OnEnemyDeath;
     }
 

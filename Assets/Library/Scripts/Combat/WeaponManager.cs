@@ -87,6 +87,10 @@ public class WeaponManager : MonoBehaviour
     
     [Header("Effects")]
     [SerializeField] private ParticleSystem[] slashEffects;
+    
+    [Header("Sounds")]
+    [SerializeField] private float attackVolume;
+    [SerializeField] private float chargeAttackVolume;
 
     private void Awake()
     {
@@ -362,6 +366,7 @@ public class WeaponManager : MonoBehaviour
                 Debug.Log("ChargeAttack");
                 _currentWeapon.OnInnitSecondaryAttack();
                 playerAnimation.ChargeAttack();
+                GameManager.Instance.PlaySound(Sound.chargeAttack, chargeAttackVolume);
                 AttackHandle?.Invoke(comboCounter);
                 cooldownTimer = _currentWeapon._weaponData.chargeAttackSpeed;
         
@@ -390,7 +395,7 @@ public class WeaponManager : MonoBehaviour
                 }
         
                 _currentWeapon.OnInnitNormalAttack();
-        
+                GameManager.Instance.PlaySound(Sound.attack, attackVolume);
                 cooldownTimer = _currentWeapon._weaponData.attackSpeed;
                 cooldownTimer = comboAttackSpeed;
 

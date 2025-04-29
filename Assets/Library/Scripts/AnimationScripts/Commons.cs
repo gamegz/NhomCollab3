@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class Commons : MonoBehaviour
 {
     public static Commons instance { get; private set; }
-    [SerializeField] GameObject CameraParent;
+    //[SerializeField] GameObject CameraParent;
  
     private void Awake()
     {
@@ -20,10 +20,10 @@ public class Commons : MonoBehaviour
         }
     }
 
-    public Vector3 CameraParentForward()
-    {
-        return CameraParent.transform.forward;
-    }
+    // public Vector3 CameraParentForward()
+    // {
+    //     return CameraParent.transform.forward;
+    // }
 
     public Vector2 GetMouseDir(Vector3 from) //Look at player mouse position
     {

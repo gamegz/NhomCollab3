@@ -11,6 +11,7 @@ public class ExpOrb : MonoBehaviour
     private float _expAmount;
     private bool isRoomEnd = false;
     [SerializeField] private float moveSpeed;
+    [SerializeField] private float pickUpVolume;
 
     private void Awake()
     {
@@ -65,6 +66,7 @@ public class ExpOrb : MonoBehaviour
         if(other.gameObject.tag == "Player")
         {
             transform.DOKill();
+            GameManager.Instance.PlaySound(Sound.pickUpSound, pickUpVolume);
             _playerStatsRef.AddExp(_expAmount);
             Destroy(this.gameObject);
         }

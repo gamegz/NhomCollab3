@@ -286,7 +286,11 @@ namespace Enemy
             attackCoolDownCount = attackCooldown;
             canAttack = false;
             isAttacking = false;
-            if (!isTokenUser) { return; }
+            if (!isTokenUser)
+            {
+                isTokenOwner = true;
+                return;
+            }
             isTokenOwner = false;
         } //Call when finish attack
         

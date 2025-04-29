@@ -69,6 +69,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 10
+  pickUpVolume: 0.1
 --- !u!1 &8413848416705502949
 GameObject:
   m_ObjectHideFlags: 0

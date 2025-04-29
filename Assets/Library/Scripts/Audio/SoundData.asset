@@ -13,7 +13,22 @@ MonoBehaviour:
   m_Name: SoundData
   m_EditorClassIdentifier: 
   PlayButtonSound: {fileID: 8300000, guid: 4290c2523da6acf42a41dab5836383c9, type: 3}
-  footstepSounds:
-  - {fileID: 8300000, guid: 7eabf5939e5c83f46a583baac437ed77, type: 3}
-  - {fileID: 8300000, guid: a3ae571fa084d074f93bbcb643e9a0bd, type: 3}
+  attackSound:
+  - {fileID: 8300000, guid: 2f5c88f8ae91c464dad49dcf84e007a1, type: 3}
+  - {fileID: 8300000, guid: 9a8c9d1464102364ea441ef201b34f75, type: 3}
+  - {fileID: 8300000, guid: 9e477c66bc67c984aa958953dfbb65f1, type: 3}
+  chargeAttackSound:
+  - {fileID: 8300000, guid: d27a3ec27842e9446b5adbd05a01ec2c, type: 3}
+  - {fileID: 8300000, guid: c94632c6c7856dc4b948c1f803594c16, type: 3}
+  parrySuccess:
+  - {fileID: 8300000, guid: eea091bcb841a464daa3d054532ac3c5, type: 3}
+  - {fileID: 8300000, guid: fe01952ed8de2b54f9b96c50643171c7, type: 3}
+  parryInnit: {fileID: 8300000, guid: 0ab17e9dfb7e84945bb806d8bbc4fca7, type: 3}
   DashSound: {fileID: 8300000, guid: bd9f721f364b3b24880f3c30345c9431, type: 3}
+  PlayerHurtSound: {fileID: 8300000, guid: 3084cba8c4591fc43b06f0242519578f, type: 3}
+  PlayerHealSound: {fileID: 8300000, guid: 120a0458b661596458840e74e96c765e, type: 3}
+  PickupSound:
+  - {fileID: 8300000, guid: 1ae1ab14391cada4a9f4a1e393ad3827, type: 3}
+  - {fileID: 8300000, guid: 6e1f4a595601440499110ec87b5a00b9, type: 3}
+  - {fileID: 8300000, guid: d1634c2ef7ddb684eb8c1cec9a88108d, type: 3}
+  LevelUpSound: {fileID: 8300000, guid: 7e033f9ff6fd9334288df4e7b7fca055, type: 3}

@@ -81,6 +81,10 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     
     private LosePanelUI losePanelUI;
     private SelectionPanelScript spawnSelectionPanelUI;
+    
+    [Header("Sound")]
+    [SerializeField] private float hurtSoundVolume;
+    [SerializeField] private float healSoundVolume;
     private void Awake()
     {
         _playerInput = new PlayerInput();
@@ -272,7 +276,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
             
             //PlayerDatas.Instance.OnPlayerHealthChange(modifiedHealth);
             PlayerDatas.Instance.GetStats.currentPlayerHealth -= modifiedHealth;
-
+            GameManager.Instance.PlaySound(Sound.playerHurt, hurtSoundVolume);
             HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, PlayerDatas.Instance.GetStats.healthStat, SetHealthState(HealthStates.DECREASED));
         }
 
@@ -335,7 +339,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
             {
                 currentHBProgress = 0;
                 PlayerDatas.Instance.GetStats.currentPlayerHealth++;
-
+                GameManager.Instance.PlaySound(Sound.playerHeal, healSoundVolume);
                 HealActivated?.Invoke();
                 HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, PlayerDatas.Instance.GetStats.healthStat, SetHealthState(HealthStates.INCREASED));
             }
@@ -354,6 +358,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
 
     private IEnumerator OverHealing()
     {
+        GameManager.Instance.PlaySound(Sound.playerHeal, healSoundVolume);
         while (clampedHBValue >= 0)
         {
             overHealTimer += Time.deltaTime;

@@ -25,6 +25,9 @@ public class GameManager : MonoBehaviour
 
     public static event Action<GameState> OnGameStateChange;
     public static event Action OnPlayerDeathEvent;
+    
+    [Header("GlobalSound")]
+    public AudioSource townSound;
     private void Awake()
     {
         Cursor.visible = true;
@@ -124,6 +127,16 @@ public class GameManager : MonoBehaviour
     //    }
     //}
 
+    public void OnEnterRoom()
+    {
+        townSound.Stop();
+    }
+
+    public void OnExitRoom()
+    {
+        townSound.Play();
+    }
+
     public Transform GetSpawnPoint()
     {
         if (RespawnPoint == null)
@@ -140,7 +153,11 @@ public class GameManager : MonoBehaviour
 
         if (SpawnPoint == null)
         {
-            SpawnPoint = GameObject.Find("SpawnPoint").transform;
+            GameObject spawnObject = GameObject.Find("SpawnPoint");
+            if (spawnObject != null)
+            {
+                SpawnPoint = spawnObject.transform;
+            }
         }
         
         return SpawnPoint;
@@ -215,12 +232,41 @@ public class GameManager : MonoBehaviour
         GameManager.Instance.isPlayerDead = false;
     }
 
-    public void PlaySound(Sound sound)
+    public void PlaySound(Sound sound, float volume = 1)
     {
+        int randomIndex = 0;
         switch (sound)
         {
             case Sound.dash:
-                _audioManager.PlaySoundEffect(soundData.DashSound);
+                _audioManager.PlaySoundEffect(soundData.DashSound).SetSourceVolume(volume);
+                break;
+            case Sound.attack:
+                randomIndex = Random.Range(0, soundData.attackSound.Count);
+                _audioManager.PlaySoundEffect(soundData.attackSound[randomIndex]).SetSourceVolume(volume);
+                break;
+            case Sound.chargeAttack:
+                randomIndex = Random.Range(0, soundData.chargeAttackSound.Count);
+                _audioManager.PlaySoundEffect(soundData.chargeAttackSound[randomIndex]).SetSourceVolume(volume);
+                break;
+            case Sound.parryInnit:
+                _audioManager.PlaySoundEffect(soundData.parryInnit).SetSourceVolume(volume);
+                break;
+            case Sound.parrySuccess:
+                randomIndex = Random.Range(0, soundData.parrySuccess.Count);
+                _audioManager.PlaySoundEffect(soundData.parrySuccess[randomIndex]).SetSourceVolume(volume);
+                break;
+            case Sound.playerHurt:
+                _audioManager.PlaySoundEffect(soundData.PlayerHurtSound).SetSourceVolume(volume);
+                break;
+            case Sound.playerHeal:
+                _audioManager.PlaySoundEffect(soundData.PlayerHealSound).SetSourceVolume(volume);
+                break;
+            case Sound.pickUpSound:
+                randomIndex = Random.Range(0, soundData.PickupSound.Count);
+                _audioManager.PlaySoundEffect(soundData.PickupSound[randomIndex]).SetSourceVolume(volume);
+                break;
+            case Sound.levelUpSound:
+                _audioManager.PlaySoundEffect(soundData.LevelUpSound).SetSourceVolume(volume);
                 break;
         }
     }
@@ -258,5 +304,13 @@ public enum GameState
 public enum Sound
 {
     footstep,
-    dash
+    dash,
+    attack,
+    chargeAttack,
+    parryInnit,
+    parrySuccess,
+    playerHurt,
+    playerHeal,
+    pickUpSound,
+    levelUpSound
 }

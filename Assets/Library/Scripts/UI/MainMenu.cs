@@ -21,8 +21,8 @@ public class MainMenu : MonoBehaviour
     {
         audioManager = AudioManager.Instance;
         playButton?.onClick.AddListener(() => {
-            Time.timeScale = 1.0f;
             audioManager.PlaySoundEffect(GameManager.Instance.soundData.PlayButtonSound);
+            Time.timeScale = 1.0f;
             SceneManager.LoadScene(gameScene);
             GameManager.Instance.UpdateGameState(GameState.PLAYING);  
         });
@@ -31,6 +31,11 @@ public class MainMenu : MonoBehaviour
         {
             audioManager.PlaySoundEffect(GameManager.Instance.soundData.PlayButtonSound);
             GameManager.Instance.PublicOnApplicationQuit();
+        });
+        
+        optionButton?.onClick.AddListener(() =>
+        {
+            audioManager.PlaySoundEffect(GameManager.Instance.soundData.PlayButtonSound);
         });
     }
 }
