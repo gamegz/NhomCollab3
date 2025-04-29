@@ -31,7 +31,7 @@ Transform:
   - {fileID: 2812916268698978843}
   - {fileID: 4877079949132884090}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1281354928785085599
 GameObject:
@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 4877079949132884090}
   - component: {fileID: 8440540228124779800}
   - component: {fileID: 1317078600409684567}
-  - component: {fileID: 3351972391171838208}
+  - component: {fileID: 5098552435474032808}
   m_Layer: 0
   m_Name: F_Prop_Fence_Wood_03
   m_TagString: Untagged
@@ -117,8 +117,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &3351972391171838208
-MeshCollider:
+--- !u!65 &5098552435474032808
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -135,10 +135,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 43279559213969922, guid: 792e2fe7ad9e6d24a8aef66d6bbed46d, type: 2}
+  serializedVersion: 3
+  m_Size: {x: 2.4992933, y: 1.0354815, z: 0.049127195}
+  m_Center: {x: -1.2499669, y: 0.6802541, z: 0}
 --- !u!1 &5701611890534768964
 GameObject:
   m_ObjectHideFlags: 0

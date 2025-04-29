@@ -227,10 +227,10 @@ MonoBehaviour:
   stunDuration: 10
   isStunned: 0
   enemyNavAgent: {fileID: 531018669308337807}
-  followSpeed: 67
-  retreatSpeed: 120
-  chaseSpeed: 140
-  roamSpeed: 45
+  followSpeed: 50
+  retreatSpeed: 25
+  chaseSpeed: 120
+  roamSpeed: 20
   turnSpeed: 13
   _dashDistance: 20
   _dashDuration: 0.23

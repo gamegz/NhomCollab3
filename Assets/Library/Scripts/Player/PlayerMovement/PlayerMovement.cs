@@ -191,7 +191,6 @@ public class PlayerMovement : MonoBehaviour
 
     public void Move(InputAction.CallbackContext context)
     {
-        if(isParrying) return;
         _movement = context.ReadValue<Vector2>();
     }
 
@@ -475,10 +474,7 @@ public class PlayerMovement : MonoBehaviour
         float elapsedParryTime = blockingTime;
 
         m_PlayerBase.StartImmunityCoroutine(blockingTime);
-
-        Debug.Log("Parrying");
-        _movement.x = 0f;
-        _movement.y = 0f;
+        
         playerAnimation.Parry();
         
         PlayParryIndicatorEffect();

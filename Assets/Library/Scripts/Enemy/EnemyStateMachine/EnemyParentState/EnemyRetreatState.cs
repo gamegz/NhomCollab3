@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Enemy.statemachine;
+using Enemy.variant;
 
 
 namespace Enemy.statemachine.States
@@ -19,10 +20,15 @@ namespace Enemy.statemachine.States
             _enemy.currentSpeed = _enemy.followSpeed;
             if(_enemy.enemyAnimators != null)
             {
-                _enemy.enemyAnimators.SetTrigger("Move");
+                if(_enemy is not EnemyUnderBoss)
+                    _enemy.enemyAnimators.SetTrigger("Move");
+                
+            }
+
+            if (_enemy is EnemyUnderBoss)
+            {
                 _enemy.enemyAnimators.SetTrigger("MoveBack");
             }
-                
             
         }
 

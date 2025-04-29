@@ -68,6 +68,7 @@ namespace Enemy.statemachine.States
             
             if (_attackInnitTimeCount <= 0)
             {         
+                _enemy.enemyAnimators.SetTrigger("Attack");
                 _enemy.ShootRayAttack(_attackDir);
             }
 
@@ -79,7 +80,7 @@ namespace Enemy.statemachine.States
             else
             {
                 _enemy.canTurn = false;
-                _enemy.enemyNavAgent.ResetPath();
+                _enemy.enemyNavAgent.SetDestination(_enemy.transform.position);
             }
           
 

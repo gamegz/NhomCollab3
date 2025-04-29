@@ -15,7 +15,7 @@ EditorBuildSettings:
     path: Assets/Trash/PrototypeScene/PrototypeScene.unity
     guid: 8e3cccb0a7b84864e8e52255bde8db40
   - enabled: 1
-    path: Assets/Library/Scenes/UNUSED/HomeRoomScene.unity
+    path: Assets/Library/Scenes/HomeRoomScene.unity
     guid: c07921cecc83adb438374f045a88b938
   - enabled: 1
     path: Assets/Library/Scenes/MainMenu.unity

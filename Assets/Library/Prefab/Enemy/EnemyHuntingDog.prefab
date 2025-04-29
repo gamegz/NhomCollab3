@@ -228,8 +228,8 @@ MonoBehaviour:
   isStunned: 0
   enemyNavAgent: {fileID: 6022271626846796852}
   followSpeed: 78
-  retreatSpeed: 80
-  chaseSpeed: 200
+  retreatSpeed: 55
+  chaseSpeed: 400
   roamSpeed: 30
   turnSpeed: 10
   _dashDistance: 15

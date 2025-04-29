@@ -37,6 +37,7 @@ namespace Enemy.statemachine.States
             _attackDir = _enemy.GetDirectionToPlayer();
             _enemy.canTurn = false;
             _enemy.canMove = false;
+            _enemy.currentSpeed = 90;
         }
 
       
