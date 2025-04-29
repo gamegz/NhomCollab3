@@ -30,7 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1836658613952236288
 MonoBehaviour:
@@ -44,11 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d91f617b1442e645b41360c7ee9996e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isPlayerDead: 0
-  SpawnPoint: {fileID: 0}
-  nextSpawnPoint: {fileID: 0}
   RespawnPoint: []
+  SpawnPoint: {fileID: 0}
+  isPlayerDead: 0
+  StartingGameState: 0
   mainMenuName: MainMenu
+  playRoomName: AssetFillMain
   state: 0
   inOverviewMode: 0
+  soundData: {fileID: 11400000, guid: f65784f729a5d63408ca4390ea1a2802, type: 2}
   pausePanel: {fileID: 0}

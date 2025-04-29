@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a837af4b494754141b9e7cc0c5405ed1, type: 3}
+  m_Name: SoundData
+  m_EditorClassIdentifier: 
+  PlayButtonSound: {fileID: 8300000, guid: 4290c2523da6acf42a41dab5836383c9, type: 3}
+  footstepSounds:
+  - {fileID: 8300000, guid: 7eabf5939e5c83f46a583baac437ed77, type: 3}
+  - {fileID: 8300000, guid: a3ae571fa084d074f93bbcb643e9a0bd, type: 3}
+  DashSound: {fileID: 8300000, guid: bd9f721f364b3b24880f3c30345c9431, type: 3}

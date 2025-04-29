@@ -18,6 +18,7 @@ public class PlayerMovement : MonoBehaviour
     protected Rigidbody _rb;
     private PlayerInput _playerInput;
     private Camera _camera;
+    private AudioSource _audioSource;
 
     [Header("Movement")]
     //private float playerSpeed;
@@ -92,6 +93,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Awake()
     {
+        _audioSource = GetComponent<AudioSource>();
         _camera = Camera.main;
         _playerInput = new PlayerInput();
         currentCharge = maxCharge;
@@ -161,7 +163,7 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         RechargeDash();
-
+        footstep();
 
         if (Input.GetKeyDown(KeyCode.Y))
         {
@@ -181,6 +183,22 @@ public class PlayerMovement : MonoBehaviour
         MoveCharacter();
     }
 
+    private void footstep()
+    {
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+        {
+            //int randomIndex = UnityEngine.Random.Range(1, 2);
+            _audioSource.pitch = UnityEngine.Random.Range(0.8f, 1.2f);
+            _audioSource.enabled = true;
+            //_audioSource.Play();
+        }
+        else
+        {
+            //_audioSource.Stop();
+            _audioSource.enabled = false;
+        }
+    }
+
     #region INPUT_LISTENER
 
     private void MousePos(InputAction.CallbackContext context)
@@ -191,6 +209,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Move(InputAction.CallbackContext context)
     {
+        
         _movement = context.ReadValue<Vector2>();
     }
 
@@ -324,7 +343,7 @@ public class PlayerMovement : MonoBehaviour
         isDashing = true;
         
         ActivateDashTrail();
-        
+        GameManager.Instance.PlaySound(Sound.dash);
         playerAnimation.Dash(true);
         while (elapsedDashTime < dashDuration)
         {

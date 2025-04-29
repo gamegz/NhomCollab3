@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Library.Scripts.Audio;
 using UnityEngine.Events;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,8 +17,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private string mainMenuName = "MainMenu";
     [SerializeField] private string playRoomName = "AssetFillMain";
     [HideInInspector] public GameState state;
-    [HideInInspector] public bool inOverviewMode = false;   
-    
+    [HideInInspector] public bool inOverviewMode = false; 
+    public SO_SoundData soundData;
+    private AudioManager _audioManager;
     private GameObject currentRespawnPoint;
     public static GameManager Instance { get; private set; }
 
@@ -25,7 +28,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Cursor.visible = true;
-
+        _audioManager = AudioManager.Instance;
         PlayerDatas.Instance.LoadGame();
         if(PlayerDatas.Instance.GetStats.currentPlayerHealth <= 0)
         {
@@ -139,6 +142,7 @@ public class GameManager : MonoBehaviour
         {
             SpawnPoint = GameObject.Find("SpawnPoint").transform;
         }
+        
         return SpawnPoint;
     }
 
@@ -211,6 +215,16 @@ public class GameManager : MonoBehaviour
         GameManager.Instance.isPlayerDead = false;
     }
 
+    public void PlaySound(Sound sound)
+    {
+        switch (sound)
+        {
+            case Sound.dash:
+                _audioManager.PlaySoundEffect(soundData.DashSound);
+                break;
+        }
+    }
+
     private void OnApplicationQuit()
     {
         PlayerDatas.Instance.SaveGame();
@@ -239,4 +253,10 @@ public enum GameState
     
     HOMELOBBY,    
     MENU
+}
+
+public enum Sound
+{
+    footstep,
+    dash
 }
