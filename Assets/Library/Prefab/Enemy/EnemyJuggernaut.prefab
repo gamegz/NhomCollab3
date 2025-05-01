@@ -193,7 +193,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c98f314446ef6424fbb068431725a36e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TEST_LowHealth: 1
+  TEST_LowHealth: 0
   playerRef: {fileID: 0}
   playerStatsRef: {fileID: 0}
   layerData: {fileID: 11400000, guid: 32d18213bd5db754c9ad8e424b172143, type: 2}

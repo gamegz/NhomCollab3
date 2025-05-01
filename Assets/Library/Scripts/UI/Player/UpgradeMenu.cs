@@ -136,6 +136,7 @@ namespace UI
             //Check upgrade condition
             if (statsUpgradeCS.GemCount < gemRequiredForUpgrade) { return; }
             if (currentLevel >= maxLevel) { return; }
+            if(currentLevel + upgradeTarget.upgradeCount + 1 > maxLevel) { return; }
             Debug.Log("currentLevel" + currentLevel);
             //Changes values from the UIgroup
             upgradeTarget.upgradeCount++;

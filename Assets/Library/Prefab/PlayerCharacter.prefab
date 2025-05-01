@@ -517,10 +517,10 @@ RectTransform:
   m_Father: {fileID: 7798623433762235925}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 331.75, y: -54}
-  m_SizeDelta: {x: 663.5, y: 54}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 54}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4160310983122435917
 CanvasRenderer:
@@ -640,7 +640,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -18.12}
+  m_AnchoredPosition: {x: 0, y: -154}
   m_SizeDelta: {x: 1100, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1326491651713419778
@@ -1316,10 +1316,10 @@ MonoBehaviour:
   offset: {x: 0, y: 0}
   maskMethod: 0
   masks: 00000000
-  _TilingOffset: 555
-  _MaskBase: 556
-  _MaskLayers: 557
-  instanceID: -660694
+  _TilingOffset: 560
+  _MaskBase: 561
+  _MaskLayers: 562
+  instanceID: -3435580
 --- !u!1 &2758309433295606730
 GameObject:
   m_ObjectHideFlags: 0
@@ -1572,7 +1572,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -18.12}
+  m_AnchoredPosition: {x: 0, y: -154}
   m_SizeDelta: {x: 1100, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &355203058193184143
@@ -2743,7 +2743,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -18.12}
+  m_AnchoredPosition: {x: 0, y: -154}
   m_SizeDelta: {x: 1100, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4852254007325224192
@@ -2968,10 +2968,10 @@ MonoBehaviour:
   offset: {x: 0, y: 0}
   maskMethod: 0
   masks: 00000000
-  _TilingOffset: 555
-  _MaskBase: 556
-  _MaskLayers: 557
-  instanceID: -660714
+  _TilingOffset: 560
+  _MaskBase: 561
+  _MaskLayers: 562
+  instanceID: -3435600
 --- !u!1 &7728795428013802694
 GameObject:
   m_ObjectHideFlags: 0
@@ -3253,7 +3253,7 @@ MonoBehaviour:
     m_Bits: 128
   currentPlayerHealth: 0
   HBIncreaseAmount: 1
-  maxHBRequirement: 4
+  maxHBRequirement: 100
   invulTimeAfterDamaged: 0.5
   holdTime: 2
   holdCounter: 0
@@ -3290,16 +3290,16 @@ MonoBehaviour:
   healthUpgradeGroup:
     baseStat: 2
     upgradePercentIncrease: 100
-    upgradeRequirement: 8
+    upgradeRequirement: 10
     currentLevel: 0
     maxLevel: 3
     trueStats: 0
   speedUpgradeGroup:
     baseStat: 30
-    upgradePercentIncrease: 10
+    upgradePercentIncrease: 1
     upgradeRequirement: 1
     currentLevel: 0
-    maxLevel: 10
+    maxLevel: 15
     trueStats: 0
   strengthUpgradeGroup:
     baseStat: 40
@@ -3310,28 +3310,28 @@ MonoBehaviour:
     trueStats: 0
   recoveryUpgradeGroup:
     baseStat: 20
-    upgradePercentIncrease: 5
+    upgradePercentIncrease: 8
     upgradeRequirement: 1
     currentLevel: 0
-    maxLevel: 100
+    maxLevel: 20
     trueStats: 0
   dashChargeUpgradeGroup:
     baseStat: 1
     upgradePercentIncrease: 100
-    upgradeRequirement: 6
+    upgradeRequirement: 10
     currentLevel: 0
-    maxLevel: 3
+    maxLevel: 2
     trueStats: 0
   dashRecoveryUpgradeGroup:
     baseStat: 1
-    upgradePercentIncrease: 5
+    upgradePercentIncrease: 2
     upgradeRequirement: 1
     currentLevel: 0
-    maxLevel: 100
+    maxLevel: 30
     trueStats: 0
   currentExp: 0
   maxExpPerLevel: 0
-  expMultiplier: 1.5
+  expMultiplier: 1.1
   upgradeMenu: {fileID: 2769685232698336782}
   levelUpVolume: 0.3
 --- !u!114 &5720772312843677862
@@ -4849,12 +4849,12 @@ PrefabInstance:
     - target: {fileID: 1472355849228537638, guid: 99143bfe628a5b64ea906d2706d654a3,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1.3300171
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1472355849228537638, guid: 99143bfe628a5b64ea906d2706d654a3,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -20.7
+      value: -39
       objectReference: {fileID: 0}
     - target: {fileID: 1648995407355478901, guid: 99143bfe628a5b64ea906d2706d654a3,
         type: 3}
@@ -4900,7 +4900,7 @@ PrefabInstance:
     - target: {fileID: 1709123000419433071, guid: 99143bfe628a5b64ea906d2706d654a3,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -22.3
+      value: -38.2
       objectReference: {fileID: 0}
     - target: {fileID: 1762354087198047685, guid: 99143bfe628a5b64ea906d2706d654a3,
         type: 3}
@@ -5137,7 +5137,7 @@ PrefabInstance:
     - target: {fileID: 2708437682168157357, guid: 99143bfe628a5b64ea906d2706d654a3,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -5.169983
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2813868783243965399, guid: 99143bfe628a5b64ea906d2706d654a3,
         type: 3}
@@ -5517,7 +5517,7 @@ PrefabInstance:
     - target: {fileID: 7146436418150071698, guid: 99143bfe628a5b64ea906d2706d654a3,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 60
+      value: 29.2
       objectReference: {fileID: 0}
     - target: {fileID: 7171065487026815166, guid: 99143bfe628a5b64ea906d2706d654a3,
         type: 3}
@@ -5622,12 +5622,12 @@ PrefabInstance:
     - target: {fileID: 7715376376590746708, guid: 99143bfe628a5b64ea906d2706d654a3,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -233.4
+      value: -220
       objectReference: {fileID: 0}
     - target: {fileID: 7715376376590746708, guid: 99143bfe628a5b64ea906d2706d654a3,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -30.83
+      value: -26
       objectReference: {fileID: 0}
     - target: {fileID: 7721387000373454723, guid: 99143bfe628a5b64ea906d2706d654a3,
         type: 3}

@@ -323,7 +323,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
 
     public void IncreaseHealBar(bool byChargedAttack) // ACTIVATED WHEN HITTING AN ENEMY
     {
-        currentHBProgress = Mathf.Clamp(currentHBProgress + PlayerDatas.Instance.GetStats.recoveryStat, 0, maxHBRequirement + 1);
+        currentHBProgress = Mathf.Clamp(currentHBProgress + PlayerDatas.Instance.GetStats.recoveryStat, 0, maxHBRequirement);
         clampedHBValue = Mathf.Clamp(currentHBProgress, 0, maxHBRequirement);
 
         if (clampedHBValue == maxHBRequirement)

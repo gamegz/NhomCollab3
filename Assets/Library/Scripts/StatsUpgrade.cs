@@ -34,7 +34,9 @@ public class StatsUpgrade : MonoBehaviour
         LoadLevelFromData(PlayerDatas.Instance.GetStats);
         LoadExperienceAndGem(PlayerDatas.Instance.GetStats);
     }
-
+    //step 1: figure out max stats
+    //(max stats / original stats) * 100 = max percent
+    //step 2: max percent - 100 = percent need to increase
     public void AddExp(float expAmount)
     {
         currentExp += expAmount;

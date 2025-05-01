@@ -15,7 +15,7 @@ public class CharacterBaseStatsData
     public float PlayerAttackSpeed;
     public float PlayerRecovery;
     public int PlayerDashCharge;
-    public int PlayerDashRecovery;
+    public float PlayerDashRecovery;
     
 
     public int PlayerGemCount; //Number of gem
