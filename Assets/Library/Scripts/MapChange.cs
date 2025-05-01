@@ -21,6 +21,10 @@ public class MapChange : MonoBehaviour
     {
         if (other.tag == "Player")
         {
+            if (GameManager.Instance.RespawnPoint.Count > 0)
+            {
+                GameManager.Instance.RespawnPoint.Clear();
+            }
             GameManager.Instance.UpdateGameState(GameState.PLAYING);
             SceneManager.LoadScene("BossRoom");
         }
