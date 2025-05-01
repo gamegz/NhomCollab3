@@ -55,6 +55,7 @@ MonoBehaviour:
   _reflectedDamage: 10
   _lifeTime: 7
   _destroyDelay: 0
+  _canBeReflected: 1
   _audioSource: {fileID: -217975512193171313}
   parrySuccessfullyEffect: {fileID: 7355859257983901512}
   explodeEffect: {fileID: 4620124295226077308, guid: 046c1511a98ce354cab9af4122f134a6,
@@ -122,7 +123,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: e1e582edd25dabe4485758a7b24c0828, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.02
+  m_Volume: 0.05
   m_Pitch: 1
   Loop: 0
   Mute: 0

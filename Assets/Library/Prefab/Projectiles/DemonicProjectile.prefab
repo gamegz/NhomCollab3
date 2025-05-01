@@ -55,6 +55,9 @@ MonoBehaviour:
   _damage: 1
   _reflectedDamage: 10
   _lifeTime: 7
+  _destroyDelay: 0
+  _canBeReflected: 0
+  _audioSource: {fileID: 0}
   parrySuccessfullyEffect: {fileID: 5021523437292992991}
   explodeEffect: {fileID: 8094543601027132086, guid: be168ca63774cfc48892efa0070ff037,
     type: 3}

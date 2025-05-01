@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 78012084758272336}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.18, z: 0.856}
+  m_LocalPosition: {x: 0, y: -0.18, z: 0.703}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -52,7 +52,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.7, y: 1, z: 1}
+  m_Size: {x: 0.45, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &4625309602152201094
 MonoBehaviour:
@@ -193,12 +193,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f1a06bb8c2f61d44b5d8e11c0b828ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TEST_LowHealth: 1
   playerRef: {fileID: 0}
   playerStatsRef: {fileID: 0}
   layerData: {fileID: 11400000, guid: 32d18213bd5db754c9ad8e424b172143, type: 2}
   colliderCapsule: {fileID: 557185237890086324}
   expPrefab: {fileID: 0}
-  maxHealth: 50
+  maxHealth: 60
   currentHealth: 0
   _shootPoint: {fileID: 0}
   _shootProjectile: {fileID: 0}
@@ -215,14 +216,14 @@ MonoBehaviour:
   retreatDistance: 3.24
   maxRetreatDistance: 5
   followDistance: 6
-  staggerThreshold: 1
+  staggerThreshold: 20
   staggerTime: 0.2
   knockbackForce: 10
   isStagger: 0
   isTargetInAttackRange: 0
   isTokenOwner: 0
   isTokenUser: 1
-  canBeStunned: 1
+  canBeStunned: 0
   stunPoint: 9998
   stunDuration: 10
   isStunned: 0
@@ -262,10 +263,10 @@ MonoBehaviour:
   slashSpatterEffect: {fileID: 8173386204565796667}
   attackIndicatorEffect: {fileID: 7396244701646413198}
   attackIndicatorVolume: 0.1
-  footStepVolume: 0.01
+  footStepVolume: 0.05
   footStepTimer: 0.1
-  hurtSoundVolume: 0.03
-  zombieSoundVolume: 0.01
+  hurtSoundVolume: 0.09
+  zombieSoundVolume: 0.08
 --- !u!1001 &1358741094646946934
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1107,7 +1108,7 @@ PrefabInstance:
     - target: {fileID: 521441697229490654, guid: 3ac75813af0147947a38e01f127b8a6f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.43
+      value: 1.128
       objectReference: {fileID: 0}
     - target: {fileID: 521441697229490654, guid: 3ac75813af0147947a38e01f127b8a6f,
         type: 3}

@@ -499,6 +499,7 @@ public class PlayerMovement : MonoBehaviour
         GameManager.Instance.PlaySound(Sound.parryInnit, parryInnitVolume);
         
         float elapsedParryTime = blockingTime;
+        float _escapeParryTime = escapeParryTime;
 
         m_PlayerBase.StartImmunityCoroutine(blockingTime);
         
@@ -524,6 +525,7 @@ public class PlayerMovement : MonoBehaviour
                     {
                         GameManager.Instance.PlaySound(Sound.parrySuccess, parrySuccessVolume);
                         enemyProjectile.ReflectBulletReverse();
+                        _escapeParryTime = 0;
                     }
                 }
             }
@@ -533,7 +535,7 @@ public class PlayerMovement : MonoBehaviour
 
         canCancelParry = true;
         _rb.velocity = Vector3.zero;
-        yield return new WaitForSeconds(escapeParryTime);
+        yield return new WaitForSeconds(_escapeParryTime);
         OnParryStop?.Invoke();
         canParry = true;
         parryCoroutine = null;

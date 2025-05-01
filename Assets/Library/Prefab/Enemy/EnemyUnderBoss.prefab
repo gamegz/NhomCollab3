@@ -194,12 +194,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12f9f6ca54e722d44aba0abbae9e9831, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TEST_LowHealth: 1
   playerRef: {fileID: 0}
   playerStatsRef: {fileID: 0}
   layerData: {fileID: 11400000, guid: 32d18213bd5db754c9ad8e424b172143, type: 2}
   colliderCapsule: {fileID: 3413322010517945385}
   expPrefab: {fileID: 0}
-  maxHealth: 100
+  maxHealth: 45
   currentHealth: 0
   _shootPoint: {fileID: 2099823919637676737}
   _shootProjectile: {fileID: 4767452944218749296, guid: 4e8dc9d9b8c3b2b459c045bd00c1c747,
@@ -219,20 +220,20 @@ MonoBehaviour:
   followDistance: 14
   staggerThreshold: 10
   staggerTime: 1
-  knockbackForce: 0
+  knockbackForce: 10
   isStagger: 0
   isTargetInAttackRange: 0
   isTokenOwner: 0
   isTokenUser: 0
-  canBeStunned: 1
+  canBeStunned: 0
   stunPoint: 80
   stunDuration: 1
   isStunned: 0
   enemyNavAgent: {fileID: 5822318548057199715}
   followSpeed: 40
-  retreatSpeed: 20
+  retreatSpeed: 30
   chaseSpeed: 60
-  roamSpeed: 20
+  roamSpeed: 40
   turnSpeed: 13
   _dashDistance: 20
   _dashDuration: 0.23
@@ -264,10 +265,10 @@ MonoBehaviour:
   slashSpatterEffect: {fileID: 5202803861615601398}
   attackIndicatorEffect: {fileID: 8501795070645840514}
   attackIndicatorVolume: 0.1
-  footStepVolume: 0.01
+  footStepVolume: 0.02
   footStepTimer: 0.2
-  hurtSoundVolume: 0.03
-  zombieSoundVolume: 0.01
+  hurtSoundVolume: 0.09
+  zombieSoundVolume: 0.05
 --- !u!1 &2303800332723904832
 GameObject:
   m_ObjectHideFlags: 0

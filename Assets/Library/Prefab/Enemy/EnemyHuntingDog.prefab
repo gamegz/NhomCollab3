@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1851223616956967473}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.18, z: 0.856}
+  m_LocalPosition: {x: 0, y: 0.389, z: 0.973}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -52,7 +52,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.61, y: 1, z: 0.25}
+  m_Size: {x: 0.49, y: 1, z: 0.62}
   m_Center: {x: 0, y: 0, z: -0.37270355}
 --- !u!114 &5744708408054253854
 MonoBehaviour:
@@ -193,6 +193,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46357cf4374ce2647bbc2e98b5e1586b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TEST_LowHealth: 1
   playerRef: {fileID: 0}
   playerStatsRef: {fileID: 0}
   layerData: {fileID: 11400000, guid: 32d18213bd5db754c9ad8e424b172143, type: 2}
@@ -210,9 +211,9 @@ MonoBehaviour:
   isAttacking: 0
   canAttack: 0
   attackCoolDownCount: 0
-  attackRange: 4
+  attackRange: 5
   chaseToAttackTransitTime: 20
-  retreatDistance: 4.5
+  retreatDistance: 5.5
   maxRetreatDistance: 7
   followDistance: 13
   staggerThreshold: 10
@@ -229,7 +230,7 @@ MonoBehaviour:
   enemyNavAgent: {fileID: 6022271626846796852}
   followSpeed: 78
   retreatSpeed: 55
-  chaseSpeed: 400
+  chaseSpeed: 300
   roamSpeed: 30
   turnSpeed: 10
   _dashDistance: 15
@@ -262,10 +263,10 @@ MonoBehaviour:
   slashSpatterEffect: {fileID: 4669209040098307740}
   attackIndicatorEffect: {fileID: 3976339564999742977}
   attackIndicatorVolume: 0.1
-  footStepVolume: 0.01
+  footStepVolume: 0.05
   footStepTimer: 0.08
-  hurtSoundVolume: 0.03
-  zombieSoundVolume: 0.01
+  hurtSoundVolume: 0.09
+  zombieSoundVolume: 0.08
 --- !u!1001 &728802666591245305
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -761,10 +762,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1337840784358735848}
     m_Modifications:
+    - target: {fileID: 350681989998181233, guid: 3ac75813af0147947a38e01f127b8a6f,
+        type: 3}
+      propertyPath: ClampVelocityModule.dampen
+      value: 0.4
+      objectReference: {fileID: 0}
     - target: {fileID: 521441697229490654, guid: 3ac75813af0147947a38e01f127b8a6f,
         type: 3}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 521441697229490654, guid: 3ac75813af0147947a38e01f127b8a6f,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.68
+      objectReference: {fileID: 0}
+    - target: {fileID: 521441697229490654, guid: 3ac75813af0147947a38e01f127b8a6f,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.68
+      objectReference: {fileID: 0}
+    - target: {fileID: 521441697229490654, guid: 3ac75813af0147947a38e01f127b8a6f,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.68
       objectReference: {fileID: 0}
     - target: {fileID: 521441697229490654, guid: 3ac75813af0147947a38e01f127b8a6f,
         type: 3}
@@ -774,7 +795,7 @@ PrefabInstance:
     - target: {fileID: 521441697229490654, guid: 3ac75813af0147947a38e01f127b8a6f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 0.867
       objectReference: {fileID: 0}
     - target: {fileID: 521441697229490654, guid: 3ac75813af0147947a38e01f127b8a6f,
         type: 3}
@@ -815,6 +836,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 521441697229490654, guid: 3ac75813af0147947a38e01f127b8a6f,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4523306081381216688, guid: 3ac75813af0147947a38e01f127b8a6f,
         type: 3}

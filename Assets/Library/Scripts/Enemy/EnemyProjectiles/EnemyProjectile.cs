@@ -7,6 +7,7 @@ using System;
 public class EnemyProjectile : MonoBehaviour
 {
     [SerializeField] protected Rigidbody rb;
+    
 
     protected GameObject _owner;
     protected Vector3 _shootDir = Vector3.forward;
@@ -17,6 +18,7 @@ public class EnemyProjectile : MonoBehaviour
     [SerializeField] protected int _reflectedDamage;
     [SerializeField] protected float _lifeTime;
     [SerializeField] protected float _destroyDelay;
+    [SerializeField] protected bool _canBeReflected;
     [SerializeField] protected AudioSource _audioSource;
     
     
@@ -55,6 +57,7 @@ public class EnemyProjectile : MonoBehaviour
 
     public void ReflectBulletReverse()
     {
+        if(!_canBeReflected) { return; }
         if(_deflected) { return; }
         switch (projectileDeflectMethod)    
         {
@@ -74,7 +77,8 @@ public class EnemyProjectile : MonoBehaviour
 
     private void ReflectBulletToOwner()
     {
-        if(_owner == null) { return; }
+        if (!_canBeReflected) { return; }
+        if (_owner == null) { return; }
         ChangeShootDir(_owner.transform.position - transform.position);
         _deflected = true;
     }

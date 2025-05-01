@@ -27,6 +27,7 @@ namespace Enemy
         public event Action<EnemyBase> OnEnemyDeaths;
         public delegate void OnCallEnemyDeath(EnemyBase enemy);
         public static event OnCallEnemyDeath OnEnemyDeathsEvent;
+        [SerializeField] private bool TEST_LowHealth;
         #region DATA CONFIG
 
 
@@ -224,6 +225,7 @@ namespace Enemy
 
         public virtual void Start()
         {
+            if (TEST_LowHealth) { maxHealth = 1; }
             enemyNavAgent.updateRotation = false;
             isStagger = false;
             canMove = true;
