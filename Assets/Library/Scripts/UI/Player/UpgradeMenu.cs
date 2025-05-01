@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using Core.Events;
+using UnityEngine.InputSystem;
 
 namespace UI
 {
@@ -29,12 +31,46 @@ namespace UI
 
         private int _totalCurrentGemUse; //Gem use temporary
         private float targetValue;
+        private PlayerInput playerInput;
         
-       
+        [SerializeField] private Button exitButton;
+
+        private void Awake()
+        {
+            playerInput = new PlayerInput();
+            exitButton?.onClick.AddListener(CloseUpgradeMenu);
+        }
+
         void Start()
         {
             SetUpUI();
         }
+
+        private void OnEnable()
+        {
+            playerInput.Player.OpenUpgradeMenu.performed += EnableUpgradeMenu;
+            playerInput.Enable();
+        }
+
+        private void OnDisable()
+        {
+            playerInput.Player.OpenUpgradeMenu.performed -= EnableUpgradeMenu;
+            playerInput.Disable();
+        }
+
+        private void EnableUpgradeMenu(InputAction.CallbackContext context)
+        { 
+            if (GameManager.Instance.state != GameState.PLAYING) { return; }
+            upgradeMenuObj.SetActive(true);
+            GameManager.Instance.UpdateGameState(GameState.OPENMENU);
+        }
+
+        private void CloseUpgradeMenu()
+        {
+            upgradeMenuObj.SetActive(false);
+            GameManager.Instance.UpdateGameState(GameState.PLAYING);
+        }
+        
 
         public void UpdateExpBar(float currentExpAmount, float maxExpAmount)
         {

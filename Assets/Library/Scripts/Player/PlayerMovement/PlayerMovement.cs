@@ -100,11 +100,12 @@ public class PlayerMovement : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
         _camera = Camera.main;
         _playerInput = new PlayerInput();
-        currentCharge = maxCharge;
         m_PlayerBase = GetComponent<PlayerBase>();
         _rb = GetComponent<Rigidbody>();
         totalDashTime = dashRecoverTimePerCharge * maxCharge;
+        
     }
+    
 
     private void OnEnable()
     {
@@ -154,6 +155,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
+        currentCharge = (int)PlayerDatas.Instance.GetStats.dashChargeStat;
         //if (dashChargeUpdateCoroutine != null)
         //{
         //    StopCoroutine(dashChargeUpdateCoroutine);
@@ -380,9 +382,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void RechargeDash()
     {
-        if (currentCharge >= maxCharge) { return; }
+        if (currentCharge >= PlayerDatas.Instance.GetStats.dashChargeStat) { return; }
 
-        dashRecoverTimePerChargeCount += Time.deltaTime * dashRegenMultiplier;
+        dashRecoverTimePerChargeCount += Time.deltaTime * PlayerDatas.Instance.GetStats.dashRecoveryStat;
         OnDashRecoverTimeChanged?.Invoke();
 
         if (dashRecoverTimePerChargeCount > dashRecoverTimePerCharge)
@@ -456,7 +458,7 @@ public class PlayerMovement : MonoBehaviour
 
     public int GetMaxCharge()
     {
-        return maxCharge;
+        return (int)PlayerDatas.Instance.GetStats.dashChargeStat;
     }
 
 

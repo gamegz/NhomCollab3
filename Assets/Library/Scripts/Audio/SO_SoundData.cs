@@ -29,4 +29,11 @@ public class SO_SoundData : ScriptableObject
     [Space(20)]
     public List<AudioClip> PickupSound;
     public AudioClip LevelUpSound;
+
+    [Space(20)] 
+    [Header("Enemy")] 
+    public AudioClip AttackIndicatorSound;
+    public AudioClip FootStepSound;
+    public List<AudioClip> hurtSound;
+    public List<AudioClip> zombieSound;
 }

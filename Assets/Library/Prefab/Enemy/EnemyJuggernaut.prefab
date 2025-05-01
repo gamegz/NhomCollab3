@@ -261,6 +261,11 @@ MonoBehaviour:
   bloodSpatterEffect: {fileID: 5599941269536080865}
   slashSpatterEffect: {fileID: 7848415079028005630}
   attackIndicatorEffect: {fileID: 8071703857039868145}
+  attackIndicatorVolume: 0.1
+  footStepVolume: 0.01
+  footStepTimer: 0.1
+  hurtSoundVolume: 0.03
+  zombieSoundVolume: 0.01
 --- !u!1001 &313973418493952325
 PrefabInstance:
   m_ObjectHideFlags: 0

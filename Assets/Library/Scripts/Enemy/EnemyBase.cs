@@ -126,7 +126,7 @@ namespace Enemy
         public DeathMethod deathMethod;
 
         [SerializeField] private Animator enemyAnimator;
-
+        
         public bool IsTokenUser => isTokenUser;
         public Animator enemyAnimators => enemyAnimator;
         public float DashDuration { get { return _dashDuration; } }
@@ -179,11 +179,22 @@ namespace Enemy
         [SerializeField] private ParticleSystem slashSpatterEffect;
         [SerializeField] private ParticleSystem attackIndicatorEffect;
 
+        [Header("Sounds")] 
+        [SerializeField] private float attackIndicatorVolume;
+
+        [SerializeField] private float footStepVolume;
+        
+        [SerializeField] private float footStepTimer;
+        [SerializeField] private float hurtSoundVolume = 1f;
+        [SerializeField] private float zombieSoundVolume = .05f;
+
+        private float footStepTimerCount;
+
 
         public virtual void Awake()
         {
             SetUpStateMachine();
-
+            _stateMachine.onStateChange += PlayRandomZombieSound;
         }
 
         protected virtual void OnEnable()
@@ -196,6 +207,8 @@ namespace Enemy
         {
             WeaponManager.OnPerformChargedATK -= HitByChargedATK;
             GameManager.OnPlayerDeathEvent -= OnDeath;
+            
+            _stateMachine.onStateChange -= PlayRandomZombieSound;
         }
 
         public virtual void SetUpStateMachine()
@@ -219,7 +232,7 @@ namespace Enemy
             currentSpeed = roamSpeed;
             currentHealth = maxHealth;
             stunPoint = (canBeStunned) ? stunPoint : maxHealth;
-
+                
             attackCollider.enabled = false;
             attackCollider.gameObject.SetActive(false);
             attackCoolDownCount = attackCooldown;
@@ -247,6 +260,20 @@ namespace Enemy
             {
                 LookAtTarget(transform, playerRef.transform, turnSpeed);
             }
+            
+            footStepTimerCount -= Time.deltaTime;
+            if (footStepTimerCount <= 0)
+            {
+                GameManager.Instance.PlaySound(Sound.enemyFootStep, footStepVolume);
+                footStepTimerCount = (currentSpeed / 10) * footStepTimer;
+                
+            }
+            
+        }
+
+        protected virtual void PlayRandomZombieSound()
+        {
+            GameManager.Instance.PlaySound(Sound.zombieSound, zombieSoundVolume);
         }
 
         public virtual void FixedUpdateLogic()
@@ -450,7 +477,7 @@ namespace Enemy
 
         }
 
-        public void ShootRayAttack(Vector3 direction)
+        public virtual void ShootRayAttack(Vector3 direction)
         {
             if (isStagger) return;
 
@@ -492,6 +519,7 @@ namespace Enemy
             
             PlayBloodEffect();
             PlaySplashEffect();
+            GameManager.Instance.PlaySound(Sound.enemyHurt, hurtSoundVolume);
             enemyAnimator.SetTrigger("Hurt");
             OnEnemyDamaged?.Invoke(isChargedATK);
 
@@ -611,13 +639,13 @@ namespace Enemy
             isStunned = true;
             hasBeenStunned = true;
             canMove = false;
-            Debug.Log("Stun");
+            //Debug.Log("Stun");
             enemyAnimator.SetTrigger("Idle");
             yield return new WaitForSeconds(stunDuration);
 
             isStunned = false;
             canMove = true;
-            Debug.Log("End Stun");
+            //Debug.Log("End Stun");
         }
 
         public virtual void OnDeath()
@@ -638,14 +666,13 @@ namespace Enemy
             Vector3 spawnPosition = transform.position - new Vector3(0, 0.5f, 0);
             GameObject expObj = Instantiate(expPrefab, spawnPosition, Quaternion.identity);
             ExpOrb expOrb = expObj.GetComponent<ExpOrb>();
-            if(expOrb == null) { Debug.LogWarning("missing script Reference");  return; } 
-            if(playerRef == null) { Debug.LogWarning("missing playerRef Reference");  return; } 
-            if(playerStatsRef == null) { Debug.LogWarning("missing playerRefStats Reference");  return; } 
-            if(expObj == null) { Debug.LogWarning("missing obj Reference");  return; } 
-            expOrb.SetExp(_dropValue, playerStatsRef, playerRef);
+            // if(expOrb == null) { Debug.LogWarning("missing script Reference");  return; } 
+            // if(playerRef == null) { Debug.LogWarning("missing playerRef Reference");  return; } 
+            // if(playerStatsRef == null) { Debug.LogWarning("missing playerRefStats Reference");  return; } 
+            // if(expObj == null) { Debug.LogWarning("missing obj Reference");  return; } 
+            expOrb?.SetExp(_dropValue, playerStatsRef, playerRef);
             if (GameManager.Instance.isPlayerDead) 
             {
-                Debug.Log("PlayerDie");
                 Destroy(expObj); 
             }
             OnEnemyDeaths?.Invoke(this);
@@ -788,8 +815,15 @@ namespace Enemy
             attackIndicatorEffect?.Play();
         }
         #endregion
-        
-        
+
+        #region SoundEffect
+
+        public void PlayAttackIndicatorSound()
+        {
+            GameManager.Instance.PlaySound(Sound.enemyAttackIndicator, attackIndicatorVolume);
+        }
+
+        #endregion
         
         
         

@@ -12,7 +12,10 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private Button continueButton;
     [SerializeField] private Button mainMenuButton;
     [SerializeField] private Button quitButton;
+    [SerializeField] private Button confirmButton;
+    [SerializeField] private Button cancelButton;
     [SerializeField] private RectTransform mainPanel;
+    [SerializeField] private GameObject confirmPanel;
     //[SerializeField] private string mainMenuName = "MainMenu";
 
     private Sequence menuTween;
@@ -38,11 +41,26 @@ public class PauseMenu : MonoBehaviour
         });
 
         mainMenuButton?.onClick.AddListener(() => {
+            //Time.timeScale = 1.0f;
+            //gamePaused = false;
+            confirmPanel.SetActive(true);
+            // PauseMenuHolder.SetActive(false);
+            // GameManager.Instance.UpdateGameState(GameState.SELECTGAME);
+        });
+        
+        cancelButton?.onClick.AddListener(() =>
+        {
+            confirmPanel.SetActive(false);
+        });
+        
+        confirmButton?.onClick.AddListener(() =>
+        {
             Time.timeScale = 1.0f;
-            gamePaused = false;
+            confirmPanel.SetActive(false);
             PauseMenuHolder.SetActive(false);
             GameManager.Instance.UpdateGameState(GameState.SELECTGAME);
         });
+        
 
         quitButton?.onClick.AddListener(() => GameManager.Instance.PublicOnApplicationQuit());
         PauseMenuHolder.SetActive(false);       

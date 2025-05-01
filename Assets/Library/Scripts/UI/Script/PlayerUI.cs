@@ -5,7 +5,7 @@ public class PlayerUI : MonoBehaviour
 {
     [Header("Reference")]
     [SerializeField] private WeaponManager weaponManager;
-    [SerializeField] private Animator healTextAnimator;
+    //[SerializeField] private Animator healTextAnimator;
     [SerializeField] private Camera mainCamera;
     [SerializeField] private GameObject instructionText;
     [SerializeField] private GameObject instructionText2;
@@ -28,17 +28,17 @@ public class PlayerUI : MonoBehaviour
 
     private void Awake()
     {
-        if (healTextAnimator == null)
-            Debug.Log("There isn't any Over Heal animator");
-        else
-        {
-            healText = healTextAnimator.GetComponent<TextMeshProUGUI>();
-
-            if (healText == null)
-            {
-                Debug.Log("Heal text wasn't assigned");
-            }
-        }
+        // if (healTextAnimator == null)
+        //     Debug.Log("There isn't any Over Heal animator");
+        // else
+        // {
+        //     healText = healTextAnimator.GetComponent<TextMeshProUGUI>();
+        //
+        //     if (healText == null)
+        //     {
+        //         Debug.Log("Heal text wasn't assigned");
+        //     }
+        // }
 
         //playerHearts[playerHearts.Length - 1].transform.localScale = Vector3.zero;
 

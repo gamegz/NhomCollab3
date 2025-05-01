@@ -144,7 +144,6 @@ public class EnemySpawner : MonoBehaviour
             
             if (sectionResetRef != null && index >= 0 && index < sectionReset.ExtraRoomList.Count)
             {
-                Debug.Log(index);
                 sectionReset.ExtraRoomList[index].MarkAsCleared();
             }
         }

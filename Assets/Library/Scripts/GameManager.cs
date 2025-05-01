@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     
     [Header("GlobalSound")]
     public AudioSource townSound;
+    public AudioSource bossBattleMusic;
     private void Awake()
     {
         Cursor.visible = true;
@@ -84,7 +85,6 @@ public class GameManager : MonoBehaviour
             case GameState.PLAYING:
                 //Cursor.visible = false;
                 //SceneManager.LoadScene(playRoomName);
-                Debug.Log("Playing Game");
                 Time.timeScale = 1;
                 break;
             case GameState.WIN:
@@ -102,34 +102,22 @@ public class GameManager : MonoBehaviour
 
         OnGameStateChange?.Invoke(newState);
     }
-
-    //public void TogglePause()
-    //{
-    //    if (Time.timeScale > 0)
-    //    {
-    //        previousTimeScale = Time.timeScale;
-    //        Time.timeScale = 0;
-    //        isPaused = true;
-    //    }
-    //    else if (Time.timeScale == 0)
-    //    {
-    //        Time.timeScale = previousTimeScale;
-    //        isPaused = false;
-    //    }
-    //}
-
-    //public void PublicTogglePause()
-    //{
-    //    TogglePause();
-    //    if (Time.timeScale == 1f && pausePanel != null)
-    //    {
-    //        pausePanel.SetActive(false);
-    //    }
-    //}
-
+    
     public void OnEnterRoom()
     {
         townSound.Stop();
+    }
+
+    public void OnEnterBossRoom()
+    {
+        townSound.Stop();
+        bossBattleMusic.Play();
+    }
+
+    public void OnFinishBossRoom()
+    {
+        bossBattleMusic.Stop();
+        townSound.Play();
     }
 
     public void OnExitRoom()
@@ -186,10 +174,9 @@ public class GameManager : MonoBehaviour
     public List<GameObject> GetClaimedRespawnPoints()
     {
         
-        Debug.Log("Claimed Respawn Points: " + RespawnPoint.Count);
         foreach (var point in RespawnPoint)
         {
-            Debug.Log("Respawn Point: " + point.name);
+            //Debug.Log("Respawn Point: " + point.name);
         }
         return RespawnPoint;
     }
@@ -268,6 +255,20 @@ public class GameManager : MonoBehaviour
             case Sound.levelUpSound:
                 _audioManager.PlaySoundEffect(soundData.LevelUpSound).SetSourceVolume(volume);
                 break;
+            case Sound.enemyAttackIndicator:
+                _audioManager.PlaySoundEffect(soundData.AttackIndicatorSound).SetSourceVolume(volume);
+                break;
+            case Sound.enemyFootStep:
+                _audioManager.PlaySoundEffect(soundData.FootStepSound).SetSourceVolume(volume);
+                break;
+            case Sound.enemyHurt:
+                randomIndex = Random.Range(0, soundData.hurtSound.Count);
+                _audioManager.PlaySoundEffect(soundData.hurtSound[randomIndex]).SetSourceVolume(volume);
+                break;
+            case Sound.zombieSound:
+                randomIndex = Random.Range(0, soundData.zombieSound.Count);
+                _audioManager.PlaySoundEffect(soundData.zombieSound[randomIndex]).SetSourceVolume(volume);
+                break;
         }
     }
 
@@ -312,5 +313,9 @@ public enum Sound
     playerHurt,
     playerHeal,
     pickUpSound,
-    levelUpSound
+    levelUpSound,
+    enemyAttackIndicator,
+    enemyFootStep,
+    enemyHurt,
+    zombieSound
 }

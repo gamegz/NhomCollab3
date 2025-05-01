@@ -17,6 +17,7 @@ public class EnemyProjectile : MonoBehaviour
     [SerializeField] protected int _reflectedDamage;
     [SerializeField] protected float _lifeTime;
     [SerializeField] protected float _destroyDelay;
+    [SerializeField] protected AudioSource _audioSource;
     
     
     //Effects
@@ -106,6 +107,9 @@ public class EnemyProjectile : MonoBehaviour
         {
             if(_deflected) { return; }
             other.gameObject.GetComponent<IDamageable>().TakeDamage(_damage);
+            if(_audioSource != null)
+                _audioSource.volume = 0.02f;
+            _audioSource?.Play();
             SpawnExplodeEffect(transform.position);
             Destroy(gameObject);
         }
@@ -113,6 +117,9 @@ public class EnemyProjectile : MonoBehaviour
         {
             if (!_deflected) { return; }
             other.gameObject.GetComponent<IDamageable>().TakeDamage(_reflectedDamage);
+            if(_audioSource != null)
+                _audioSource.volume = 0.02f;
+            _audioSource?.Play();
             SpawnExplodeEffect(transform.position);
             Destroy(gameObject);
         }

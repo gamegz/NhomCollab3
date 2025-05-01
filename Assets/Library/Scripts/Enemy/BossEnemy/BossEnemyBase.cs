@@ -1,12 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Enemy;
 using Enemy.statemachine.States;
+using Random = UnityEngine.Random;
 
 public class BossEnemyBase : EnemyBase ///This is getting messy af
 {
+    public static Action OnBossDeath;
+    
     [Header("ATTACK STATES")]
     public EnemyAttackState enemyAttackMelee1;
     public EnemyAttackState enemyAttackMelee2;
@@ -25,7 +29,11 @@ public class BossEnemyBase : EnemyBase ///This is getting messy af
     //public EnemyRetreatState bossRetreat;
     //public EnemyFollowState bossFollow;
 
-
+    public AudioSource bossWalkSound;
+    public AudioSource lazerShootSound;
+    public AudioSource teleportSound;
+    public AudioSource AOEAttackSound;
+    public AudioSource swordSlashSound;
 
     private PlayerInput playerInput;
     private int evadeChance = 18;
@@ -71,7 +79,6 @@ public class BossEnemyBase : EnemyBase ///This is getting messy af
             //Quaternion rotation = Quaternion.LookRotation(dirToTarget, Vector3.up);
             //transform.rotation = rotation;
         }
-            
         base.UpdateLogic();
     }
 
@@ -82,6 +89,7 @@ public class BossEnemyBase : EnemyBase ///This is getting messy af
 
     public override void OnDeath()
     {
+        OnBossDeath?.Invoke();
         base.OnDeath();
     }
 
@@ -118,6 +126,11 @@ public class BossEnemyBase : EnemyBase ///This is getting messy af
         if (currentHealth < ((maxHealth / 100) * 40))
         {
             evadeChance = 10;
+        }
+
+        if (currentHealth <= 0)
+        {
+            OnDeath();
         }
     }
 

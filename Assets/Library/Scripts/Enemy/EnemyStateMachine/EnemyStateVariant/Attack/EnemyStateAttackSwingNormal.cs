@@ -49,6 +49,7 @@ namespace Enemy.statemachine.States
                 //Effectttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
                 if (!_attackIndicatorPlayed)
                 {
+                    _enemy.PlayAttackIndicatorSound();
                     _enemy.PlayAttackIndicatorEffect();
                     _attackIndicatorPlayed = true;
                 }

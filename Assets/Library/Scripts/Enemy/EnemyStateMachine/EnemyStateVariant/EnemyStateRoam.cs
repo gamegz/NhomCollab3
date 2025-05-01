@@ -27,6 +27,7 @@ namespace Enemy.statemachine.States
 
         public override void UpdateState()
         {
+            if(_enemy.playerRef == null) {return;} 
             _enemy.UpdateLogicByPlayerDistance();
 
             if (_currentRoamDelayCountDown > 0) 

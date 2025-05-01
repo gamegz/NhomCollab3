@@ -1,7 +1,7 @@
 {
-  "PlayerHealth": 5,
-  "PlayerDamage": 1,
-  "PlayerMoveSpeed": 8.0,
+  "PlayerHealth": 2,
+  "PlayerDamage": 20,
+  "PlayerMoveSpeed": 7.0,
   "PlayerAttackSpeed": 0.3,
   "PlayerRecovery": 1,
   "PlayerDashCharge": 1,
@@ -9,9 +9,9 @@
   "PlayerGemCount" : 0,
   "CurrentExperienceAmount" : 0,
 
-  "healthStat": 5,
-  "damageStat": 1,
-  "moveSpeedStat": 8,
+  "healthStat": 2,
+  "damageStat": 20,
+  "moveSpeedStat": 7,
   "attackSpeedStat": 0.3,
   "recoveryStat": 1,
   "dashChargeStat": 1,

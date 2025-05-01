@@ -116,6 +116,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""OpenUpgradeMenu"",
+                    ""type"": ""Button"",
+                    ""id"": ""6bd45666-44f9-4621-af1b-180ccad261bd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -413,6 +422,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Escape"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""94726af3-c4e5-453c-89dd-768784d7be6d"",
+                    ""path"": ""<Keyboard>/u"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""OpenUpgradeMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1030,6 +1050,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Player_OnInteract = m_Player.FindAction("OnInteract", throwIfNotFound: true);
         m_Player_Parry = m_Player.FindAction("Parry", throwIfNotFound: true);
         m_Player_Escape = m_Player.FindAction("Escape", throwIfNotFound: true);
+        m_Player_OpenUpgradeMenu = m_Player.FindAction("OpenUpgradeMenu", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1114,6 +1135,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_OnInteract;
     private readonly InputAction m_Player_Parry;
     private readonly InputAction m_Player_Escape;
+    private readonly InputAction m_Player_OpenUpgradeMenu;
     public struct PlayerActions
     {
         private @PlayerInput m_Wrapper;
@@ -1128,6 +1150,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @OnInteract => m_Wrapper.m_Player_OnInteract;
         public InputAction @Parry => m_Wrapper.m_Player_Parry;
         public InputAction @Escape => m_Wrapper.m_Player_Escape;
+        public InputAction @OpenUpgradeMenu => m_Wrapper.m_Player_OpenUpgradeMenu;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1167,6 +1190,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Escape.started += instance.OnEscape;
             @Escape.performed += instance.OnEscape;
             @Escape.canceled += instance.OnEscape;
+            @OpenUpgradeMenu.started += instance.OnOpenUpgradeMenu;
+            @OpenUpgradeMenu.performed += instance.OnOpenUpgradeMenu;
+            @OpenUpgradeMenu.canceled += instance.OnOpenUpgradeMenu;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -1201,6 +1227,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Escape.started -= instance.OnEscape;
             @Escape.performed -= instance.OnEscape;
             @Escape.canceled -= instance.OnEscape;
+            @OpenUpgradeMenu.started -= instance.OnOpenUpgradeMenu;
+            @OpenUpgradeMenu.performed -= instance.OnOpenUpgradeMenu;
+            @OpenUpgradeMenu.canceled -= instance.OnOpenUpgradeMenu;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -1401,6 +1430,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnOnInteract(InputAction.CallbackContext context);
         void OnParry(InputAction.CallbackContext context);
         void OnEscape(InputAction.CallbackContext context);
+        void OnOpenUpgradeMenu(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

@@ -65,7 +65,6 @@ public class StatsUpgrade : MonoBehaviour
         currentExp = PlayerDatas.Instance.GetStats.currentExperienceAmount;
         GemCount = PlayerDatas.Instance.GetStats.GemCount;
         expOverflow = PlayerDatas.Instance.GetStats.overflowExperience;
-        Debug.Log(speedUpgradeGroup.baseStat);
         //Create dic
         upgradeGroupDic = new Dictionary<UpgradeType, UpgradeGroup>
         {
@@ -91,7 +90,8 @@ public class StatsUpgrade : MonoBehaviour
         upgradeNum);
         //Replace the stats
         PlayerDatas.Instance.playerStatsData.SetUpgradeLevel(upgradeType, upgradeTarget.currentLevel);
-        PlayerDatas.Instance.OnStatsUpgrade(upgradeType, upgradeTarget.trueStats, this);
+        PlayerDatas.Instance.OnStatsUpgrade(upgradeType, upgradeTarget.trueStats, this, GemCount);
+        PlayerBase.Instance.UpgradeHealthBarUIWhenUpgrade();
         upgradeGroupDic[upgradeType] = upgradeTarget;
     }
 
@@ -141,7 +141,6 @@ public class StatsUpgrade : MonoBehaviour
             GemCount = stats.GemCount;
             currentExp = stats.currentExperienceAmount;
         }
-        Debug.Log("GemCountInStats: " + GemCount);
         upgradeMenu.UpdateExpBar(currentExp, maxExpPerLevel);
     }
 }

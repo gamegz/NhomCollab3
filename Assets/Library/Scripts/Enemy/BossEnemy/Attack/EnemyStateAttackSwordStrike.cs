@@ -68,6 +68,7 @@ namespace Enemy.statemachine.States
                 // Efectttttttttttttttttttttttttttttttttttttttttttttttttttttttt
                 if (!_attackIndicatorPlayed)
                 {
+                    bossEnemy.PlayAttackIndicatorSound();
                     bossEnemy.PlayAttackIndicatorEffect();
                     _attackIndicatorPlayed = true;
                 }
@@ -176,7 +177,7 @@ namespace Enemy.statemachine.States
                 bossEnemy.canTurn = false;
                 //Effecttttttttttttttttttttttttttttttttttttttttttttttttttttttt
                 PlaySwordStrikeEffect();
-                
+                bossEnemy.swordSlashSound.Play();
                 bossEnemy.InnitAttackCollider(0.13f);              
                 yield return new WaitForSeconds(attackTime);
                 bossEnemy.canTurn = true;

@@ -28,9 +28,9 @@ public class SelectionPanelScript : MonoBehaviour
     {
         List<GameObject> claimedPoints = GameManager.Instance.GetClaimedRespawnPoints();
         GameObject currentPoint = GameManager.Instance.GetCurrentRespawnPoint();
-        Debug.LogWarning("Claimed Respawn Points: " + string.Join(", ", claimedPoints.Select(p => p.name)));
-        Debug.LogWarning("Current Respawn Point: " + (currentPoint != null ? currentPoint.name : "None"));
-        Debug.LogWarning("Current Respawn Point in GameManager: " + (GameManager.Instance.GetCurrentRespawnPoint() != null ? GameManager.Instance.GetCurrentRespawnPoint().name : "None"));
+        //Debug.LogWarning("Claimed Respawn Points: " + string.Join(", ", claimedPoints.Select(p => p.name)));
+        //Debug.LogWarning("Current Respawn Point: " + (currentPoint != null ? currentPoint.name : "None"));
+        //Debug.LogWarning("Current Respawn Point in GameManager: " + (GameManager.Instance.GetCurrentRespawnPoint() != null ? GameManager.Instance.GetCurrentRespawnPoint().name : "None"));
         // Clear old buttons
         foreach (Transform child in buttonContainer)
         {
@@ -41,7 +41,7 @@ public class SelectionPanelScript : MonoBehaviour
         // Create new buttons for each claimed respawn point (except current one)
         foreach (GameObject point in claimedPoints)
         {
-            Debug.Log($"Checking Point: {point.name}, Current: {currentPoint?.name ?? "None"}");
+            //Debug.Log($"Checking Point: {point.name}, Current: {currentPoint?.name ?? "None"}");
             if (!GameManager.Instance.isPlayerDead && point == currentPoint) continue;  // Skip current point
 
             Button newButton = Instantiate(respawnButtonPrefab, buttonContainer);

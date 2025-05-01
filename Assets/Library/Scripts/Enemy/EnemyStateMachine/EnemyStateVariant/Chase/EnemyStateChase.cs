@@ -29,6 +29,7 @@ namespace Enemy.statemachine.States
 
         public override void UpdateState()
         {
+            if(_enemy.playerRef == null) {return;} 
             _enemy.UpdateLogicByPlayerDistance();
 
             _enemy.enemyNavAgent.SetDestination(_enemy.playerRef.transform.position);

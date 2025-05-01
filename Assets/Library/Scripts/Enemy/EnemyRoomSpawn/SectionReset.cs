@@ -32,6 +32,7 @@ public class ExtraRoom
 
     public bool WasCleared;
     public bool WasResetSinceCleared;
+    
 
     public void Reset()
     {
@@ -66,7 +67,6 @@ public class ExtraRoom
     {
         foreach (GameObject roomTrigger in RoomTrigger)
         {
-            Debug.Log("work ?");
             UnResetRoomTriggerAndMarkClear(roomTrigger);
         }
         WasResetSinceCleared = false;
@@ -79,7 +79,6 @@ public class ExtraRoom
             BoxCollider boxCollider = roomTrigger.GetComponent<BoxCollider>();
             if (boxCollider != null)
             {
-                Debug.Log("Work or not?");
                 boxCollider.enabled = false;
             }
         }
@@ -89,6 +88,9 @@ public class SectionReset : MonoBehaviour, IInteractable
 {
     public List<RoomMain> MainRoomList;
     public List<ExtraRoom> ExtraRoomList;
+    
+    [SerializeField] private GameObject holdEText;
+    [SerializeField] private GameObject pressEText;
     void Start()
     {
         
@@ -99,87 +101,36 @@ public class SectionReset : MonoBehaviour, IInteractable
         
     }
 
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    if (other.gameObject.tag == "Player")
-    //    {
-    //        foreach (Room room in RoomList)
-    //        {
-    //            if (room.RoomTrigger != null)
-    //            {
-    //                BoxCollider boxCollider = room.RoomTrigger.GetComponent<BoxCollider>();
-    //                if (boxCollider != null)
-    //                {
-    //                    boxCollider.enabled = true;
-    //                }
-    //            }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (GameManager.Instance.isRespawnPointClaimed(this.gameObject))
+        {
+            pressEText.SetActive(true);
+                
+            return;
+        }
+        else
+        {
+            holdEText.SetActive(true);
+        }
+    }
 
-    //            if (room.EntranceDoor != null)
-    //            {
-    //                room.EntranceDoor.SetActive(false);
-    //            }
-
-    //            if (room.ExitDoor != null)
-    //            {
-    //                room.ExitDoor.SetActive(true);
-    //            }
-    //        }
-    //    }
-    //}
+    private void OnTriggerExit(Collider other)
+    {
+        pressEText.SetActive(false);
+        holdEText.SetActive(false);
+    }
 
     public void ResetRoomAfterTeleport()
     {
         foreach (RoomMain room in MainRoomList)
         {
-            /*if (room.RoomTrigger1 != null)
-            {
-                BoxCollider boxCollider = room.RoomTrigger1.GetComponent<BoxCollider>();
-                if (boxCollider != null)
-                {
-                    boxCollider.enabled = true;
-                }
-            }
-
-            if (room.RoomTrigger2 != null)
-            {
-                BoxCollider boxCollider = room.RoomTrigger2.GetComponent<BoxCollider>();
-                if (boxCollider != null)
-                {
-                    boxCollider.enabled = true;
-                }
-            }
-
-            if (room.RoomTrigger3 != null)
-            {
-                BoxCollider boxCollider = room.RoomTrigger3.GetComponent<BoxCollider>();
-                if (boxCollider != null)
-                {
-                    boxCollider.enabled = true;
-                }
-            }
-
-            if (room.RoomTrigger4 != null)
-            {
-                BoxCollider boxCollider = room.RoomTrigger4.GetComponent<BoxCollider>();
-                if (boxCollider != null)
-                {
-                    boxCollider.enabled = true;
-                }
-            }*/
+            
             ResetMainRoom(room.RoomTrigger1);
             ResetMainRoom(room.RoomTrigger2);
             ResetMainRoom(room.RoomTrigger3);
             ResetMainRoom(room.RoomTrigger4);
             
-            // if (room.sharedSectionResetRef != null)
-            // {
-            //     var extraRoom = room.sharedSectionResetRef.ExtraRoomList[room.sharedExtraRoomIndex];
-            //     if (extraRoom.WasCleared)
-            //     {
-            //         extraRoom.WasResetSinceCleared = true;
-            //         Debug.Log("Synced WasResetSinceCleared to shared ExtraRoom");
-            //     }
-            // }
             foreach (var link in room.sharedSectionResetLinks)
             {
                 if (link.sectionResetRef != null)
@@ -191,31 +142,17 @@ public class SectionReset : MonoBehaviour, IInteractable
                         if (extraRoom.WasCleared)
                         {
                             extraRoom.WasResetSinceCleared = true;
-                            Debug.Log("Synced WasResetSinceCleared to shared ExtraRoom");
                         }
                     }
                 }
             }
-
-            // if (room.Door1 != null)
-            // {
-            //     room.Door1.SetActive(false);
-            // }
-            //
-            // if (room.ExitDoor != null)
-            // {
-            //     room.ExitDoor.SetActive(true);
-            // }
+            
         }
 
         foreach (ExtraRoom extraRoom in ExtraRoomList)
         {
-            Debug.Log(extraRoom);
-            Debug.Log(extraRoom.WasCleared);
-            Debug.Log(extraRoom.WasResetSinceCleared);
             if (extraRoom.WasCleared && extraRoom.WasResetSinceCleared)
             {
-                Debug.Log("ever work here ?");
                 extraRoom.UnResetToCleared();
             }
             else if (!extraRoom.WasCleared)
@@ -243,7 +180,9 @@ public class SectionReset : MonoBehaviour, IInteractable
         {
             return;
         }
-
+        
+        holdEText.SetActive(false);
+        pressEText.SetActive(true);
         GameManager.Instance.ClaimRespawnPoimt(this.gameObject);
     }
 }

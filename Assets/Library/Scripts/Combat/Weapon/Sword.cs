@@ -44,7 +44,7 @@ public class Sword : WeaponBase
 
         if (damagable != null && !other.CompareTag("Player"))
         {
-            damagable.TakeDamage(_weaponData.baseWeaponDamage);
+            damagable.TakeDamage((int)PlayerDatas.Instance.GetStats.damageStat);
         }
     }
 }

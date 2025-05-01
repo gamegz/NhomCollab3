@@ -67,6 +67,7 @@ namespace Enemy.statemachine.States
                 // Effectttttttttttttttttttttttttttttttttttttt
                 if (!_attackIndicatorPlayed)
                 {
+                    bossEnemy.PlayAttackIndicatorSound();
                     bossEnemy.PlayAttackIndicatorEffect();
                     _attackIndicatorPlayed = true;
                 }
@@ -153,6 +154,7 @@ namespace Enemy.statemachine.States
 
                 SpawnBlackHoleEffect(spawnEffectLocation.position);
                 bossEnemy.enemyNavAgent.Warp(telePos);
+                bossEnemy.teleportSound.Play();
                 Vector3 newSpawnPos = new Vector3 (telePos.x, telePos.y + 4, telePos.z);
                 SpawnBlackHoleEffect(newSpawnPos);
 

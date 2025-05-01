@@ -91,6 +91,7 @@ namespace Enemy.statemachine.States
                 // Effecttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
                 if (!_attackIndicatorPlayed)
                 {
+                    bossEnemy.PlayAttackIndicatorSound();
                     bossEnemy.PlayAttackIndicatorEffect();
                     _attackIndicatorPlayed = true;
                 }
@@ -131,6 +132,7 @@ namespace Enemy.statemachine.States
             Vector3 dirToPlayer = bossEnemy.GetDirectionIgnoreY(bossEnemy.transform.position, bossEnemy.playerRef.transform.position);
             RaycastHit[] hit;
             lazerEffect.Play();
+            bossEnemy.lazerShootSound.Play();
             hit = Physics.BoxCastAll(shootLocation.position, new Vector3(1, 9, 1), bossEnemy.transform.forward, Quaternion.Euler(bossEnemy.transform.forward), distanceToPlayer, bossEnemy.layerData.hostileTargetLayer);
             foreach(RaycastHit rayHit in hit)
             {

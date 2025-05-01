@@ -81,10 +81,13 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     
     private LosePanelUI losePanelUI;
     private SelectionPanelScript spawnSelectionPanelUI;
+    private TooltipsUI _tooltipsUI;
     
     [Header("Sound")]
     [SerializeField] private float hurtSoundVolume;
     [SerializeField] private float healSoundVolume;
+    
+    private bool isFirstTimePlayer = true;
     private void Awake()
     {
         _playerInput = new PlayerInput();
@@ -92,6 +95,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         rb = GetComponent<Rigidbody>();
         losePanelUI = GetComponent<LosePanelUI>();
         spawnSelectionPanelUI = GetComponent<SelectionPanelScript>();
+        _tooltipsUI = GetComponent<TooltipsUI>();
 
         for(int i = 0; i < Object.FindObjectsOfType<PlayerBase>().Length; i++)
         {
@@ -151,19 +155,13 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         EnemyBase.OnEnemyDamaged -= IncreaseHealBar;
     }
 
-    //private void OnTriggerSpeedBuff()
-    //{
-    //    buffSpeed = 0.2f;
-    //}
-
-    //private void EndBuffDuration()
-    //{
-    //    buffSpeed = 1f;
-    //}
+    public void UpgradeHealthBarUIWhenUpgrade()
+    {
+        HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, PlayerDatas.Instance.GetStats.healthStat, SetHealthState(HealthStates.INCREASED));
+    }
 
     private void OnInteractWithObject(InputAction.CallbackContext context)
     {
-        Debug.LogWarning($"Interact pressed. Current Interactable: {currentInteractable}");
 
         if (currentInteractable == null)
         {
@@ -176,13 +174,11 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         {
             if (interactableObject != null && GameManager.Instance.isRespawnPointClaimed(interactableObject))
             {
-                Debug.Log("Opening Respawn Selection UI...");
                 GameManager.Instance.EnterOverviewMode();
                 spawnSelectionPanelUI.ShowRespawnSelectionUI();
                 //return;
             }
-
-            Debug.Log("asdasdasd");
+            
             isHolding = true;
             holdCounter = 0f;
             StartCoroutine(HoldToClaim());
@@ -235,8 +231,8 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         {
             currentInteractable.OnInteract();
         }
-        playerUI.ToggleInstructionText(false);
-        playerUI.ToggleInstructionText2(true);
+        //playerUI.ToggleInstructionText(false);
+        //playerUI.ToggleInstructionText2(true);
         isHolding = false;
     }
 
@@ -276,8 +272,15 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
             
             //PlayerDatas.Instance.OnPlayerHealthChange(modifiedHealth);
             PlayerDatas.Instance.GetStats.currentPlayerHealth -= modifiedHealth;
-            GameManager.Instance.PlaySound(Sound.playerHurt, hurtSoundVolume);
+            if(!GameManager.Instance.isPlayerDead)
+                GameManager.Instance.PlaySound(Sound.playerHurt, hurtSoundVolume);
             HealthModified?.Invoke(PlayerDatas.Instance.GetStats.currentPlayerHealth, PlayerDatas.Instance.GetStats.healthStat, SetHealthState(HealthStates.DECREASED));
+        }
+
+        if (isFirstTimePlayer)
+        {
+            _tooltipsUI.HealInstruction();
+            isFirstTimePlayer = false;
         }
 
         if (PlayerDatas.Instance.GetStats.currentPlayerHealth <= 0)
@@ -320,7 +323,7 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
 
     public void IncreaseHealBar(bool byChargedAttack) // ACTIVATED WHEN HITTING AN ENEMY
     {
-        currentHBProgress = Mathf.Clamp(currentHBProgress + HBIncreaseAmount, 0, maxHBRequirement + 1);
+        currentHBProgress = Mathf.Clamp(currentHBProgress + PlayerDatas.Instance.GetStats.recoveryStat, 0, maxHBRequirement + 1);
         clampedHBValue = Mathf.Clamp(currentHBProgress, 0, maxHBRequirement);
 
         if (clampedHBValue == maxHBRequirement)
@@ -463,14 +466,13 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
         {
             currentInteractable = interactable;
             GameManager.Instance.SetCurrentRespawnPoint(other.gameObject);
-            Debug.Log($"Interactable object detected: {other.gameObject.name}");
-            if (GameManager.Instance.isRespawnPointClaimed(other.gameObject))
-            {
-                playerUI.ToggleInstructionText2(true);
-                
-                return;
-            }
-            playerUI.ToggleInstructionText(true);
+            // if (GameManager.Instance.isRespawnPointClaimed(other.gameObject))
+            // {
+            //     playerUI.ToggleInstructionText2(true);
+            //     
+            //     return;
+            // }
+            // playerUI.ToggleInstructionText(true);
             
         }
     }
@@ -479,8 +481,8 @@ public class PlayerBase : MonoBehaviour, IDamageable // THIS SCRIPT WILL HANDLE 
     {
         if(other.GetComponent<IInteractable>() == currentInteractable)
         {
-            playerUI.ToggleInstructionText(false);
-            playerUI.ToggleInstructionText2(false);
+            //playerUI.ToggleInstructionText(false);
+            //playerUI.ToggleInstructionText2(false);
             GameManager.Instance.SetCurrentRespawnPoint(null);
             currentInteractable = null;
         }

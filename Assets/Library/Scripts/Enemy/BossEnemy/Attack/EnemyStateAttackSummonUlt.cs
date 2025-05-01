@@ -79,6 +79,7 @@ namespace Enemy.statemachine.States
             // Effectttttttttttttttttttttttttttttttttttttt
             if (!_attackIndicatorPlayed)
             {
+                bossEnemy.PlayAttackIndicatorSound();
                 bossEnemy.PlayAttackIndicatorEffect();
                 _attackIndicatorPlayed = true;
             }
@@ -92,7 +93,9 @@ namespace Enemy.statemachine.States
                 telepos = hit.position;
             }
             bossEnemy.enemyNavAgent.Warp(telepos);
-
+            
+            
+            
             yield return new WaitForSeconds(attackDelay);
             //Shoot a bunch of projectile
             for (int i = 0; i < spawnNum; i++)

@@ -29,7 +29,7 @@ namespace Enemy.statemachine.States
         public override void UpdateState()
         {
             //Kept following
-
+            if(_enemy.playerRef == null) {return;} 
 
             switch (_enemy.isTokenOwner)
             {

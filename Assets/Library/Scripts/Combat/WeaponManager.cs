@@ -109,7 +109,7 @@ public class WeaponManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("weaponList is empty");
+                //Debug.Log("weaponList is empty");
             }
         }
     }
@@ -246,6 +246,7 @@ public class WeaponManager : MonoBehaviour
 
     private void OnAttackInputEnd(InputAction.CallbackContext context) // this is Unity new input event for when the player release the mouse button
     {
+        if(EventSystem.current.IsPointerOverGameObject()) {return;}
         StartCoroutine(AttackRoutine());
 
         // if (EventSystem.current.IsPointerOverGameObject() && isRecovering)
@@ -363,7 +364,6 @@ public class WeaponManager : MonoBehaviour
 
             if (_isHoldAttack)
             {
-                Debug.Log("ChargeAttack");
                 _currentWeapon.OnInnitSecondaryAttack();
                 playerAnimation.ChargeAttack();
                 GameManager.Instance.PlaySound(Sound.chargeAttack, chargeAttackVolume);
@@ -434,14 +434,12 @@ public class WeaponManager : MonoBehaviour
                 if (slashEffects != null && slashEffects.Length > 0)
                 {
                     int effectIndex = (comboCounter - 1) % slashEffects.Length;
-                    Debug.Log($"Playing effect at index: {effectIndex}");
                     if (effectIndex < slashEffects.Length)
                     {
                         slashEffects[effectIndex].Play();
                     }
                     else
                     {
-                        Debug.LogWarning("Effect index out of bounds!");
                     }
                 }
 
@@ -596,17 +594,17 @@ public class WeaponManager : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        if (playerTransform != null)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(playerTransform.position, 5f);
-
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(playerTransform.position, 4f);
-
-            Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(playerTransform.position, 3f);
-        }
+        // if (playerTransform != null)
+        // {
+        //     Gizmos.color = Color.red;
+        //     Gizmos.DrawWireSphere(playerTransform.position, 5f);
+        //
+        //     Gizmos.color = Color.yellow;
+        //     Gizmos.DrawWireSphere(playerTransform.position, 4f);
+        //
+        //     Gizmos.color = Color.green;
+        //     Gizmos.DrawWireSphere(playerTransform.position, 3f);
+        // }
     }
 
 }

@@ -8,7 +8,11 @@ public class OneWayDoorBreakable : MonoBehaviour, IDamageable
 
     [Header("Reference")]
     [SerializeField] private GameObject _breakableDoorRef;
+
+    public List<AudioClip> BarricadeBeingHitSounds = new List<AudioClip>();
+    public List<AudioClip> BarricadeBeingBreakSounds = new List<AudioClip>();
     private GameObject _player;
+    private AudioSource _audioSource;
     //[SerializeField] private GameObject _animatedDoorRef; // Animation played immediately when spawned (will discuss with Tung later about this)
 
 
@@ -22,13 +26,14 @@ public class OneWayDoorBreakable : MonoBehaviour, IDamageable
     [Header("Coroutines")]
     private Coroutine destroyDoorCoroutine = null;
 
+    private int randomIndex = 0;
 
     private void Awake()
     {
         if (_breakableDoorRef == null)
             Debug.Log("BreakableDoorRef isn't assigned");
         else _breakableDoorRef.SetActive(true); // Use this as a method to respawn the door in the scene when the players restart an area
-
+        _audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -44,23 +49,28 @@ public class OneWayDoorBreakable : MonoBehaviour, IDamageable
 
     public void TakeDamage(int damageAmount) // No need to use damageAmount for now
     {
+        randomIndex = Random.Range(0, BarricadeBeingHitSounds.Count);
+        _audioSource.PlayOneShot(BarricadeBeingHitSounds[randomIndex]);
         if (breakableOneWay)
         {
             if(!TargetInFront(_player.transform.position)) { return; }
-
+            health -= damageAmount;
+            if(health > 0){return;}
             _breakableDoorRef.SetActive(false);
-
+            
             if (destroyDoorCoroutine != null)
             {
                 StopCoroutine(destroyDoorCoroutine);
                 destroyDoorCoroutine = null;
             }
-
+    
             if (destroyDoorCoroutine == null)
                 destroyDoorCoroutine = StartCoroutine(DestroyDoor());
         }
         else
         {
+            health -= damageAmount;
+            if(health > 0){return;}
             _breakableDoorRef.SetActive(false);
 
             if (destroyDoorCoroutine != null)
@@ -95,7 +105,8 @@ public class OneWayDoorBreakable : MonoBehaviour, IDamageable
         GameObject tempDoorPlaceholder = new GameObject("Destroyed Door Animation Placeholder");
         tempDoorPlaceholder.transform.parent = this.transform;
         tempDoorPlaceholder.transform.position = this.transform.position;
-
+        randomIndex = Random.Range(0, BarricadeBeingBreakSounds.Count);
+        _audioSource.PlayOneShot(BarricadeBeingBreakSounds[randomIndex]);
         yield return new WaitForSeconds(2f); // Temporary time for future animation implementation
         
         if (tempDoorPlaceholder != null)

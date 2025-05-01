@@ -76,6 +76,7 @@ namespace Enemy.EnemyManager
 			UpdateTokenOwner();
 			foreach (EnemyBase enemy in activeEnemies)
 			{
+				if(enemy.playerRef == null) {break;}
 				enemy.UpdateLogic();
 				enemy.FixedUpdateLogic();
 			}

@@ -19,6 +19,10 @@ public class MapChange : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        SceneManager.LoadScene("PrototypeScene");
+        if (other.tag == "Player")
+        {
+            GameManager.Instance.UpdateGameState(GameState.PLAYING);
+            SceneManager.LoadScene("BossRoom");
+        }
     }
 }

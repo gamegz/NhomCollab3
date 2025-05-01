@@ -93,6 +93,7 @@ namespace Enemy.statemachine.States
                 // Effectttttttttttttttttttttttttttttttttttttttttttttt
                 if (!_attackIndicatorPlayed)
                 {
+                    bossEnemy.PlayAttackIndicatorSound();
                     bossEnemy.PlayAttackIndicatorEffect();
                     _attackIndicatorPlayed = true;
                 }
@@ -112,10 +113,11 @@ namespace Enemy.statemachine.States
                 //}
 
                 ExplodeEffect.Play();
+                bossEnemy.AOEAttackSound.Play();
                 Collider[] hitColliders = Physics.OverlapSphere(ExplodeEffect.transform.position, explodeRange, bossEnemy.layerData.hostileTargetLayer);
                 foreach (var hitCollider in hitColliders) { 
                     hitCollider.transform.gameObject.GetComponent<IDamageable>().TakeDamage(explodeDamage);
-                    Debug.Log("HitPlayer");
+                    
                 }
                 doAttack = true;
                 finishAttack = true;

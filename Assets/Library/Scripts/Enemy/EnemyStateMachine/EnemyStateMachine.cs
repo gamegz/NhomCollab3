@@ -9,7 +9,7 @@ namespace Enemy.statemachine
     //Handle transitionings, set up and updating states
     public class EnemyStateMachine : StateMachine
     {
-
+        
         public override void SetStartState(StateMachineBaseState StartingState)
         {
             base.SetStartState(StartingState);

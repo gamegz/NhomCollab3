@@ -35,6 +35,7 @@ namespace Enemy.statemachine.States
 
         public override void UpdateState()
         {
+            if(_enemy.playerRef == null) {return;} 
             _enemy.UpdateLogicByPlayerDistance();
             Vector3 retreatPos = _enemy.GetNavLocationByDirection(_enemy.transform.position,
                                                                   _enemy.transform.position - _enemy.playerRef.transform.position,

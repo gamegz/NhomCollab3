@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +9,7 @@ namespace FiniteStateMachine
     public class StateMachine
     {
         public StateMachineBaseState _currentState;
-              
+        public Action onStateChange;      
         //public StateMachine(StateMachineBaseState startState)
         //{
         //    SetStartState(_currentState);
@@ -32,6 +33,7 @@ namespace FiniteStateMachine
         {
             _currentState.ExitState();
             _currentState = StateToSwitch;
+            onStateChange?.Invoke();
             _currentState.EnterState();
         }
     }

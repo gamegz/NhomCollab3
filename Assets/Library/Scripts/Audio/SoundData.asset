@@ -32,3 +32,19 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 6e1f4a595601440499110ec87b5a00b9, type: 3}
   - {fileID: 8300000, guid: d1634c2ef7ddb684eb8c1cec9a88108d, type: 3}
   LevelUpSound: {fileID: 8300000, guid: 7e033f9ff6fd9334288df4e7b7fca055, type: 3}
+  AttackIndicatorSound: {fileID: 8300000, guid: 96b055f797dcb4640b3d0ca2f53d2358,
+    type: 3}
+  FootStepSound: {fileID: 8300000, guid: a1dbb1acd179d1046a4d8419dc22d56b, type: 3}
+  hurtSound:
+  - {fileID: 8300000, guid: b979afb7eb14e3443871d05779d661dd, type: 3}
+  - {fileID: 8300000, guid: 7a5974942013a9d4baa1754b89d5bea9, type: 3}
+  - {fileID: 8300000, guid: bca395bb19f1f4e41b6e0cc26064892c, type: 3}
+  zombieSound:
+  - {fileID: 8300000, guid: 5a344b22472dbc34b8a220411c38c03c, type: 3}
+  - {fileID: 8300000, guid: 9114e3c646b284d4aa7e7e9cafc2ab51, type: 3}
+  - {fileID: 8300000, guid: b695fef9edadf384695f269cca52c1e4, type: 3}
+  - {fileID: 8300000, guid: 7060375c642572b48829c52279203d37, type: 3}
+  - {fileID: 8300000, guid: 5cf2ae48a0dd60c46b785684fe0f7200, type: 3}
+  - {fileID: 8300000, guid: 285abe83983910c4c9285d855905e41d, type: 3}
+  - {fileID: 8300000, guid: 784eb35fca4bd034f8e4a58f6d051722, type: 3}
+  - {fileID: 8300000, guid: bb1d71b13ebf67749a5f12de72e2b79a, type: 3}

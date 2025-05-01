@@ -57,7 +57,7 @@ public class CharacterStatsData
     }
 
     //Change the value directly - called by StatsUpgrade script
-    public void OnStatsUpgrade(UpgradeType upgradeType, float value, int level)
+    public void OnStatsUpgrade(UpgradeType upgradeType, float value, int level, int GemCount)
     {
         switch (upgradeType)
         {
@@ -89,6 +89,8 @@ public class CharacterStatsData
                 Debug.LogWarning("Unknown UpgradeType: " + upgradeType);
                 break;
         }
+        this.GemCount = GemCount;
+        currentPlayerHealth = healthStat;
     }
 
     public void OnGemAndExperienceUpgrade(float currentExperienceAmount, float maximumExperienceAmount, int GemCount)

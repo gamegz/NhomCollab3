@@ -8,10 +8,11 @@ namespace Enemy.variant
 {
     public class EnemyHotEye : EnemyBase
     {
-
+        private AudioSource _audioSource;
         public override void Awake()
         {
             base.Awake();
+            _audioSource = GetComponent<AudioSource>();
         }
 
         public override void Start()
@@ -32,7 +33,23 @@ namespace Enemy.variant
             //currentState = EnemyState.Roam;
         }
 
+        public override void ShootRayAttack(Vector3 direction)
+        {
+            if (isStagger) return;
 
+            RaycastHit hit;
+
+            if (Physics.Raycast(transform.position, direction, out hit, Mathf.Infinity, layerData.hostileTargetLayer))
+            {
+                if (hit.transform.gameObject.CompareTag("Player"))
+                {
+                    hit.transform.gameObject.GetComponent<IDamageable>().TakeDamage(attackDamage);
+                    _audioSource?.Play();
+                }
+                
+            }
+            
+        }
 
         public override void UpdateLogic()
         {
