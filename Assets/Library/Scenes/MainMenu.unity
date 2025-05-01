@@ -13908,16 +13908,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Game Manager
       objectReference: {fileID: 0}
-    - target: {fileID: 757607698695052125, guid: 3b81989f46d75d3429b7065842b57335,
-        type: 3}
-      propertyPath: m_Volume
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3195856031284922047, guid: 3b81989f46d75d3429b7065842b57335,
-        type: 3}
-      propertyPath: m_Volume
-      value: 0.08
-      objectReference: {fileID: 0}
     - target: {fileID: 3348247436174893742, guid: 3b81989f46d75d3429b7065842b57335,
         type: 3}
       propertyPath: m_RootOrder

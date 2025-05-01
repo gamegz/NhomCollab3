@@ -107,11 +107,28 @@ public class EnemySpawner : MonoBehaviour
     private void OnEnemyDeath(EnemyBase enemy)
     {
         spawnedEnemies--;
+        Debug.Log("spawned enemy: " + spawnedEnemies);
         if (spawnedEnemies <= 0)
         {
             _currentEnemyCount = spawnedEnemies;
             OnEndCurrentWave();
         }
+        if (_currentWaveCount == setAmountOfWave && _currentEnemyCount == 0)
+        {
+            OnFinishCurrentRoom();
+        }
+
+        if (GameManager.Instance.isPlayerDead)
+        {
+            ClearRoom();
+        }
+    }
+
+    private void ClearRoom()
+    {
+        _currentWaveCount = setAmountOfWave;
+        spawnedEnemies = 0;
+        _currentEnemyCount = spawnedEnemies;
         if (_currentWaveCount == setAmountOfWave && _currentEnemyCount == 0)
         {
             OnFinishCurrentRoom();

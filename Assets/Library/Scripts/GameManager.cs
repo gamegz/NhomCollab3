@@ -105,24 +105,24 @@ public class GameManager : MonoBehaviour
     
     public void OnEnterRoom()
     {
-        townSound.Stop();
+        townSound?.Stop();
     }
 
     public void OnEnterBossRoom()
     {
-        townSound.Stop();
-        bossBattleMusic.Play();
+        townSound?.Stop();
+        bossBattleMusic?.Play();
     }
 
     public void OnFinishBossRoom()
     {
-        bossBattleMusic.Stop();
-        townSound.Play();
+        bossBattleMusic?.Stop();
+        townSound?.Play();
     }
 
     public void OnExitRoom()
     {
-        townSound.Play();
+        townSound?.Play();
     }
 
     public Transform GetSpawnPoint()
